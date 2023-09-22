@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "878574490380",
+    "project_id": "mesjid-app",
+    "storage_bucket": "mesjid-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878574490380:android:4a18ade3d4add018e06f29",
+        "android_client_info": {
+          "package_name": "com.example.mesjid_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnQBXg_BJozd55FUYe16KG5julGyqpIHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
