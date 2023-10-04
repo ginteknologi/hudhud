@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,7 @@ Future<void> main() async {
   await initializeDateFormatting('id_ID');
 
   if (!kIsWeb) {
-  SetupFirebase.initFirebase();
+    SetupFirebase.initFirebase();
     await [
       Permission.location,
       Permission.storage,
@@ -43,11 +44,10 @@ Future<void> main() async {
   // });
   runApp(
     EasyLocalization(
-      supportedLocales: const [Locale('en', 'US'), Locale('id','ID')],
-      path: 'assets/lang', // <-- change the path of the translation files 
-      child: MyApp()
-    ),
-      // MyApp()
+        supportedLocales: const [Locale('en', 'US'), Locale('id', 'ID')],
+        path: 'assets/lang', // <-- change the path of the translation files
+        child: MyApp()),
+    // MyApp()
   );
 }
 
@@ -56,7 +56,10 @@ class MyApp extends StatelessWidget {
   // final gctrl = Get.put(SocketController());
   final mainCtrl = Get.put(MainController());
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
     return GetMaterialApp(
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,

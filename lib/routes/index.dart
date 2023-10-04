@@ -4,6 +4,7 @@ import 'package:mesjid_app/routes/artikel/index.dart';
 import 'package:mesjid_app/routes/doa/index.dart';
 import 'package:mesjid_app/routes/dkm/index.dart';
 import 'package:mesjid_app/routes/home/index.dart';
+import 'package:mesjid_app/routes/onboard/index.dart';
 import 'package:mesjid_app/routes/quran/index.dart';
 import 'package:mesjid_app/routes/ruangan/index.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
@@ -19,6 +20,7 @@ class AppPages {
     // ...PagesQuran.pages,
     // ...PagesRuangan.pages,
     // ...PagesSedekah.pages,
+    ...PagesOnboard.pages
   ];
   static var root = RoutesHome.splashscreen;
 }

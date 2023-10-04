@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class AppColors {
-  static const Color appPrimary = Color(0xFF1892C1);
+  static const Color appPrimary = Color(0xFF048C7C);
   static const Color textPrimary = Colors.white;
   static const Color appPrimary2 = Color(0xFF1E8EE3);
   static const Color appAccent = Color(0xFFDDEFFF);
@@ -40,7 +40,6 @@ class AppColors {
     return const Color(0xFFCBCBCB);
   }
 }
-
 
 final priceFormat = NumberFormat.currency(
   locale: 'id_ID',
@@ -232,7 +231,8 @@ ThemeData darkTheme(context) {
     textTheme: loadTextTheme(context, 'dark'),
     switchTheme: switchTheme,
     radioTheme: radioTheme,
-    checkboxTheme: checkboxTheme, colorScheme: colorSceme.copyWith(error: AppColors.appDanger),
+    checkboxTheme: checkboxTheme,
+    colorScheme: colorSceme.copyWith(error: AppColors.appDanger),
   );
 }
 
@@ -291,6 +291,8 @@ ThemeData lightTheme(context) {
     textTheme: loadTextTheme(context, 'light'),
     switchTheme: switchTheme,
     radioTheme: radioTheme,
-    checkboxTheme: checkboxTheme, colorScheme: colorSceme.copyWith(error: AppColors.appDanger),
+    checkboxTheme: checkboxTheme,
+    primaryColor: AppColors.primary,
+    colorScheme: colorSceme.copyWith(error: AppColors.appDanger),
   );
 }
