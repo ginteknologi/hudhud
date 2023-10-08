@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 
 import 'package:mesjid_app/routes/auth/index.dart';
@@ -14,7 +16,8 @@ class OnboardController extends GetxController {
     isLoadingList.value = false;
   }
 
-  goToLogin() {
+  goToLogin() async {
+    log('data:');
     Get.offAllNamed(RoutesAuth.root);
   }
 

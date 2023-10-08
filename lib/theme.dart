@@ -148,7 +148,7 @@ loadTextTheme(context, type) {
             fontSize: MediaQuery.of(context).size.width / 22,
           ),
           titleSmall: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 22,
+            fontSize: MediaQuery.of(context).size.width / 24,
           ),
           bodySmall: defaultTextStyle.copyWith(
             fontSize: MediaQuery.of(context).size.width / 28,

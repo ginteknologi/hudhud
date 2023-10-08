@@ -11,7 +11,7 @@ import 'package:mesjid_app/routes/sedekah/index.dart';
 
 class AppPages {
   static var list = [
-    // ...PagesAuth.pages,
+    ...PagesAuth.pages,
     // ...PagesAkun.pages,
     // ...PagesArtikel.pages,
     // ...PagesDoa.pages,

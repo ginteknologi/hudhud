@@ -7,6 +7,7 @@ class PagesAuth {
       name: RoutesAuth.root,
       page: () => const AuthPage(),
       transition: Transition.noTransition,
+      maintainState: true,
     ),
   ];
 }
