@@ -19,7 +19,7 @@ class AppPages {
     ...PagesHome.pages,
     // ...PagesQuran.pages,
     // ...PagesRuangan.pages,
-    // ...PagesSedekah.pages,
+    ...PagesSedekah.pages,
     ...PagesOnboard.pages
   ];
   static var root = RoutesHome.splashscreen;

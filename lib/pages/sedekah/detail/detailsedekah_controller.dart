@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/sedekah/sedekah_service.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
 
-class SedekahController extends GetxController {
+class DetailSedekahController extends GetxController {
   var isLoadingList = true.obs;
   var list = {}.obs;
 
@@ -10,11 +9,6 @@ class SedekahController extends GetxController {
     final result = await SedekahService().getList(page: 0, limit: 10);
     list.value = result['data'];
     isLoadingList.value = false;
-  }
-
-  goToDetail(String id) {
-    // print(RoutesSedekah.detail, id: id);
-    Get.toNamed('${RoutesSedekah.root}/$id');
   }
 
   @override

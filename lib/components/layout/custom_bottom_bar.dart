@@ -2,29 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomBottomBar extends StatelessWidget {
+  CustomBottomBar({super.key, this.onChanged});
+  Function(BottomBarEnum)? onChanged;
+
   RxInt selectedIndex = 0.obs;
 
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
-      icon: 'assets/icons/beranda.png',
-      activeIcon: 'assets/icons/beranda_a.png',
-      title: "Beranda".tr,
-    ),
+        icon: 'assets/icons/beranda.png',
+        activeIcon: 'assets/icons/beranda_a.png',
+        title: "Beranda".tr,
+        navType: BottomBarEnum.beranda),
     BottomMenuModel(
-      icon: 'assets/icons/al-quran.png',
-      activeIcon: 'assets/icons/al-quran_a.png',
-      title: "Al-Qur'an".tr,
-    ),
+        icon: 'assets/icons/al-quran.png',
+        activeIcon: 'assets/icons/al-quran_a.png',
+        title: "Al-Qur'an".tr,
+        navType: BottomBarEnum.alquran),
     BottomMenuModel(
-      icon: 'assets/icons/ruangan.png',
-      activeIcon: 'assets/icons/ruangan_a.png',
-      title: "Ruangan".tr,
-    ),
+        icon: 'assets/icons/ruangan.png',
+        activeIcon: 'assets/icons/ruangan_a.png',
+        title: "Ruangan".tr,
+        navType: BottomBarEnum.ruangan),
     BottomMenuModel(
-      icon: 'assets/icons/dkm.png',
-      activeIcon: 'assets/icons/dkm_a.png',
-      title: "DKM".tr,
-    )
+        icon: 'assets/icons/dkm.png',
+        activeIcon: 'assets/icons/dkm_a.png',
+        title: "DKM".tr,
+        navType: BottomBarEnum.dkm)
   ];
 
   @override
@@ -52,7 +55,7 @@ class CustomBottomBar extends StatelessWidget {
                   Image.asset(bottomMenuList[index].icon,
                       height: 30, width: 30),
                   Padding(
-                    padding: EdgeInsets.only(top: 0),
+                    padding: const EdgeInsets.only(top: 0),
                     child: Text(
                       bottomMenuList[index].title ?? "",
                       overflow: TextOverflow.ellipsis,
@@ -87,6 +90,7 @@ class CustomBottomBar extends StatelessWidget {
           }),
           onTap: (index) {
             selectedIndex.value = index;
+            onChanged!(bottomMenuList[index].navType);
           },
         ),
       ),
@@ -94,12 +98,18 @@ class CustomBottomBar extends StatelessWidget {
   }
 }
 
+enum BottomBarEnum { beranda, alquran, ruangan, dkm }
+
 class BottomMenuModel {
-  BottomMenuModel({required this.icon, this.title, required this.activeIcon});
+  BottomMenuModel(
+      {required this.icon,
+      this.title,
+      required this.activeIcon,
+      required this.navType});
 
   String icon;
   String activeIcon;
-
+  BottomBarEnum navType;
   String? title;
 }
 
@@ -107,14 +117,14 @@ class BottomMenuModel {
 Widget getDefaultWidget() {
   return Container(
     color: Colors.white,
-    padding: EdgeInsets.all(10),
-    child: Center(
+    padding: const EdgeInsets.all(10),
+    child: const Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Please replace the respective Widget here',
+            'Something went wrong',
             style: TextStyle(
               fontSize: 18,
             ),
