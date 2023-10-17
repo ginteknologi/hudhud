@@ -135,17 +135,17 @@ class SedekahPage extends StatelessWidget {
   getList(ctrl, context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
-      itemCount: 5,
+      itemCount: ctrl.listSedekah.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         // Datum model = filteredEvents[index];
         return FadeInUp(
           child: ListItemSedekahWidget(
-            id: '2',
-            title: 'Sedekah ${index}',
-            dueDay: 20,
-            targetPrice: 5000000,
-            totalPrice: 1000000,
+            id: ctrl.listSedekah[index]['id'],
+            title: ctrl.listSedekah[index]['title'],
+            dueDay: ctrl.listSedekah[index]['dueDay'],
+            targetPrice: ctrl.listSedekah[index]['target'],
+            totalPrice: ctrl.listSedekah[index]['total'],
             image: 'assets/icons/image-item1.png',
           ),
         );

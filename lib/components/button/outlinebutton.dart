@@ -66,7 +66,7 @@ class ButtonOutline extends StatelessWidget {
     var _bgcolor = disabled ? bgcolor.withOpacity(.5) : bgcolor;
     var _color = disabled ? color.withOpacity(.5) : color;
     final ButtonStyle buttonStyle = OutlinedButton.styleFrom(
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.symmetric(horizontal: 10),
       primary: inverted ? _bgcolor : _color,
       backgroundColor: inverted ? _color : _bgcolor,
       side: BorderSide(

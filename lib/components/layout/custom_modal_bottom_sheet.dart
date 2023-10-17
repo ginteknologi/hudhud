@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -124,7 +125,7 @@ class CustomModalBottomSheet extends StatelessWidget {
                                               height: 35,
                                               width: 35),
                                           const SizedBox(height: 5),
-                                          Text(
+                                          AutoSizeText(
                                             '${dataGrid?[index]["label"]}',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -134,7 +135,19 @@ class CustomModalBottomSheet extends StatelessWidget {
                                                     ?.fontSize,
                                                 color: Colors.black87,
                                                 fontWeight: FontWeight.w500),
+                                            maxLines: 2,
                                           ),
+                                          // Text(
+                                          //   '${dataGrid?[index]["label"]}',
+                                          //   textAlign: TextAlign.center,
+                                          //   style: TextStyle(
+                                          //       fontSize: Theme.of(context)
+                                          //           .textTheme
+                                          //           .bodySmall
+                                          //           ?.fontSize,
+                                          //       color: Colors.black87,
+                                          //       fontWeight: FontWeight.w500),
+                                          // ),
                                         ],
                                       ))))));
                 },

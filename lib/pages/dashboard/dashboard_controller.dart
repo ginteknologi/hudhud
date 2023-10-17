@@ -75,7 +75,7 @@ class DashboardController extends GetxController {
     return listAllMenu = [
       {"label": "Sedekah", "icon": "assets/icons/sedekah.svg", "urlNav": ""},
       {"label": "Kiblat", "icon": "assets/icons/kiblat.svg", "urlNav": ""},
-      {"label": "Do'a/Hadist", "icon": "assets/icons/doa.svg", "urlNav": ""},
+      {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": ""},
       {"label": "Al-Quran", "icon": "assets/icons/alquran.svg", "urlNav": ""},
       {"label": "Ruangan", "icon": "assets/icons/ruangan.svg", "urlNav": ""},
       {
