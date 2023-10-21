@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,8 @@ import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:mesjid_app/components/layout/custom_card_item.dart';
 import 'package:mesjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:mesjid_app/pages/dashboard/dashboard_controller.dart';
+import 'package:mesjid_app/routes/akun/index.dart';
+import 'package:mesjid_app/routes/notifikasi/index.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -94,23 +97,36 @@ class DashboardPage extends StatelessWidget {
                             Row(
                               children: [
                                 ButtonIcon(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.toNamed(RoutesNotifikasi.root);
+                                  },
                                   bgcolor: Colors.transparent,
                                   icon: const Icon(
                                     Icons.notifications,
-                                    size: 40,
+                                    size: 35,
                                     color: Colors.white,
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.network(
-                                    "https://picsum.photos/50",
-                                    height: 50,
-                                    width: 50,
-                                  ),
-                                )
+                                Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Get.toNamed(RoutesAkun.root);
+                                      },
+                                      borderRadius: BorderRadius.circular(20),
+                                      splashColor:
+                                          Colors.green.withOpacity(0.5),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.network(
+                                          "https://picsum.photos/50",
+                                          height: 35,
+                                          width: 35,
+                                        ),
+                                      ),
+                                    )),
                               ],
                             )
                           ],
@@ -126,19 +142,104 @@ class DashboardPage extends StatelessWidget {
                           ),
                           child: SizedBox(
                             width: Get.width,
-                            height: 210,
+                            height: 220,
                             child: Column(
                               children: [
                                 Flexible(
                                     flex: 1,
                                     child: Container(
+                                      width: Get.width,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 5),
                                       constraints:
                                           BoxConstraints.loose(Size.infinite),
                                       decoration: const BoxDecoration(
                                           image: DecorationImage(
                                               image: AssetImage(
-                                                  "assets/img/bg_grad.png"),
+                                                  "assets/img/card/card_subuh.png"),
                                               fit: BoxFit.fill)),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Ahad, 9 Muharram 1444",
+                                                  style: context
+                                                      .textTheme.labelSmall
+                                                      ?.copyWith(
+                                                          letterSpacing: 1,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                ),
+                                                Text("Minggu, 8 Agustus 2023",
+                                                    style: context
+                                                        .textTheme.labelSmall
+                                                        ?.copyWith(
+                                                            height: 1,
+                                                            letterSpacing: 1,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color:
+                                                                Colors.white)),
+                                              ]),
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Subuh",
+                                                    style: context
+                                                        .textTheme.headlineSmall
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color:
+                                                                Colors.white)),
+                                                Text("04.00 WIB",
+                                                    style: context
+                                                        .textTheme.displayMedium
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: Colors.white,
+                                                            height: 1))
+                                              ]),
+                                          // SizedBox(
+                                          //   height: 2,
+                                          // ),
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "3 Jam 20 Menit",
+                                                  style: context
+                                                      .textTheme.labelMedium
+                                                      ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                ),
+                                                Text("Menuju Ashar",
+                                                    style: context
+                                                        .textTheme.labelMedium
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color: Colors.white,
+                                                            height: 1)),
+                                              ]),
+                                        ],
+                                      ),
                                     )),
                                 SizedBox(
                                     height: 62,
@@ -174,32 +275,40 @@ class DashboardPage extends StatelessWidget {
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: [
-                                                        Text(
-                                                            ctrl.listWaktu[
-                                                                index]['label'],
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Colors
-                                                                    .black54,
-                                                                fontSize: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodySmall
-                                                                    ?.fontSize)),
-                                                        Text(
-                                                            ctrl.listWaktu[
-                                                                index]['waktu'],
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontSize: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodySmall
-                                                                    ?.fontSize))
+                                                        AutoSizeText(
+                                                          ctrl.listWaktu[index]
+                                                              ['label'],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              color: Colors
+                                                                  .black54,
+                                                              fontSize: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodySmall
+                                                                  ?.fontSize),
+                                                          maxLines: 1,
+                                                        ),
+                                                        AutoSizeText(
+                                                          ctrl.listWaktu[index]
+                                                              ['waktu'],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodySmall
+                                                                  ?.fontSize),
+                                                          maxLines: 1,
+                                                        ),
                                                       ],
                                                     )));
                                           }),
@@ -354,7 +463,7 @@ class DashboardPage extends StatelessWidget {
   getButtonCard(DashboardController ctrl, BuildContext context) {
     return Card(
         elevation: 0,
-        color: Theme.of(context).primaryColor,
+        color: Color(0xFFD9BA62),
         margin: const EdgeInsets.only(top: 10),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -385,7 +494,7 @@ class DashboardPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SvgPicture.asset(
-                                        'assets/icons/quran-btn.svg',
+                                        'assets/icons/quran_yellow.svg',
                                         height: 35,
                                         width: 35),
                                     const SizedBox(
@@ -402,7 +511,7 @@ class DashboardPage extends StatelessWidget {
                                                     .textTheme
                                                     .bodySmall
                                                     ?.fontSize,
-                                                color: Colors.white)),
+                                                color: Colors.black)),
                                         Text(
                                           "Al-Fatihah : 5",
                                           style: TextStyle(
@@ -411,7 +520,7 @@ class DashboardPage extends StatelessWidget {
                                                   .textTheme
                                                   .bodySmall
                                                   ?.fontSize,
-                                              color: Colors.white),
+                                              color: Colors.black),
                                         )
                                       ],
                                     )
@@ -419,7 +528,7 @@ class DashboardPage extends StatelessWidget {
                                 )),
                             const Icon(
                               Icons.chevron_right_rounded,
-                              color: Colors.white,
+                              color: Colors.black,
                             )
                           ]),
                     )))));

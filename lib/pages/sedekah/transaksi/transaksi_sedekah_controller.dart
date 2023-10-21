@@ -13,6 +13,7 @@ class TransactionSedekahController extends GetxController {
 
   var dataBillProduct = {}.obs;
   RxString inputPembayaran = "".obs;
+  var isHide = false.obs;
 
   getData() async {
     final result = await SedekahService().getList(page: 0, limit: 10);

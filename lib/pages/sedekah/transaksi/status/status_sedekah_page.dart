@@ -38,7 +38,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
       children: [
         Card(
             elevation: 0,
-            color: Color(0xFF92E3A9),
+            color: const Color(0xFF92E3A9),
             margin: const EdgeInsets.only(top: 20),
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
@@ -49,7 +49,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                 width: Get.width,
                 height: 90,
                 child: Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -59,7 +59,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         AutoSizeText(
@@ -83,7 +83,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                       ],
                     ))) //SizedBox
             ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         ListItemUiWidget(
@@ -112,7 +112,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           category: "Nomor Virtual Account",
           hasRightContent: true,
           showIcon: IconPosition.right,
-          iconRight: Icon(Icons.copy),
+          iconRight: const Icon(Icons.copy),
         ),
         ListItemUiWidget(
           id: 3,
@@ -124,7 +124,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           category: "Donasimu",
           hasRightContent: true,
           showIcon: IconPosition.right,
-          iconRight: Icon(Icons.copy),
+          iconRight: const Icon(Icons.copy),
         ),
         Container(
             margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -133,7 +133,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
               onPressed: () {},
               radius: 5,
               showIcon: "right",
-              iconRight: Icon(Icons.chevron_right_rounded),
+              iconRight: const Icon(Icons.chevron_right_rounded),
               title: "Intruksi Pembayaran",
               width: Get.width,
               height: 60,
@@ -148,16 +148,16 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
       Positioned(
         child: Card(
             elevation: 0,
-            color: Color(0xFF0E9889),
+            color: const Color(0xFF0E9889),
             margin: const EdgeInsets.only(top: 20),
             clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               //set border radius more than 50% of height and width to make circle
             ),
             child: Container(
               width: Get.width,
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               height: 220,
               child: Align(
                   alignment: Alignment.centerLeft,
@@ -186,14 +186,14 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
             margin:
                 const EdgeInsets.only(top: 19, right: 1, bottom: 1, left: 1),
             clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(15),
                   bottomRight: Radius.circular(15)),
               //set border radius more than 50% of height and width to make circle
             ),
             child: Container(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 width: Get.width - 45,
                 height: 140,
                 child: Column(
@@ -203,13 +203,13 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(
-                          child: new Container(
-                            padding: new EdgeInsets.only(right: 13.0),
-                            child: new Text(
+                          child: Container(
+                            padding: const EdgeInsets.only(right: 13.0),
+                            child: const Text(
                               'Menggunakan DANA',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                color: new Color(0xFF212121),
+                                color: Color(0xFF212121),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

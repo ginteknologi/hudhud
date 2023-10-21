@@ -39,7 +39,7 @@ class DetailSedekahPage extends StatelessWidget {
                       Flexible(
                           flex: 1,
                           child: Text(
-                            "Sedekah Mesjid",
+                            "Sedekah Mesjid  dan pemeliharaan Masjid An-Ni’mah untuk biaya operasional",
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                     .textTheme
@@ -78,10 +78,13 @@ class DetailSedekahPage extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
-                                      .labelSmall
+                                      .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w300)))
                     ],
+                  ),
+                  SizedBox(
+                    height: 20,
                   ),
                   Row(
                     children: [

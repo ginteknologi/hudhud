@@ -4,15 +4,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class CustomModalBottomSheet extends StatelessWidget {
-  CustomModalBottomSheet({
-    super.key,
-    this.typeSheet = TypeBottomSheet.typeAlertSheet,
-    this.titleAlert,
-    this.textAlert,
-    this.closeButton = true,
-    this.confirmText,
-    this.dataGrid,
-  });
+  CustomModalBottomSheet(
+      {super.key,
+      this.typeSheet = TypeBottomSheet.typeAlertSheet,
+      this.titleAlert,
+      this.textAlert,
+      this.closeButton = true,
+      this.confirmText,
+      this.dataGrid,
+      this.height,
+      this.content = const []});
 
   TypeBottomSheet typeSheet;
   // alert
@@ -23,6 +24,10 @@ class CustomModalBottomSheet extends StatelessWidget {
 
   // grid sheet
   final List? dataGrid;
+
+  // custom sheet
+  double? height;
+  final List<Widget> content;
 
   alertSheet(context) {
     return Wrap(
@@ -157,6 +162,35 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
+  customSheet(context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
+      child: Container(
+          height: height ?? 350,
+          // constraints: BoxConstraints.loose(Size.infinite),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width / 4,
+                height: 5,
+                margin: EdgeInsets.only(bottom: 20),
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
+              ),
+              Flexible(
+                  flex: 1,
+                  child: Column(
+                    children: content,
+                  )),
+            ],
+          )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -165,12 +199,11 @@ class CustomModalBottomSheet extends StatelessWidget {
       // Create a Wrap widget to display the sheet contents.
       child: typeSheet == TypeBottomSheet.typeAlertSheet
           ? alertSheet(context)
-          : gridSheet(context),
+          : typeSheet == TypeBottomSheet.typeGridSheet
+              ? gridSheet(context)
+              : customSheet(context),
     );
   }
 }
 
-enum TypeBottomSheet {
-  typeGridSheet,
-  typeAlertSheet,
-}
+enum TypeBottomSheet { typeGridSheet, typeAlertSheet, typeCustomSheet }

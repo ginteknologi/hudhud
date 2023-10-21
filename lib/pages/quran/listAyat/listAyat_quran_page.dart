@@ -5,16 +5,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/quran/halaman/halaman_quran_page.dart';
-import 'package:mesjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
-import 'package:mesjid_app/pages/quran/quran_controller.dart';
+import 'package:mesjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
 import 'package:mesjid_app/theme.dart';
 
-class QuranPage extends StatelessWidget {
-  final TypeViewQuran typeView;
-  QuranPage({super.key, required this.typeView});
+class ListAyatQuranPage extends StatelessWidget {
+  const ListAyatQuranPage({super.key});
 
-  layout(QuranController ctrl, BuildContext context) {
+  layout(ListAyatQuranController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -154,6 +151,10 @@ class QuranPage extends StatelessWidget {
                                       child: ListItemUiWidget(
                                         id: ctrl.listSurah[index]['id'],
                                         title: ctrl.listSurah[index]['title'],
+                                        onTap: () {
+                                          ctrl.goToDetail(
+                                              ctrl.listSurah[index]);
+                                        },
                                         titleStyle: context
                                             .textTheme.titleMedium
                                             ?.copyWith(
@@ -228,28 +229,15 @@ class QuranPage extends StatelessWidget {
                     ]))));
   }
 
-  Widget getCurrentWidget(TypeViewQuran type, QuranController ctrl) {
-    switch (type) {
-      case TypeViewQuran.perayat:
-        return ListAyatQuranPage();
-      case TypeViewQuran.perhalaman:
-        return HalamanQuranPage();
-      default:
-        return ListAyatQuranPage();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(QuranController());
+    final ctrl = Get.put(ListAyatQuranController());
 
     return Scaffold(
       backgroundColor: Color(0xFFF5F5F5),
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: getCurrentWidget(typeView, ctrl),
+      body: layout(ctrl, context),
     );
   }
 }
-
-enum TypeViewQuran { perayat, perhalaman }

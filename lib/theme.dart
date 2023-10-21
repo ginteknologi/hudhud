@@ -156,6 +156,9 @@ loadTextTheme(context, type) {
           labelSmall: defaultTextStyle.copyWith(
             fontSize: MediaQuery.of(context).size.width / 35,
           ),
+          labelMedium: defaultTextStyle.copyWith(
+            fontSize: MediaQuery.of(context).size.width / 30,
+          ),
           labelLarge: defaultTextStyle.copyWith(
             fontSize: MediaQuery.of(context).size.width / 25,
           ),

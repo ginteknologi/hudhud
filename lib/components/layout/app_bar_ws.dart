@@ -14,7 +14,7 @@ class AppBarWSWidget {
     required BuildContext context, // Add the BuildContext parameter
   }) {
     return AppBar(
-      iconTheme: const IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
       leading: GestureDetector(
           onTap: () {
             Navigator.of(context).pop(); // Navigate back to the previous page

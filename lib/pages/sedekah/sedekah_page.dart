@@ -79,29 +79,65 @@ class SedekahPage extends StatelessWidget {
                           EdgeInsets.symmetric(horizontal: 21, vertical: 7),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text("Sudah sedekah hari ini?",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge
-                                      ?.fontSize,
-                                  fontWeight: FontWeight.normal)),
-                          ButtonElevated(
-                            title: 'Sedekah Sekarang!',
-                            width: 150,
-                            bgcolor: const Color(0xFF92E3A9),
-                            height: 35,
-                            color: Colors.black,
-                            radius: 5,
-                            onPressed: () {
-                              ctrl.goToDetail('1');
-                            },
+                          Flexible(
+                            child: Container(
+                              padding: EdgeInsets.only(right: 13.0),
+                              child: Text("Sudah sedekah hari ini?",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.fontSize,
+                                      fontWeight: FontWeight.normal)),
+                            ),
+                          ),
+                          Flexible(
+                            child: Container(
+                              padding: EdgeInsets.only(right: 13.0),
+                              width: double.infinity,
+                              child: ButtonElevated(
+                                title: 'Sekarang!',
+                                width: Get.width,
+                                bgcolor: const Color(0xFF92E3A9),
+                                height: 35,
+                                color: Colors.black,
+                                radius: 5,
+                                size: 16,
+                                onPressed: () {
+                                  ctrl.goToDetail('1');
+                                },
+                              ),
+                            ),
                           )
                         ],
                       ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: [
+                      //     Text("Sudah sedekah hari ini?",
+                      //         style: TextStyle(
+                      //             color: Colors.white,
+                      //             fontSize: Theme.of(context)
+                      //                 .textTheme
+                      //                 .labelLarge
+                      //                 ?.fontSize,
+                      //             fontWeight: FontWeight.normal)),
+                      //     ButtonElevated(
+                      //       title: 'Sedekah Sekarang!',
+                      //       width: 150,
+                      //       bgcolor: const Color(0xFF92E3A9),
+                      //       height: 35,
+                      //       color: Colors.black,
+                      //       radius: 5,
+                      //       onPressed: () {
+                      //         ctrl.goToDetail('1');
+                      //       },
+                      //     )
+                      //   ],
+                      // ),
                     ),
                     Padding(
                         padding:

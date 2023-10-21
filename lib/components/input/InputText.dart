@@ -33,6 +33,8 @@ class InputText extends StatelessWidget {
   final void Function(String newValue) onSubmit;
   final void Function(String newValue) onChanged;
   final String? Function(String? newValue) validator;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
   const InputText({
     Key? key,
     required this.controller,
@@ -65,6 +67,8 @@ class InputText extends StatelessWidget {
     this.maxLine = 3,
     this.isFill = false,
     this.fillColor = Colors.transparent,
+    this.suffixIcon,
+    this.prefixIcon,
   }) : super(key: key);
 
   @override
@@ -134,6 +138,9 @@ class InputText extends StatelessWidget {
             .copyWith(color: _placeholderStyle!.color!.withOpacity(.5)),
         labelText: labelPosition == 'float' ? label : null,
         labelStyle: _labelStyle,
+        // icon:,
+        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
       ),
       onChanged: showCounter
           ? (newValue) {

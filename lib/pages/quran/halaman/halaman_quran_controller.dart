@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/quran/quran_service.dart';
 
-class QuranController extends GetxController {
+class HalamanQuranController extends GetxController {
   var isLoadingList = true.obs;
   var list = {}.obs;
   List listSurah = [].obs;

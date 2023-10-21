@@ -10,7 +10,7 @@ import 'package:mesjid_app/theme.dart';
 class ListItemUiWidget extends StatelessWidget {
   ListItemUiWidget(
       {required this.id,
-      this.category = "category",
+      this.category,
       this.title = "title",
       this.titleStyle,
       this.subTitle,
@@ -23,6 +23,7 @@ class ListItemUiWidget extends StatelessWidget {
       this.listInset = false,
       this.typeList = TypeList.none,
       this.showIcon = IconPosition.none,
+      this.onTap,
       this.image});
 
   int id;
@@ -31,7 +32,7 @@ class ListItemUiWidget extends StatelessWidget {
   TextStyle? titleStyle;
   String? subTitle;
   final List<Widget> rightContent;
-  Icon? iconLeft;
+  Widget? iconLeft;
   final bool justify;
   final IconPosition showIcon;
   bool hasRightContent;
@@ -40,6 +41,7 @@ class ListItemUiWidget extends StatelessWidget {
   TypeDivider typeDivider;
   TypeList typeList;
   bool listInset;
+  VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,8 @@ class ListItemUiWidget extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           highlightColor: Colors.transparent,
-          onTap: () {},
+          splashColor: Colors.green.withOpacity(0.5),
+          onTap: onTap,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +91,7 @@ class ListItemUiWidget extends StatelessWidget {
                           showIcon == IconPosition.both)
                         Padding(
                           padding: const EdgeInsets.only(
-                            right: 5,
+                            right: 10,
                           ),
                           child: iconLeft,
                         ),
@@ -107,18 +110,19 @@ class ListItemUiWidget extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    AutoSizeText(
-                                      '$category',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.fontSize,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.normal),
-                                      maxLines: 1,
-                                    ),
+                                    if (category != null)
+                                      AutoSizeText(
+                                        '$category',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.fontSize,
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.normal),
+                                        maxLines: 1,
+                                      ),
                                     AutoSizeText(
                                       '$title',
                                       textAlign: TextAlign.start,

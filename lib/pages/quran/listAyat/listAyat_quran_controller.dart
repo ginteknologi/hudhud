@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/quran/quran_service.dart';
+import 'package:mesjid_app/routes/quran/index.dart';
 
-class QuranController extends GetxController {
+class ListAyatQuranController extends GetxController {
   var isLoadingList = true.obs;
   var list = {}.obs;
   List listSurah = [].obs;
@@ -13,6 +14,12 @@ class QuranController extends GetxController {
     final result = await QuranService().getList(page: 0, limit: 10);
     list.value = result['data'];
     isLoadingList.value = false;
+  }
+
+  goToDetail(param) {
+    // print(RoutesSedekah.detail, id: id);
+    Get.toNamed('${RoutesQuran.root}/detail/${param['id']}',
+        arguments: {"selectedSurah": param});
   }
 
   getAyats() async {

@@ -223,12 +223,17 @@ class TransaksiSedekahPage extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Switch(
-                        value: false,
-                        onChanged: (value) {},
-                        activeTrackColor: Colors.lightGreenAccent,
-                        activeColor: Colors.green,
-                        inactiveThumbColor: Colors.white,
+                      Obx(
+                        () => Switch(
+                          value: ctrl.isHide.value,
+                          onChanged: (value) {
+                            print(value);
+                            ctrl.isHide.value = value;
+                          },
+                          activeTrackColor: Color(0xFF92E3A9),
+                          activeColor: Theme.of(context).primaryColor,
+                          inactiveThumbColor: Colors.white,
+                        ),
                       ),
                       SizedBox(
                         width: 10,

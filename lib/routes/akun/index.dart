@@ -8,7 +8,7 @@ class PagesAkun {
       name: RoutesAkun.root,
       page: () => const AkunPage(),
       transition: Transition.cupertino,
-      middlewares: [IsLoginMiddleware()],
+      // middlewares: [IsLoginMiddleware()],
     ),
   ];
 }

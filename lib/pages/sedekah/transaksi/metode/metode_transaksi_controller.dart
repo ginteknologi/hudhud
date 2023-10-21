@@ -83,7 +83,7 @@ class MetodeTransaksiController extends GetxController {
           {
             "id": "linkaja",
             "image": "assets/img/pembayaran/linkaja.png",
-            "label": "linkAja",
+            "label": "LinkAja",
             "type": 2
           },
         ],

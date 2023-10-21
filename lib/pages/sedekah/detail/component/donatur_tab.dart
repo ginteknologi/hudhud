@@ -34,6 +34,9 @@ class DonaturTab extends StatelessWidget {
                       id: ctrl.listDonatur[index]['id'],
                       title:
                           priceFormat.format(ctrl.listDonatur[index]['title']),
+                      titleStyle: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
                       subTitle: ctrl.listDonatur[index]['subTitle'],
                       category: ctrl.listDonatur[index]['category'],
                       hasRightContent: true,

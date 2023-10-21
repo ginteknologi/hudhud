@@ -15,35 +15,37 @@ class ButtonElevated extends StatelessWidget {
   final Icon iconLeft;
   final Icon iconRight;
   final bool justify;
+  final bool nearLeft;
   final bool disabled;
   final EdgeInsetsGeometry margin;
   final Color bgcolor;
   final Color color;
   final bool shadow;
   final VoidCallback onPressed;
-  const ButtonElevated({
-    Key? key,
-    required this.title,
-    this.color = AppColors.textPrimary,
-    this.bgcolor = AppColors.primary,
-    this.size = 15,
-    this.radius = 0,
-    required this.onPressed,
-    this.width = 100,
-    this.height = 50,
-    this.margin = const EdgeInsets.only(
-      top: 5,
-      bottom: 5,
-    ),
-    this.shadow = true,
-    this.selected = false,
-    this.disabled = false,
-    this.showIcon = 'none',
-    this.iconOnly = false,
-    this.iconLeft = const Icon(FlutterRemix.user_line),
-    this.iconRight = const Icon(FlutterRemix.user_line),
-    this.justify = false,
-  }) : super(key: key);
+  const ButtonElevated(
+      {Key? key,
+      required this.title,
+      this.color = AppColors.textPrimary,
+      this.bgcolor = AppColors.primary,
+      this.size = 15,
+      this.radius = 0,
+      required this.onPressed,
+      this.width = 100,
+      this.height = 50,
+      this.margin = const EdgeInsets.only(
+        top: 5,
+        bottom: 5,
+      ),
+      this.shadow = true,
+      this.selected = false,
+      this.disabled = false,
+      this.showIcon = 'none',
+      this.iconOnly = false,
+      this.iconLeft = const Icon(FlutterRemix.user_line),
+      this.iconRight = const Icon(FlutterRemix.user_line),
+      this.justify = false,
+      this.nearLeft = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,9 @@ class ButtonElevated extends StatelessWidget {
                 : Row(
                     mainAxisAlignment: justify
                         ? MainAxisAlignment.spaceBetween
-                        : MainAxisAlignment.center,
+                        : nearLeft
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.center,
                     children: [
                       if (showIcon == 'left' || showIcon == 'both')
                         Padding(
@@ -94,12 +98,16 @@ class ButtonElevated extends StatelessWidget {
                           ),
                           child: iconLeft,
                         ),
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.button!.copyWith(
-                              color: color,
-                              fontSize: size,
-                            ),
+                      Align(
+                        alignment:
+                            nearLeft ? Alignment.centerLeft : Alignment.center,
+                        child: Text(
+                          title,
+                          style: Theme.of(context).textTheme.button!.copyWith(
+                                color: color,
+                                fontSize: size,
+                              ),
+                        ),
                       ),
                       if (showIcon == 'right' || showIcon == 'both')
                         Padding(
