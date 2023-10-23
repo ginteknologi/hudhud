@@ -13,6 +13,7 @@ class CustomModalBottomSheet extends StatelessWidget {
       this.confirmText,
       this.dataGrid,
       this.height,
+      this.onTap,
       this.content = const []});
 
   TypeBottomSheet typeSheet;
@@ -24,6 +25,7 @@ class CustomModalBottomSheet extends StatelessWidget {
 
   // grid sheet
   final List? dataGrid;
+  VoidCallback? onTap;
 
   // custom sheet
   double? height;
@@ -96,7 +98,7 @@ class CustomModalBottomSheet extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width / 4,
                 height: 5,
-                margin: EdgeInsets.only(bottom: 20),
+                margin: EdgeInsets.only(bottom: 10),
                 decoration: new BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   shape: BoxShape.rectangle,
@@ -116,45 +118,48 @@ class CustomModalBottomSheet extends StatelessWidget {
                           child: Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                  onTap: () {},
+                                  onTap: onTap ??
+                                      () {
+                                        Navigator.pop(context);
+                                        if (dataGrid?[index]['urlNav'] !=
+                                            null) {
+                                          Get.toNamed(
+                                              dataGrid?[index]['urlNav']);
+                                        }
+                                      },
                                   borderRadius: BorderRadius.circular(20),
                                   splashColor: Colors.green.withOpacity(0.5),
-                                  child: GestureDetector(
-                                      onTap: () {},
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                              dataGrid?[index]['icon'],
-                                              height: 35,
-                                              width: 35),
-                                          const SizedBox(height: 5),
-                                          AutoSizeText(
-                                            '${dataGrid?[index]["label"]}',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall
-                                                    ?.fontSize,
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.w500),
-                                            maxLines: 2,
-                                          ),
-                                          // Text(
-                                          //   '${dataGrid?[index]["label"]}',
-                                          //   textAlign: TextAlign.center,
-                                          //   style: TextStyle(
-                                          //       fontSize: Theme.of(context)
-                                          //           .textTheme
-                                          //           .bodySmall
-                                          //           ?.fontSize,
-                                          //       color: Colors.black87,
-                                          //       fontWeight: FontWeight.w500),
-                                          // ),
-                                        ],
-                                      ))))));
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(dataGrid?[index]['icon'],
+                                          height: 35, width: 35),
+                                      const SizedBox(height: 5),
+                                      AutoSizeText(
+                                        '${dataGrid?[index]["label"]}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.fontSize,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500),
+                                        maxLines: 2,
+                                      ),
+                                      // Text(
+                                      //   '${dataGrid?[index]["label"]}',
+                                      //   textAlign: TextAlign.center,
+                                      //   style: TextStyle(
+                                      //       fontSize: Theme.of(context)
+                                      //           .textTheme
+                                      //           .bodySmall
+                                      //           ?.fontSize,
+                                      //       color: Colors.black87,
+                                      //       fontWeight: FontWeight.w500),
+                                      // ),
+                                    ],
+                                  )))));
                 },
               )
             ],

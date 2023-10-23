@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/artikel/artikel_page.dart';
+import 'package:mesjid_app/pages/artikel/detail/detail_artikel_page.dart';
 // import 'package:mesjid_app/pages/artikel/detail/detailartikel_page.dart';
 
 class PagesArtikel {
@@ -9,15 +10,15 @@ class PagesArtikel {
       page: () => const ArtikelPage(),
       transition: Transition.cupertino,
     ),
-    // GetPage(
-    //   name: RoutesArtikel.detail,
-    //   page: () => const DetailArtikelPage(),
-    //   transition: Transition.cupertino,
-    // ),
+    GetPage(
+      name: RoutesArtikel.detail,
+      page: () => const DetailArtikelPage(),
+      transition: Transition.cupertino,
+    ),
   ];
 }
 
 class RoutesArtikel {
   static const String root = '/artikel';
-  // static const String detail = '/artikel/:id';
+  static const String detail = '/artikel/:id';
 }

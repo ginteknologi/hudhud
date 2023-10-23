@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
@@ -14,9 +12,11 @@ class ListItemUiWidget extends StatelessWidget {
       this.title = "title",
       this.titleStyle,
       this.subTitle,
+      this.subtitleStyle,
       this.rightContent = const [],
       this.hasRightContent = false,
       this.justify = false,
+      this.start = false,
       this.iconLeft,
       this.iconRight,
       this.typeDivider = TypeDivider.line,
@@ -24,6 +24,7 @@ class ListItemUiWidget extends StatelessWidget {
       this.typeList = TypeList.none,
       this.showIcon = IconPosition.none,
       this.onTap,
+      this.widthContent,
       this.image});
 
   int id;
@@ -31,9 +32,11 @@ class ListItemUiWidget extends StatelessWidget {
   String title;
   TextStyle? titleStyle;
   String? subTitle;
+  TextStyle? subtitleStyle;
   final List<Widget> rightContent;
-  Widget? iconLeft;
+  final Widget? iconLeft;
   final bool justify;
+  final bool start;
   final IconPosition showIcon;
   bool hasRightContent;
   Widget? iconRight;
@@ -41,6 +44,7 @@ class ListItemUiWidget extends StatelessWidget {
   TypeDivider typeDivider;
   TypeList typeList;
   bool listInset;
+  double? widthContent;
   VoidCallback? onTap;
 
   @override
@@ -85,7 +89,9 @@ class ListItemUiWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: justify
                         ? MainAxisAlignment.spaceBetween
-                        : MainAxisAlignment.center,
+                        : start
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.center,
                     children: [
                       if (showIcon == IconPosition.left ||
                           showIcon == IconPosition.both)
@@ -95,18 +101,25 @@ class ListItemUiWidget extends StatelessWidget {
                           ),
                           child: iconLeft,
                         ),
-                      Expanded(
+                      if (showIcon == IconPosition.leftFlex)
+                        Expanded(
                           flex: 1,
+                          child: iconLeft ?? Text(""),
+                        ),
+                      Expanded(
+                          flex: 2,
                           child: Row(
                             mainAxisAlignment: hasRightContent
                                 ? MainAxisAlignment.spaceBetween
                                 : MainAxisAlignment.start,
                             children: [
                               Container(
-                                constraints: BoxConstraints(
-                                    maxWidth:
-                                        MediaQuery.of(context).size.width *
-                                            0.6),
+                                constraints:
+                                    // BoxConstraints.loose(Size.infinite),
+                                    BoxConstraints(
+                                        maxWidth: widthContent ??
+                                            MediaQuery.of(context).size.width *
+                                                0.5),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -140,14 +153,16 @@ class ListItemUiWidget extends StatelessWidget {
                                       AutoSizeText(
                                         '$subTitle',
                                         textAlign: TextAlign.start,
-                                        minFontSize: 16,
-                                        style: TextStyle(
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall
-                                                ?.fontSize,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.w500),
+                                        minFontSize: 14,
+                                        style: subtitleStyle ??
+                                            TextStyle(
+                                                fontSize: Theme.of(context)
+                                                    .textTheme
+                                                    .titleSmall
+                                                    ?.fontSize,
+                                                color: Colors.black87,
+                                                fontWeight: FontWeight.w500),
+                                        overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                       )
                                   ],
@@ -197,4 +212,4 @@ enum TypeDivider { line, dotted, dashed }
 
 enum TypeList { solid, none }
 
-enum IconPosition { left, right, both, none }
+enum IconPosition { left, right, both, none, leftFlex }

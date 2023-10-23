@@ -157,7 +157,7 @@ class DashboardPage extends StatelessWidget {
                                           image: DecorationImage(
                                               image: AssetImage(
                                                   "assets/img/card/card_subuh.png"),
-                                              fit: BoxFit.fill)),
+                                              fit: BoxFit.cover)),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
@@ -364,7 +364,7 @@ class DashboardPage extends StatelessWidget {
                                 'lainnya') {
                               showSheet(ctrl, context);
                             } else {
-                              Get.toNamed(RoutesSedekah.root);
+                              Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
                             }
                           },
                           borderRadius: BorderRadius.circular(20),
@@ -382,7 +382,7 @@ class DashboardPage extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: Theme.of(context)
                                         .textTheme
-                                        .bodySmall
+                                        .labelMedium
                                         ?.fontSize,
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w500),

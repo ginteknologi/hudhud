@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +84,8 @@ class SedekahPage extends StatelessWidget {
                           Flexible(
                             child: Container(
                               padding: EdgeInsets.only(right: 13.0),
-                              child: Text("Sudah sedekah hari ini?",
+                              child: AutoSizeText("Sudah sedekah hari ini?",
+                                  maxLines: 1,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: Theme.of(context)
@@ -95,7 +97,6 @@ class SedekahPage extends StatelessWidget {
                           ),
                           Flexible(
                             child: Container(
-                              padding: EdgeInsets.only(right: 13.0),
                               width: double.infinity,
                               child: ButtonElevated(
                                 title: 'Sekarang!',

@@ -73,15 +73,23 @@ class DashboardController extends GetxController {
 
   getAllMenu() async {
     return listAllMenu = [
-      {"label": "Sedekah", "icon": "assets/icons/sedekah.svg", "urlNav": ""},
-      {"label": "Kiblat", "icon": "assets/icons/kiblat.svg", "urlNav": ""},
-      {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": ""},
+      {
+        "label": "Sedekah",
+        "icon": "assets/icons/sedekah.svg",
+        "urlNav": "/sedekah"
+      },
+      {
+        "label": "Kiblat",
+        "icon": "assets/icons/kiblat.svg",
+        "urlNav": "/kiblat"
+      },
+      {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
       {"label": "Al-Quran", "icon": "assets/icons/alquran.svg", "urlNav": ""},
       {"label": "Ruangan", "icon": "assets/icons/ruangan.svg", "urlNav": ""},
       {
         "label": "Artikel/Informasi",
         "icon": "assets/icons/artikel.svg",
-        "urlNav": ""
+        "urlNav": "/artikel"
       },
       {"label": "DKM", "icon": "assets/icons/dkm.svg", "urlNav": ""},
     ];

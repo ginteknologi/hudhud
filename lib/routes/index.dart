@@ -14,12 +14,12 @@ class AppPages {
   static var list = [
     ...PagesAuth.pages,
     ...PagesAkun.pages,
-    // ...PagesArtikel.pages,
-    // ...PagesDoa.pages,
+    ...PagesArtikel.pages,
+    ...PagesDoa.pages,
     // ...PagesDkm.pages,
     ...PagesHome.pages,
     ...PagesQuran.pages,
-    // ...PagesRuangan.pages,
+    ...PagesRuangan.pages,
     ...PagesSedekah.pages,
     ...PagesOnboard.pages,
     ...PagesNotifikasi.pages

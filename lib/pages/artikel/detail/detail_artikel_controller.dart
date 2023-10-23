@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/artikel/artikel_service.dart';
-import 'package:mesjid_app/routes/artikel/index.dart';
 
-class ArtikelController extends GetxController {
+class DetailArtikelController extends GetxController {
   var isLoadingList = true.obs;
   var list = {}.obs;
 
@@ -10,15 +9,12 @@ class ArtikelController extends GetxController {
   List listCategoryFilter = [].obs;
   late List<RxBool> listCategoryFilterSelected;
 
+  var selectedArtikel = Get.arguments['selectedArtikel'];
+
   getData() async {
     final result = await ArtikelService().getList(page: 0, limit: 10);
     list.value = result['data'];
     isLoadingList.value = false;
-  }
-
-  goToDetail(param) {
-    Get.toNamed('${RoutesArtikel.root}/${param['id']}',
-        arguments: {"selectedArtikel": param});
   }
 
   getCategoryFilter() async {
