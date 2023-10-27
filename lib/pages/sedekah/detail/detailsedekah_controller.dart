@@ -16,6 +16,8 @@ class DetailSedekahController extends GetxController
   late TabController tabController;
   late ScrollController scrollController;
   List listDonatur = [].obs;
+  var todayLaporan = {}.obs;
+  List listLaporan = [].obs;
 
   getData() async {
     final result = await SedekahService().getList(page: 0, limit: 10);
@@ -108,11 +110,35 @@ class DetailSedekahController extends GetxController
     ];
   }
 
+  getListLaporan() {
+    return listLaporan = [
+      {
+        "tanggal": "25 Oktober 2023",
+        "title": "Penyaluran Pembangunan Masjid Tempat Wudhu",
+        "description":
+            "Lorem ipsum dolor sit amet consectetur. Semper tempus condimentum ut aliquet. Mauris vitae posuere duis ac dis mauris massa nunc.Lorem ipsum dolor sit amet consectetur. Semper tempus condimentum ut aliquet. Mauris vitae posuere duis ac dis mauris massa nunc.Lorem ipsum dolor sit amet consectetur. Semper tempus condimentum ut aliquet. Mauris vitae posuere duis ac dis mauris massa nunc.",
+        "dana": 7000000,
+        "image": "assets/img/artikel_5.png",
+      }
+    ];
+  }
+
+  getTodayLaporan() {
+    return todayLaporan.value = {
+      "tanggal": "25 Oktober 2023",
+      "totalOnline": 7000000,
+      "totalOffline": 800000,
+      "total": 7800000,
+    };
+  }
+
   @override
   void onInit() {
     tabController = TabController(vsync: this, length: tabDetailSedekah.length);
     scrollController = ScrollController();
     getKajianLive();
+    getTodayLaporan();
+    getListLaporan();
     super.onInit();
   }
 

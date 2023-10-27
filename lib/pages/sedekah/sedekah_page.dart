@@ -81,11 +81,12 @@ class SedekahPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(
+                          Expanded(
+                            flex: 2,
                             child: Container(
                               padding: EdgeInsets.only(right: 13.0),
-                              child: AutoSizeText("Sudah sedekah hari ini?",
-                                  maxLines: 1,
+                              child: Text("Sudah sedekah hari ini?",
+                                  maxLines: 2,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: Theme.of(context)
@@ -95,17 +96,18 @@ class SedekahPage extends StatelessWidget {
                                       fontWeight: FontWeight.normal)),
                             ),
                           ),
-                          Flexible(
+                          Expanded(
+                            flex: 1,
                             child: Container(
                               width: double.infinity,
                               child: ButtonElevated(
-                                title: 'Sekarang!',
+                                title: 'Sedekah!',
                                 width: Get.width,
                                 bgcolor: const Color(0xFF92E3A9),
                                 height: 35,
                                 color: Colors.black,
                                 radius: 5,
-                                size: 16,
+                                size: 14,
                                 onPressed: () {
                                   ctrl.goToDetail('1');
                                 },

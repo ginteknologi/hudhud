@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomBottomBar extends StatelessWidget {
-  CustomBottomBar({super.key, this.onChanged});
+  CustomBottomBar({super.key, this.onChanged, this.selectedIdx = 0});
   Function(BottomBarEnum)? onChanged;
 
   RxInt selectedIndex = 0.obs;
+  int selectedIdx;
 
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
@@ -43,7 +44,7 @@ class CustomBottomBar extends StatelessWidget {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           elevation: 10,
-          currentIndex: selectedIndex.value,
+          currentIndex: checkStateIndex(),
           type: BottomNavigationBarType.fixed,
           items: List.generate(bottomMenuList.length, (index) {
             return BottomNavigationBarItem(
@@ -90,11 +91,19 @@ class CustomBottomBar extends StatelessWidget {
           }),
           onTap: (index) {
             selectedIndex.value = index;
+            selectedIdx = index;
             onChanged!(bottomMenuList[index].navType);
           },
         ),
       ),
     );
+  }
+
+  checkStateIndex() {
+    if (selectedIdx != 0) {
+      selectedIndex.value = selectedIdx;
+    }
+    return selectedIndex.value;
   }
 }
 

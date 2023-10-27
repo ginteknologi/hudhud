@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/akun/akun_page.dart';
+import 'package:mesjid_app/pages/akun/edit/edit_akun_page.dart';
+import 'package:mesjid_app/pages/akun/riwayat/riwayat_page.dart';
 import 'package:mesjid_app/routes/isLogin_middleware.dart';
 
 class PagesAkun {
@@ -10,9 +12,23 @@ class PagesAkun {
       transition: Transition.cupertino,
       // middlewares: [IsLoginMiddleware()],
     ),
+    GetPage(
+      name: RoutesAkun.edit,
+      page: () => const EditAkunPage(),
+      transition: Transition.cupertino,
+      // middlewares: [IsLoginMiddleware()],
+    ),
+    GetPage(
+      name: RoutesAkun.riwayat,
+      page: () => const RiwayatPage(),
+      transition: Transition.cupertino,
+      // middlewares: [IsLoginMiddleware()],
+    ),
   ];
 }
 
 class RoutesAkun {
   static const String root = '/akun';
+  static const String edit = '/akun/edit';
+  static const String riwayat = '/akun/riwayat';
 }

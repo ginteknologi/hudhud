@@ -7,6 +7,7 @@ import 'package:mesjid_app/components/button/outlinebutton.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/partial/list_sedekah.dart';
 import 'package:mesjid_app/pages/sedekah/detail/component/donatur_tab.dart';
+import 'package:mesjid_app/pages/sedekah/detail/component/laporan_tab.dart';
 import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
 
@@ -250,7 +251,9 @@ class DetailSedekahPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 21, right: 21),
                 child: Align(
                   alignment: Alignment.center,
-                  child: Text("Belum Ada Laporan dari DKM"),
+                  child: LaporanTab()
+                  // Text("Belum Ada Laporan dari DKM")
+                  ,
                 )),
           ],
         ));

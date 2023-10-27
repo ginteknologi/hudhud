@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:mesjid_app/components/layout/custom_modal_bottom_sheet.dart';
+import 'package:mesjid_app/components/layout/sliding_widget.dart';
 import 'package:mesjid_app/pages/dashboard/dashboard_page.dart';
 import 'package:mesjid_app/pages/dkm/dkm_page.dart';
 import 'package:mesjid_app/pages/home/home_controller.dart';
@@ -185,10 +186,8 @@ class HomePage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(
-                                  'assets/icons/alquran_perhalaman.svg',
-                                  height: 30,
-                                  width: 30),
+                              Image.asset('assets/icons/quran_halaman.png',
+                                  height: 30, width: 30),
                               SizedBox(
                                 height: 5,
                               ),
@@ -210,6 +209,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(HomeController());
 
+    ctrl.obs.listen((value) {
+      print(value);
+    });
+    // print(ctrl.visible.value);
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         extendBodyBehindAppBar: true,
@@ -220,14 +223,24 @@ class HomePage extends StatelessWidget {
               child: getCurrentWidget(ctrl.type.value, ctrl),
               duration: Duration(seconds: 4),
             )),
-        bottomNavigationBar: CustomBottomBar(
-          onChanged: (BottomBarEnum type) {
-            if (type == BottomBarEnum.alquran) {
-              showSheet(ctrl, context);
-            } else {
-              ctrl.type.value = type;
-            }
-          },
-        ));
+        bottomNavigationBar: Obx(() => ctrl.visible.value
+            ? SlidingWidget(
+                from: Offset.zero,
+                to: Offset(0, 1),
+                visible: ctrl.visible.value,
+                controller: ctrl.animateController,
+                child: CustomBottomBar(
+                  selectedIdx: ctrl.selectedIdx.value,
+                  onChanged: (BottomBarEnum type) {
+                    if (type == BottomBarEnum.alquran) {
+                      showSheet(ctrl, context);
+                    } else {
+                      ctrl.type.value = type;
+                    }
+                  },
+                ))
+            : Container(
+                height: 0,
+              )));
   }
 }

@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:mesjid_app/components/layout/custom_card_item.dart';
 import 'package:mesjid_app/components/layout/custom_modal_bottom_sheet.dart';
@@ -58,40 +61,53 @@ class DashboardPage extends StatelessWidget {
                                       alignment: Alignment.centerLeft,
                                       child: Padding(
                                         padding: const EdgeInsets.only(top: 0),
-                                        child: Text(
+                                        child: AutoSizeText(
                                             "Muhammad Fahmi Zulmeinidar".tr,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.start,
+                                            maxLines: 1,
                                             style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w900)),
                                       ),
                                     ),
-                                    const Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.location_pin,
-                                              size: 12,
-                                              color: Color(0xFFFFECB7),
+                                    Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap: () {
+                                            showPopup(
+                                                ctrl, context, null, null);
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          splashColor:
+                                              Colors.green.withOpacity(0.5),
+                                          child: const Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 10),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.location_pin,
+                                                    size: 12,
+                                                    color: Color(0xFFFFECB7),
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 5),
+                                                      child: Text(
+                                                          "Kota Jakarta, Indonesia",
+                                                          style: TextStyle(
+                                                              color: Color(
+                                                                  0xFFFFECB7),
+                                                              fontSize: 12)))
+                                                ],
+                                              ),
                                             ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 5),
-                                                child: Text(
-                                                    "Kota Jakarta, Indonesia",
-                                                    style: TextStyle(
-                                                        color:
-                                                            Color(0xFFFFECB7),
-                                                        fontSize: 12)))
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                          ),
+                                        ))
                                   ],
                                 )),
                             Row(
@@ -131,192 +147,7 @@ class DashboardPage extends StatelessWidget {
                             )
                           ],
                         ),
-                        Card(
-                          elevation: 0,
-                          color: const Color(0xFFF5F5F5),
-                          margin: const EdgeInsets.only(top: 20),
-                          clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            //set border radius more than 50% of height and width to make circle
-                          ),
-                          child: SizedBox(
-                            width: Get.width,
-                            height: 220,
-                            child: Column(
-                              children: [
-                                Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                      width: Get.width,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 5),
-                                      constraints:
-                                          BoxConstraints.loose(Size.infinite),
-                                      decoration: const BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  "assets/img/card/card_subuh.png"),
-                                              fit: BoxFit.cover)),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Ahad, 9 Muharram 1444",
-                                                  style: context
-                                                      .textTheme.labelSmall
-                                                      ?.copyWith(
-                                                          letterSpacing: 1,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white),
-                                                ),
-                                                Text("Minggu, 8 Agustus 2023",
-                                                    style: context
-                                                        .textTheme.labelSmall
-                                                        ?.copyWith(
-                                                            height: 1,
-                                                            letterSpacing: 1,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color:
-                                                                Colors.white)),
-                                              ]),
-                                          Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text("Subuh",
-                                                    style: context
-                                                        .textTheme.headlineSmall
-                                                        ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color:
-                                                                Colors.white)),
-                                                Text("04.00 WIB",
-                                                    style: context
-                                                        .textTheme.displayMedium
-                                                        ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            color: Colors.white,
-                                                            height: 1))
-                                              ]),
-                                          // SizedBox(
-                                          //   height: 2,
-                                          // ),
-                                          Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "3 Jam 20 Menit",
-                                                  style: context
-                                                      .textTheme.labelMedium
-                                                      ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white),
-                                                ),
-                                                Text("Menuju Ashar",
-                                                    style: context
-                                                        .textTheme.labelMedium
-                                                        ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color: Colors.white,
-                                                            height: 1)),
-                                              ]),
-                                        ],
-                                      ),
-                                    )),
-                                SizedBox(
-                                    height: 62,
-                                    child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 12, 0, 12),
-                                        child: GridView.count(
-                                          crossAxisCount: 5,
-                                          shrinkWrap: false,
-                                          mainAxisSpacing: 0,
-                                          crossAxisSpacing: 0,
-                                          padding: const EdgeInsets.all(0),
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          childAspectRatio: 0.5,
-                                          children: List.generate(
-                                              ctrl.listWaktu.length, (index) {
-                                            return SizedBox(
-                                                height: 20,
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                        border: Border(
-                                                            right: BorderSide(
-                                                                width: 1,
-                                                                color: index ==
-                                                                        4
-                                                                    ? Colors
-                                                                        .transparent
-                                                                    : const Color(
-                                                                        0xFFA5A5A5)))),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        AutoSizeText(
-                                                          ctrl.listWaktu[index]
-                                                              ['label'],
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color: Colors
-                                                                  .black54,
-                                                              fontSize: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.fontSize),
-                                                          maxLines: 1,
-                                                        ),
-                                                        AutoSizeText(
-                                                          ctrl.listWaktu[index]
-                                                              ['waktu'],
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontSize: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.fontSize),
-                                                          maxLines: 1,
-                                                        ),
-                                                      ],
-                                                    )));
-                                          }),
-                                        )))
-                              ],
-                            ),
-                          ), //SizedBox
-                        ),
+                        getCardBanner(ctrl, context),
                         getGridMenu(ctrl),
                         Container(
                           margin: const EdgeInsets.only(top: 25),
@@ -566,6 +397,178 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
+  getCardBanner(DashboardController ctrl, BuildContext context) {
+    var activeCard = {};
+    for (var element in ctrl.listWaktu) {
+      if (element['active']) {
+        activeCard = element;
+      }
+    }
+    return Card(
+      elevation: 0,
+      color: const Color(0xFFF5F5F5),
+      margin: const EdgeInsets.only(top: 20),
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        //set border radius more than 50% of height and width to make circle
+      ),
+      child: SizedBox(
+        width: Get.width,
+        height: 220,
+        child: Column(
+          children: [
+            Expanded(
+                flex: 1,
+                child: Container(
+                    width: Get.width,
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    constraints: BoxConstraints.loose(Size.infinite),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(activeCard['cardImage']),
+                            fit: BoxFit.fill)),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: (MediaQuery.of(context).size.width * 0.5) - 41,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AutoSizeText(
+                                      "Ahad, 9 Muharram 1444",
+                                      maxLines: 1,
+                                      style: context.textTheme.labelSmall
+                                          ?.copyWith(
+                                              letterSpacing: 1,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                    ),
+                                    AutoSizeText("Minggu, 8 Agustus 2023",
+                                        maxLines: 1,
+                                        style: context.textTheme.labelSmall
+                                            ?.copyWith(
+                                                height: 1,
+                                                letterSpacing: 1,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.white)),
+                                  ]),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AutoSizeText(activeCard['label'],
+                                        maxLines: 1,
+                                        style: context.textTheme.headlineSmall
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.white)),
+                                    AutoSizeText(activeCard['waktu'] + " WIB",
+                                        maxLines: 1,
+                                        style: context.textTheme.displayMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.white,
+                                                height: 1))
+                                  ]),
+                              // SizedBox(
+                              //   height: 2,
+                              // ),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "3 Jam 20 Menit",
+                                      style: context.textTheme.labelMedium
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                    ),
+                                    Text("Menuju " + activeCard['label'],
+                                        style: context.textTheme.labelMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.white,
+                                                height: 1)),
+                                  ]),
+                            ],
+                          ),
+                        )
+                      ],
+                    ))),
+            SizedBox(
+                height: 62,
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                    child: GridView.count(
+                      crossAxisCount: 5,
+                      shrinkWrap: false,
+                      mainAxisSpacing: 0,
+                      crossAxisSpacing: 0,
+                      padding: const EdgeInsets.all(0),
+                      physics: const NeverScrollableScrollPhysics(),
+                      childAspectRatio: 0.5,
+                      children: List.generate(ctrl.listWaktu.length, (index) {
+                        return SizedBox(
+                            height: 20,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        right: BorderSide(
+                                            width: 1,
+                                            color: index == 4
+                                                ? Colors.transparent
+                                                : const Color(0xFFA5A5A5)))),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    AutoSizeText(
+                                      ctrl.listWaktu[index]['label'],
+                                      textAlign: TextAlign.center,
+                                      style: ctrl.listWaktu[index]['active']
+                                          ? context.textTheme.bodySmall
+                                              ?.copyWith(
+                                                  letterSpacing: 1,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColor)
+                                          : context.textTheme.bodySmall
+                                              ?.copyWith(
+                                                  letterSpacing: 1,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black54),
+                                      maxLines: 1,
+                                    ),
+                                    AutoSizeText(
+                                      ctrl.listWaktu[index]['waktu'],
+                                      textAlign: TextAlign.center,
+                                      style: ctrl.listWaktu[index]['active']
+                                          ? context.textTheme.bodySmall
+                                              ?.copyWith(
+                                                  letterSpacing: 1,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColor)
+                                          : context.textTheme.bodySmall
+                                              ?.copyWith(
+                                                  letterSpacing: 1,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black),
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                )));
+                      }),
+                    )))
+          ],
+        ),
+      ), //SizedBox
+    );
+  }
+
   void showSheet(ctrl, context) {
     showModalBottomSheet(
         context: context,
@@ -580,6 +583,126 @@ class DashboardPage extends StatelessWidget {
             dataGrid: ctrl.listAllMenu,
           );
         });
+  }
+
+  void showPopup(ctrl, context, Widget? content, double? height) {
+    showDialog(
+        context: context,
+        builder: (BuildContext bc) {
+          return Dialog(
+            elevation: 0,
+            backgroundColor: Color(0xFFDADADA),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7.0)),
+            child: Container(
+                padding: EdgeInsets.all(10),
+                height: height ?? 185,
+                child: content ??
+                    Column(
+                      children: [
+                        Text(
+                          "Pilih Lokasi",
+                          style: bc.textTheme.titleMedium?.copyWith(
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ButtonElevated(
+                          title: 'Lokasi Terkini',
+                          width: Get.width,
+                          bgcolor: Theme.of(bc).primaryColor,
+                          height: 45,
+                          color: Colors.white,
+                          radius: 7,
+                          shadow: false,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            showPopup(ctrl, bc, dialogTerkini(context), 200);
+                          },
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        ButtonElevated(
+                          title: 'Pilih Lokasi',
+                          width: Get.width,
+                          bgcolor: Colors.white,
+                          height: 45,
+                          color: Colors.black,
+                          radius: 7,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            showPopup(ctrl, bc, dialogCari(context), 220);
+                          },
+                          shadow: false,
+                        )
+                      ],
+                    )),
+          );
+        });
+  }
+
+  dialogTerkini(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "Dengan anda memilih Lokasi Saat Ini, Anda setuju apikasi ini berjalan di belakang layar dan akan menguras baterai anda.",
+          style: context.textTheme.titleSmall?.copyWith(
+              letterSpacing: 0,
+              fontWeight: FontWeight.normal,
+              color: Colors.black),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        ButtonElevated(
+          title: 'Lanjutkan',
+          width: Get.width,
+          bgcolor: Theme.of(context).primaryColor,
+          height: 45,
+          color: Colors.white,
+          radius: 7,
+          shadow: false,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+
+  dialogCari(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "Pilih Lokasi Manual mengikuti jam sholat di daerah tertentu. Jikas anda berpindah lokasi anda harus mengaktifkan secara manual kembali",
+          style: context.textTheme.titleSmall?.copyWith(
+              letterSpacing: 0,
+              fontWeight: FontWeight.normal,
+              color: Colors.black),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        ButtonElevated(
+          title: 'Cari Lokasi',
+          showIcon: 'right',
+          iconRight: Icon(Icons.search),
+          width: Get.width,
+          bgcolor: Theme.of(context).primaryColor,
+          height: 45,
+          color: Colors.white,
+          radius: 7,
+          shadow: false,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
   }
 
   @override

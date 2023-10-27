@@ -1,13 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:mesjid_app/pages/quran/quran_page.dart';
 // import 'package:mesjid_app/pages/home/home_service.dart';
 
-class HomeController extends GetxController {
+class HomeController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   var isLoadingList = true.obs;
   var list = {}.obs;
   Rx<BottomBarEnum> type = BottomBarEnum.beranda.obs;
   Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perayat.obs;
+  var visible = true.obs;
+  late AnimationController animateController;
+  var selectedIdx = 0.obs;
 
   getData() async {
     // final result = await HomeService().getList(page: 0, limit: 10);
@@ -42,6 +47,10 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    animateController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 400),
+    );
     super.onInit();
   }
 }

@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:mesjid_app/pages/home/home_controller.dart';
+import 'package:mesjid_app/pages/quran/halaman/halaman_quran_page.dart';
 import 'package:mesjid_app/pages/quran/quran_service.dart';
 
-class HalamanQuranController extends GetxController {
+class HalamanQuranController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   var isLoadingList = true.obs;
   var list = {}.obs;
   List listSurah = [].obs;
+  var visible = true.obs;
+
+  var bookmarked = false.obs;
 
   var txtController = TextEditingController();
+  late AnimationController animateController;
+
+  final hctrl = Get.find<HomeController>();
 
   getData() async {
     final result = await QuranService().getList(page: 0, limit: 10);
@@ -15,95 +25,35 @@ class HalamanQuranController extends GetxController {
     isLoadingList.value = false;
   }
 
-  getAyats() async {
-    return listSurah = [
-      {
-        "id": 2,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 3,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 4,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 5,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 6,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 7,
-        "title": "Al-Ikhlas",
-        "subTitle":
-            "Pembukaan terus menerus yaaa Pembukaan terus menerus yaaa ",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "75"
-      },
-      {
-        "id": 8,
-        "title": "Al-Ikhlas",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "75"
-      },
-      {
-        "id": 9,
-        "title": "Al-Ikhlas",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "105"
-      },
-      {
-        "id": 10,
-        "title": "Al-Anfal",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "105"
-      },
-      {
-        "id": 11,
-        "title": "Al-Anfal",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "105"
-      },
+  getQuran() async {
+    listSurah = [
+      'assets/img/quran/1.png',
+      'assets/img/quran/2.png',
+      'assets/img/quran/3.png',
+      'assets/img/quran/4.png'
     ];
+    // listSurah.sort((b, a) => a.compareTo(b));
+    return listSurah;
+  }
+
+  bookmark() async {
+    Fluttertoast.showToast(
+        msg: "Halaman berhasil ditandai",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black87,
+        timeInSecForIosWeb: 1,
+        fontSize: Get.width / 30);
   }
 
   @override
   void onInit() {
-    getAyats();
+    animateController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 400),
+    );
+    getQuran();
+    print(listSurah);
     super.onInit();
   }
 }

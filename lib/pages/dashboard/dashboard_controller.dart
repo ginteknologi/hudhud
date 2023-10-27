@@ -42,12 +42,63 @@ class DashboardController extends GetxController {
 
   getList() async {
     return listWaktu = [
-      {"label": "Subuh", "waktu": "05.15"},
-      {"label": "Dzuhur", "waktu": "12.30"},
-      {"label": "Ashar", "waktu": "15.40"},
-      {"label": "Maghrib", "waktu": "18.34"},
-      {"label": "Isya", "waktu": "19.32"}
+      {
+        "label": "Subuh",
+        "waktu": "05.15",
+        "active": false,
+        "cardImage": "assets/img/card/card_subuh.png"
+      },
+      {
+        "label": "Dzuhur",
+        "waktu": "12.30",
+        "active": false,
+        "cardImage": "assets/img/card/card_dzuhur.png"
+      },
+      {
+        "label": "Ashar",
+        "waktu": "15.40",
+        "active": false,
+        "cardImage": "assets/img/card/card_ashar.png"
+      },
+      {
+        "label": "Maghrib",
+        "waktu": "18.34",
+        "active": false,
+        "cardImage": "assets/img/card/card_maghrib.png"
+      },
+      {
+        "label": "Isya",
+        "waktu": "19.32",
+        "active": false,
+        "cardImage": "assets/img/card/card_isya.png"
+      }
     ];
+  }
+
+  getWaktu() async {
+    var timeleft = DateTime.now();
+    var hourAndMinutes = "${timeleft.hour}.${timeleft.minute}";
+    int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
+    for (var el in listWaktu) {
+      var numberTime = int.parse(el['waktu'].split('.').join());
+      if (hourAndMinutes == el['waktu']) {
+        el['active'] = true;
+        break;
+      } else if (numberTime > hourminutes) {
+        el['active'] = true;
+        break;
+      } else {
+        el['active'] = true;
+        break;
+      }
+    }
+
+    print(timeleft.hour.toString() +
+        ":" +
+        timeleft.minute.toString() +
+        ":" +
+        timeleft.second.toString());
+    print(listWaktu);
   }
 
   getMenuHome() async {
@@ -191,6 +242,7 @@ class DashboardController extends GetxController {
     getKajianLive();
     getListArtikel();
     getAllMenu();
+    getWaktu();
     super.onInit();
   }
 }

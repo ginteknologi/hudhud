@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:mesjid_app/components/button/buttonvariant.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/akun/akun_controller.dart';
+import 'package:mesjid_app/routes/akun/index.dart';
 
 class AkunPage extends StatelessWidget {
   const AkunPage({super.key});
@@ -62,7 +64,9 @@ class AkunPage extends StatelessWidget {
                                   height: 45,
                                   color: Colors.white,
                                   radius: 20,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.toNamed(RoutesAkun.edit);
+                                  },
                                 )
                               ],
                             )),
@@ -80,6 +84,9 @@ class AkunPage extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                             size: 30,
                           ),
+                          onTap: () {
+                            Get.toNamed(RoutesAkun.riwayat);
+                          },
                         ),
                         ListItemUiWidget(
                           id: 1,

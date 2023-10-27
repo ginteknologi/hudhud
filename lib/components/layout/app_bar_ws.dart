@@ -11,20 +11,24 @@ class AppBarWSWidget {
     Color? color,
     double? titleSize,
     double? elevation,
+    bool? noBack,
     required BuildContext context, // Add the BuildContext parameter
   }) {
     return AppBar(
       iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-      leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop(); // Navigate back to the previous page
-          },
-          child: const Icon(Icons.arrow_back_rounded)),
+      leading: noBack == true
+          ? null
+          : GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .pop(); // Navigate back to the previous page
+              },
+              child: const Icon(Icons.arrow_back_rounded)),
       bottom: bottom,
       backgroundColor: backgroundColor ?? Colors.white,
       elevation: elevation ?? 1,
       title: Align(
-        alignment: Alignment.centerRight,
+        alignment: noBack == false ? Alignment.centerRight : Alignment.center,
         child: Text(title,
             textAlign: TextAlign.left,
             style: TextStyle(
