@@ -46,30 +46,35 @@ class DashboardController extends GetxController {
         "label": "Subuh",
         "waktu": "05.15",
         "active": false,
+        "id": 1,
         "cardImage": "assets/img/card/card_subuh.png"
       },
       {
         "label": "Dzuhur",
         "waktu": "12.30",
         "active": false,
+        "id": 2,
         "cardImage": "assets/img/card/card_dzuhur.png"
       },
       {
         "label": "Ashar",
         "waktu": "15.40",
         "active": false,
+        "id": 3,
         "cardImage": "assets/img/card/card_ashar.png"
       },
       {
         "label": "Maghrib",
         "waktu": "18.34",
         "active": false,
+        "id": 4,
         "cardImage": "assets/img/card/card_maghrib.png"
       },
       {
         "label": "Isya",
         "waktu": "19.32",
         "active": false,
+        "id": 5,
         "cardImage": "assets/img/card/card_isya.png"
       }
     ];
@@ -79,26 +84,24 @@ class DashboardController extends GetxController {
     var timeleft = DateTime.now();
     var hourAndMinutes = "${timeleft.hour}.${timeleft.minute}";
     int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
+
+    var thistime = getNextLargerNumber(hourminutes, listWaktu);
     for (var el in listWaktu) {
-      var numberTime = int.parse(el['waktu'].split('.').join());
-      if (hourAndMinutes == el['waktu']) {
+      el['active'] = false;
+      if (thistime['id'] == el['id']) {
         el['active'] = true;
-        break;
-      } else if (numberTime > hourminutes) {
-        el['active'] = true;
-        break;
-      } else {
-        el['active'] = true;
-        break;
       }
     }
+  }
 
-    print(timeleft.hour.toString() +
-        ":" +
-        timeleft.minute.toString() +
-        ":" +
-        timeleft.second.toString());
-    print(listWaktu);
+  getNextLargerNumber(int number, List array) {
+    for (var i = 0; i < array.length; i++) {
+      var numberTime = int.parse(array[i]['waktu'].split('.').join());
+      if (number < numberTime) {
+        return array[i];
+      }
+    }
+    return -1;
   }
 
   getMenuHome() async {
