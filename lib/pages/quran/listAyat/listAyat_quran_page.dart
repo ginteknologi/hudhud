@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
-import 'package:mesjid_app/theme.dart';
+// import 'package:mesjid_app/theme.dart';
+import 'package:mesjid_app/routes/quran/index.dart';
 
 class ListAyatQuranPage extends StatelessWidget {
   const ListAyatQuranPage({super.key});
 
   layout(ListAyatQuranController ctrl, BuildContext context) {
-    return SafeArea(
+    return 
+    SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
@@ -91,7 +93,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                             Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: AutoSizeText(
-                                                  "Ayat No : 1",
+                                                  "Ayat No : 3121",
                                                   textAlign: TextAlign.start,
                                                   style: context
                                                       .textTheme.titleSmall
@@ -131,113 +133,117 @@ class ListAyatQuranPage extends StatelessWidget {
                             )
                           ])),
                       Container(
-                        decoration: BoxDecoration(color: Colors.white),
+                        decoration: const BoxDecoration(color: Colors.white),
                         child: Padding(
                             padding: const EdgeInsets.only(
                                 left: 21, right: 21, top: 21),
                             child: Column(
                               children: [
-                                Align(
+                                const Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text("Surat"),
                                 ),
-                                ListView.builder(
-                                  physics: const ClampingScrollPhysics(),
-                                  itemCount: ctrl.listSurah.length,
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    // Datum model = filteredEvents[index];
-                                    return FadeInUp(
-                                      child: ListItemUiWidget(
-                                        id: ctrl.listSurah[index]['id'],
-                                        title: ctrl.listSurah[index]['title'],
-                                        onTap: () {
-                                          ctrl.goToDetail(
-                                              ctrl.listSurah[index]);
-                                        },
-                                        titleStyle: context
-                                            .textTheme.titleMedium
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                        subTitle: ctrl.listSurah[index]
-                                            ['subTitle'],
-                                        hasRightContent: true,
-                                        showIcon: IconPosition.left,
-                                        iconLeft: Container(
-                                          height: 42,
-                                          width: 42,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              SvgPicture.asset(
-                                                'assets/icons/start_list.svg',
-                                                alignment: Alignment.center,
-                                                width: 42,
-                                                height: 42,
-                                              ),
-                                              Container(
-                                                child: Column(
+                                Obx(() => !ctrl.isLoadingList.value ?
+                                  ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: ctrl.list.length,
+                                    // itemCount: 114,
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      // Datum model = filteredEvents[index];
+                                      return FadeInUp(
+                                        child: ListItemUiWidget(
+                                          id: ctrl.list[index]['number'],
+                                          title: ctrl.list[index]['name']['transliteration']['id'],
+                                          onTap: () {
+                                            // print(ctrl.list[index]);
+                                            Get.toNamed('${RoutesQuran.detail.replaceAll(':id', ctrl.list[index]['number'].toString())}?nama_surah=${ctrl.list[index]['name']['transliteration']['id']}');                                       
+                                            // ctrl.goToDetail(ctrl.list[index]['number']);
+                                          },
+                                          titleStyle: context.textTheme.titleMedium?.
+                                            copyWith(fontWeight: FontWeight.bold,
+                                              color: Theme.of(context).primaryColor),
+                                          subTitle: ctrl.list[index]['name']['translation']['id'],
+                                          hasRightContent: true,
+                                          showIcon: IconPosition.left,
+                                          iconLeft: SizedBox(
+                                            height: 42,
+                                            width: 42,
+                                            child: Stack(
+                                              children: <Widget>[
+                                                SvgPicture.asset(
+                                                  'assets/icons/start_list.svg',
+                                                  alignment: Alignment.center,
+                                                  width: 42,
+                                                  height: 42,
+                                                ),
+                                                Column(
                                                   children: <Widget>[
                                                     Expanded(
                                                       child: Align(
                                                         alignment:
                                                             Alignment.center,
-                                                        child: Text("999"),
+                                                        child: Text(ctrl.list[index]['number'].toString()),
                                                       ),
                                                     )
                                                   ],
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
+                                          // Container(
+                                          //   height: 42,
+                                          //   width: 42,
+                                          //   decoration: BoxDecoration(
+                                          //       image: DecorationImage(
+                                          //     image: Svg(
+                                          //       'assets/example.svg',
+                                          //     ),
+                                          //   )),
+                                          //   child: Align(
+                                          //     alignment: Alignment.center,
+                                          //     child: Text("999"),
+                                          //   ),
+                                          // ),
+                                          rightContent: [
+                                            Text(
+                                                ctrl.list[index]['revelation']['id'] +
+                                                    '\n' +
+                                                    ctrl.list[index]['numberOfVerses'].toString() +
+                                                    ' Ayat',
+                                                textAlign: TextAlign.end,
+                                                style: context.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.normal,
+                                                ))
+                                          ],
                                         ),
-                                        // Container(
-                                        //   height: 42,
-                                        //   width: 42,
-                                        //   decoration: BoxDecoration(
-                                        //       image: DecorationImage(
-                                        //     image: Svg(
-                                        //       'assets/example.svg',
-                                        //     ),
-                                        //   )),
-                                        //   child: Align(
-                                        //     alignment: Alignment.center,
-                                        //     child: Text("999"),
-                                        //   ),
-                                        // ),
-                                        rightContent: [
-                                          Text(
-                                              ctrl.listSurah[index]['type'] +
-                                                  '\n' +
-                                                  ctrl.listSurah[index]
-                                                      ['total'] +
-                                                  ' Ayat',
-                                              textAlign: TextAlign.end,
-                                              style: context.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                fontWeight: FontWeight.normal,
-                                              ))
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                )
+                                      );
+                                    },
+                                  )
+                                  : const Text('Loading')
+                                ) 
                               ],
                             )),
                       )
-                    ]))));
+                    ]
+                )
+            )
+        )
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(ListAyatQuranController());
+    print(ctrl.list.length);
 
     return Scaffold(
       backgroundColor: Color(0xFFF5F5F5),
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: layout(ctrl, context),
+      body: 
+        layout(ctrl, context)
     );
   }
 }

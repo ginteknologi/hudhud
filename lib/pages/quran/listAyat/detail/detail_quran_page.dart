@@ -1,15 +1,9 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/partial/list_card_ayat.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/quran/listAyat/detail/detail_quran_controller.dart';
-import 'package:mesjid_app/theme.dart';
 
 class DetailAyatQuranPage extends StatelessWidget {
   const DetailAyatQuranPage({super.key});
@@ -21,7 +15,7 @@ class DetailAyatQuranPage extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
               child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 21),
+                  padding: const EdgeInsets.symmetric(horizontal: 21),
                   child: getList(ctrl, context)
                   // Card(
                   //   elevation: 3,
@@ -372,31 +366,35 @@ class DetailAyatQuranPage extends StatelessWidget {
   }
 
   getList(ctrl, context) {
-    return ListView.builder(
-      physics: const ClampingScrollPhysics(),
-      itemCount: ctrl.listAyat.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        // Datum model = filteredEvents[index];
-        return FadeInUp(
-          child: ListCardAyatWidget(
-            id: ctrl.listAyat[index]['id'],
-            ayat: ctrl.listAyat[index]['ayat'],
-            descEN: ctrl.listAyat[index]['descEN'],
-            descIDN: ctrl.listAyat[index]['descIDN'],
-            nomor: ctrl.listAyat[index]['nomor'],
-            bookmark: ctrl.listAyatBookmarked[index],
-            bookmarked: ctrl.listAyatBookmarked[index].value,
-            onTap: () {
-              ctrl.listAyatBookmarked[index].value =
-                  !ctrl.listAyatBookmarked[index].value;
-              if (ctrl.listAyatBookmarked[index].value) {
-                ctrl.bookmark();
-              }
-            },
-          ),
-        );
-      },
+    return Obx(() => !ctrl.isLoadingDetail.value ? 
+      ListView.builder(
+        physics: const ClampingScrollPhysics(),
+        itemCount: ctrl.detail['numberOfVerses'],
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          // Datum model = filteredEvents[index];
+          return FadeInUp(
+            child: ListCardAyatWidget(
+              id: ctrl.listAyat[index]['number']['inSurah'],
+              ayat: ctrl.listAyat[index]['text']['arab'],
+              descEN: ctrl.listAyat[index]['translation']['en'],
+              descIDN: ctrl.listAyat[index]['translation']['id'],
+              nomor: ctrl.listAyat[index]['number']['inSurah'].toString(),
+              bookmark: ctrl.listAyatBookmarked[index],
+              bookmarked: ctrl.listAyatBookmarked[index].value,
+              audioFile: ctrl.listAyat[index]['audio']['primary'],
+              onTap: () {
+                ctrl.listAyatBookmarked[index].value =
+                    !ctrl.listAyatBookmarked[index].value;
+                if (ctrl.listAyatBookmarked[index].value) {
+                  ctrl.bookmark();
+                }
+              },
+            ),
+          );
+        },
+      ) 
+    : const Text('Loading')
     );
   }
 
@@ -405,11 +403,11 @@ class DetailAyatQuranPage extends StatelessWidget {
     final ctrl = Get.put(DetailAyatQuranController());
 
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFF5F5F5),
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
       appBar: AppBarWSWidget.getAppbarWidget(
-          title: ctrl.surah['title'], context: context, elevation: 0),
+          title: ctrl.surahName.toString(), context: context, elevation: 0),
       body: layout(ctrl, context),
     );
   }

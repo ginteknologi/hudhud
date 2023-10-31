@@ -7,12 +7,31 @@ import 'package:mesjid_app/configs/remote_data.dart';
 class QuranService extends GetConnect {
   final authStore = GetStorage();
 
-  Future getList(
-    {required page, required limit, status = "", priority = ""}) async {
+  Future getList() async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}quran?page=$page&limit=$limit"),
+        Uri.parse("${RemoteData.quran}surah"),
         headers: <String, String>{
-          'Authorization': "Bearer ${authStore.read('jwt')}",
+          // 'Authorization': "Bearer ${authStore.read('jwt')}",
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      json['code'] = response.statusCode;
+      return json;
+    } else if (response.statusCode == 401) {
+      // RemoteData.authError();
+    } else {
+      final json = jsonDecode(response.body);
+      json['code'] = response.statusCode;
+      
+      return json;
+    }
+  }
+  Future getDetail(id) async {
+    final response = await http.get(
+        Uri.parse("${RemoteData.quran}surah/$id"),
+        headers: <String, String>{
+          // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
         });
     if (response.statusCode == 200) {

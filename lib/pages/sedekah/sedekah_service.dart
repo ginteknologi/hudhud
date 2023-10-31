@@ -10,7 +10,7 @@ class SedekahService extends GetConnect {
   Future getList(
     {required page, required limit, status = "", priority = ""}) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}sedekah?page=$page&limit=$limit"),
+        Uri.parse("${RemoteData.api}/campaign"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

@@ -20,7 +20,7 @@ class HalamanQuranController extends GetxController
   final hctrl = Get.find<HomeController>();
 
   getData() async {
-    final result = await QuranService().getList(page: 0, limit: 10);
+    final result = await QuranService().getList();
     list.value = result['data'];
     isLoadingList.value = false;
   }

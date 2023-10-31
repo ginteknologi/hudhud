@@ -4,106 +4,19 @@ import 'package:mesjid_app/pages/quran/quran_service.dart';
 
 class QuranController extends GetxController {
   var isLoadingList = true.obs;
-  var list = {}.obs;
-  List listSurah = [].obs;
+  RxList list = [].obs;
 
   var txtController = TextEditingController();
 
   getData() async {
-    final result = await QuranService().getList(page: 0, limit: 10);
+    final result = await QuranService().getList();
     list.value = result['data'];
     isLoadingList.value = false;
   }
 
-  getAyats() async {
-    return listSurah = [
-      {
-        "id": 2,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 3,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 4,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 5,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 6,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 7,
-        "title": "Al-Ikhlas",
-        "subTitle":
-            "Pembukaan terus menerus yaaa Pembukaan terus menerus yaaa ",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "75"
-      },
-      {
-        "id": 8,
-        "title": "Al-Ikhlas",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "75"
-      },
-      {
-        "id": 9,
-        "title": "Al-Ikhlas",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "105"
-      },
-      {
-        "id": 10,
-        "title": "Al-Anfal",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "105"
-      },
-      {
-        "id": 11,
-        "title": "Al-Anfal",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "105"
-      },
-    ];
-  }
-
   @override
   void onInit() {
-    getAyats();
+    getData();
     super.onInit();
   }
 }

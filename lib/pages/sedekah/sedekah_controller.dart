@@ -4,12 +4,13 @@ import 'package:mesjid_app/routes/sedekah/index.dart';
 
 class SedekahController extends GetxController {
   var isLoadingList = true.obs;
-  var list = {}.obs;
+  RxList list = [].obs;
   List listSedekah = [].obs;
 
   getData() async {
     final result = await SedekahService().getList(page: 0, limit: 10);
     list.value = result['data'];
+    print(list);
     isLoadingList.value = false;
   }
 
@@ -62,6 +63,7 @@ class SedekahController extends GetxController {
 
   @override
   void onInit() {
+    getData();
     getKajianLive();
     super.onInit();
   }

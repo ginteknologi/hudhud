@@ -146,22 +146,21 @@ class QuranPage extends StatelessWidget {
                                 ),
                                 ListView.builder(
                                   physics: const ClampingScrollPhysics(),
-                                  itemCount: ctrl.listSurah.length,
+                                  itemCount: ctrl.list.length,
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
                                     // Datum model = filteredEvents[index];
                                     return FadeInUp(
                                       child: ListItemUiWidget(
-                                        id: ctrl.listSurah[index]['id'],
-                                        title: ctrl.listSurah[index]['title'],
+                                        id: ctrl.list[index]['number'],
+                                        title: ctrl.list[index]['name']['transliteration']['id'],
                                         titleStyle: context
                                             .textTheme.titleMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Theme.of(context)
                                                     .primaryColor),
-                                        subTitle: ctrl.listSurah[index]
-                                            ['subTitle'],
+                                        subTitle: ctrl.list[index]['name']['translation']['id'],
                                         hasRightContent: true,
                                         showIcon: IconPosition.left,
                                         iconLeft: Container(
@@ -207,9 +206,9 @@ class QuranPage extends StatelessWidget {
                                         // ),
                                         rightContent: [
                                           Text(
-                                              ctrl.listSurah[index]['type'] +
+                                              ctrl.list[index]['revelation']['id'] +
                                                   '\n' +
-                                                  ctrl.listSurah[index]
+                                                  ctrl.list[index]
                                                       ['total'] +
                                                   ' Ayat',
                                               textAlign: TextAlign.end,

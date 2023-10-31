@@ -4,108 +4,26 @@ import 'package:get/get.dart';
 import 'package:mesjid_app/pages/quran/quran_service.dart';
 
 class DetailAyatQuranController extends GetxController {
-  var isLoadingList = true.obs;
-  var list = {}.obs;
+  final surahId = Get.parameters['id'];
+  final surahName = Get.parameters['nama_surah'];
+  var isLoadingDetail = true.obs;
+  var detail = {}.obs;
   List listSurah = [].obs;
   List listAyat = [].obs;
   late List<RxBool> listAyatBookmarked;
 
   var txtController = TextEditingController();
 
-  var surah = Get.arguments['selectedSurah'];
+  // var surah = Get.arguments['selectedSurah'];
 
   var isChecked = false.obs;
 
   getData() async {
-    final result = await QuranService().getList(page: 0, limit: 10);
-    list.value = result['data'];
-    isLoadingList.value = false;
-  }
-
-  getAyats() async {
-    return listSurah = [
-      {
-        "id": 2,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 3,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 4,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 5,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 6,
-        "title": "Al-Fatihah",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "75"
-      },
-      {
-        "id": 7,
-        "title": "Al-Ikhlas",
-        "subTitle":
-            "Pembukaan terus menerus yaaa Pembukaan terus menerus yaaa ",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "75"
-      },
-      {
-        "id": 8,
-        "title": "Al-Ikhlas",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "75"
-      },
-      {
-        "id": 9,
-        "title": "Al-Ikhlas",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "105"
-      },
-      {
-        "id": 10,
-        "title": "Al-Anfal",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Madaniah",
-        "total": "105"
-      },
-      {
-        "id": 11,
-        "title": "Al-Anfal",
-        "subTitle": "Pembukaan",
-        "category": "Donatur",
-        "type": "Makiah",
-        "total": "105"
-      },
-    ];
+    final result = await QuranService().getDetail(surahId.toString());
+    detail.value = result['data'];
+    listAyat = detail['verses'];
+    listAyatBookmarked = List.generate(detail['numberOfVerses'], (index) => false.obs);
+    isLoadingDetail.value = false;
   }
 
   getAyat() async {
@@ -142,7 +60,7 @@ class DetailAyatQuranController extends GetxController {
         "bookmarked": false
       },
     ];
-    listAyatBookmarked = List.generate(listAyat.length, (index) => false.obs);
+    // listAyatBookmarked = List.generate(listAyat.length, (index) => false.obs);
     return listAyat;
   }
 
@@ -157,10 +75,9 @@ class DetailAyatQuranController extends GetxController {
   }
 
   @override
-  void onInit() {
-    print(surah);
-    getAyats();
-    getAyat();
+  void onInit() async {
+    // getAyat();
+    await getData();
     super.onInit();
   }
 }

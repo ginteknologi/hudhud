@@ -1,17 +1,20 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
-import 'package:mesjid_app/theme.dart';
+import 'package:just_audio/just_audio.dart';
 
 class ListCardAyatWidget extends StatelessWidget {
   ListCardAyatWidget(
-      {required this.id,
+      {super.key, 
+      required this.id,
       this.nomor,
       this.ayat,
       this.descEN,
       this.descIDN,
+      this.audioFile,
       this.onTap,
       required this.bookmark,
       required this.bookmarked});
@@ -21,9 +24,14 @@ class ListCardAyatWidget extends StatelessWidget {
   String? ayat;
   String? descEN;
   String? descIDN;
+  String? audioFile;
   bool bookmarked;
   VoidCallback? onTap;
   RxBool bookmark = false.obs;
+  RxBool onplay = false.obs;
+  AudioPlayer audioPlayer = AudioPlayer();
+  Duration? audioPosition;
+  
   @override
   Widget build(BuildContext context) {
     return Obx(() => Card(
@@ -107,10 +115,41 @@ class ListCardAyatWidget extends StatelessWidget {
                                     width: 10,
                                   ),
                                   InkWell(
-                                    onTap: () {
-                                      print("clicked play");
+                                    onTap: ()  {
+                                      if (audioPlayer.position == null) {
+                                        print("clicked play position null");
+                                        audioPlayer.setUrl(audioFile!);
+                                        audioPlayer.play();
+                                        onplay.value = true;
+                                      } else if (onplay.value) {
+                                        print("clicked pause");
+                                        audioPosition =  audioPlayer.position;
+                                        audioPlayer.pause();
+                                        onplay.value = false;
+                                      } else {
+                                        print("clicked play");
+                                        if (audioPosition != null) {
+                                          audioPlayer.seek(audioPosition!);
+                                        } else {
+                                          audioPlayer.setUrl(audioFile!);
+                                        }
+                                        audioPlayer.play();
+                                        onplay.value = true;
+                                        
+                                        audioPlayer.playerStateStream.listen((PlayerState state) {
+                                          if (state.processingState == ProcessingState.completed) {
+                                            // File selesai diputar
+                                            print("Selesai");
+                                            audioPosition = null;
+                                            onplay.value = false;
+                                          }
+                                        });
+                                      }
                                     },
-                                    child: Icon(
+                                    child: onplay.value ? Icon(
+                                      Icons.pause_rounded,
+                                      color: Theme.of(context).primaryColor,
+                                    ): Icon(
                                       Icons.play_arrow_rounded,
                                       color: Theme.of(context).primaryColor,
                                     ),

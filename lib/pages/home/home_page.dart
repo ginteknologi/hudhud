@@ -1,5 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +16,13 @@ class HomePage extends StatelessWidget {
   Widget getCurrentWidget(BottomBarEnum type, HomeController ctrl) {
     switch (type) {
       case BottomBarEnum.beranda:
-        return DashboardPage();
+        return const DashboardPage();
       case BottomBarEnum.alquran:
         return QuranPage(typeView: ctrl.typeViewQuran.value);
       case BottomBarEnum.ruangan:
-        return RuanganPage();
+        return const RuanganPage();
       case BottomBarEnum.dkm:
-        return DkmPage();
+        return const DkmPage();
       default:
         return getDefaultWidget();
     }
@@ -62,7 +60,7 @@ class HomePage extends StatelessWidget {
                     height: 65,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +87,7 @@ class HomePage extends StatelessWidget {
                       ),
                     )), //SizedBox
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Card(
@@ -106,7 +104,7 @@ class HomePage extends StatelessWidget {
                     height: 65,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,7 +131,7 @@ class HomePage extends StatelessWidget {
                       ),
                     )), //SizedBox
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Align(
@@ -142,7 +140,7 @@ class HomePage extends StatelessWidget {
                     style: context.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900, color: Colors.black)),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Material(
@@ -175,7 +173,7 @@ class HomePage extends StatelessWidget {
                                           color: Colors.black54))
                             ]),
                       ),
-                      SizedBox(
+                     const SizedBox(
                         width: 20,
                       ),
                       InkWell(
@@ -190,7 +188,7 @@ class HomePage extends StatelessWidget {
                             children: [
                               Image.asset('assets/icons/quran_halaman.png',
                                   height: 30, width: 30),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                               Text("Perhalaman",
@@ -222,13 +220,13 @@ class HomePage extends StatelessWidget {
         // appBar: layoutAppbar(),
         // body: layout(ctrl, context),
         body: Obx(() => AnimatedContainer(
+              duration: const Duration(seconds: 4),
               child: getCurrentWidget(ctrl.type.value, ctrl),
-              duration: Duration(seconds: 4),
             )),
         bottomNavigationBar: Obx(() => ctrl.visible.value
             ? SlidingWidget(
                 from: Offset.zero,
-                to: Offset(0, 1),
+                to: const Offset(0, 1),
                 visible: ctrl.visible.value,
                 controller: ctrl.animateController,
                 child: CustomBottomBar(

@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
+import 'package:mesjid_app/pages/dashboard/dashboard_service.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class DashboardController extends GetxController {
   var isLoadingList = true.obs;
   var list = {}.obs;
   var todayDate = "".obs;
+  var dataTerbaru = {}.obs;
   List listWaktu = [].obs;
   List listMenuHome = [].obs;
   List listKajianLive = [].obs;
@@ -13,33 +15,9 @@ class DashboardController extends GetxController {
   List listKota = [].obs;
 
   getData() async {
-    // final result = await HomeService().getList(page: 0, limit: 10);
-    //dummy
-    list.value = {
-      "success": true,
-      "message": "Berhasil",
-      "data": {
-        "page": 1,
-        "limit": 8,
-        "total": 1,
-        "data": [
-          {
-            "id": 1,
-            "point": 1,
-            "pic": 7,
-            "user_id": 4,
-            "tag": "Bug",
-            "priority": "Urgent",
-            "judul": "asdasdasd",
-            "keterangan": null,
-            "status": "pending",
-            "createdAt": "2023-09-22T15:58:20.020Z",
-            "updatedAt": "2023-09-22T15:58:14.000Z"
-          }
-        ]
-      }
-    };
-    // list.value = result['data'];
+    final result = await DashboardService().getList();
+    dataTerbaru.value = result['data'];
+    print(dataTerbaru);
     isLoadingList.value = false;
   }
 
@@ -291,7 +269,8 @@ class DashboardController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
+    getData();
     getList();
     getMenuHome();
     getKajianLive();

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +12,8 @@ import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:mesjid_app/routes/akun/index.dart';
 import 'package:mesjid_app/routes/notifikasi/index.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
-import 'package:simple_moment/simple_moment.dart';
+// import 'package:mesjid_app/routes/sedekah/index.dart';
+// import 'package:simple_moment/simple_moment.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -172,7 +170,7 @@ class DashboardPage extends StatelessWidget {
                           margin: const EdgeInsets.only(top: 25),
                           child: getSeparator('Terbaru', '', context, ctrl),
                         ),
-                        getListItemVertical(ctrl),
+                        getListItemVertical(ctrl, context),
                         const SizedBox(
                           height: 100,
                         )
@@ -279,7 +277,7 @@ class DashboardPage extends StatelessWidget {
   }
 
   getListItem(DashboardController ctrl) {
-    return Container(
+    return SizedBox(
       height: 151,
       child: ListView.separated(
         // padding: EdgeInsets.only(left: 24, right: 24),
@@ -304,7 +302,7 @@ class DashboardPage extends StatelessWidget {
   getButtonCard(DashboardController ctrl, BuildContext context) {
     return Card(
         elevation: 0,
-        color: Color(0xFFD9BA62),
+        color: const Color(0xFFD9BA62),
         margin: const EdgeInsets.only(top: 10),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -375,9 +373,8 @@ class DashboardPage extends StatelessWidget {
                     )))));
   }
 
-  getListItemVertical(DashboardController ctrl) {
-    return Container(
-      child: ListView.separated(
+  getListItemVertical(DashboardController ctrl, BuildContext context) {
+    return Obx(() => !ctrl.isLoadingList.value ? ListView.separated(
         // padding: EdgeInsets.only(left: 24, right: 24),
         scrollDirection: Axis.vertical,
         physics: const NeverScrollableScrollPhysics(),
@@ -401,14 +398,15 @@ class DashboardPage extends StatelessWidget {
             subtitle:
                 '${ctrl.listArtikel[index]["time"]} | ${ctrl.listArtikel[index]["date"]}',
             imgPath: '${ctrl.listArtikel[index]["image"]}',
-          ));
+          )
+          );
         },
-      ),
+      ) : const Text('Loading')
     );
   }
 
   getCardBanner(DashboardController ctrl, BuildContext context) {
-    var activeCard = null;
+    var activeCard;
     for (var element in ctrl.listWaktu) {
       if (element['active']) {
         activeCard = element;
@@ -672,10 +670,10 @@ class DashboardPage extends StatelessWidget {
                                         top: 2,
                                         right: 2,
                                         child: Container(
-                                          padding: EdgeInsets.all(3),
+                                          padding: const EdgeInsets.all(3),
                                           constraints: BoxConstraints.loose(
                                               Size.infinite),
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Colors.red,
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(20))),
@@ -693,7 +691,7 @@ class DashboardPage extends StatelessWidget {
                                                       'assets/icons/live.svg',
                                                       height: 6,
                                                       width: 6)),
-                                              Text('Live',
+                                              const Text('Live',
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   textAlign: TextAlign.start,
@@ -760,11 +758,11 @@ class DashboardPage extends StatelessWidget {
         builder: (BuildContext bc) {
           return Dialog(
             elevation: 0,
-            backgroundColor: Color(0xFFDADADA),
+            backgroundColor: const Color(0xFFDADADA),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(7.0)),
             child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 height: height ?? 185,
                 child: content ??
                     Column(
@@ -776,7 +774,7 @@ class DashboardPage extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               color: Colors.black),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         ButtonElevated(
@@ -792,7 +790,7 @@ class DashboardPage extends StatelessWidget {
                             showPopup(ctrl, bc, dialogTerkini(context), 200);
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         ButtonElevated(
@@ -825,7 +823,7 @@ class DashboardPage extends StatelessWidget {
               fontWeight: FontWeight.normal,
               color: Colors.black),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         ButtonElevated(
@@ -854,13 +852,13 @@ class DashboardPage extends StatelessWidget {
               fontWeight: FontWeight.normal,
               color: Colors.black),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         ButtonElevated(
           title: 'Cari Lokasi',
           showIcon: 'right',
-          iconRight: Icon(Icons.search),
+          iconRight: const Icon(Icons.search),
           width: Get.width,
           bgcolor: Theme.of(context).primaryColor,
           height: 45,
@@ -890,8 +888,8 @@ class DashboardPage extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.search),
-                SizedBox(
+                const Icon(Icons.search),
+                const SizedBox(
                   width: 20,
                 ),
                 Text(
@@ -908,14 +906,14 @@ class DashboardPage extends StatelessWidget {
                 Navigator.pop(context);
               },
               bgcolor: Colors.transparent,
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black38,
               ),
             )
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         ListView.builder(
@@ -945,7 +943,6 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(DashboardController());
-
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent));
@@ -954,6 +951,6 @@ class DashboardPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
-        body: layout(ctrl, context));
+        body: Obx(() => ctrl.isLoadingList.value ? const Center(child: CircularProgressIndicator()) : layout(ctrl, context)));
   }
 }
