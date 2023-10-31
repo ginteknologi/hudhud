@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/buttonvariant.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
+import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/akun/akun_controller.dart';
+import 'package:mesjid_app/pages/home/home_controller.dart';
 import 'package:mesjid_app/routes/akun/index.dart';
+import 'package:mesjid_app/routes/auth/index.dart';
+import 'package:mesjid_app/routes/home/index.dart';
 
 class AkunPage extends StatelessWidget {
   const AkunPage({super.key});
 
-  layout(BuildContext context) {
+  layout(BuildContext context, HomeController hctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -76,7 +80,7 @@ class AkunPage extends StatelessWidget {
                         ListItemUiWidget(
                           id: 1,
                           title: "Riwayat Sedekah",
-                          titleStyle: context.textTheme.bodyLarge?.copyWith(
+                          titleStyle: context.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.black),
                           showIcon: IconPosition.left,
                           iconLeft: Icon(
@@ -91,7 +95,7 @@ class AkunPage extends StatelessWidget {
                         ListItemUiWidget(
                           id: 1,
                           title: "Tentang Kami",
-                          titleStyle: context.textTheme.bodyLarge?.copyWith(
+                          titleStyle: context.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.black),
                           showIcon: IconPosition.left,
                           iconLeft: Icon(
@@ -99,6 +103,11 @@ class AkunPage extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                             size: 30,
                           ),
+                          onTap: () {
+                            hctrl.type.value = BottomBarEnum.dkm;
+                            hctrl.selectedIdx.value = 3;
+                            Get.toNamed(RoutesHome.root);
+                          },
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height / 6,
@@ -113,7 +122,9 @@ class AkunPage extends StatelessWidget {
                           height: 45,
                           color: Colors.white,
                           radius: 7,
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.offAllNamed(RoutesAuth.logout);
+                          },
                         )
                       ],
                     )))));
@@ -122,12 +133,13 @@ class AkunPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(AkunController());
+    final hctrl = Get.find<HomeController>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Profile", context: context, elevation: 0),
-      body: layout(context),
+      body: layout(context, hctrl),
     );
   }
 }

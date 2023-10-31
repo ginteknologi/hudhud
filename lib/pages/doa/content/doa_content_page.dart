@@ -99,7 +99,7 @@ class ContentDoaPage extends StatelessWidget {
                                                       .primaryColor,
                                                   fontSize: Theme.of(context)
                                                       .textTheme
-                                                      .labelLarge
+                                                      .labelMedium
                                                       ?.fontSize,
                                                   fontWeight: FontWeight.bold)),
                                         ),
@@ -114,11 +114,17 @@ class ContentDoaPage extends StatelessWidget {
                                             height: 35,
                                             color: Colors.black,
                                             radius: 5,
-                                            size: 10,
+                                            size: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.fontSize,
                                             showIcon: "right",
                                             iconRight: Icon(
                                               Icons.share,
-                                              size: 12,
+                                              size: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.fontSize,
                                             ),
                                             onPressed: () {
                                               // ctrl.goToDetail('1');

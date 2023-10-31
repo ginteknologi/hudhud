@@ -1,13 +1,16 @@
 import 'package:get/get.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 class DashboardController extends GetxController {
   var isLoadingList = true.obs;
   var list = {}.obs;
+  var todayDate = "".obs;
   List listWaktu = [].obs;
   List listMenuHome = [].obs;
   List listKajianLive = [].obs;
   List listArtikel = [].obs;
   List listAllMenu = [].obs;
+  List listKota = [].obs;
 
   getData() async {
     // final result = await HomeService().getList(page: 0, limit: 10);
@@ -82,14 +85,20 @@ class DashboardController extends GetxController {
 
   getWaktu() async {
     var timeleft = DateTime.now();
+    todayDate.value =
+        Moment.parse("$timeleft").format("EEEE, dd MMMM", localeOverride: 'id');
     var hourAndMinutes = "${timeleft.hour}.${timeleft.minute}";
     int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
 
     var thistime = getNextLargerNumber(hourminutes, listWaktu);
-    for (var el in listWaktu) {
-      el['active'] = false;
-      if (thistime['id'] == el['id']) {
-        el['active'] = true;
+    if (thistime == -1) {
+      listWaktu[0]['active'] = true;
+    } else {
+      for (var el in listWaktu) {
+        el['active'] = false;
+        if (thistime['id'] == el['id']) {
+          el['active'] = true;
+        }
       }
     }
   }
@@ -156,42 +165,48 @@ class DashboardController extends GetxController {
         "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
         "flag": "LIVE",
         "image": "assets/icons/image-item1.png",
-        "url": ""
+        "url": "",
+        "id": 1
       },
       {
         "title": "Indahnya Husnul Khotimah",
         "subtitle": "Ust. Abdullah Sholeh Hadrami",
         "flag": "LIVE",
         "image": "assets/icons/image-item1.png",
-        "url": ""
+        "url": "",
+        "id": 1
       },
       {
         "title": "Asbabun Nuzul",
         "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
         "flag": "LIVE",
         "image": "assets/icons/image-item1.png",
-        "url": ""
+        "url": "",
+        "id": 1
       },
       {
         "title": "Indahnya Husnul Khotimah",
         "subtitle": "Ust. Abdullah Sholeh Hadrami",
         "flag": "LIVE",
         "image": "assets/icons/image-item1.png",
-        "url": ""
+        "url": "",
+        "id": 1
       },
       {
         "title": "Asbabun Nuzul",
         "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
         "flag": "LIVE",
         "image": "assets/icons/image-item1.png",
-        "url": ""
+        "url": "",
+        "id": 1
       },
       {
         "title": "Indahnya Husnul Khotimah",
         "subtitle": "Ust. Abdullah Sholeh Hadrami",
         "flag": "LIVE",
         "image": "assets/icons/image-item1.png",
-        "url": ""
+        "url": "",
+        "id": 1
       },
     ];
   }
@@ -238,6 +253,43 @@ class DashboardController extends GetxController {
     ];
   }
 
+  getListKota() {
+    return listKota = [
+      {
+        "id": 1,
+        "label": "Jakarta",
+      },
+      {
+        "id": 1,
+        "label": "Bandung",
+      },
+      {
+        "id": 1,
+        "label": "Aceh",
+      },
+      {
+        "id": 1,
+        "label": "Bogor",
+      },
+      {
+        "id": 1,
+        "label": "Medan",
+      },
+      {
+        "id": 1,
+        "label": "Palembang",
+      },
+      {
+        "id": 1,
+        "label": "Samarinda",
+      },
+      {
+        "id": 1,
+        "label": "Depok",
+      },
+    ];
+  }
+
   @override
   void onInit() {
     getList();
@@ -246,6 +298,7 @@ class DashboardController extends GetxController {
     getListArtikel();
     getAllMenu();
     getWaktu();
+    getListKota();
     super.onInit();
   }
 }

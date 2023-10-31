@@ -11,7 +11,8 @@ class AppBarWSWidget {
     Color? color,
     double? titleSize,
     double? elevation,
-    bool? noBack,
+    bool? noBack = false,
+    bool defaultPlace = true,
     required BuildContext context, // Add the BuildContext parameter
   }) {
     return AppBar(
@@ -28,7 +29,9 @@ class AppBarWSWidget {
       backgroundColor: backgroundColor ?? Colors.white,
       elevation: elevation ?? 1,
       title: Align(
-        alignment: noBack == false ? Alignment.centerRight : Alignment.center,
+        alignment: noBack == false && defaultPlace
+            ? Alignment.centerRight
+            : Alignment.center,
         child: Text(title,
             textAlign: TextAlign.left,
             style: TextStyle(

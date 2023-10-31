@@ -16,6 +16,7 @@ class ListItemUiWidget extends StatelessWidget {
       this.rightContent = const [],
       this.hasRightContent = false,
       this.justify = false,
+      this.vjustify = false,
       this.start = false,
       this.iconLeft,
       this.iconRight,
@@ -24,6 +25,7 @@ class ListItemUiWidget extends StatelessWidget {
       this.typeList = TypeList.none,
       this.showIcon = IconPosition.none,
       this.onTap,
+      this.minHeight,
       this.widthContent,
       this.image});
 
@@ -36,6 +38,7 @@ class ListItemUiWidget extends StatelessWidget {
   final List<Widget> rightContent;
   final Widget? iconLeft;
   final bool justify;
+  final bool vjustify;
   final bool start;
   final IconPosition showIcon;
   bool hasRightContent;
@@ -46,6 +49,7 @@ class ListItemUiWidget extends StatelessWidget {
   bool listInset;
   double? widthContent;
   VoidCallback? onTap;
+  double? minHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +121,15 @@ class ListItemUiWidget extends StatelessWidget {
                                 constraints:
                                     // BoxConstraints.loose(Size.infinite),
                                     BoxConstraints(
+                                        minHeight: minHeight ?? 0,
                                         maxWidth: widthContent ??
                                             MediaQuery.of(context).size.width *
                                                 0.5),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: vjustify
+                                      ? MainAxisAlignment.spaceBetween
+                                      : MainAxisAlignment.center,
                                   children: [
                                     if (category != null)
                                       AutoSizeText(

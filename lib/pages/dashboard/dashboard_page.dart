@@ -10,10 +10,12 @@ import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:mesjid_app/components/layout/custom_card_item.dart';
 import 'package:mesjid_app/components/layout/custom_modal_bottom_sheet.dart';
+import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:mesjid_app/routes/akun/index.dart';
 import 'package:mesjid_app/routes/notifikasi/index.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -136,11 +138,16 @@ class DashboardPage extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),
-                                        child: Image.network(
-                                          "https://picsum.photos/50",
+                                        child: Image.asset(
+                                          "assets/icons/image-item1.png",
                                           height: 35,
                                           width: 35,
                                         ),
+                                        // Image.network(
+                                        //   "https://picsum.photos/50",
+                                        //   height: 35,
+                                        //   width: 35,
+                                        // ),
                                       ),
                                     )),
                               ],
@@ -152,18 +159,18 @@ class DashboardPage extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.only(top: 25),
                           child: getSeparator(
-                              'Kajian Live', 'Lihat Semua', context),
+                              'Kajian Live', 'Lihat Semua', context, ctrl),
                         ),
                         getListItem(ctrl),
                         Container(
                           margin: const EdgeInsets.only(top: 10),
-                          child: getSeparator(
-                              "Sudah Baca Qur'an Hari Ini?", null, context),
+                          child: getSeparator("Sudah Baca Qur'an Hari Ini?",
+                              null, context, ctrl),
                         ),
                         getButtonCard(ctrl, context),
                         Container(
                           margin: const EdgeInsets.only(top: 25),
-                          child: getSeparator('Terbaru', '', context),
+                          child: getSeparator('Terbaru', '', context, ctrl),
                         ),
                         getListItemVertical(ctrl),
                         const SizedBox(
@@ -193,7 +200,7 @@ class DashboardPage extends StatelessWidget {
                           onTap: () {
                             if (ctrl.listMenuHome[index]['urlNav'] ==
                                 'lainnya') {
-                              showSheet(ctrl, context);
+                              showSheet(ctrl, context, false);
                             } else {
                               Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
                             }
@@ -225,7 +232,8 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getSeparator(String nama, final String? sub, BuildContext context) {
+  getSeparator(String nama, final String? sub, BuildContext context,
+      DashboardController ctrl) {
     return Material(
       color: Colors.transparent,
       child: Row(
@@ -244,7 +252,9 @@ class DashboardPage extends StatelessWidget {
               child: InkWell(
                 highlightColor: Colors.transparent,
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                onTap: () {},
+                onTap: () {
+                  showSheet(ctrl, context, true);
+                },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: Row(
@@ -398,7 +408,7 @@ class DashboardPage extends StatelessWidget {
   }
 
   getCardBanner(DashboardController ctrl, BuildContext context) {
-    var activeCard = {};
+    var activeCard = null;
     for (var element in ctrl.listWaktu) {
       if (element['active']) {
         activeCard = element;
@@ -413,175 +423,334 @@ class DashboardPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         //set border radius more than 50% of height and width to make circle
       ),
-      child: SizedBox(
-        width: Get.width,
-        height: 220,
-        child: Column(
-          children: [
-            Expanded(
-                flex: 1,
-                child: Container(
-                    width: Get.width,
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    constraints: BoxConstraints.loose(Size.infinite),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(activeCard['cardImage']),
-                            fit: BoxFit.fill)),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: (MediaQuery.of(context).size.width * 0.5) - 41,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+      child: activeCard == null
+          ? SizedBox(
+              width: Get.width,
+              height: 220,
+            )
+          : SizedBox(
+              width: Get.width,
+              height: 220,
+              child: Column(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                          width: Get.width,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          constraints: BoxConstraints.loose(Size.infinite),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(activeCard['cardImage']),
+                                  fit: BoxFit.fill)),
+                          child: Row(
                             children: [
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AutoSizeText(
-                                      "Ahad, 9 Muharram 1444",
-                                      maxLines: 1,
-                                      style: context.textTheme.labelSmall
-                                          ?.copyWith(
-                                              letterSpacing: 1,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                    ),
-                                    AutoSizeText("Minggu, 8 Agustus 2023",
-                                        maxLines: 1,
-                                        style: context.textTheme.labelSmall
-                                            ?.copyWith(
-                                                height: 1,
-                                                letterSpacing: 1,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.white)),
-                                  ]),
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AutoSizeText(activeCard['label'],
-                                        maxLines: 1,
-                                        style: context.textTheme.headlineSmall
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.white)),
-                                    AutoSizeText(activeCard['waktu'] + " WIB",
-                                        maxLines: 1,
-                                        style: context.textTheme.displayMedium
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                color: Colors.white,
-                                                height: 1))
-                                  ]),
-                              // SizedBox(
-                              //   height: 2,
-                              // ),
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "3 Jam 20 Menit",
-                                      style: context.textTheme.labelMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                    ),
-                                    Text("Menuju " + activeCard['label'],
-                                        style: context.textTheme.labelMedium
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.white,
-                                                height: 1)),
-                                  ]),
-                            ],
-                          ),
-                        )
-                      ],
-                    ))),
-            SizedBox(
-                height: 62,
-                child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                    child: GridView.count(
-                      crossAxisCount: 5,
-                      shrinkWrap: false,
-                      mainAxisSpacing: 0,
-                      crossAxisSpacing: 0,
-                      padding: const EdgeInsets.all(0),
-                      physics: const NeverScrollableScrollPhysics(),
-                      childAspectRatio: 0.5,
-                      children: List.generate(ctrl.listWaktu.length, (index) {
-                        return SizedBox(
-                            height: 20,
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        right: BorderSide(
-                                            width: 1,
-                                            color: index == 4
-                                                ? Colors.transparent
-                                                : const Color(0xFFA5A5A5)))),
+                              SizedBox(
+                                width:
+                                    (MediaQuery.of(context).size.width * 0.5) -
+                                        41,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    AutoSizeText(
-                                      ctrl.listWaktu[index]['label'],
-                                      textAlign: TextAlign.center,
-                                      style: ctrl.listWaktu[index]['active']
-                                          ? context.textTheme.bodySmall
-                                              ?.copyWith(
-                                                  letterSpacing: 1,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColor)
-                                          : context.textTheme.bodySmall
-                                              ?.copyWith(
-                                                  letterSpacing: 1,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.black54),
-                                      maxLines: 1,
-                                    ),
-                                    AutoSizeText(
-                                      ctrl.listWaktu[index]['waktu'],
-                                      textAlign: TextAlign.center,
-                                      style: ctrl.listWaktu[index]['active']
-                                          ? context.textTheme.bodySmall
-                                              ?.copyWith(
-                                                  letterSpacing: 1,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColor)
-                                          : context.textTheme.bodySmall
-                                              ?.copyWith(
-                                                  letterSpacing: 1,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black),
-                                      maxLines: 1,
-                                    ),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AutoSizeText(
+                                            "Ahad, 9 Muharram 1444",
+                                            maxLines: 1,
+                                            style: context.textTheme.labelSmall
+                                                ?.copyWith(
+                                                    letterSpacing: 1,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                          ),
+                                          AutoSizeText(ctrl.todayDate.value,
+                                              maxLines: 1,
+                                              style: context
+                                                  .textTheme.labelSmall
+                                                  ?.copyWith(
+                                                      height: 1,
+                                                      letterSpacing: 1,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.white)),
+                                        ]),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AutoSizeText(activeCard['label'],
+                                              maxLines: 1,
+                                              style: context
+                                                  .textTheme.headlineSmall
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.white)),
+                                          AutoSizeText(
+                                              activeCard['waktu'] + " WIB",
+                                              maxLines: 1,
+                                              style: context
+                                                  .textTheme.displayMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      color: Colors.white,
+                                                      height: 1))
+                                        ]),
+                                    // SizedBox(
+                                    //   height: 2,
+                                    // ),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "3 Jam 20 Menit",
+                                            style: context.textTheme.labelMedium
+                                                ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                          ),
+                                          Text("Menuju " + activeCard['label'],
+                                              style: context
+                                                  .textTheme.labelMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.white,
+                                                      height: 1)),
+                                        ]),
                                   ],
-                                )));
-                      }),
-                    )))
-          ],
-        ),
-      ), //SizedBox
+                                ),
+                              )
+                            ],
+                          ))),
+                  SizedBox(
+                      height: 62,
+                      child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          child: GridView.count(
+                            crossAxisCount: 5,
+                            shrinkWrap: false,
+                            mainAxisSpacing: 0,
+                            crossAxisSpacing: 0,
+                            padding: const EdgeInsets.all(0),
+                            physics: const NeverScrollableScrollPhysics(),
+                            childAspectRatio: 0.5,
+                            children:
+                                List.generate(ctrl.listWaktu.length, (index) {
+                              return SizedBox(
+                                  height: 20,
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              right: BorderSide(
+                                                  width: 1,
+                                                  color: index == 4
+                                                      ? Colors.transparent
+                                                      : const Color(
+                                                          0xFFA5A5A5)))),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          AutoSizeText(
+                                            ctrl.listWaktu[index]['label'],
+                                            textAlign: TextAlign.center,
+                                            style: ctrl.listWaktu[index]
+                                                    ['active']
+                                                ? context.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                        letterSpacing: 1,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Theme.of(context)
+                                                            .primaryColor)
+                                                : context.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                        letterSpacing: 1,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black54),
+                                            maxLines: 1,
+                                          ),
+                                          AutoSizeText(
+                                            ctrl.listWaktu[index]['waktu'],
+                                            textAlign: TextAlign.center,
+                                            style: ctrl.listWaktu[index]
+                                                    ['active']
+                                                ? context.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                        letterSpacing: 1,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Theme.of(context)
+                                                            .primaryColor)
+                                                : context.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                        letterSpacing: 1,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.black),
+                                            maxLines: 1,
+                                          ),
+                                        ],
+                                      )));
+                            }),
+                          )))
+                ],
+              ),
+            ), //SizedBox
     );
   }
 
-  void showSheet(ctrl, context) {
+  void showSheet(DashboardController ctrl, BuildContext context, bool flag) {
     showModalBottomSheet(
         context: context,
+        isScrollControlled: flag,
+        useSafeArea: flag,
+        showDragHandle: false,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20.0),
           ),
         ),
         builder: (BuildContext bc) {
-          return CustomModalBottomSheet(
-            typeSheet: TypeBottomSheet.typeGridSheet,
-            dataGrid: ctrl.listAllMenu,
-          );
+          return !flag
+              ? CustomModalBottomSheet(
+                  typeSheet: TypeBottomSheet.typeGridSheet,
+                  dataGrid: ctrl.listAllMenu,
+                )
+              : CustomModalBottomSheet(
+                  typeSheet: TypeBottomSheet.typeFullscreenSheet,
+                  content: [
+                    Container(
+                      height: 30,
+                      child: Text(
+                        "Kajian Live".tr,
+                        style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                      ),
+                    ),
+                    Container(
+                        height: MediaQuery.of(context).size.height -
+                            kBottomNavigationBarHeight -
+                            kToolbarHeight,
+                        child: ListView.builder(
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: ctrl.listKajianLive.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            var item = ctrl.listKajianLive[index];
+                            // Datum model = filteredEvents[index];
+                            return FadeInUp(
+                              child: ListItemUiWidget(
+                                minHeight: 70,
+                                vjustify: true,
+                                widthContent:
+                                    MediaQuery.of(context).size.width - 130,
+                                id: item['id'],
+                                title: item['title'],
+                                showIcon: IconPosition.left,
+                                iconLeft: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(7),
+                                      child: Image.asset(
+                                        item['image'],
+                                        width: 65,
+                                        height: 65,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 2,
+                                        right: 2,
+                                        child: Container(
+                                          padding: EdgeInsets.all(3),
+                                          constraints: BoxConstraints.loose(
+                                              Size.infinite),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 5),
+                                                  child: SvgPicture.asset(
+                                                      'assets/icons/live.svg',
+                                                      height: 6,
+                                                      width: 6)),
+                                              Text('Live',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      fontSize: 5)
+                                                  // ),
+                                                  ),
+                                            ],
+                                          ),
+                                        ))
+                                  ],
+                                ),
+                                onTap: () {},
+                                titleStyle: context.textTheme.labelMedium
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                subTitle: item['subtitle'],
+                                subtitleStyle: context.textTheme.labelMedium
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.w100,
+                                        color: Colors.black),
+                              ),
+                            );
+                          },
+                        ))
+                    // ListView.builder(
+                    //   physics: const ClampingScrollPhysics(),
+                    //   itemCount: ctrl.listKajianLive.length,
+                    //   shrinkWrap: true,
+                    //   itemBuilder: (context, index) {
+                    //     var item = ctrl.listKajianLive[index];
+                    //     // Datum model = filteredEvents[index];
+                    //     return FadeInUp(
+                    //       child: ListItemUiWidget(
+                    //         id: item['id'],
+                    //         title: item['title'],
+                    //         onTap: () {},
+                    //         titleStyle: context.textTheme.titleMedium?.copyWith(
+                    //             fontWeight: FontWeight.bold,
+                    //             color: Colors.black),
+                    //         subTitle: item['subtitle'],
+                    //         subtitleStyle: context.textTheme.bodySmall
+                    //             ?.copyWith(
+                    //                 fontWeight: FontWeight.w300,
+                    //                 color: Colors.black),
+                    //       ),
+                    //     );
+                    //   },
+                    // )
+                  ],
+                );
         });
   }
 
@@ -635,7 +804,8 @@ class DashboardPage extends StatelessWidget {
                           radius: 7,
                           onPressed: () {
                             Navigator.pop(context);
-                            showPopup(ctrl, bc, dialogCari(context), 220);
+                            showPopup(
+                                ctrl, bc, dialogCari(ctrl, context, bc), 220);
                           },
                           shadow: false,
                         )
@@ -674,7 +844,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  dialogCari(BuildContext context) {
+  dialogCari(DashboardController ctrl, BuildContext context, bc) {
     return Column(
       children: [
         Text(
@@ -699,6 +869,73 @@ class DashboardPage extends StatelessWidget {
           shadow: false,
           onPressed: () {
             Navigator.pop(context);
+            showPopup(
+                ctrl,
+                context,
+                dialogKota(context, ctrl),
+                MediaQuery.of(context).size.height -
+                    kBottomNavigationBarHeight -
+                    100);
+          },
+        ),
+      ],
+    );
+  }
+
+  dialogKota(BuildContext context, DashboardController ctrl) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.search),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  "Cari Lokasi",
+                  style: context.textTheme.titleSmall?.copyWith(
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black),
+                ),
+              ],
+            ),
+            ButtonIcon(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              bgcolor: Colors.transparent,
+              icon: Icon(
+                Icons.close,
+                color: Colors.black38,
+              ),
+            )
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        ListView.builder(
+          physics: const ClampingScrollPhysics(),
+          itemCount: ctrl.listKota.length,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            // Datum model = filteredEvents[index];
+            var item = ctrl.listKota[index];
+            return FadeInUp(
+              child: ListItemUiWidget(
+                id: item['id'],
+                title: item['label'],
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                titleStyle: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            );
           },
         ),
       ],

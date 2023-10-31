@@ -301,7 +301,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           side: BorderSide(width: 1, color: Colors.black12)),
                       selected: ctrl.denomSelected[index].value,
-                      label: Text(
+                      label: AutoSizeText(
                         ctrl.denom[index]['label'],
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             fontWeight: FontWeight.bold,
@@ -315,6 +315,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                         //     color: ctrl.denomSelected[index].value
                         //         ? Colors.white
                         //         : Theme.of(context).primaryColor),
+                        maxLines: 1,
                       ),
                       labelPadding: EdgeInsets.symmetric(horizontal: 10),
                       labelStyle: TextStyle(

@@ -196,6 +196,27 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
+  fullScreenSheet(context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
+      child: Container(
+          constraints: BoxConstraints.loose(Size.infinite),
+          // height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: content,
+                  )),
+            ],
+          )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -206,9 +227,16 @@ class CustomModalBottomSheet extends StatelessWidget {
           ? alertSheet(context)
           : typeSheet == TypeBottomSheet.typeGridSheet
               ? gridSheet(context)
-              : customSheet(context),
+              : typeSheet == TypeBottomSheet.typeFullscreenSheet
+                  ? fullScreenSheet(context)
+                  : customSheet(context),
     );
   }
 }
 
-enum TypeBottomSheet { typeGridSheet, typeAlertSheet, typeCustomSheet }
+enum TypeBottomSheet {
+  typeGridSheet,
+  typeAlertSheet,
+  typeCustomSheet,
+  typeFullscreenSheet
+}

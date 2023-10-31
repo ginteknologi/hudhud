@@ -11,7 +11,7 @@ import 'package:mesjid_app/theme.dart';
 class NotifikasiPage extends StatelessWidget {
   const NotifikasiPage({super.key});
 
-  layout(context, ctrl) {
+  layout(BuildContext context, NotifikasiController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,

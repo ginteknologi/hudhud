@@ -159,10 +159,12 @@ class HomePage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(
-                                  'assets/icons/quran_listayat.svg',
-                                  height: 30,
-                                  width: 30),
+                              // SvgPicture.asset(
+                              //     'assets/icons/quran_listayat.svg',
+                              //     height: 30,
+                              //     width: 30),
+                              Image.asset('assets/icons/icon_perayat.png',
+                                  height: 30, width: 30),
                               SizedBox(
                                 height: 5,
                               ),

@@ -7,7 +7,7 @@ class ButtonElevated extends StatelessWidget {
   final String title;
   final double width;
   final double height;
-  final double size;
+  final double? size;
   final double radius;
   final bool selected;
   final String showIcon;
