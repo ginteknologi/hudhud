@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/dashboard/dashboard_service.dart';
 import 'package:simple_moment/simple_moment.dart';
@@ -15,9 +17,52 @@ class DashboardController extends GetxController {
   List listKota = [].obs;
 
   getData() async {
-    final result = await DashboardService().getList();
-    dataTerbaru.value = result['data'];
-    print(dataTerbaru);
+    // final result = await DashboardService().getList();
+    // dataTerbaru.value = result['data'];
+    // print(dataTerbaru);
+    dataTerbaru.value = {
+      "success": true,
+      "message": "Success",
+      "data": {
+        "artikel": {
+          "id": 1,
+          "image": "https://dummyimage.com/600x400/000/fff",
+          "judul": "Ini Judul",
+          "isi": "Ini isinya",
+          "tanggal": "2023-10-31T12:59:58.000Z",
+          "idCategoryArtikel": 1,
+          "createdAt": "2023-10-31T13:00:02.000Z",
+          "updatedAt": "2023-10-31T13:00:03.000Z"
+        },
+        "doa": {
+          "id": 1,
+          "judul": "asdasdas",
+          "seo": "asdasdas",
+          "isi": "sdasdasdas",
+          "surat": "sdasdasdasd",
+          "idCategoryDoa": 1,
+          "createdAt": "2023-10-24T15:07:09.000Z",
+          "updatedAt": "2023-10-24T15:07:10.000Z"
+        },
+        "campaign": {
+          "id": 1,
+          "image": "https://dummyimage.com/600x400/000/fff",
+          "judul": "Sedekah Mudharabah",
+          "seo": "sedekah-mudharabah",
+          "isi": "asdasdassa",
+          "deadline": "2024-01-01T03:12:11.000Z",
+          "dana_kebutuhan": 14000000,
+          "total_online": 0,
+          "total_offline": 0,
+          "total": 0,
+          "createdAt": "2023-10-31T03:11:51.000Z",
+          "updatedAt": "2023-10-31T03:11:52.000Z"
+        }
+      }
+    };
+    var newdata = constructDataTerbaru(dataTerbaru.value);
+    // print(jsonEncode(newdata));
+    listArtikel = newdata;
     isLoadingList.value = false;
   }
 
@@ -189,47 +234,47 @@ class DashboardController extends GetxController {
     ];
   }
 
-  getListArtikel() async {
-    return listArtikel = [
-      {
-        "title": "Memurnikan Akikah Menebarkan Sunnah",
-        "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
-        "kategori": "Artikel",
-        "image": "assets/icons/image-item1.png",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "url": ""
-      },
-      {
-        "title":
-            "Do’a Sebelum Masuk Mesjid اللَّهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ",
-        "subtitle": "Ust. Abdullah Sholeh Hadrami",
-        "kategori": "Artikel",
-        "image": "assets/icons/image-item1.png",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "url": ""
-      },
-      {
-        "title": "Penyaluran Sedekah Untuk Biaya Pengobatan",
-        "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
-        "kategori": "Artikel",
-        "image": "assets/icons/image-item1.png",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "url": ""
-      },
-      {
-        "title": '"Sampaikanlah dariku walau hanya satu ayat." (HR. Bukhari)',
-        "subtitle": "Ust. Abdullah Sholeh Hadrami",
-        "kategori": "Artikel",
-        "image": "assets/icons/image-item1.png",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "url": ""
-      },
-    ];
-  }
+  // getListArtikel() async {
+  //   return listArtikel = [
+  //     {
+  //       "title": "Memurnikan Akikah Menebarkan Sunnah",
+  //       "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
+  //       "kategori": "Artikel",
+  //       "image": "assets/icons/image-item1.png",
+  //       "time": "17:40",
+  //       "date": "17 Agustus 2023",
+  //       "url": ""
+  //     },
+  //     {
+  //       "title":
+  //           "Do’a Sebelum Masuk Mesjid اللَّهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ",
+  //       "subtitle": "Ust. Abdullah Sholeh Hadrami",
+  //       "kategori": "Artikel",
+  //       "image": "assets/icons/image-item1.png",
+  //       "time": "17:40",
+  //       "date": "17 Agustus 2023",
+  //       "url": ""
+  //     },
+  //     {
+  //       "title": "Penyaluran Sedekah Untuk Biaya Pengobatan",
+  //       "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
+  //       "kategori": "Artikel",
+  //       "image": "assets/icons/image-item1.png",
+  //       "time": "17:40",
+  //       "date": "17 Agustus 2023",
+  //       "url": ""
+  //     },
+  //     {
+  //       "title": '"Sampaikanlah dariku walau hanya satu ayat." (HR. Bukhari)',
+  //       "subtitle": "Ust. Abdullah Sholeh Hadrami",
+  //       "kategori": "Artikel",
+  //       "image": "assets/icons/image-item1.png",
+  //       "time": "17:40",
+  //       "date": "17 Agustus 2023",
+  //       "url": ""
+  //     },
+  //   ];
+  // }
 
   getListKota() {
     return listKota = [
@@ -268,16 +313,71 @@ class DashboardController extends GetxController {
     ];
   }
 
+  constructDataTerbaru(data) {
+    if (data != null) {
+      List<LatestNews> items = [];
+      var item = data['data'];
+      var keys = item.keys;
+      for (var key in keys) {
+        var el = item[key];
+        var tgl = "";
+        var timeleft;
+        if (el['tanggal'] != null) {
+          timeleft = DateTime.parse(el['tanggal']);
+          tgl = Moment.parse("$timeleft")
+              .format("dd MMMM yyyy", localeOverride: 'id');
+        }
+
+        items.add(LatestNews(
+          id: el['id'],
+          date: tgl,
+          time: tgl != "" ? "${timeleft.hour} : ${timeleft.minute}" : '',
+          title: el['judul'],
+          subtitle: el['isi'],
+          image: el['image'] ?? 'https://dummyimage.com/600x400/000/fff',
+          kategori: key,
+          url: "1",
+        ));
+      }
+      return items;
+    }
+    // for (var element in collection) {
+
+    // }
+  }
+
   @override
   void onInit() async {
     getData();
     getList();
     getMenuHome();
     getKajianLive();
-    getListArtikel();
+    // getListArtikel();
     getAllMenu();
     getWaktu();
     getListKota();
     super.onInit();
   }
+}
+
+class LatestNews {
+  int id;
+  String title, subtitle, kategori, image, time, date, url;
+  LatestNews(
+      {required this.id,
+      required this.title,
+      required this.subtitle,
+      required this.kategori,
+      required this.image,
+      required this.time,
+      required this.date,
+      required this.url});
+
+  Map toJson() => {
+        'title': title,
+        'subtitle': subtitle,
+        'kategori': kategori,
+        'image': image,
+        'time': time,
+      };
 }

@@ -374,35 +374,36 @@ class DashboardPage extends StatelessWidget {
   }
 
   getListItemVertical(DashboardController ctrl, BuildContext context) {
-    return Obx(() => !ctrl.isLoadingList.value ? ListView.separated(
-        // padding: EdgeInsets.only(left: 24, right: 24),
-        scrollDirection: Axis.vertical,
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: ctrl.listArtikel.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 10),
-        itemBuilder: (context, index) {
-          return FadeInLeft(
-              child: CustomCardItem(
-            isFullWidth: true,
-            height: 165,
-            size: "medium",
-            positionChip: CrossAxisAlignment.start,
-            chipColor: Theme.of(context).primaryColor,
-            chipText: '${ctrl.listArtikel[index]["kategori"]}',
-            chipTextStyle: TextStyle(
-                fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
-            title: '${ctrl.listArtikel[index]["title"]}',
-            subtitle:
-                '${ctrl.listArtikel[index]["time"]} | ${ctrl.listArtikel[index]["date"]}',
-            imgPath: '${ctrl.listArtikel[index]["image"]}',
+    return Obx(() => !ctrl.isLoadingList.value
+        ? ListView.separated(
+            // padding: EdgeInsets.only(left: 24, right: 24),
+            scrollDirection: Axis.vertical,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: ctrl.listArtikel.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 10),
+            itemBuilder: (context, index) {
+              LatestNews item = ctrl.listArtikel[index];
+              return FadeInLeft(
+                  child: CustomCardItem(
+                network: true,
+                isFullWidth: true,
+                height: 165,
+                size: "medium",
+                positionChip: CrossAxisAlignment.start,
+                chipColor: Theme.of(context).primaryColor,
+                chipText: '${item.kategori}',
+                chipTextStyle: TextStyle(
+                    fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+                title: '${item.title}',
+                subtitle: '${item.time} | ${item.date}',
+                imgPath: '${item.image}',
+              ));
+            },
           )
-          );
-        },
-      ) : const Text('Loading')
-    );
+        : const Text('Loading'));
   }
 
   getCardBanner(DashboardController ctrl, BuildContext context) {
@@ -951,6 +952,8 @@ class DashboardPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
-        body: Obx(() => ctrl.isLoadingList.value ? const Center(child: CircularProgressIndicator()) : layout(ctrl, context)));
+        body: Obx(() => ctrl.isLoadingList.value
+            ? const Center(child: CircularProgressIndicator())
+            : layout(ctrl, context)));
   }
 }

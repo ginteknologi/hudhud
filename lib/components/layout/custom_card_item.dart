@@ -12,6 +12,7 @@ class CustomCardItem extends StatelessWidget {
       this.height = 112,
       this.chipColor = Colors.red,
       this.subtitle,
+      this.network = false,
       this.size = "small",
       this.positionChip = CrossAxisAlignment.end,
       this.chipTextStyle = const TextStyle(
@@ -33,6 +34,7 @@ class CustomCardItem extends StatelessWidget {
   double? width;
   double? height;
   bool isFullWidth;
+  bool network;
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +59,20 @@ class CustomCardItem extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         clipBehavior: Clip.antiAlias,
-                        child: Image.asset(
-                          imgPath ?? 'assets/icons/image-item1.png',
-                          height: height,
-                          width: isFullWidth == true ? Get.width : 151,
-                          fit: BoxFit.cover,
-                        ),
+                        child: network
+                            ? Image.network(
+                                imgPath ??
+                                    'https://dummyimage.com/600x400/000/fff',
+                                height: height,
+                                width: isFullWidth == true ? Get.width : 151,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                imgPath ?? 'assets/icons/image-item1.png',
+                                height: height,
+                                width: isFullWidth == true ? Get.width : 151,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                     Align(
