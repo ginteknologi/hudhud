@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/sedekah/sedekah_service.dart';
+import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_service.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:get_storage/get_storage.dart';
 
 class TransactionSedekahController extends GetxController {
+  final dataStore = GetStorage();
   var isLoadingList = true.obs;
+  RxBool isLogin = false.obs;
+  var userLogin = {}.obs;
   var list = {}.obs;
   List listDonatur = [].obs;
   List denom = [].obs;
@@ -13,33 +18,82 @@ class TransactionSedekahController extends GetxController {
 
   var dataBillProduct = {}.obs;
   RxString inputPembayaran = "".obs;
-  var isHide = false.obs;
+  var inputAnonymous = false.obs;
+
+  MoneyMaskedTextController inputNominal = MoneyMaskedTextController(
+    decimalSeparator: '',
+    thousandSeparator: '.',
+    leftSymbol: 'Rp. ',
+    rightSymbol: '',
+    initialValue: 0,
+    precision: 0,
+  );
+  TextEditingController inputNama = TextEditingController();
+  TextEditingController inputNomor = TextEditingController();
+  TextEditingController inputEmail = TextEditingController();
+  TextEditingController inputPesan = TextEditingController();
+  final inputKey = GlobalKey<FormState>();
+
+  loadStorage() {
+    try {
+      isLogin.value = dataStore.read('isLogin');
+    } catch (e) {
+      dataStore.write('isLogin', false);
+    }
+    try {
+      userLogin.value = dataStore.read('userLogin');
+    } catch (e) {
+      dataStore.write('userLogin', {});
+    }
+  }  
+  setSedekah(nominal) async {
+    inputNominal.text = nominal;
+  }
 
   getData() async {
-    final result = await SedekahService().getList(page: 0, limit: 10);
+    final result = await DetailSedekahService().getList();
     list.value = result['data'];
     isLoadingList.value = false;
   }
 
   goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
-    print(id);
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }
 
   getDenom() async {
     denom = [
-      {"id": 1, "label": "Rp. 10.000", "value": 10000},
-      {"id": 2, "label": "Rp. 50.000", "value": 50000},
-      {"id": 3, "label": "Rp. 100.000", "value": 100000},
+      {"id": 1, "label": "Rp. 10.000", "value": "10000"},
+      {"id": 2, "label": "Rp. 50.000", "value": "50000"},
+      {"id": 3, "label": "Rp. 100.000", "value": "100000"},
     ];
     denomSelected = List.generate(denom.length, (index) => false.obs);
     return denom;
+  }
+  postInput() {
+    var status = {
+      "code": 400,
+      "message": "Mohon untuk di cek kembali data anda."
+    };
+    if (inputKey.currentState!.validate()) {
+      status = {"code": 200, "message": ""};
+      final input = {
+        "nominal": inputNominal.numberValue,
+        'nama': inputNama.text,
+        'email': 'ariqamuharam@gmail.com', // ganti sama email login
+        'nomor': inputNomor.text,
+        'anonim': inputAnonymous.value,
+        'pesan': inputPesan.text,
+      };
+      dataStore.write('inputDataPembayaran', input);
+    }
+    return status;
   }
 
   @override
   void onInit() {
     getDenom();
+    getData();
     super.onInit();
   }
 }

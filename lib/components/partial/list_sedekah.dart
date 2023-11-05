@@ -13,7 +13,8 @@ class ListItemSedekahWidget extends StatelessWidget {
       this.dueDay = 0,
       this.targetPrice = 0,
       this.totalPrice = 0,
-      this.percentage = 0.3,
+      this.lineProgress = 0,
+      this.persentase = 0,
       this.image});
 
   int id;
@@ -23,7 +24,8 @@ class ListItemSedekahWidget extends StatelessWidget {
   int? totalPrice;
   int? dueDay;
   String? image;
-  double? percentage;
+  double? lineProgress;
+  int? persentase;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class ListItemSedekahWidget extends StatelessWidget {
                   margin: const EdgeInsets.only(right: 2, bottom: 11),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       // BoxShadow(
                       //   color: Colors.grey.shade300,
                       //   spreadRadius: 0,
@@ -70,7 +72,7 @@ class ListItemSedekahWidget extends StatelessWidget {
                           alignment: Alignment.topCenter,
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: Image.asset(
+                              child: Image.network(
                                 image!,
                                 height: 120,
                                 width: 110,
@@ -185,7 +187,7 @@ class ListItemSedekahWidget extends StatelessWidget {
                                       Flexible(
                                         flex: 1,
                                         child: LinearProgressIndicator(
-                                          value: percentage,
+                                          value: lineProgress,
                                           minHeight: 10,
                                           backgroundColor:
                                               const Color(0xFF92E3A9),
@@ -200,7 +202,7 @@ class ListItemSedekahWidget extends StatelessWidget {
                                         width: 10,
                                       ),
                                       Text(
-                                        "50%",
+                                        '$persentase%',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: Theme.of(context)

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/metode/metode_transaksi_controller.dart';
 
@@ -33,15 +31,12 @@ class _MetodeTransaksiSedekahPageState
                             fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Column(
-                      children: List.generate(
-                          ctrl.dataBillProduct['data']['ewallet'].length,
-                          (index) {
-                        final getInfo =
-                            ctrl.dataBillProduct['data']['ewallet'][index];
+                      children: List.generate(ctrl.dataBillProduct['ewallet'].length,(index) {
+                        final getInfo = ctrl.dataBillProduct['ewallet'][index];
                         return Column(
                           children: [
                             RadioListTile(
@@ -51,16 +46,16 @@ class _MetodeTransaksiSedekahPageState
                                   Theme.of(context).colorScheme.background,
                               title: Row(
                                 children: [
-                                  Image.asset(
-                                    getInfo['image'],
+                                  Image.network(
+                                    getInfo['data']['img'],
                                     fit: BoxFit.fitHeight,
                                     width:
                                         MediaQuery.of(context).size.width * 0.2,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
-                                  Text(getInfo['label'],
+                                  Text(getInfo['data']['name'],
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall!
@@ -70,16 +65,17 @@ class _MetodeTransaksiSedekahPageState
                                           ))
                                 ],
                               ),
-                              value: getInfo['id'].toString(),
+                              value: getInfo['_id'].toString(),
                               groupValue: ctrl.inputPembayaran.value,
                               onChanged: (String? value) {
                                 setState(() {
+                                  ctrl.inputTypeBayar.value = 'ewallet';
+                                  ctrl.dataMetodeBayar.value = getInfo['data'];
                                   ctrl.inputPembayaran.value = value.toString();
                                 });
                               },
                             ),
-                            if (ctrl.dataBillProduct['data']['bank'].length !=
-                                index + 1)
+                            if (ctrl.dataBillProduct['bank'].length != index + 1)
                               const Divider(),
                           ],
                         );
@@ -94,7 +90,7 @@ class _MetodeTransaksiSedekahPageState
                             fontWeight: FontWeight.bold, color: Colors.black45),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Align(
@@ -106,14 +102,13 @@ class _MetodeTransaksiSedekahPageState
                             fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Column(
                       children: List.generate(
-                          ctrl.dataBillProduct['data']['bank'].length, (index) {
-                        final getInfo =
-                            ctrl.dataBillProduct['data']['bank'][index];
+                          ctrl.dataBillProduct['bank'].length, (index) {
+                        final getInfo = ctrl.dataBillProduct['bank'][index];
                         return Column(
                           children: [
                             RadioListTile(
@@ -123,16 +118,16 @@ class _MetodeTransaksiSedekahPageState
                                   Theme.of(context).colorScheme.background,
                               title: Row(
                                 children: [
-                                  Image.asset(
-                                    getInfo['image'],
+                                  Image.network(
+                                    getInfo['data']['img'],
                                     fit: BoxFit.fitHeight,
                                     width:
                                         MediaQuery.of(context).size.width * 0.2,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
-                                  Text(getInfo['label'],
+                                  Text(getInfo['data']['name'],
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall!
@@ -142,16 +137,17 @@ class _MetodeTransaksiSedekahPageState
                                           ))
                                 ],
                               ),
-                              value: getInfo['id'].toString(),
+                              value: getInfo['_id'].toString(),
                               groupValue: ctrl.inputPembayaran.value,
                               onChanged: (String? value) {
                                 setState(() {
+                                  ctrl.inputTypeBayar.value = 'va';
+                                  ctrl.dataMetodeBayar.value = getInfo['data'];
                                   ctrl.inputPembayaran.value = value.toString();
                                 });
                               },
                             ),
-                            if (ctrl.dataBillProduct['data']['bank'].length !=
-                                index + 1)
+                            if (ctrl.dataBillProduct['bank'].length != index + 1)
                               const Divider(),
                           ],
                         );
@@ -160,7 +156,7 @@ class _MetodeTransaksiSedekahPageState
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "*minimal pembayaran Rp. 10.000",
+                        "*minimal pembayaran Rp. 25.000",
                         textAlign: TextAlign.left,
                         style: context.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black45),
@@ -169,22 +165,11 @@ class _MetodeTransaksiSedekahPageState
                     const SizedBox(
                       height: 20,
                     ),
-                    // Container(
-                    //   width: Get.width,
-                    //   child: ButtonElevated(
-                    //     title: 'Bayar Sekarang',
-                    //     width: Get.width,
-                    //     bgcolor: Theme.of(context).primaryColor,
-                    //     height: 45,
-                    //     color: Colors.white,
-                    //     radius: 5,
-                    //     onPressed: () {
-                    //       ctrl.goToNextPage(ctrl.inputPembayaran.value);
-                    //     },
-                    //   ),
-                    // )
                   ],
-                ))));
+                )
+              )
+            )
+          );
   }
 
   @override
@@ -194,11 +179,11 @@ class _MetodeTransaksiSedekahPageState
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
-        body: layout(ctrl, context),
+        body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
-            child: Container(
+            child: SizedBox(
               width: Get.width,
               child: ButtonElevated(
                 title: 'Bayar Sekarang',

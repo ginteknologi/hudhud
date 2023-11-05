@@ -1,15 +1,18 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/button/outlinebutton.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
+// import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/status/status_sedekah_controller.dart';
 import 'package:mesjid_app/routes/home/index.dart';
-import 'package:mesjid_app/routes/onboard/index.dart';
+// import 'package:mesjid_app/routes/onboard/index.dart';
 import 'package:mesjid_app/theme.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class StatusTransaksiSedekahPage extends StatelessWidget {
   const StatusTransaksiSedekahPage({super.key});
@@ -20,16 +23,16 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
             physics: const ClampingScrollPhysics(),
             child: Padding(
                 padding: const EdgeInsets.only(left: 21, right: 21),
-                child: getCurrentLayout(
-                    ctrl, context, ctrl.payments['selectedPayment']['type']))));
+                child: getCurrentLayout(ctrl, context, 2))));
   }
 
   Widget getCurrentLayout(
       StatusSedekahController ctrl, BuildContext context, type) {
-    if (type == 2) {
-      return layoutEwallet(ctrl, context);
-    } else {
+        print(ctrl.dataPayment['metode']);
+    if (ctrl.dataPayment['metode'] == 'va') {
       return layoutVa(ctrl, context);
+    } else {
+      return layoutEwallet(ctrl, context);
     }
   }
 
@@ -63,7 +66,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                           height: 10,
                         ),
                         AutoSizeText(
-                          "Senin, 13 September 2023, 10 : 10",
+                          // "Senin, 13 September 2023, 10 : 10",
+                          DateFormat('EEEE, dd MMMM yyyy, HH : mm').format(DateTime.parse(ctrl.dataInvoice['paymentMethod']['expiration_date'])),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: Theme.of(context)
@@ -88,7 +92,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
         ),
         ListItemUiWidget(
           id: 1,
-          title: ctrl.payments['selectedPayment']['label'],
+          title: ctrl.dataInvoice['detail']['paymentSelect']['name'],
           titleStyle: TextStyle(
               fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
               color: Colors.black,
@@ -96,15 +100,15 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           category: "Metode Pembayaran",
           hasRightContent: true,
           showIcon: IconPosition.right,
-          iconRight: Image.asset(
-            ctrl.payments['selectedPayment']['image'],
+          iconRight: Image.network(
+            ctrl.dataInvoice['detail']['paymentSelect']['img'],
             fit: BoxFit.fitHeight,
             width: MediaQuery.of(context).size.width * 0.2,
           ),
         ),
         ListItemUiWidget(
           id: 2,
-          title: "131003140303101020",
+          title: ctrl.dataInvoice['paymentMethod']['account_number'],
           titleStyle: TextStyle(
               fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
               color: Colors.black,
@@ -112,11 +116,26 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           category: "Nomor Virtual Account",
           hasRightContent: true,
           showIcon: IconPosition.right,
-          iconRight: const Icon(Icons.copy),
+          iconRight: GestureDetector(
+            onTap: () {
+              final String accountNumber = ctrl.dataInvoice['paymentMethod']['account_number'];
+              Clipboard.setData(ClipboardData(text: accountNumber));
+              Fluttertoast.showToast(
+                msg: 'Berhasil disalin',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
+            },
+            child: const Icon(Icons.copy),
+          ),
         ),
         ListItemUiWidget(
           id: 3,
-          title: priceFormat.format(50000),
+          title: priceFormat.format(ctrl.dataInvoice['detail']['nominal']),
           titleStyle: TextStyle(
               fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
               color: Colors.black,
@@ -124,7 +143,22 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           category: "Donasimu",
           hasRightContent: true,
           showIcon: IconPosition.right,
-          iconRight: const Icon(Icons.copy),
+          iconRight: GestureDetector(
+            onTap: () {
+              final String accountNumber = ctrl.dataInvoice['detail']['nominal'].toString();
+              Clipboard.setData(ClipboardData(text: accountNumber));
+              Fluttertoast.showToast(
+                msg: 'Berhasil disalin',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
+            },
+            child: const Icon(Icons.copy),
+          ),
         ),
         Container(
             margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -165,16 +199,16 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Batas Waktu Pembayaran",
+                          "Berikut pembayaran tagihan anda, Lakukan pembayaran segera",
                           style: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.normal,
                               color: Colors.white),
                         ),
-                        Text(
-                          "Senin, 13 September 2023, 10 : 10",
-                          style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
+                        // Text(
+                        //   DateFormat('EEEE, dd MMMM yyyy, HH : mm').format(DateTime.parse(ctrl.dataInvoice['paymentMethod']['expiration_date'])),
+                        //   style: context.textTheme.titleMedium?.copyWith(
+                        //       fontWeight: FontWeight.bold, color: Colors.white),
+                        // ),
                       ])),
             )),
       ),
@@ -205,23 +239,23 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                         Flexible(
                           child: Container(
                             padding: const EdgeInsets.only(right: 13.0),
-                            child: const Text(
-                              'Menggunakan DANA',
+                            child: Text(
+                              'Menggunakan ${ctrl.dataInvoice['detail']['paymentSelect']['name']}',
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color(0xFF212121),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
-                        Image.asset(
-                          ctrl.payments['selectedPayment']['image'],
-                          fit: BoxFit.fitHeight,
-                          width: MediaQuery.of(context).size.width * 0.2,
-                        )
+                        // Image.asset(
+                        //   ctrl.payments['selectedPayment']['image'],
+                        //   fit: BoxFit.fitHeight,
+                        //   width: MediaQuery.of(context).size.width * 0.2,
+                        // )
                       ],
-                    ),
+                    ),  
                     const Divider(
                       color: Colors.black45,
                     ),
@@ -236,7 +270,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                               style: context.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black)),
-                          Text("Rp. 50.000",
+                          Text(priceFormat.format(ctrl.dataInvoice['detail']['nominal']),
                               style: context.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: Colors.black)),
@@ -257,7 +291,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Menunggu Pembayaran", context: context, elevation: 0),
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
       persistentFooterButtons: [
         Padding(
           padding: const EdgeInsets.only(left: 21, right: 21),

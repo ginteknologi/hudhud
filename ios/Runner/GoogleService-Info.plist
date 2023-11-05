@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.mesjidApp</string>
+	<string>com.mesjidApp</string>
 	<key>PROJECT_ID</key>
 	<string>mesjid-app</string>
 	<key>STORAGE_BUCKET</key>

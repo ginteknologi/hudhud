@@ -1,13 +1,11 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/button/outlinebutton.dart';
 import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/transaksi_sedekah_controller.dart';
+import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
 
 class TransaksiSedekahPage extends StatelessWidget {
   const TransaksiSedekahPage({super.key});
@@ -16,13 +14,17 @@ class TransaksiSedekahPage extends StatelessWidget {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
-            child: Padding(
+            child: Form(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              key: ctrl.inputKey,
+              child: 
+            Padding(
               padding: const EdgeInsets.only(left: 21, right: 21),
               child: Column(
                 children: [
                   Card(
                       elevation: 0,
-                      color: Color(0xFF92E3A9),
+                      color: const Color(0xFF92E3A9),
                       margin: const EdgeInsets.only(top: 20),
                       clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
@@ -33,18 +35,17 @@ class TransaksiSedekahPage extends StatelessWidget {
                           width: Get.width,
                           height: 120,
                           child: Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "Sedekah Masjid",
+                                  Text('sedekah',
                                     style:
                                         context.textTheme.titleMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   AutoSizeText(
@@ -130,7 +131,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                   //           )))
                   //       .toList(),
                   // ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Column(
@@ -147,25 +148,37 @@ class TransaksiSedekahPage extends StatelessWidget {
                         ),
                       ),
                       InputText(
-                        labelPosition: 'none',
-                        placeholder: 'Rp. 0',
-                        placeholderStyle:
-                            Theme.of(context).textTheme.bodyMedium,
-                        inputPadding: const EdgeInsets.all(15),
-                        controller: ctrl.txtController,
-                        onSubmit: (newValue) {},
+                        controller: ctrl.inputNominal,
+                        labelPosition: "none",
+                        placeholder: "Rp. ",
+                        isFill: true,
+                        inputAction: TextInputAction.next,
+                        inputType: TextInputType.number,
+                        inputStyle: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: Theme.of(context).colorScheme.primary),
+                        placeholderStyle: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: Theme.of(context).colorScheme.primary),
+                        onSubmit: (newValue) {
+                          FocusScope.of(context).nextFocus();
+                        },
                         onEditingComplete: () {},
                         onChanged: (newValue) {},
                         validator: (newValue) {
                           if (newValue!.isEmpty) {
                             return "Mohon untuk diisi.";
+                          } else if (ctrl.inputNominal.numberValue < 1000) {
+                            return "Nominal kurang dari Rp. 1.000,-";
                           }
                           return null;
                         },
-                      )
+                      ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Column(
@@ -182,14 +195,16 @@ class TransaksiSedekahPage extends StatelessWidget {
                         ),
                       ),
                       InputText(
-                        labelPosition: 'none',
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        placeholder: 'Nama Donatur',
-                        placeholderStyle:
-                            Theme.of(context).textTheme.bodyMedium,
-                        inputPadding: const EdgeInsets.all(15),
-                        controller: ctrl.txtController,
-                        onSubmit: (newValue) {},
+                        enabled: !ctrl.isLogin.value,
+                        controller: ctrl.inputNama,
+                        labelPosition: "none",
+                        placeholder: "Nama Lengkap",
+                        isFill: true,
+                        placeholderStyle: Theme.of(context).textTheme.bodyMedium,
+                        inputAction: TextInputAction.next,
+                        onSubmit: (newValue) {
+                          FocusScope.of(context).nextFocus();
+                        },
                         onEditingComplete: () {},
                         onChanged: (newValue) {},
                         validator: (newValue) {
@@ -198,45 +213,47 @@ class TransaksiSedekahPage extends StatelessWidget {
                           }
                           return null;
                         },
-                      ),
+                      ),                      
                       InputText(
-                        labelPosition: 'none',
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        placeholder: 'Nomor Handphone',
-                        placeholderStyle:
-                            Theme.of(context).textTheme.bodyMedium,
-                        inputPadding: const EdgeInsets.all(15),
-                        controller: ctrl.txtController,
-                        onSubmit: (newValue) {},
+                        controller: ctrl.inputNomor,
+                        labelPosition: "none",
+                        placeholder: "Nomor Handphone Aktif",
+                        isFill: true,
+                        inputType: TextInputType.number,
+                        placeholderStyle: Theme.of(context).textTheme.bodyMedium,
+                        inputAction: TextInputAction.next,
+                        onSubmit: (newValue) {
+                          FocusScope.of(context).nextFocus();
+                        },
                         onEditingComplete: () {},
                         onChanged: (newValue) {},
                         validator: (newValue) {
                           if (newValue!.isEmpty) {
                             return "Mohon untuk diisi.";
+                          } else if (!newValue.isPhoneNumber) {
+                            return "Hanya diisi nomor handphone dengan benar.";
                           }
                           return null;
                         },
-                      ),
+                      ),                      
                       InputText(
-                        labelPosition: 'none',
-                        margin: EdgeInsets.symmetric(vertical: 5),
+                        labelPosition: "none",
+                        margin: const EdgeInsets.symmetric(vertical: 5),
                         placeholder: "Do'a Anda",
-                        placeholderStyle:
-                            Theme.of(context).textTheme.bodyMedium,
+                        placeholderStyle: Theme.of(context).textTheme.bodyMedium,
                         inputPadding: const EdgeInsets.all(15),
                         multiText: true,
                         maxLine: 5,
-                        controller: ctrl.txtController,
-                        onSubmit: (newValue) {},
+                        controller: ctrl.inputPesan,
+                        onSubmit: (newValue) {
+                          FocusScope.of(context).unfocus();
+                        },
                         onEditingComplete: () {},
                         onChanged: (newValue) {},
                         validator: (newValue) {
-                          if (newValue!.isEmpty) {
-                            return "Mohon untuk diisi.";
-                          }
                           return null;
                         },
-                      ),
+                      ),                      
                     ],
                   ),
                   const SizedBox(
@@ -246,20 +263,20 @@ class TransaksiSedekahPage extends StatelessWidget {
                     children: [
                       Obx(
                         () => Switch(
-                          value: ctrl.isHide.value,
+                          value: ctrl.inputAnonymous.value,
                           onChanged: (value) {
                             print(value);
-                            ctrl.isHide.value = value;
+                            ctrl.inputAnonymous.value = value;
                           },
-                          activeTrackColor: Color(0xFF92E3A9),
+                          activeTrackColor: const Color(0xFF92E3A9),
                           activeColor: Theme.of(context).primaryColor,
                           inactiveThumbColor: Colors.white,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      Text("Sembunyikan Nama Anda")
+                      const Text("Sembunyikan Nama Anda")
                     ],
                   ),
                   const SizedBox(
@@ -281,11 +298,14 @@ class TransaksiSedekahPage extends StatelessWidget {
                   // )
                 ],
               ),
-            )));
+            )
+            )
+          )
+        );
   }
 
   getListDenom(TransactionSedekahController ctrl, BuildContext context) {
-    return Container(
+    return SizedBox(
         height: 50,
         width: Get.width,
         child: Row(
@@ -294,12 +314,12 @@ class TransaksiSedekahPage extends StatelessWidget {
               return Container(
                 // width: 140,
                 alignment: Alignment.center,
-                margin: EdgeInsets.only(left: 3),
+                margin: const EdgeInsets.only(left: 3),
 
                 child: Obx(() => ChoiceChip(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(width: 1, color: Colors.black12)),
+                          side: const BorderSide(width: 1, color: Colors.black12)),
                       selected: ctrl.denomSelected[index].value,
                       label: AutoSizeText(
                         ctrl.denom[index]['label'],
@@ -317,14 +337,15 @@ class TransaksiSedekahPage extends StatelessWidget {
                         //         : Theme.of(context).primaryColor),
                         maxLines: 1,
                       ),
-                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 10),
                       labelStyle: TextStyle(
                           color: Colors.grey[300], fontWeight: FontWeight.w500),
                       backgroundColor: Colors.transparent,
                       pressElevation: 1,
                       selectedColor: Theme.of(context).primaryColor,
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       onSelected: (selected) {
+                        ctrl.setSedekah(ctrl.denom[index]['value']);
                         var idxBefore = ctrl.denomSelected
                             .indexWhere((e) => e.value == true);
                         if (index == idxBefore) {
@@ -348,15 +369,17 @@ class TransaksiSedekahPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(TransactionSedekahController());
+
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Transaksi", context: context, elevation: 0),
-        body: layout(ctrl, context),
-        persistentFooterButtons: [
+        body: layout(ctrl,context),
+        persistentFooterButtons: 
+        [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
-            child: Container(
+            child: SizedBox(
               width: Get.width,
               child: ButtonElevated(
                 title: 'Lanjut Pembayaran',
@@ -366,11 +389,18 @@ class TransaksiSedekahPage extends StatelessWidget {
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  ctrl.goToMetode('1');
+                  final result = ctrl.postInput();
+                  if (result['code'] == 200) {
+                      print('berhasil');
+                      ctrl.goToMetode('1');
+                  } else {
+                      print('gagal');
+                  }
                 },
               ),
             ),
           )
-        ]);
+        ]
+      );
   }
 }

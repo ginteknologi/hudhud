@@ -25,17 +25,16 @@ class _EasyImageViewPagerState extends State<EasyImageViewPager> {
   Widget build(BuildContext context) {
     return PageView.builder(
       reverse: true,
-      physics: _pagingEnabled
-          ? const PageScrollPhysics()
-          : const NeverScrollableScrollPhysics(),
+      physics: _pagingEnabled ? const PageScrollPhysics() : const NeverScrollableScrollPhysics(),
       itemCount: widget.imageProviders.length,
       controller: _pageController,
       itemBuilder: (context, index) {
-        final image = widget.imageProviders[index];
+        final image = widget.imageProviders[index]['image'];
         return EasyImageView(
           imageProvider: image,
           onScaleChanged: (scale) {
             setState(() {
+              print(index);
               // Disable paging when image is zoomed-in
               _pagingEnabled = scale <= 1.0;
             });
@@ -75,8 +74,7 @@ class EasyImageView extends StatefulWidget {
 }
 
 class _EasyImageViewState extends State<EasyImageView> {
-  final TransformationController _transformationController =
-      TransformationController();
+  final TransformationController _transformationController = TransformationController();
 
   @override
   void dispose() {

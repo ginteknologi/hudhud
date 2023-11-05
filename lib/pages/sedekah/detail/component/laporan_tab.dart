@@ -1,8 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
+// import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
 import 'package:mesjid_app/theme.dart';
 
@@ -25,17 +26,16 @@ class LaporanTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                   //set border radius more than 50% of height and width to make circle
                 ),
-                child: Container(
+                child: SizedBox(
                   height: 240,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 50,
                         child: Align(
-                          child: Text(
-                            ctrl.todayLaporan['tanggal'],
+                          child: Text( DateFormat('dd MMMM yyyy').format(DateTime.now()),
                             style: context.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
@@ -45,10 +45,10 @@ class LaporanTab extends StatelessWidget {
                       Expanded(
                           flex: 2,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             width: Get.width,
                             constraints: BoxConstraints.loose(Size.infinite),
-                            decoration: BoxDecoration(color: Colors.white),
+                            decoration: const BoxDecoration(color: Colors.white),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -64,8 +64,7 @@ class LaporanTab extends StatelessWidget {
                                       maxLines: 1,
                                     ),
                                     AutoSizeText(
-                                      priceFormat.format(
-                                          ctrl.todayLaporan['totalOnline']),
+                                      priceFormat.format(ctrl.detail['total_online']),
                                       style: context.textTheme.titleMedium
                                           ?.copyWith(
                                               fontWeight: FontWeight.bold,
@@ -74,7 +73,7 @@ class LaporanTab extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Column(
@@ -89,8 +88,7 @@ class LaporanTab extends StatelessWidget {
                                       maxLines: 1,
                                     ),
                                     AutoSizeText(
-                                      priceFormat.format(
-                                          ctrl.todayLaporan['totalOffline']),
+                                      priceFormat.format(ctrl.detail['total_offline']),
                                       style: context.textTheme.titleMedium
                                           ?.copyWith(
                                               fontWeight: FontWeight.bold,
@@ -99,7 +97,7 @@ class LaporanTab extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Divider(),
+                                const Divider(),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -113,7 +111,7 @@ class LaporanTab extends StatelessWidget {
                                     ),
                                     AutoSizeText(
                                       priceFormat
-                                          .format(ctrl.todayLaporan['total']),
+                                          .format(ctrl.detail['total']),
                                       style: context.textTheme.titleMedium
                                           ?.copyWith(
                                               fontWeight: FontWeight.bold,
@@ -129,11 +127,11 @@ class LaporanTab extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               getList(ctrl, context),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
             ]));
@@ -142,11 +140,10 @@ class LaporanTab extends StatelessWidget {
   getList(DetailSedekahController ctrl, BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
-      itemCount: ctrl.listLaporan.length,
+      itemCount: ctrl.listPenyaluran.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         // Datum model = filteredEvents[index];
-        var item = ctrl.listLaporan[index];
         return FadeInUp(
           child: Card(
             borderOnForeground: false,
@@ -159,7 +156,7 @@ class LaporanTab extends StatelessWidget {
               //set border radius more than 50% of height and width to make circle
             ),
             child: Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               constraints: BoxConstraints.loose(Size.infinite),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -170,24 +167,22 @@ class LaporanTab extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      '•   ' + item['tanggal'],
+                    child: Text('•   ${DateFormat('dd MMMM yyyy').format(DateTime.parse(ctrl.listPenyaluran[index]['tanggal']))}',
                       style: context.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Colors.black45,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.only(left: 20),
                     child: Column(
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: AutoSizeText(
-                            item['title'],
+                          child: AutoSizeText(ctrl.listPenyaluran[index]['judul'],
                             style: context.textTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -232,7 +227,7 @@ class LaporanTab extends StatelessWidget {
                                       maxLines: 1,
                                     ),
                                     AutoSizeText(
-                                      priceFormat.format(item['dana']),
+                                      priceFormat.format(ctrl.listPenyaluran[index]['dana_tersalurkan']),
                                       style: context.textTheme.titleLarge
                                           ?.copyWith(
                                               fontWeight: FontWeight.w900,
@@ -243,19 +238,17 @@ class LaporanTab extends StatelessWidget {
                                 ),
                               )), //SizedBox
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Text(
-                          item['description'],
+                        Text(ctrl.listPenyaluran[index]['isi'],
                           style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w300, color: Colors.black),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Image.asset(
-                          item['image'],
+                        Image.network(ctrl.listPenyaluran[index]['image'],
                           width: Get.width,
                         )
                       ],

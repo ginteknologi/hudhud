@@ -12,6 +12,7 @@ import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:mesjid_app/routes/akun/index.dart';
 import 'package:mesjid_app/routes/notifikasi/index.dart';
+import 'package:mesjid_app/routes/quran/index.dart';
 // import 'package:mesjid_app/routes/sedekah/index.dart';
 // import 'package:simple_moment/simple_moment.dart';
 
@@ -383,6 +384,10 @@ class DashboardPage extends StatelessWidget {
             child: InkWell(
                 borderRadius: BorderRadius.circular(7),
                 onTap: () {
+                  if (ctrl.lastRead['ayatNumber'] > 0) {
+                    Get.toNamed('${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');                                       
+                    // Get.toNamed(AppRoutes.detailEventScreen);
+                  }
                   print("tapped");
                 },
                 child: SizedBox(
@@ -420,8 +425,7 @@ class DashboardPage extends StatelessWidget {
                                                     .bodySmall
                                                     ?.fontSize,
                                                 color: Colors.black)),
-                                        Text(
-                                          "Al-Fatihah : 5",
+                                          Text(ctrl.lastRead['ayatNumber'] > 0 ? ctrl.lastRead['suratName'].toString()+' : '+ctrl.lastRead['ayatNumber'].toString() : 'Belum baca',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)

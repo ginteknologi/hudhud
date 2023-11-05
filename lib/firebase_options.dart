@@ -66,7 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '878574490380',
     projectId: 'mesjid-app',
     storageBucket: 'mesjid-app.appspot.com',
-    iosBundleId: 'com.example.mesjidApp',
+    iosBundleId: 'com.mesjidApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -75,6 +75,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '878574490380',
     projectId: 'mesjid-app',
     storageBucket: 'mesjid-app.appspot.com',
-    iosBundleId: 'com.example.mesjidApp.RunnerTests',
+    iosBundleId: 'com.mesjidApp.RunnerTests',
   );
 }

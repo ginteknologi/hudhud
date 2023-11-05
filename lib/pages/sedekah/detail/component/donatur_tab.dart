@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
@@ -7,6 +8,7 @@ import 'package:mesjid_app/theme.dart';
 
 class DonaturTab extends StatelessWidget {
   const DonaturTab({super.key});
+  
 
   layout(DetailSedekahController ctrl, BuildContext context) {
     return Column(
@@ -32,19 +34,16 @@ class DonaturTab extends StatelessWidget {
                   return FadeInUp(
                     child: ListItemUiWidget(
                       id: ctrl.listDonatur[index]['id'],
-                      title:
-                          priceFormat.format(ctrl.listDonatur[index]['title']),
+                      title: priceFormat.format(ctrl.listDonatur[index]['nominal']),
                       titleStyle: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold),
-                      subTitle: ctrl.listDonatur[index]['subTitle'],
-                      category: ctrl.listDonatur[index]['category'],
+                      category: ctrl.listDonatur[index]['nama_donatur'].toString(),
+                      subTitle: ctrl.listDonatur[index]['ucapan'].toString(),
                       hasRightContent: true,
                       rightContent: [
                         Text(
-                            ctrl.listDonatur[index]['date'] +
-                                ', ' +
-                                ctrl.listDonatur[index]['time'],
+                             '${DateFormat('dd/MM/yyyy, HH:mm').format(DateTime.parse(ctrl.listDonatur[index]['tanggal']))}, ',
                             style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.normal,
                             ))
@@ -58,6 +57,7 @@ class DonaturTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     final ctrl = Get.put(DetailSedekahController());
     return layout(ctrl, context);
   }

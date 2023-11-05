@@ -1,19 +1,18 @@
-import 'dart:async';
-
-import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+// import 'dart:async';
+// import 'package:animate_do/animate_do.dart';
+// import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
+// import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/layout/sliding_app_bar.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
+// import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/home/home_controller.dart';
 import 'package:mesjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
 import 'package:mesjid_app/pages/quran/halaman/halaman_quran_controller.dart';
-import 'package:mesjid_app/theme.dart';
+// import 'package:mesjid_app/theme.dart';
 
 class HalamanQuranPage extends StatefulWidget {
   const HalamanQuranPage({super.key});
@@ -22,10 +21,8 @@ class HalamanQuranPage extends StatefulWidget {
   State<HalamanQuranPage> createState() => _HalamanQuranPageState();
 }
 
-class _HalamanQuranPageState extends State<HalamanQuranPage>
-    with SingleTickerProviderStateMixin {
-  layout(HalamanQuranController ctrl, BuildContext context,
-      HomeController ctrlHome) {
+class _HalamanQuranPageState extends State<HalamanQuranPage> with SingleTickerProviderStateMixin {
+  layout(HalamanQuranController ctrl, BuildContext context, HomeController ctrlHome) {
     return SafeArea(
         child: Container(
             constraints: BoxConstraints.loose(Size.infinite),
@@ -47,14 +44,10 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                                     //   _show = !_show;
                                     // });
                                   });
-
-                                  ctrlHome.visible.value =
-                                      !ctrlHome.visible.value;
-
+                                  ctrlHome.visible.value = !ctrlHome.visible.value;
                                   ctrlHome.selectedIdx.value = 1;
                                 },
-                                child: EasyImageViewPager(
-                                    imageProviders: ctrl.listSurah)
+                                child: EasyImageViewPager(imageProviders: ctrl.listSurah)
 
                                 // PageView.builder(
                                 //     itemCount: ctrl.listSurah.length,
@@ -89,7 +82,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                           height: 60,
                         ),
                         onTap: () {
-                          showPopup(ctrl, context);
+                          showPopup(ctrl, context, ctrlHome);
                         },
                       ),
                     )),
@@ -138,6 +131,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
   void showPopup(
     HalamanQuranController ctrl,
     BuildContext context,
+    HomeController ctrlHome,
   ) {
     showDialog(
         context: context,

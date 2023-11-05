@@ -76,7 +76,7 @@ class HomePage extends StatelessWidget {
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text("Belum baca Al-Quran",
+                            child: Text(ctrl.lastReadPerayat['ayatNumber'] > 0 ? '${ctrl.lastReadPerayat['suratName']} : ${ctrl.lastReadPerayat['ayatNumber']}' : 'Belum baca Al-quran',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: context.textTheme.labelMedium?.copyWith(

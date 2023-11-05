@@ -9,6 +9,7 @@ import 'package:mesjid_app/routes/onboard/index.dart';
 import 'package:mesjid_app/routes/quran/index.dart';
 import 'package:mesjid_app/routes/ruangan/index.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:mesjid_app/routes/kiblat/index.dart';
 
 class AppPages {
   static var list = [
@@ -22,7 +23,8 @@ class AppPages {
     ...PagesRuangan.pages,
     ...PagesSedekah.pages,
     ...PagesOnboard.pages,
-    ...PagesNotifikasi.pages
+    ...PagesNotifikasi.pages,
+    ...PagesKiblat.pages
   ];
   static var root = RoutesHome.splashscreen;
 }

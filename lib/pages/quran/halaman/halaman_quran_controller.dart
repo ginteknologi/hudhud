@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:mesjid_app/pages/home/home_controller.dart';
 import 'package:mesjid_app/pages/quran/halaman/halaman_quran_page.dart';
 import 'package:mesjid_app/pages/quran/quran_service.dart';
+import 'package:get_storage/get_storage.dart';
 
-class HalamanQuranController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class HalamanQuranController extends GetxController with GetSingleTickerProviderStateMixin {
+  final dataStore = GetStorage();
+  var lastReadPerhalaman = {}.obs;
   var isLoadingList = true.obs;
   var list = {}.obs;
   List listSurah = [].obs;
@@ -26,11 +28,33 @@ class HalamanQuranController extends GetxController
   }
 
   getQuran() async {
+    lastReadPerhalaman.value = dataStore.read('perHalamanLastRead');
     listSurah = [
-      'assets/img/quran/1.png',
-      'assets/img/quran/2.png',
-      'assets/img/quran/3.png',
-      'assets/img/quran/4.png'
+      {
+        'id': 1,
+        'name': 'Al-Fatihah',
+        'image': 'assets/img/quran/1.jpg'
+      },
+      {
+        'id': 2,
+        'name': 'Al-Fatihah',
+        'image': 'assets/img/quran/2.jpg'
+      },
+      {
+        'id': 3,
+        'name': 'Al-Fatihah',
+        'image': 'assets/img/quran/3.jpg'
+      },
+      {
+        'id': 4,
+        'name': 'Al-Fatihah',
+        'image': 'assets/img/quran/4.jpg'
+      },
+      {
+        'id': 5,
+        'name': 'Al-Fatihah',
+        'image': 'assets/img/quran/5.jpg'
+      }
     ];
     // listSurah.sort((b, a) => a.compareTo(b));
     return listSurah;

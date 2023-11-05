@@ -10,6 +10,7 @@ import 'package:mesjid_app/pages/sedekah/detail/component/donatur_tab.dart';
 import 'package:mesjid_app/pages/sedekah/detail/component/laporan_tab.dart';
 import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:mesjid_app/theme.dart';
 
 class DetailSedekahPage extends StatelessWidget {
   const DetailSedekahPage({super.key});
@@ -27,8 +28,7 @@ class DetailSedekahPage extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      "https://picsum.photos/1000",
+                    child: Image.network(ctrl.detail['image'],
                       height: 146,
                       width: Get.width,
                       fit: BoxFit.cover,
@@ -39,8 +39,8 @@ class DetailSedekahPage extends StatelessWidget {
                     children: [
                       Flexible(
                           flex: 1,
-                          child: Text(
-                            "Sedekah Mesjid  dan pemeliharaan Masjid An-Ni’mah untuk biaya operasional",
+                          // child: Text(ctrl.detail['judul'],
+                          child: Text(ctrl.detail['judul'],
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                     .textTheme
@@ -57,8 +57,7 @@ class DetailSedekahPage extends StatelessWidget {
                     children: [
                       Flexible(
                           flex: 1,
-                          child: Text(
-                              "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’mah",
+                          child: Text(ctrl.detail['subjudul'],
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -74,8 +73,7 @@ class DetailSedekahPage extends StatelessWidget {
                     children: [
                       Flexible(
                           flex: 1,
-                          child: Text(
-                              "Lorem ipsum dolor sit amet consectetur. Lacus sed eget ultrices faucibus nibh. Ac morbi aenean volutpat nisl vulputate. Quam neque amet eleifend fermentum nec. Tristique purus tristique in netus velit posuere tellus bibendum. Vulputate massa faucibus tellus nec risus tristique. Id cras consectetur vitae dapibus a pulvinar urna. Dictum quis a tellus lorem morbi congue.",
+                          child: Text(ctrl.detail['isi'],
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -92,7 +90,7 @@ class DetailSedekahPage extends StatelessWidget {
                       Flexible(
                         flex: 1,
                         child: LinearProgressIndicator(
-                          value: 0.8,
+                          value: ctrl.detail['lineprogress'],
                           minHeight: 10,
                           backgroundColor: const Color(0xFF92E3A9),
                           borderRadius: BorderRadius.circular(10),
@@ -103,8 +101,7 @@ class DetailSedekahPage extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        "80%",
+                      Text('${ctrl.detail['persentase']}%',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                             fontSize:
@@ -130,7 +127,7 @@ class DetailSedekahPage extends StatelessWidget {
                                       .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w500)),
-                          Text("Rp. 10.500.000",
+                          Text(priceFormat.format(ctrl.detail['total']),
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -149,7 +146,7 @@ class DetailSedekahPage extends StatelessWidget {
                                       .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w500)),
-                          Text("Rp. 10.500.000",
+                          Text(priceFormat.format(ctrl.detail['dana_kebutuhan']),
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -168,7 +165,7 @@ class DetailSedekahPage extends StatelessWidget {
                                       .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w500)),
-                          Text("90 Hari",
+                          Text('${ctrl.detail['deadline']} hari',
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -195,7 +192,7 @@ class DetailSedekahPage extends StatelessWidget {
                           color: Colors.white,
                           radius: 5,
                           onPressed: () {
-                            Get.toNamed('${RoutesSedekah.root}/2/transaksi',
+                            Get.toNamed('${RoutesSedekah.root}/${Get.parameters['id']}/transaksi',
                                 arguments: {"first": 'First data'});
                           },
                         ),
@@ -243,12 +240,12 @@ class DetailSedekahPage extends StatelessWidget {
         },
         body: TabBarView(
           controller: ctrl.tabController,
-          children: [
+          children: const [
             Padding(
-                padding: const EdgeInsets.only(left: 21, right: 21),
+                padding: EdgeInsets.only(left: 21, right: 21),
                 child: DonaturTab()),
             Padding(
-                padding: const EdgeInsets.only(left: 21, right: 21),
+                padding: EdgeInsets.only(left: 21, right: 21),
                 child: Align(
                   alignment: Alignment.center,
                   child: LaporanTab()
@@ -287,7 +284,7 @@ class DetailSedekahPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Detail Sedekah", context: context, elevation: 0),
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoadingList.value ? const Text('Loading') : layout(ctrl, context)),
     );
   }
 }

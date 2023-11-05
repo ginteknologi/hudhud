@@ -4,6 +4,7 @@ import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_controller.dart';
+import 'package:mesjid_app/theme.dart';
 
 class PaymentTransaksiSedekahPage extends StatelessWidget {
   const PaymentTransaksiSedekahPage({super.key});
@@ -20,21 +21,20 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                     Positioned(
                       child: Card(
                           elevation: 0,
-                          color: Color(0xFF0E9889),
+                          color: const Color(0xFF0E9889),
                           margin: const EdgeInsets.only(top: 20),
                           clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                             //set border radius more than 50% of height and width to make circle
                           ),
                           child: Container(
                             width: Get.width,
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             height: 350,
                             child: Align(
                               alignment: Alignment.topCenter,
-                              child: Text(
-                                "Menggunakan DANA",
+                              child: Text("Menggunakan ${ctrl.dataBillProduct['dataMetodeBayar']['name']}",
                                 style: context.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
@@ -46,15 +46,15 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                       top: 50,
                       child: Card(
                           elevation: 0,
-                          color: Color(0xFFF3F3F4),
+                          color: const Color(0xFFF3F3F4),
                           margin: const EdgeInsets.only(top: 20),
                           clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                             //set border radius more than 50% of height and width to make circle
                           ),
                           child: Container(
-                              padding: EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(15),
                               width: Get.width - 42,
                               height: 300,
                               child: Column(
@@ -63,8 +63,8 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                 children: [
                                   Column(
                                     children: [
-                                      Text("Donasimu"),
-                                      Text("Rp. 10.000",
+                                      const Text("Donasimu"),
+                                      Text(priceFormat.format(ctrl.dataBillProduct['nominal']) ,
                                           style: context.textTheme.headlineSmall
                                               ?.copyWith(
                                                   fontWeight: FontWeight.w900,
@@ -77,12 +77,12 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Tuliskan Nomor DANA anda",
+                                      Text("Tuliskan Nomor ${ctrl.dataBillProduct['dataMetodeBayar']['name']} anda",
                                           style: context.textTheme.titleMedium
                                               ?.copyWith(
                                                   fontWeight: FontWeight.w900,
                                                   color: Colors.black)),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
@@ -92,7 +92,7 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                               ?.copyWith(
                                                   fontWeight: FontWeight.normal,
                                                   color: Colors.black)),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       InputText(
@@ -100,16 +100,18 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                         isFill: true,
                                         fillColor: Colors.white,
                                         margin:
-                                            EdgeInsets.symmetric(vertical: 5),
+                                            const EdgeInsets.symmetric(vertical: 5),
                                         placeholder: '08XXXXX',
                                         placeholderStyle: Theme.of(context)
                                             .textTheme
                                             .bodyMedium,
                                         inputPadding: const EdgeInsets.all(10),
-                                        controller: ctrl.txtController,
+                                        controller: ctrl.nomorInput,
                                         onSubmit: (newValue) {},
                                         onEditingComplete: () {},
-                                        onChanged: (newValue) {},
+                                        onChanged: (newValue) {
+                                          ctrl.dataBillProduct['phoneovo'] = newValue;
+                                        },
                                         validator: (newValue) {
                                           if (newValue!.isEmpty) {
                                             return "Mohon untuk diisi.";
@@ -136,11 +138,11 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
-        body: layout(ctrl, context),
+        body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
-            child: Container(
+            child: SizedBox(
               width: Get.width,
               child: ButtonElevated(
                 title: 'Lanjutkan',
@@ -150,7 +152,7 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  ctrl.procceedPayment('1', ctrl.payments['selectedPayment']);
+                  ctrl.procceedPayment('1');
                 },
               ),
             ),

@@ -8,7 +8,7 @@ class SedekahController extends GetxController {
   List listSedekah = [].obs;
 
   getData() async {
-    final result = await SedekahService().getList(page: 0, limit: 10);
+    final result = await SedekahService().getList();
     list.value = result['data'];
     print(list);
     isLoadingList.value = false;
@@ -62,7 +62,7 @@ class SedekahController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     getData();
     getKajianLive();
     super.onInit();

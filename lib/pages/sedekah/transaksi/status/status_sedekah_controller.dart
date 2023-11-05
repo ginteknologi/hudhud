@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/sedekah/sedekah_service.dart';
+import 'package:mesjid_app/pages/sedekah/transaksi/transaksi_sedekah_service.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:get_storage/get_storage.dart';
 
 class StatusSedekahController extends GetxController {
-  var isLoadingList = true.obs;
-  var list = {}.obs;
+  final dataStore = GetStorage();
+  var isLoading = true.obs;
+  var dataPayment = {}.obs;
+  var dataInvoice = {}.obs;
 
   var payments = Get.arguments;
 
@@ -13,14 +15,20 @@ class StatusSedekahController extends GetxController {
   RxString inputPembayaran = "".obs;
 
   getData() async {
-    final result = await SedekahService().getList(page: 0, limit: 10);
-    list.value = result['data'];
-    isLoadingList.value = false;
+    try {
+      var invoiceID = dataStore.read('dataInvoice');
+      dataPayment.value = dataStore.read('inputDataPembayaran');
+      final result = await TransaksiSedekahServices().getDataInvoice(invoiceID);
+      dataInvoice.value = result['data'];
+      print(dataInvoice);
+      isLoading.value = false;
+    } catch (e) {
+      print(e);
+    }
   }
 
   goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
-    print(id);
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }
 
@@ -94,9 +102,9 @@ class StatusSedekahController extends GetxController {
   }
 
   @override
-  void onInit() {
-    print(payments);
+  void onInit() async {
     getBillProduct();
+    await getData();
     super.onInit();
   }
 }

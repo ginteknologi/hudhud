@@ -2,9 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:in_app_update/in_app_update.dart';
+// import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mesjid_app/configs/firebase_message_setup.dart';
 import 'package:mesjid_app/routes/index.dart';
@@ -18,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await GetStorage.init();
-  await initializeDateFormatting('id_ID');
+  await initializeDateFormatting('id_ID',null);
 
   if (!kIsWeb) {
     SetupFirebase.initFirebase();

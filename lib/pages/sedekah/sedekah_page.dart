@@ -1,6 +1,6 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:easy_localization/easy_localization.dart';
+// import 'package:auto_size_text/auto_size_text.dart';
+// import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
@@ -166,7 +166,8 @@ class SedekahPage extends StatelessWidget {
                             ),
                             getList(ctrl, context)
                           ],
-                        )),
+                        )
+                      ),
                   ],
                 ))));
   }
@@ -174,18 +175,20 @@ class SedekahPage extends StatelessWidget {
   getList(ctrl, context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
-      itemCount: ctrl.listSedekah.length,
+      itemCount: ctrl.list.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         // Datum model = filteredEvents[index];
         return FadeInUp(
           child: ListItemSedekahWidget(
-            id: ctrl.listSedekah[index]['id'],
-            title: ctrl.listSedekah[index]['title'],
-            dueDay: ctrl.listSedekah[index]['dueDay'],
-            targetPrice: ctrl.listSedekah[index]['target'],
-            totalPrice: ctrl.listSedekah[index]['total'],
-            image: 'assets/icons/image-item1.png',
+            id: ctrl.list[index]['id'],
+            title: ctrl.list[index]['judul'],
+            dueDay: ctrl.list[index]['deadline'],
+            targetPrice: ctrl.list[index]['dana_kebutuhan'],
+            totalPrice: ctrl.list[index]['total'],
+            image: ctrl.list[index]['image'],
+            lineProgress: ctrl.list[index]['lineprogress'],
+            persentase: ctrl.list[index]['persentase'],
           ),
         );
       },
@@ -200,7 +203,7 @@ class SedekahPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Sedekah", context: context, elevation: 0),
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoadingList.value ? const Text("loading") : layout(ctrl, context)),
     );
   }
 }

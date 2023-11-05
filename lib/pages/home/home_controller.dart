@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:mesjid_app/pages/quran/quran_page.dart';
 // import 'package:mesjid_app/pages/home/home_service.dart';
+import 'package:get_storage/get_storage.dart';
 
-class HomeController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
+  final dataStore = GetStorage();
+  var lastReadPerayat = {}.obs;
   var isLoadingList = true.obs;
   var list = {}.obs;
   Rx<BottomBarEnum> type = BottomBarEnum.beranda.obs;
@@ -17,36 +19,38 @@ class HomeController extends GetxController
   getData() async {
     // final result = await HomeService().getList(page: 0, limit: 10);
     //dummy
-    list.value = {
-      "success": true,
-      "message": "Berhasil",
-      "data": {
-        "page": 1,
-        "limit": 8,
-        "total": 1,
-        "data": [
-          {
-            "id": 1,
-            "point": 1,
-            "pic": 7,
-            "user_id": 4,
-            "tag": "Bug",
-            "priority": "Urgent",
-            "judul": "asdasdasd",
-            "keterangan": null,
-            "status": "pending",
-            "createdAt": "2023-09-22T15:58:20.020Z",
-            "updatedAt": "2023-09-22T15:58:14.000Z"
-          }
-        ]
-      }
-    };
+    lastReadPerayat.value = dataStore.read('perAyatLastRead');
+    // list.value = {
+    //   "success": true,
+    //   "message": "Berhasil",
+    //   "data": {
+    //     "page": 1,
+    //     "limit": 8,
+    //     "total": 1,
+    //     "data": [
+    //       {
+    //         "id": 1,
+    //         "point": 1,
+    //         "pic": 7,
+    //         "user_id": 4,
+    //         "tag": "Bug",
+    //         "priority": "Urgent",
+    //         "judul": "asdasdasd",
+    //         "keterangan": null,
+    //         "status": "pending",
+    //         "createdAt": "2023-09-22T15:58:20.020Z",
+    //         "updatedAt": "2023-09-22T15:58:14.000Z"
+    //       }
+    //     ]
+    //   }
+    // };
     // list.value = result['data'];
     isLoadingList.value = false;
   }
 
   @override
   void onInit() {
+    getData();
     animateController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 400),

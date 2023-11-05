@@ -4,12 +4,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mesjid_app/configs/remote_data.dart';
 
-class SedekahService extends GetConnect {
+class DetailSedekahService extends GetConnect {
   final authStore = GetStorage();
 
   Future getList() async {
+    final id = Get.parameters['id'];
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/campaign"),
+        Uri.parse("${RemoteData.api}/campaign/$id"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

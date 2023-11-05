@@ -377,17 +377,18 @@ class DetailAyatQuranPage extends StatelessWidget {
             child: ListCardAyatWidget(
               id: ctrl.listAyat[index]['number']['inSurah'],
               ayat: ctrl.listAyat[index]['text']['arab'],
-              descEN: ctrl.listAyat[index]['translation']['en'],
+              descEN: ctrl.listAyat[index]['text']['transliteration']['en'],
               descIDN: ctrl.listAyat[index]['translation']['id'],
               nomor: ctrl.listAyat[index]['number']['inSurah'].toString(),
               bookmark: ctrl.listAyatBookmarked[index],
               bookmarked: ctrl.listAyatBookmarked[index].value,
               audioFile: ctrl.listAyat[index]['audio']['primary'],
               onTap: () {
-                ctrl.listAyatBookmarked[index].value =
-                    !ctrl.listAyatBookmarked[index].value;
-                if (ctrl.listAyatBookmarked[index].value) {
-                  ctrl.bookmark();
+                ctrl.detailLastRead['ayatNumber'] = ctrl.listAyat[index]['number']['inSurah'];
+                ctrl.detailLastRead['suratName'] = ctrl.surahName.toString();
+                if (ctrl.detailLastRead['ayatNumber'] == ctrl.listAyat[index]['number']['inSurah']) {
+                ctrl.listAyatBookmarked[index].value = !ctrl.listAyatBookmarked[index].value;
+                  // ctrl.bookmark();
                 }
               },
             ),
@@ -408,7 +409,7 @@ class DetailAyatQuranPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: ctrl.surahName.toString(), context: context, elevation: 0),
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoadingDetail.value ? const Text('Loadung') : layout(ctrl, context))
     );
   }
 }

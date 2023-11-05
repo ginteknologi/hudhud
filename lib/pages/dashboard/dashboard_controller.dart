@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/dashboard/dashboard_service.dart';
 import 'package:simple_moment/simple_moment.dart';
+import 'package:get_storage/get_storage.dart';
 
 class DashboardController extends GetxController {
+  final dataStore = GetStorage();
   var isLoadingList = true.obs;
   var list = {}.obs;
+  var lastRead = {}.obs;
   var todayDate = "".obs;
   var dataTerbaru = {}.obs;
   List listWaktu = [].obs;
@@ -26,6 +26,7 @@ class DashboardController extends GetxController {
     // final result = await DashboardService().getList();
     // dataTerbaru.value = result['data'];
     // print(dataTerbaru);
+    lastRead.value = dataStore.read('perAyatLastRead');
     dataTerbaru.value = {
       "success": true,
       "message": "Success",
@@ -70,6 +71,7 @@ class DashboardController extends GetxController {
     // constructLatestData(dataTerbaru.value);
     // print(jsonEncode(newdata));
     listArtikel = newdata;
+    print(listArtikel);
     isLoadingList.value = false;
   }
 
