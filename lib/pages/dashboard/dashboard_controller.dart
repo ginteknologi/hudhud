@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:get/get.dart';
@@ -15,6 +16,11 @@ class DashboardController extends GetxController {
   List listArtikel = [].obs;
   List listAllMenu = [].obs;
   List listKota = [].obs;
+  var latestArtikel = {}.obs;
+  var latestDoa = {}.obs;
+  var latestCampaign = {}.obs;
+  var duration = 0.obs;
+  var txttime = "".obs;
 
   getData() async {
     // final result = await DashboardService().getList();
@@ -61,6 +67,7 @@ class DashboardController extends GetxController {
       }
     };
     var newdata = constructDataTerbaru(dataTerbaru.value);
+    // constructLatestData(dataTerbaru.value);
     // print(jsonEncode(newdata));
     listArtikel = newdata;
     isLoadingList.value = false;
@@ -113,17 +120,41 @@ class DashboardController extends GetxController {
     var hourAndMinutes = "${timeleft.hour}.${timeleft.minute}";
     int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
 
+    var tmptime = ("05.10").split('.');
+    var setTimeTo = new DateTime(timeleft.year, timeleft.month,
+        timeleft.day + 1, int.parse(tmptime[0]), int.parse(tmptime[1]));
+
     var thistime = getNextLargerNumber(hourminutes, listWaktu);
     if (thistime == -1) {
       listWaktu[0]['active'] = true;
+      var time = listWaktu[0]['waktu'].split('.');
+      var setTimeTo = new DateTime(timeleft.year, timeleft.month,
+          timeleft.day + 1, int.parse(time[0]), int.parse(time[1]));
+      duration.value = timesBetween(timeleft, setTimeTo);
     } else {
       for (var el in listWaktu) {
         el['active'] = false;
         if (thistime['id'] == el['id']) {
           el['active'] = true;
+          var time = el['waktu'].split('.');
+          var setTimeTo = new DateTime(timeleft.year, timeleft.month,
+              timeleft.day, int.parse(time[0]), int.parse(time[1]));
+          duration.value = timesBetween(timeleft, setTimeTo);
+          // var setTime = new DateTime(
+          //     timeleft.year, timeleft.month, timeleft.day, time[0], time[1]);
         }
       }
     }
+  }
+
+  startWaktu() {
+    Timer.periodic(new Duration(seconds: 1), (timer) {
+      txttime.value = getTimeRemaining(duration.value);
+      if (duration.value == 0) {
+        getWaktu();
+      }
+      duration.value--;
+    });
   }
 
   getNextLargerNumber(int number, List array) {
@@ -134,6 +165,26 @@ class DashboardController extends GetxController {
       }
     }
     return -1;
+  }
+
+  int timesBetween(DateTime from, DateTime to) {
+    // from = DateTime(from.year, from.month, from.day, from.hour, fr);
+    // to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inSeconds);
+  }
+
+  getTimeRemaining(waktu) {
+    var detik = waktu;
+    var h = (detik / 3600).floor();
+    var m = ((detik % 3600) / 60).floor();
+    // var s = ((detik % 3600) % 60).floor();
+
+    // var hDisplay = h > 0 ? '${h}${h == 1 ? " jam " : " jam "}' : "";
+    // var mDisplay = m > 0 ? '${m}${m == 1 ? " menit " : " menit "}' : "";
+    // var sDisplay = s > 0 ? '${s}${s == 1 ? " detik" : " detik"}' : "";
+    var hDisplay = h > 0 ? '${h} jam ' : '';
+    var mDisplay = m > 0 ? '${m} menit' : '';
+    return hDisplay + mDisplay;
   }
 
   getMenuHome() async {
@@ -341,9 +392,13 @@ class DashboardController extends GetxController {
       }
       return items;
     }
-    // for (var element in collection) {
+  }
 
-    // }
+  constructLatestData(data) {
+    var item = data['data'];
+    latestArtikel = item['artikel'];
+    latestCampaign = item['campaign'];
+    latestDoa = item['doa'];
   }
 
   @override
@@ -353,6 +408,7 @@ class DashboardController extends GetxController {
     getMenuHome();
     getKajianLive();
     // getListArtikel();
+    startWaktu();
     getAllMenu();
     getWaktu();
     getListKota();

@@ -19,6 +19,9 @@ class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
   layout(DashboardController ctrl, BuildContext context) {
+    LatestNews artikel = ctrl.listArtikel[0];
+    LatestNews doa = ctrl.listArtikel[1];
+    LatestNews campaign = ctrl.listArtikel[2];
     return SafeArea(
         top: false,
         child: Container(
@@ -170,7 +173,73 @@ class DashboardPage extends StatelessWidget {
                           margin: const EdgeInsets.only(top: 25),
                           child: getSeparator('Terbaru', '', context, ctrl),
                         ),
-                        getListItemVertical(ctrl, context),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        // getListItemVertical(ctrl, context),
+                        CustomCardItem(
+                          network: true,
+                          isFullWidth: true,
+                          height: 165,
+                          size: "medium",
+                          positionChip: CrossAxisAlignment.start,
+                          chipColor: Theme.of(context).primaryColor,
+                          chipText: '${artikel.kategori}',
+                          chipTextStyle: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.fontSize,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white),
+                          title: '${artikel.title}',
+                          subtitle: '${artikel.time} | ${artikel.date}',
+                          imgPath: '${artikel.image}',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomCardItem(
+                          network: true,
+                          isFullWidth: true,
+                          height: 165,
+                          size: "medium",
+                          positionChip: CrossAxisAlignment.start,
+                          chipColor: Theme.of(context).primaryColor,
+                          chipText: '${doa.kategori}',
+                          chipTextStyle: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.fontSize,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white),
+                          title: '${doa.title}',
+                          subtitle: '${doa.time} | ${doa.date}',
+                          imgPath: '${doa.image}',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomCardItem(
+                          network: true,
+                          isFullWidth: true,
+                          height: 165,
+                          size: "medium",
+                          positionChip: CrossAxisAlignment.start,
+                          chipColor: Theme.of(context).primaryColor,
+                          chipText: '${campaign.kategori}',
+                          chipTextStyle: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.fontSize,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white),
+                          title: '${campaign.title}',
+                          subtitle: '${campaign.time} | ${campaign.date}',
+                          imgPath: '${campaign.image}',
+                        ),
                         const SizedBox(
                           height: 100,
                         )
@@ -508,13 +577,15 @@ class DashboardPage extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            "3 Jam 20 Menit",
-                                            style: context.textTheme.labelMedium
-                                                ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                          ),
+                                          Obx(() => Text(
+                                                ctrl.txttime.value,
+                                                style: context
+                                                    .textTheme.labelMedium
+                                                    ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                              )),
                                           Text("Menuju " + activeCard['label'],
                                               style: context
                                                   .textTheme.labelMedium
