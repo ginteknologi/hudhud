@@ -386,6 +386,7 @@ class DetailAyatQuranPage extends StatelessWidget {
               onTap: () {
                 ctrl.detailLastRead['ayatNumber'] = ctrl.listAyat[index]['number']['inSurah'];
                 ctrl.detailLastRead['suratName'] = ctrl.surahName.toString();
+                ctrl.detailLastRead['id'] = ctrl.listAyat[index]['number']['inSurah'];
                 if (ctrl.detailLastRead['ayatNumber'] == ctrl.listAyat[index]['number']['inSurah']) {
                 ctrl.listAyatBookmarked[index].value = !ctrl.listAyatBookmarked[index].value;
                   // ctrl.bookmark();

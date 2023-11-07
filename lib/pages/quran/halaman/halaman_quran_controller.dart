@@ -22,7 +22,7 @@ class HalamanQuranController extends GetxController with GetSingleTickerProvider
   final hctrl = Get.find<HomeController>();
 
   getData() async {
-    final result = await QuranService().getList();
+    final result = await QuranService().getList('all');
     list.value = result['data'];
     isLoadingList.value = false;
   }

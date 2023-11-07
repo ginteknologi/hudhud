@@ -425,7 +425,7 @@ class DashboardPage extends StatelessWidget {
                                                     .bodySmall
                                                     ?.fontSize,
                                                 color: Colors.black)),
-                                          Text(ctrl.lastRead['ayatNumber'] > 0 ? ctrl.lastRead['suratName'].toString()+' : '+ctrl.lastRead['ayatNumber'].toString() : 'Belum baca',
+                                          Text(ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['suratName']} : ${ctrl.lastRead['ayatNumber']}' : 'Belum baca',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)

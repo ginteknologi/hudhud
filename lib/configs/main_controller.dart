@@ -27,11 +27,11 @@ class MainController extends GetxController {
     try {
       print(dataStore.read('perAyatLastRead'));
       if (dataStore.read('perAyatLastRead') == null) {
-        dataStore.write('perAyatLastRead', {'suratName': '', 'ayatNumber': 0});
+        dataStore.write('perAyatLastRead', {'id': 0,'suratName': '', 'ayatNumber': 0});
       }
       print(dataStore.read('perHalamanLastRead'));
       if (dataStore.read('perHalamanLastRead') == null) {
-        dataStore.write('perHalamanLastRead', {'suratName': '', 'page': 0});
+        dataStore.write('perHalamanLastRead', {'id': 0,'suratName': '', 'page': 0});
       }
     } catch (e) {
       print(e);

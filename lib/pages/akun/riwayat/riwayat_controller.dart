@@ -11,7 +11,7 @@ class RiwayatController extends GetxController {
   var txtController = TextEditingController();
 
   getData() async {
-    final result = await QuranService().getList();
+    final result = await QuranService().getList('all');
     list.value = result['data'];
     isLoadingList.value = false;
   }

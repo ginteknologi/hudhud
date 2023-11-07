@@ -7,9 +7,9 @@ import 'package:mesjid_app/configs/remote_data.dart';
 class QuranService extends GetConnect {
   final authStore = GetStorage();
 
-  Future getList() async {
+  Future getList(search) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.quran}surah"),
+        Uri.parse("${RemoteData.api}/quran/surah?search=$search"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -29,7 +29,7 @@ class QuranService extends GetConnect {
   }
   Future getDetail(id) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.quran}surah/$id"),
+        Uri.parse("${RemoteData.api}/quran/surah/$id"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

@@ -63,8 +63,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            Text(
-                                              "11",
+                                            Text(ctrl.lastRead['id'] > 0 ? '${ctrl.lastRead['id']}' : '-',
                                               style: context
                                                   .textTheme.titleSmall
                                                   ?.copyWith(
@@ -78,8 +77,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                           children: [
                                             Align(
                                               alignment: Alignment.centerLeft,
-                                              child: AutoSizeText(
-                                                "Al-Fatihah",
+                                              child: AutoSizeText(ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['suratName']}' : 'Belum baca',
                                                 textAlign: TextAlign.start,
                                                 style: context
                                                     .textTheme.titleMedium
@@ -92,8 +90,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                             ),
                                             Align(
                                                 alignment: Alignment.centerLeft,
-                                                child: AutoSizeText(
-                                                  "Ayat No : 3121",
+                                                child: AutoSizeText('Ayat No : ' "${ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['ayatNumber']}' : '-'}",
                                                   textAlign: TextAlign.start,
                                                   style: context
                                                       .textTheme.titleSmall
@@ -120,10 +117,13 @@ class ListAyatQuranPage extends StatelessWidget {
                               placeholderStyle:
                                   Theme.of(context).textTheme.bodyMedium,
                               inputPadding: const EdgeInsets.all(15),
-                              controller: ctrl.txtController,
+                              controller: ctrl.searchController,
                               onSubmit: (newValue) {},
                               onEditingComplete: () {},
-                              onChanged: (newValue) {},
+                              onChanged: (newValue) {
+                                print('asdasdsad');
+                                ctrl.getDataSearch();
+                              },
                               validator: (newValue) {
                                 if (newValue!.isEmpty) {
                                   return "Mohon untuk diisi.";
