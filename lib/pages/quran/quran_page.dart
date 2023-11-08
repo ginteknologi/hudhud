@@ -153,14 +153,16 @@ class QuranPage extends StatelessWidget {
                                     return FadeInUp(
                                       child: ListItemUiWidget(
                                         id: ctrl.list[index]['number'],
-                                        title: ctrl.list[index]['name']['transliteration']['id'],
+                                        title: ctrl.list[index]['name']
+                                            ['transliteration']['id'],
                                         titleStyle: context
                                             .textTheme.titleMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Theme.of(context)
                                                     .primaryColor),
-                                        subTitle: ctrl.list[index]['name']['translation']['id'],
+                                        subTitle: ctrl.list[index]['name']
+                                            ['translation']['id'],
                                         hasRightContent: true,
                                         showIcon: IconPosition.left,
                                         iconLeft: Container(
@@ -206,10 +208,10 @@ class QuranPage extends StatelessWidget {
                                         // ),
                                         rightContent: [
                                           Text(
-                                              ctrl.list[index]['revelation']['id'] +
+                                              ctrl.list[index]['revelation']
+                                                      ['id'] +
                                                   '\n' +
-                                                  ctrl.list[index]
-                                                      ['total'] +
+                                                  ctrl.list[index]['total'] +
                                                   ' Ayat',
                                               textAlign: TextAlign.end,
                                               style: context.textTheme.bodySmall
@@ -241,7 +243,6 @@ class QuranPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(QuranController());
-
     return Scaffold(
       backgroundColor: Color(0xFFF5F5F5),
       extendBodyBehindAppBar: false,

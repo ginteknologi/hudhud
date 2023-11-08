@@ -76,7 +76,10 @@ class HomePage extends StatelessWidget {
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(ctrl.lastReadPerayat['ayatNumber'] > 0 ? '${ctrl.lastReadPerayat['suratName']} : ${ctrl.lastReadPerayat['ayatNumber']}' : 'Belum baca Al-quran',
+                            child: Text(
+                                ctrl.lastReadPerayat['ayatNumber'] > 0
+                                    ? '${ctrl.lastReadPerayat['suratName']} : ${ctrl.lastReadPerayat['ayatNumber']}'
+                                    : 'Belum baca Al-quran',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: context.textTheme.labelMedium?.copyWith(
@@ -173,7 +176,7 @@ class HomePage extends StatelessWidget {
                                           color: Colors.black54))
                             ]),
                       ),
-                     const SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       InkWell(
@@ -181,6 +184,7 @@ class HomePage extends StatelessWidget {
                           Navigator.pop(context);
                           ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
                           ctrl.type.value = BottomBarEnum.alquran;
+                          ctrl.idxLastReadHalaman.value = 3;
                         },
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,

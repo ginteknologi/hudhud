@@ -5,10 +5,12 @@ import 'package:mesjid_app/pages/quran/quran_page.dart';
 // import 'package:mesjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 
-class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
+class HomeController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final dataStore = GetStorage();
   var lastReadPerayat = {}.obs;
   var isLoadingList = true.obs;
+  var idxLastReadHalaman = 0.obs;
   var list = {}.obs;
   Rx<BottomBarEnum> type = BottomBarEnum.beranda.obs;
   Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perayat.obs;

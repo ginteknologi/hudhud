@@ -12,6 +12,7 @@ import 'package:mesjid_app/components/layout/sliding_app_bar.dart';
 import 'package:mesjid_app/pages/home/home_controller.dart';
 import 'package:mesjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
 import 'package:mesjid_app/pages/quran/halaman/halaman_quran_controller.dart';
+import 'package:mesjid_app/pages/quran/quran_controller.dart';
 // import 'package:mesjid_app/theme.dart';
 
 class HalamanQuranPage extends StatefulWidget {
@@ -21,8 +22,10 @@ class HalamanQuranPage extends StatefulWidget {
   State<HalamanQuranPage> createState() => _HalamanQuranPageState();
 }
 
-class _HalamanQuranPageState extends State<HalamanQuranPage> with SingleTickerProviderStateMixin {
-  layout(HalamanQuranController ctrl, BuildContext context, HomeController ctrlHome) {
+class _HalamanQuranPageState extends State<HalamanQuranPage>
+    with SingleTickerProviderStateMixin {
+  layout(HalamanQuranController ctrl, BuildContext context,
+      HomeController ctrlHome) {
     return SafeArea(
         child: Container(
             constraints: BoxConstraints.loose(Size.infinite),
@@ -44,10 +47,14 @@ class _HalamanQuranPageState extends State<HalamanQuranPage> with SingleTickerPr
                                     //   _show = !_show;
                                     // });
                                   });
-                                  ctrlHome.visible.value = !ctrlHome.visible.value;
+                                  ctrlHome.visible.value =
+                                      !ctrlHome.visible.value;
                                   ctrlHome.selectedIdx.value = 1;
                                 },
-                                child: EasyImageViewPager(imageProviders: ctrl.listSurah)
+                                child: EasyImageViewPager(
+                                    idxInitial:
+                                        ctrlHome.idxLastReadHalaman.value,
+                                    imageProviders: ctrl.listSurah)
 
                                 // PageView.builder(
                                 //     itemCount: ctrl.listSurah.length,
@@ -73,19 +80,19 @@ class _HalamanQuranPageState extends State<HalamanQuranPage> with SingleTickerPr
                                 )))
                   ],
                 ),
-                Obx(() => Positioned(
-                      top: ctrl.bookmarked.value ? 0 : -20,
-                      right: 10,
-                      child: GestureDetector(
-                        child: SvgPicture.asset(
-                          'assets/icons/bookmark-page.svg',
-                          height: 60,
-                        ),
-                        onTap: () {
-                          showPopup(ctrl, context, ctrlHome);
-                        },
-                      ),
-                    )),
+                // Obx(() => Positioned(
+                //       top: ctrl.bookmarked.value ? 0 : -20,
+                //       right: 10,
+                //       child: GestureDetector(
+                //         child: SvgPicture.asset(
+                //           'assets/icons/bookmark-page.svg',
+                //           height: 60,
+                //         ),
+                //         onTap: () {
+                //           showPopup(ctrl, context, ctrlHome);
+                //         },
+                //       ),
+                //     )),
               ],
             )
 
