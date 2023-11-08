@@ -6,10 +6,14 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 class EasyImageViewPager extends StatefulWidget {
   final List imageProviders;
   final int idxInitial;
+  final Function(int) onTap;
 
   /// Create new instance, using the [imageProviders] to populate the [PageView]
   const EasyImageViewPager(
-      {Key? key, required this.imageProviders, required this.idxInitial})
+      {Key? key,
+      required this.imageProviders,
+      required this.idxInitial,
+      required this.onTap})
       : super(key: key);
 
   @override
@@ -48,13 +52,13 @@ class _EasyImageViewPagerState extends State<EasyImageViewPager> {
                 setState(() {
                   print(index);
                   // Disable paging when image is zoomed-in
-                  _pagingEnabled = scale <= 1.0;
+                  // _pagingEnabled = scale <= 1.0;
                 });
               },
             ),
           ),
           Positioned(
-            top: -20,
+            top: 0,
             right: 10,
             child: GestureDetector(
               child: SvgPicture.asset(
@@ -62,6 +66,7 @@ class _EasyImageViewPagerState extends State<EasyImageViewPager> {
                 height: 60,
               ),
               onTap: () {
+                widget.onTap(index);
                 // showPopup(ctrl, context, ctrlHome);
               },
             ),
@@ -112,11 +117,20 @@ class EasyImageView extends StatefulWidget {
 }
 
 class _EasyImageViewState extends State<EasyImageView> {
-  final TransformationController _transformationController =
+  late TransformationController _transformationController =
       TransformationController();
 
   @override
   void dispose() {
+    final zoomFactor = 30.0;
+    final xTranslate = 100.0;
+    final yTranslate = 100.0;
+    // _transformationController = TransformationController(scaleMatrix);
+    _transformationController.value.setEntry(0, 0, zoomFactor);
+    _transformationController.value.setEntry(1, 1, zoomFactor);
+    _transformationController.value.setEntry(2, 2, zoomFactor);
+    _transformationController.value.setEntry(0, 3, -xTranslate);
+    _transformationController.value.setEntry(1, 3, -yTranslate);
     _transformationController.dispose();
     super.dispose();
   }
@@ -125,12 +139,19 @@ class _EasyImageViewState extends State<EasyImageView> {
   Widget build(BuildContext context) {
     return SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).orientation != Orientation.portrait
+            ? double.infinity
+            : MediaQuery.of(context).size.height,
         child: InteractiveViewer(
+          constrained: false,
           transformationController: _transformationController,
           minScale: widget.minScale,
           maxScale: widget.maxScale,
-          child: Image.asset(widget.imageProvider),
+          child: Image.asset(
+            widget.imageProvider,
+            width: MediaQuery.of(context).size.width - 42,
+            fit: BoxFit.fitWidth,
+          ),
           onInteractionEnd: (scaleEndDetails) {
             double scale = _transformationController.value.getMaxScaleOnAxis();
 

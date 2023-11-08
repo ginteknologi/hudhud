@@ -385,7 +385,8 @@ class DashboardPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
                 onTap: () {
                   if (ctrl.lastRead['ayatNumber'] > 0) {
-                    Get.toNamed('${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');                                       
+                    Get.toNamed(
+                        '${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
                     // Get.toNamed(AppRoutes.detailEventScreen);
                   }
                   print("tapped");
@@ -425,7 +426,10 @@ class DashboardPage extends StatelessWidget {
                                                     .bodySmall
                                                     ?.fontSize,
                                                 color: Colors.black)),
-                                          Text(ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['suratName']} : ${ctrl.lastRead['ayatNumber']}' : 'Belum baca',
+                                        Text(
+                                          ctrl.lastRead['ayatNumber'] > 0
+                                              ? '${ctrl.lastRead['suratName']} : ${ctrl.lastRead['ayatNumber']}'
+                                              : 'Belum baca',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)
@@ -1019,6 +1023,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(DashboardController());
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent));

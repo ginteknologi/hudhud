@@ -17,15 +17,18 @@ class ListAyatQuranController extends GetxController {
     final result = await QuranService().getList('all');
     list.value = result['data'];
     isLoadingList.value = false;
+    lastRead.value = {"id": 0, "suratName": "Al-Anfal", "ayatNumber": 20};
   }
+
   getDataSearch() async {
     lastRead.value = dataStore.read('perAyatLastRead');
     final result = await QuranService().getList(searchController.text);
     list.value = result['data'];
     isLoadingList.value = false;
   }
+
   @override
-  void onInit() async{
+  void onInit() async {
     await getData();
     super.onInit();
   }

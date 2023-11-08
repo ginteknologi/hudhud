@@ -8,7 +8,7 @@ import 'package:just_audio/just_audio.dart';
 
 class ListCardAyatWidget extends StatelessWidget {
   ListCardAyatWidget(
-      {super.key, 
+      {super.key,
       required this.id,
       this.nomor,
       this.ayat,
@@ -16,6 +16,7 @@ class ListCardAyatWidget extends StatelessWidget {
       this.descIDN,
       this.audioFile,
       this.onTap,
+      this.activeColor,
       required this.bookmark,
       required this.bookmarked});
 
@@ -31,12 +32,13 @@ class ListCardAyatWidget extends StatelessWidget {
   RxBool onplay = false.obs;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration? audioPosition;
-  
+  Color? activeColor;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => Card(
           elevation: 3,
-          color: Colors.white,
+          color: activeColor ?? Colors.white,
           margin: const EdgeInsets.only(top: 20),
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
@@ -115,7 +117,7 @@ class ListCardAyatWidget extends StatelessWidget {
                                     width: 10,
                                   ),
                                   InkWell(
-                                    onTap: ()  {
+                                    onTap: () {
                                       if (audioPlayer.position == null) {
                                         print("clicked play position null");
                                         audioPlayer.setUrl(audioFile!);
@@ -123,7 +125,7 @@ class ListCardAyatWidget extends StatelessWidget {
                                         onplay.value = true;
                                       } else if (onplay.value) {
                                         print("clicked pause");
-                                        audioPosition =  audioPlayer.position;
+                                        audioPosition = audioPlayer.position;
                                         audioPlayer.pause();
                                         onplay.value = false;
                                       } else {
@@ -135,9 +137,11 @@ class ListCardAyatWidget extends StatelessWidget {
                                         }
                                         audioPlayer.play();
                                         onplay.value = true;
-                                        
-                                        audioPlayer.playerStateStream.listen((PlayerState state) {
-                                          if (state.processingState == ProcessingState.completed) {
+
+                                        audioPlayer.playerStateStream
+                                            .listen((PlayerState state) {
+                                          if (state.processingState ==
+                                              ProcessingState.completed) {
                                             // File selesai diputar
                                             print("Selesai");
                                             audioPosition = null;
@@ -146,13 +150,17 @@ class ListCardAyatWidget extends StatelessWidget {
                                         });
                                       }
                                     },
-                                    child: onplay.value ? Icon(
-                                      Icons.pause_rounded,
-                                      color: Theme.of(context).primaryColor,
-                                    ): Icon(
-                                      Icons.play_arrow_rounded,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
+                                    child: onplay.value
+                                        ? Icon(
+                                            Icons.pause_rounded,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          )
+                                        : Icon(
+                                            Icons.play_arrow_rounded,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
                                   ),
                                 ],
                               ))

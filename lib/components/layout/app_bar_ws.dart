@@ -4,6 +4,7 @@ class AppBarWSWidget {
   static AppBar getAppbarWidget({
     required String title,
     String? stepForm,
+    Widget? iconRight,
     Function? logout,
     Function? back,
     PreferredSizeWidget? bottom,
@@ -75,6 +76,7 @@ class AppBarWSWidget {
                         : const Text(""),
           ),
         ),
+        iconRight ?? const Text("")
       ],
     );
   }

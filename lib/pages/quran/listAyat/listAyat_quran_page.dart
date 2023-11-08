@@ -13,8 +13,7 @@ class ListAyatQuranPage extends StatelessWidget {
   const ListAyatQuranPage({super.key});
 
   layout(ListAyatQuranController ctrl, BuildContext context) {
-    return 
-    SafeArea(
+    return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
@@ -63,7 +62,10 @@ class ListAyatQuranPage extends StatelessWidget {
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            Text(ctrl.lastRead['id'] > 0 ? '${ctrl.lastRead['id']}' : '-',
+                                            Text(
+                                              ctrl.lastRead['id'] > 0
+                                                  ? '${ctrl.lastRead['id']}'
+                                                  : '-',
                                               style: context
                                                   .textTheme.titleSmall
                                                   ?.copyWith(
@@ -77,7 +79,10 @@ class ListAyatQuranPage extends StatelessWidget {
                                           children: [
                                             Align(
                                               alignment: Alignment.centerLeft,
-                                              child: AutoSizeText(ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['suratName']}' : 'Belum baca',
+                                              child: AutoSizeText(
+                                                ctrl.lastRead['ayatNumber'] > 0
+                                                    ? '${ctrl.lastRead['suratName']}'
+                                                    : 'Belum baca',
                                                 textAlign: TextAlign.start,
                                                 style: context
                                                     .textTheme.titleMedium
@@ -90,7 +95,9 @@ class ListAyatQuranPage extends StatelessWidget {
                                             ),
                                             Align(
                                                 alignment: Alignment.centerLeft,
-                                                child: AutoSizeText('Ayat No : ' "${ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['ayatNumber']}' : '-'}",
+                                                child: AutoSizeText(
+                                                  'Ayat No : '
+                                                  "${ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['ayatNumber']}' : '-'}",
                                                   textAlign: TextAlign.start,
                                                   style: context
                                                       .textTheme.titleSmall
@@ -143,94 +150,111 @@ class ListAyatQuranPage extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Text("Surat"),
                                 ),
-                                Obx(() => !ctrl.isLoadingList.value ?
-                                  ListView.builder(
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: ctrl.list.length,
-                                    // itemCount: 114,
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      // Datum model = filteredEvents[index];
-                                      return FadeInUp(
-                                        child: ListItemUiWidget(
-                                          id: ctrl.list[index]['number'],
-                                          title: ctrl.list[index]['name']['transliteration']['id'],
-                                          onTap: () {
-                                            // print(ctrl.list[index]);
-                                            Get.toNamed('${RoutesQuran.detail.replaceAll(':id', ctrl.list[index]['number'].toString())}?nama_surah=${ctrl.list[index]['name']['transliteration']['id']}');                                       
-                                            // ctrl.goToDetail(ctrl.list[index]['number']);
-                                          },
-                                          titleStyle: context.textTheme.titleMedium?.
-                                            copyWith(fontWeight: FontWeight.bold,
-                                              color: Theme.of(context).primaryColor),
-                                          subTitle: ctrl.list[index]['name']['translation']['id'],
-                                          hasRightContent: true,
-                                          showIcon: IconPosition.left,
-                                          iconLeft: SizedBox(
-                                            height: 42,
-                                            width: 42,
-                                            child: Stack(
-                                              children: <Widget>[
-                                                SvgPicture.asset(
-                                                  'assets/icons/start_list.svg',
-                                                  alignment: Alignment.center,
-                                                  width: 42,
-                                                  height: 42,
-                                                ),
-                                                Column(
+                                Obx(() => !ctrl.isLoadingList.value
+                                    ? ListView.builder(
+                                        physics: const BouncingScrollPhysics(),
+                                        itemCount: ctrl.list.length,
+                                        // itemCount: 114,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          var item = ctrl.list[index];
+                                          return FadeInUp(
+                                            child: ListItemUiWidget(
+                                              id: item['number'],
+                                              title: item['name']
+                                                  ['transliteration']['id'],
+                                              onTap: () {
+                                                // print(item);
+                                                Get.toNamed(
+                                                    '${RoutesQuran.detail.replaceAll(':id', item['number'].toString())}?nama_surah=${item['name']['transliteration']['id']}');
+                                                // ctrl.goToDetail(item['number']);
+                                              },
+                                              titleStyle: context
+                                                  .textTheme.titleMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Theme.of(context)
+                                                          .primaryColor),
+                                              subTitle: item['name']
+                                                  ['translation']['id'],
+                                              hasRightContent: true,
+                                              showIcon: IconPosition.left,
+                                              activeColor: ctrl.lastRead[
+                                                          'suratName'] ==
+                                                      item['name'][
+                                                              'transliteration']
+                                                          ['id']
+                                                  ? BoxDecoration(
+                                                      color: Colors.green[50])
+                                                  : BoxDecoration(),
+                                              iconLeft: SizedBox(
+                                                height: 42,
+                                                width: 42,
+                                                child: Stack(
                                                   children: <Widget>[
-                                                    Expanded(
-                                                      child: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(ctrl.list[index]['number'].toString()),
-                                                      ),
-                                                    )
+                                                    SvgPicture.asset(
+                                                      'assets/icons/start_list.svg',
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width: 42,
+                                                      height: 42,
+                                                    ),
+                                                    Column(
+                                                      children: <Widget>[
+                                                        Expanded(
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Text(ctrl
+                                                                .list[index]
+                                                                    ['number']
+                                                                .toString()),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ],
                                                 ),
+                                              ),
+                                              // Container(
+                                              //   height: 42,
+                                              //   width: 42,
+                                              //   decoration: BoxDecoration(
+                                              //       image: DecorationImage(
+                                              //     image: Svg(
+                                              //       'assets/example.svg',
+                                              //     ),
+                                              //   )),
+                                              //   child: Align(
+                                              //     alignment: Alignment.center,
+                                              //     child: Text("999"),
+                                              //   ),
+                                              // ),
+                                              rightContent: [
+                                                Text(
+                                                    item['revelation']['id'] +
+                                                        '\n' +
+                                                        item['numberOfVerses']
+                                                            .toString() +
+                                                        ' Ayat',
+                                                    textAlign: TextAlign.end,
+                                                    style: context
+                                                        .textTheme.bodySmall
+                                                        ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ))
                                               ],
                                             ),
-                                          ),
-                                          // Container(
-                                          //   height: 42,
-                                          //   width: 42,
-                                          //   decoration: BoxDecoration(
-                                          //       image: DecorationImage(
-                                          //     image: Svg(
-                                          //       'assets/example.svg',
-                                          //     ),
-                                          //   )),
-                                          //   child: Align(
-                                          //     alignment: Alignment.center,
-                                          //     child: Text("999"),
-                                          //   ),
-                                          // ),
-                                          rightContent: [
-                                            Text(
-                                                ctrl.list[index]['revelation']['id'] +
-                                                    '\n' +
-                                                    ctrl.list[index]['numberOfVerses'].toString() +
-                                                    ' Ayat',
-                                                textAlign: TextAlign.end,
-                                                style: context.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                  fontWeight: FontWeight.normal,
-                                                ))
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  )
-                                  : const Text('Loading')
-                                ) 
+                                          );
+                                        },
+                                      )
+                                    : const Text('Loading'))
                               ],
                             )),
                       )
-                    ]
-                )
-            )
-        )
-      );
+                    ]))));
   }
 
   @override
@@ -239,11 +263,9 @@ class ListAyatQuranPage extends StatelessWidget {
     print(ctrl.list.length);
 
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
-      extendBodyBehindAppBar: false,
-      resizeToAvoidBottomInset: false,
-      body: 
-        layout(ctrl, context)
-    );
+        backgroundColor: Color(0xFFF5F5F5),
+        extendBodyBehindAppBar: false,
+        resizeToAvoidBottomInset: false,
+        body: layout(ctrl, context));
   }
 }

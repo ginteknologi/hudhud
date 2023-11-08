@@ -366,38 +366,46 @@ class DetailAyatQuranPage extends StatelessWidget {
   }
 
   getList(ctrl, context) {
-    return Obx(() => !ctrl.isLoadingDetail.value ? 
-      ListView.builder(
-        physics: const ClampingScrollPhysics(),
-        itemCount: ctrl.detail['numberOfVerses'],
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          // Datum model = filteredEvents[index];
-          return FadeInUp(
-            child: ListCardAyatWidget(
-              id: ctrl.listAyat[index]['number']['inSurah'],
-              ayat: ctrl.listAyat[index]['text']['arab'],
-              descEN: ctrl.listAyat[index]['text']['transliteration']['en'],
-              descIDN: ctrl.listAyat[index]['translation']['id'],
-              nomor: ctrl.listAyat[index]['number']['inSurah'].toString(),
-              bookmark: ctrl.listAyatBookmarked[index],
-              bookmarked: ctrl.listAyatBookmarked[index].value,
-              audioFile: ctrl.listAyat[index]['audio']['primary'],
-              onTap: () {
-                ctrl.detailLastRead['ayatNumber'] = ctrl.listAyat[index]['number']['inSurah'];
-                ctrl.detailLastRead['suratName'] = ctrl.surahName.toString();
-                ctrl.detailLastRead['id'] = ctrl.listAyat[index]['number']['inSurah'];
-                if (ctrl.detailLastRead['ayatNumber'] == ctrl.listAyat[index]['number']['inSurah']) {
-                ctrl.listAyatBookmarked[index].value = !ctrl.listAyatBookmarked[index].value;
-                  // ctrl.bookmark();
-                }
-              },
-            ),
-          );
-        },
-      ) 
-    : const Text('Loading')
-    );
+    return Obx(() => !ctrl.isLoadingDetail.value
+        ? ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            itemCount: ctrl.detail['numberOfVerses'],
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              // Datum model = filteredEvents[index];
+              var item = ctrl.listAyat[index];
+              return FadeInUp(
+                child: ListCardAyatWidget(
+                  id: item['number']['inSurah'],
+                  ayat: item['text']['arab'],
+                  descEN: item['text']['transliteration']['en'],
+                  descIDN: item['translation']['id'],
+                  nomor: item['number']['inSurah'].toString(),
+                  bookmark: ctrl.listAyatBookmarked[index],
+                  bookmarked: ctrl.listAyatBookmarked[index].value,
+                  audioFile: item['audio']['primary'],
+                  activeColor: ctrl.detailLastRead['ayatNumber'] ==
+                          item['number']['inSurah']
+                      ? Colors.green[50]
+                      : Colors.white,
+                  onTap: () {
+                    ctrl.detailLastRead['ayatNumber'] =
+                        item['number']['inSurah'];
+                    ctrl.detailLastRead['suratName'] =
+                        ctrl.surahName.toString();
+                    ctrl.detailLastRead['id'] = item['number']['inSurah'];
+                    if (ctrl.detailLastRead['ayatNumber'] ==
+                        item['number']['inSurah']) {
+                      ctrl.listAyatBookmarked[index].value =
+                          !ctrl.listAyatBookmarked[index].value;
+                      // ctrl.bookmark();
+                    }
+                  },
+                ),
+              );
+            },
+          )
+        : const Text('Loading'));
   }
 
   @override
@@ -405,12 +413,13 @@ class DetailAyatQuranPage extends StatelessWidget {
     final ctrl = Get.put(DetailAyatQuranController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      extendBodyBehindAppBar: false,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBarWSWidget.getAppbarWidget(
-          title: ctrl.surahName.toString(), context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingDetail.value ? const Text('Loadung') : layout(ctrl, context))
-    );
+        backgroundColor: const Color(0xFFF5F5F5),
+        extendBodyBehindAppBar: false,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBarWSWidget.getAppbarWidget(
+            title: ctrl.surahName.toString(), context: context, elevation: 0),
+        body: Obx(() => ctrl.isLoadingDetail.value
+            ? const Text('Loadung')
+            : layout(ctrl, context)));
   }
 }

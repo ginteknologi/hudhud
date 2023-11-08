@@ -27,6 +27,7 @@ class ListItemUiWidget extends StatelessWidget {
       this.onTap,
       this.minHeight,
       this.widthContent,
+      this.activeColor,
       this.image});
 
   int id;
@@ -50,6 +51,7 @@ class ListItemUiWidget extends StatelessWidget {
   double? widthContent;
   VoidCallback? onTap;
   double? minHeight;
+  BoxDecoration? activeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -64,134 +66,140 @@ class ListItemUiWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
-                padding: listInset
-                    ? EdgeInsets.only(left: 0, top: 10, right: 0)
-                    : EdgeInsets.only(left: 0, top: 10, right: 0),
-                child: Container(
-                  width: Get.width,
-                  margin: const EdgeInsets.only(right: 2, bottom: 11),
-                  decoration: typeList == TypeList.solid
-                      ? BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              spreadRadius: 0,
-                              blurRadius: 15,
-                              offset: Offset(0, 4),
+              Container(
+                decoration: activeColor ?? BoxDecoration(),
+                child: Padding(
+                  padding: listInset
+                      ? EdgeInsets.only(left: 0, top: 10, right: 0)
+                      : EdgeInsets.only(left: 0, top: 10, right: 0),
+                  child: Container(
+                    width: Get.width,
+                    margin: const EdgeInsets.only(right: 2, bottom: 11),
+                    decoration: typeList == TypeList.solid
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                spreadRadius: 0,
+                                blurRadius: 15,
+                                offset: Offset(0, 4),
+                              ),
+                              BoxShadow(
+                                color: Colors.white,
+                                spreadRadius: 0,
+                                blurRadius: 0,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          )
+                        : BoxDecoration(),
+                    child: Row(
+                      mainAxisAlignment: justify
+                          ? MainAxisAlignment.spaceBetween
+                          : start
+                              ? MainAxisAlignment.start
+                              : MainAxisAlignment.center,
+                      children: [
+                        if (showIcon == IconPosition.left ||
+                            showIcon == IconPosition.both)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              right: 10,
                             ),
-                            BoxShadow(
-                              color: Colors.white,
-                              spreadRadius: 0,
-                              blurRadius: 0,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        )
-                      : BoxDecoration(),
-                  child: Row(
-                    mainAxisAlignment: justify
-                        ? MainAxisAlignment.spaceBetween
-                        : start
-                            ? MainAxisAlignment.start
-                            : MainAxisAlignment.center,
-                    children: [
-                      if (showIcon == IconPosition.left ||
-                          showIcon == IconPosition.both)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            right: 10,
+                            child: iconLeft,
                           ),
-                          child: iconLeft,
-                        ),
-                      if (showIcon == IconPosition.leftFlex)
+                        if (showIcon == IconPosition.leftFlex)
+                          Expanded(
+                            flex: 1,
+                            child: iconLeft ?? Text(""),
+                          ),
                         Expanded(
-                          flex: 1,
-                          child: iconLeft ?? Text(""),
-                        ),
-                      Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: hasRightContent
-                                ? MainAxisAlignment.spaceBetween
-                                : MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                constraints:
-                                    // BoxConstraints.loose(Size.infinite),
-                                    BoxConstraints(
-                                        minHeight: minHeight ?? 0,
-                                        maxWidth: widthContent ??
-                                            MediaQuery.of(context).size.width *
-                                                0.5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: vjustify
-                                      ? MainAxisAlignment.spaceBetween
-                                      : MainAxisAlignment.center,
-                                  children: [
-                                    if (category != null)
-                                      AutoSizeText(
-                                        '$category',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.fontSize,
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.normal),
-                                        maxLines: 1,
-                                      ),
-                                    AutoSizeText(
-                                      '$title',
-                                      textAlign: TextAlign.start,
-                                      style: titleStyle ??
-                                          TextStyle(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: hasRightContent
+                                  ? MainAxisAlignment.spaceBetween
+                                  : MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  constraints:
+                                      // BoxConstraints.loose(Size.infinite),
+                                      BoxConstraints(
+                                          minHeight: minHeight ?? 0,
+                                          maxWidth: widthContent ??
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: vjustify
+                                        ? MainAxisAlignment.spaceBetween
+                                        : MainAxisAlignment.center,
+                                    children: [
+                                      if (category != null)
+                                        AutoSizeText(
+                                          '$category',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
                                               fontSize: Theme.of(context)
                                                   .textTheme
-                                                  .titleMedium
+                                                  .bodySmall
                                                   ?.fontSize,
                                               color: Colors.black54,
-                                              fontWeight: FontWeight.bold),
-                                      maxLines: 2,
-                                    ),
-                                    if (subTitle != null)
+                                              fontWeight: FontWeight.normal),
+                                          maxLines: 1,
+                                        ),
                                       AutoSizeText(
-                                        '$subTitle',
+                                        '$title',
                                         textAlign: TextAlign.start,
-                                        minFontSize: 14,
-                                        style: subtitleStyle ??
+                                        style: titleStyle ??
                                             TextStyle(
                                                 fontSize: Theme.of(context)
                                                     .textTheme
-                                                    .titleSmall
+                                                    .titleMedium
                                                     ?.fontSize,
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.w500),
-                                        overflow: TextOverflow.ellipsis,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.bold),
                                         maxLines: 2,
-                                      )
-                                  ],
+                                      ),
+                                      if (subTitle != null)
+                                        AutoSizeText(
+                                          '$subTitle',
+                                          textAlign: TextAlign.start,
+                                          minFontSize: 14,
+                                          style: subtitleStyle ??
+                                              TextStyle(
+                                                  fontSize: Theme.of(context)
+                                                      .textTheme
+                                                      .titleSmall
+                                                      ?.fontSize,
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w500),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: rightContent,
-                              )
-                            ],
-                          )),
-                      if (showIcon == IconPosition.right ||
-                          showIcon == IconPosition.both)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 5,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: rightContent,
+                                )
+                              ],
+                            )),
+                        if (showIcon == IconPosition.right ||
+                            showIcon == IconPosition.both)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 5,
+                            ),
+                            child: iconRight,
                           ),
-                          child: iconRight,
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
