@@ -23,6 +23,7 @@ class DashboardPage extends StatelessWidget {
     LatestNews artikel = ctrl.listArtikel[0];
     LatestNews doa = ctrl.listArtikel[1];
     LatestNews campaign = ctrl.listArtikel[2];
+
     return SafeArea(
         top: false,
         child: Container(
@@ -1018,6 +1019,23 @@ class DashboardPage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void showPopupInfaq(ctrl, context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext bc) {
+          return Dialog(
+            elevation: 0,
+            backgroundColor: const Color(0xFFDADADA),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7.0)),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                height: 400,
+                child: Text("testss")),
+          );
+        });
   }
 
   @override

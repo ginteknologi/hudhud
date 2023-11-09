@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -21,6 +23,9 @@ class DashboardController extends GetxController {
   var latestCampaign = {}.obs;
   var duration = 0.obs;
   var txttime = "".obs;
+
+  RxBool showPopupInfaq = true.obs;
+  DialogPopupInfaq dialogPopupInfaq = DialogPopupInfaq.subuh;
 
   getData() async {
     // final result = await DashboardService().getList();
@@ -147,6 +152,17 @@ class DashboardController extends GetxController {
         }
       }
     }
+    // ======
+    if (timeleft.hour > 6 && timeleft.hour < 12) {
+      dialogPopupInfaq = DialogPopupInfaq.pagi;
+      showPopupInfaq.value = true;
+    } else if (timeleft.hour > 2 && timeleft.hour < 6) {
+      dialogPopupInfaq = DialogPopupInfaq.subuh;
+      showPopupInfaq.value = true;
+    } else {
+      showPopupInfaq.value = false;
+    }
+    // showPopupInfaq.value = true;
   }
 
   startWaktu() {
@@ -403,6 +419,44 @@ class DashboardController extends GetxController {
     latestDoa = item['doa'];
   }
 
+  void _showPopup() {
+    Get.defaultDialog(
+      barrierDismissible: false,
+      contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      title: '',
+      titleStyle: TextStyle(height: 0),
+      titlePadding: EdgeInsets.all(0),
+      content: Container(
+        constraints: BoxConstraints.loose(Size.infinite),
+        height: 400,
+        width: Get.width - 42,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: dialogPopupInfaq == DialogPopupInfaq.pagi
+                  ? AssetImage('assets/img/infaq_pagi.png')
+                  : AssetImage('assets/img/infaq_subuh.png'),
+              fit: BoxFit.fill,
+              alignment: Alignment.topCenter),
+        ),
+      ),
+      confirm: ButtonElevated(
+        title: 'Siap, Bismillah Infaq',
+        width: 165,
+        bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
+            ? Color(0xFFD9A04A)
+            : Get.theme.primaryColor,
+        height: 45,
+        color: Colors.white,
+        radius: 7,
+        shadow: false,
+        onPressed: () {
+          // Navigator.pop(context);
+          Get.back();
+        },
+      ),
+    );
+  }
+
   @override
   void onInit() async {
     getData();
@@ -414,9 +468,19 @@ class DashboardController extends GetxController {
     getAllMenu();
     getWaktu();
     getListKota();
+
+    if (showPopupInfaq.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showPopup();
+        showPopupInfaq.value = false;
+      });
+    }
+
     super.onInit();
   }
 }
+
+enum DialogPopupInfaq { subuh, pagi }
 
 class LatestNews {
   int id;
