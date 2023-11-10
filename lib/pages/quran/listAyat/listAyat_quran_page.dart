@@ -13,6 +13,7 @@ class ListAyatQuranPage extends StatelessWidget {
   const ListAyatQuranPage({super.key});
 
   layout(ListAyatQuranController ctrl, BuildContext context) {
+    var lasRead = ctrl.lastRead['id'] ?? 0;
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -63,7 +64,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                               width: 10,
                                             ),
                                             Text(
-                                              ctrl.lastRead['id'] > 0
+                                              lasRead > 0
                                                   ? '${ctrl.lastRead['id']}'
                                                   : '-',
                                               style: context
