@@ -475,6 +475,7 @@ class DashboardController extends GetxController {
                 onPressed: () {
                   // Navigator.pop(context);
                   Get.back();
+                  Get.toNamed('/sedekah');
                 },
               ))
         ],
