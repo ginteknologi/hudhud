@@ -419,7 +419,7 @@ class DetailAyatQuranPage extends StatelessWidget {
         appBar: AppBarWSWidget.getAppbarWidget(
             title: ctrl.surahName.toString(), context: context, elevation: 0),
         body: Obx(() => ctrl.isLoadingDetail.value
-            ? const Text('Loadung')
+            ? const Text('Loading')
             : layout(ctrl, context)));
   }
 }

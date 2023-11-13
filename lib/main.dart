@@ -10,8 +10,9 @@ import 'package:mesjid_app/routes/index.dart';
 import 'package:mesjid_app/configs/main_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:mesjid_app/theme.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,6 +71,37 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       initialRoute: AppPages.root,
       getPages: AppPages.list,
+    );
+  }
+  
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  Future<void> scheduleNotification() async {
+    var androidDetails = const AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      importance: Importance.high,
+    );
+    var platformChannelSpecifics =
+        NotificationDetails(android: androidDetails);
+
+    var scheduledTime = tz.TZDateTime.local(
+      tz.local as int,
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      10,
+      44,
+    );
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0, // ID notifikasi (dapat diubah sesuai kebutuhan)
+      'Judul Notifikasi',
+      'Isi Notifikasi akan muncul pada jam 10:00.',
+      scheduledTime,
+      platformChannelSpecifics,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
     );
   }
 }

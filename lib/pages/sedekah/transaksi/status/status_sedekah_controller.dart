@@ -103,7 +103,7 @@ class StatusSedekahController extends GetxController {
 
   @override
   void onInit() async {
-    getBillProduct();
+    // getBillProduct();
     await getData();
     super.onInit();
   }

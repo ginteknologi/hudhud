@@ -1,35 +1,35 @@
-import 'package:animate_do/animate_do.dart';
+// import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mesjid_app/components/button/buttonvariant.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/input/InputDropdown.dart';
+// import 'package:mesjid_app/components/input/InputDropdown.dart';
 import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
+// import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/ruangan/booking/booking_ruangan_controller.dart';
 import 'package:mesjid_app/routes/home/index.dart';
 import 'package:simple_moment/simple_moment.dart';
-
 class BookingRuanganPage extends StatelessWidget {
   const BookingRuanganPage({super.key});
 
   layout(BookingRuanganController ctrl, BuildContext context) {
     return SafeArea(
         child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 21, vertical: 21),
+            padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 21),
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child: Text("Silahkan Isi Form"),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Column(
@@ -69,12 +69,22 @@ class BookingRuanganPage extends StatelessWidget {
                               ),
                               ButtonVariant(
                                   height: 40,
-                                  label: data['controller'].value == ""
-                                      ? data['placeholder']
-                                      : Moment.parse(data['controller'].value)
-                                          .format("dd MMMM yyyy"),
+                                  label: data['controller'].value == "" ? data['placeholder'] : data['controller'].value,
                                   shadow: false,
                                   onPressed: () {
+                                    showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(1945, 1, 1),
+                                      lastDate: DateTime(2050, 12, 31),
+                                    ).then((selectedDate) {
+                                      if (selectedDate != null) {
+                                        // Format tanggal yang dipilih ke dalam format "dd MMMM yyyy"
+                                        String formattedDate = DateFormat("dd MMMM yyyy").format(selectedDate);
+                                        // Set nilai controller dengan tanggal yang diformat
+                                        data['controller'].value = formattedDate;
+                                      }
+                                    });                                    
                                     // DatePicker.showDatePicker(context,
                                     //     showTitleActions: true,
                                     //     minTime: DateTime(1945, 1, 1),
@@ -86,12 +96,50 @@ class BookingRuanganPage extends StatelessWidget {
                           ),
                         );
                       }
-                      return SizedBox(
+                      if (data['type'] == 'timepicker') {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  data['label'],
+                                ),
+                              ),
+                              ButtonVariant(
+                                  height: 40,
+                                  label: data['controller'].value == "" ? data['placeholder']: data['controller'].value,
+                                  shadow: false,
+                                  onPressed: () {
+                                    showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now(),
+                                      builder: (BuildContext context, Widget? child) {
+                                        return MediaQuery(
+                                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                                          child: child!,
+                                        );
+                                      },
+                                    ).then((selectedTime) {
+                                      if (selectedTime != null) {
+                                        String formattedTime = "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}";
+                                        // Set nilai controller dengan waktu yang diformat
+                                        data['controller'].value = formattedTime;
+                                      }
+                                    });                               
+                                  }),
+                            ],
+                          ),
+                        );
+                      }                      
+                      return const SizedBox(
                         height: 20,
                       );
                     }),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   AutoSizeText(
@@ -121,11 +169,11 @@ class BookingRuanganPage extends StatelessWidget {
             title: "Ruangan > List Jadwal > Booking Ruangan",
             context: context,
             elevation: 0),
-        body: layout(ctrl, context),
+        body: Obx(() => ctrl.isLoadingList.value ? Text('Loading') : layout(ctrl, context)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
-            child: Container(
+            child: SizedBox(
               width: Get.width,
               child: ButtonElevated(
                 title: 'Booking Sekarang',
@@ -135,7 +183,7 @@ class BookingRuanganPage extends StatelessWidget {
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  Get.offAllNamed(RoutesHome.root);
+                  ctrl.proceedBooking();
                 },
               ),
             ),

@@ -3,13 +3,13 @@ import 'package:mesjid_app/pages/ruangan/ruangan_service.dart';
 
 class RuanganController extends GetxController {
   var isLoadingList = true.obs;
-  var list = {}.obs;
+  var list = [].obs;
   List listKegiatan = [].obs;
 
   Rx<DateTime> selectedDay = DateTime.now().obs;
 
   getData() async {
-    final result = await RuanganService().getList(page: 0, limit: 10);
+    final result = await RuanganService().getList();
     list.value = result['data'];
     isLoadingList.value = false;
   }
@@ -19,37 +19,37 @@ class RuanganController extends GetxController {
       {
         "id": 1,
         "label": "Kajian umum",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh "
+        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh sds sdd"
       },
       {
         "id": 1,
         "label": "Kajian umum",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh "
+        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh sds sdd"
       },
       {
         "id": 1,
         "label": "Kajian umum",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh "
+        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh sds sdd"
       },
       {
         "id": 1,
         "label": "Kajian umum",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh "
+        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh sds sdd"
       },
       {
         "id": 1,
         "label": "Kajian umum",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh "
+        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh sds sdd"
       },
       {
         "id": 1,
         "label": "Kajian umum",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh "
+        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh sds sdd"
       },
       {
         "id": 1,
         "label": "Kajian umum",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh "
+        "subtitle": "Lorem ipsum dolor sit amet consectetur. Aliquam nibh sds sdd"
       },
     ];
     return listKegiatan;
@@ -57,6 +57,7 @@ class RuanganController extends GetxController {
 
   @override
   void onInit() {
+    getData();
     getListKegiatan();
     super.onInit();
   }

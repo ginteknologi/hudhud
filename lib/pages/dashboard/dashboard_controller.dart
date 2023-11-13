@@ -5,6 +5,7 @@ import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mesjid_app/routes/sedekah/index.dart';
 
 class DashboardController extends GetxController {
   final dataStore = GetStorage();
@@ -39,37 +40,35 @@ class DashboardController extends GetxController {
       "data": {
         "artikel": {
           "id": 1,
-          "image": "https://dummyimage.com/600x400/000/fff",
-          "judul": "Ini Judul",
-          "isi": "Ini isinya",
+          "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
+          "judul": "Sedekah yang Paling Utama adalah yang Paling Sesuai dengan Kondisi Penerima Sedekah",
+          "isi": "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
           "tanggal": "2023-10-31T12:59:58.000Z",
-          "idCategoryArtikel": 1,
+          "url": 'artikel/1',
           "createdAt": "2023-10-31T13:00:02.000Z",
           "updatedAt": "2023-10-31T13:00:03.000Z"
         },
         "doa": {
           "id": 1,
-          "judul": "asdasdas",
-          "seo": "asdasdas",
-          "isi": "sdasdasdas",
-          "surat": "sdasdasdasd",
-          "idCategoryDoa": 1,
-          "createdAt": "2023-10-24T15:07:09.000Z",
-          "updatedAt": "2023-10-24T15:07:10.000Z"
+          // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
+          "image": "https://harakahdaily.net/wp-content/uploads/2020/03/Doa-Mohon-Perlindungan-Dari-Ilmu-Tak-Bermanfaat-IslamRamah.co_.jpeg",
+          "judul": "Doa Bangun Tidur",
+          "isi": "Ini isinya",
+          "tanggal": "2023-10-31T12:59:58.000Z",
+          "url": 'doa/1',
+          "createdAt": "2023-10-31T13:00:02.000Z",
+          "updatedAt": "2023-10-31T13:00:03.000Z"
         },
         "campaign": {
           "id": 1,
-          "image": "https://dummyimage.com/600x400/000/fff",
-          "judul": "Sedekah Mudharabah",
-          "seo": "sedekah-mudharabah",
-          "isi": "asdasdassa",
-          "deadline": "2024-01-01T03:12:11.000Z",
-          "dana_kebutuhan": 14000000,
-          "total_online": 0,
-          "total_offline": 0,
-          "total": 0,
-          "createdAt": "2023-10-31T03:11:51.000Z",
-          "updatedAt": "2023-10-31T03:11:52.000Z"
+          // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
+          "image": "https://masjidannimah.id/wp-content/uploads/2023/10/image-36.png",
+          "judul": "Sedekah Mesjid",
+          "isi": "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
+          "tanggal": "2023-10-31T12:59:58.000Z",
+          "url": "sedekah/1",
+          "createdAt": "2023-10-31T13:00:02.000Z",
+          "updatedAt": "2023-10-31T13:00:03.000Z"
         }
       }
     };
@@ -77,7 +76,6 @@ class DashboardController extends GetxController {
     // constructLatestData(dataTerbaru.value);
     // print(jsonEncode(newdata));
     listArtikel = newdata;
-    print(listArtikel);
     isLoadingList.value = false;
   }
 
@@ -154,7 +152,7 @@ class DashboardController extends GetxController {
       }
     }
     // ======
-    if (timeleft.hour > 6 && timeleft.hour < 12) {
+    if (timeleft.hour > 6 && timeleft.hour < 23) {
       dialogPopupInfaq = DialogPopupInfaq.pagi;
       showPopupInfaq.value = true;
     } else if (timeleft.hour > 2 && timeleft.hour < 6) {
@@ -240,67 +238,59 @@ class DashboardController extends GetxController {
         "urlNav": "/kiblat"
       },
       {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
-      {"label": "Al-Quran", "icon": "assets/icons/alquran.svg", "urlNav": ""},
-      {"label": "Ruangan", "icon": "assets/icons/ruangan.svg", "urlNav": ""},
+      // {"label": "Al-Quran", "icon": "assets/icons/alquran.svg", "urlNav": ""},
+      // {"label": "Ruangan", "icon": "assets/icons/ruangan.svg", "urlNav": ""},
       {
         "label": "Artikel/Informasi",
         "icon": "assets/icons/artikel.svg",
         "urlNav": "/artikel"
       },
-      {"label": "DKM", "icon": "assets/icons/dkm.svg", "urlNav": ""},
+      // {"label": "DKM", "icon": "assets/icons/dkm.svg", "urlNav": "dkm"},
     ];
   }
 
   getKajianLive() async {
     return listKajianLive = [
       {
-        "title": "Asbabun Nuzul",
-        "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
+        "title": "PALESTINA BUKAN SEKEDAR ISU KEMANUSIAAN | MT Sakinah",
+        "subtitle": "Ustadzh Umi Irena Handono & Ustadzh Sally",
         "flag": "LIVE",
-        "image": "assets/icons/image-item1.png",
-        "url": "",
+        "image": "https://img.youtube.com/vi/uMFFFymo21w/0.jpg",
+        "url": "https://www.youtube.com/watch?v=uMFFFymo21w",
         "id": 1
       },
       {
-        "title": "Indahnya Husnul Khotimah",
-        "subtitle": "Ust. Abdullah Sholeh Hadrami",
+        "title": "30 Hari Setelah BADAI AL-AQSA | Kajian Subuh",
+        "subtitle": "Ust. Ihsan Tanjung, Lc, MA ",
         "flag": "LIVE",
-        "image": "assets/icons/image-item1.png",
-        "url": "",
-        "id": 1
+        "image": "https://img.youtube.com/vi/AkEPZYUGZvE/0.jpg",
+        "url": "https://www.youtube.com/watch?v=AkEPZYUGZvE",
+        "id": 2
       },
       {
-        "title": "Asbabun Nuzul",
-        "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
+        "title": "Shalat adalah Penolongmu | Kajian Maghrib",
+        "subtitle": "Ust. DR. Iqbal Subhan Nugraha, Lc, MA",
         "flag": "LIVE",
-        "image": "assets/icons/image-item1.png",
-        "url": "",
-        "id": 1
+        "image": "https://img.youtube.com/vi/a2YodUWUhTE/0.jpg",
+        "url": "https://www.youtube.com/watch?v=a2YodUWUhTE",
+        "id": 3
       },
       {
-        "title": "Indahnya Husnul Khotimah",
-        "subtitle": "Ust. Abdullah Sholeh Hadrami",
+        "title": "Info Palestina | Kajian Subuh",
+        "subtitle": "Ust. DR. Arifin Nugroho, Lc, MA",
         "flag": "LIVE",
-        "image": "assets/icons/image-item1.png",
-        "url": "",
-        "id": 1
+        "image": "https://img.youtube.com/vi/U-Hg6wQD5CA/0.jpg",
+        "url": "https://www.youtube.com/watch?v=U-Hg6wQD5CA",
+        "id": 4
       },
       {
-        "title": "Asbabun Nuzul",
-        "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
+        "title": "Memberi Menerangkan Hati | Kajian Umum",
+        "subtitle": "Ust. Derry Sulaiman",
         "flag": "LIVE",
-        "image": "assets/icons/image-item1.png",
-        "url": "",
-        "id": 1
-      },
-      {
-        "title": "Indahnya Husnul Khotimah",
-        "subtitle": "Ust. Abdullah Sholeh Hadrami",
-        "flag": "LIVE",
-        "image": "assets/icons/image-item1.png",
-        "url": "",
-        "id": 1
-      },
+        "image": "https://img.youtube.com/vi/ivay-bfTUDg/0.jpg",
+        "url": "https://www.youtube.com/watch?v=ivay-bfTUDg",
+        "id": 5
+      }
     ];
   }
 
@@ -406,7 +396,7 @@ class DashboardController extends GetxController {
           subtitle: el['isi'],
           image: el['image'] ?? 'https://dummyimage.com/600x400/000/fff',
           kategori: key,
-          url: "1",
+          url: el['url'],
         ));
       }
       return items;
@@ -428,57 +418,36 @@ class DashboardController extends GetxController {
       title: '',
       titleStyle: TextStyle(height: 0),
       titlePadding: EdgeInsets.all(0),
-      content: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: Text("")),
-              ButtonIcon(
-                onTap: () {
-                  Get.back();
-                },
-                bgcolor: Colors.transparent,
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            constraints: BoxConstraints.loose(Size.infinite),
-            height: 400,
-            width: Get.width - 42,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: dialogPopupInfaq == DialogPopupInfaq.pagi
-                      ? AssetImage('assets/img/infaq_pagi.png')
-                      : AssetImage('assets/img/infaq_subuh.png'),
-                  fit: BoxFit.fill,
-                  alignment: Alignment.topCenter),
-            ),
-          ),
-          Container(
-              width: Get.width,
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(color: Colors.white),
-              child: ButtonElevated(
-                title: 'Siap, Bismillah Infaq',
-                width: 165,
-                bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
-                    ? Color(0xFFD9A04A)
-                    : Get.theme.primaryColor,
-                height: 45,
-                color: Colors.white,
-                radius: 7,
-                shadow: false,
-                onPressed: () {
-                  // Navigator.pop(context);
-                  Get.back();
-                  Get.toNamed('/sedekah');
-                },
-              ))
-        ],
+      content: Container(
+        constraints: BoxConstraints.loose(Size.infinite),
+        height: 400,
+        width: Get.width - 42,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: dialogPopupInfaq == DialogPopupInfaq.pagi
+                  ? AssetImage('assets/img/infaq_pagi.png')
+                  : AssetImage('assets/img/infaq_subuh.png'),
+              fit: BoxFit.fill,
+              alignment: Alignment.topCenter),
+        ),
+      ),
+      confirm: ButtonElevated(
+        title: 'Bismillah Infaq',
+        width: 165,
+        bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
+            ? Color(0xFFD9A04A)
+            : Get.theme.primaryColor,
+        height: 45,
+        color: Colors.white,
+        radius: 7,
+        shadow: false,
+        onPressed: () {
+          // Navigator.pop(context);
+          // Get.back();
+          // print(showPopupInfaq.value);
+          // showPopupInfaq.value = false;
+          Get.toNamed('${RoutesSedekah.root}/1');
+        },
       ),
       // confirm: ButtonElevated(
       //   title: 'Siap, Bismillah Infaq',
@@ -542,5 +511,6 @@ class LatestNews {
         'kategori': kategori,
         'image': image,
         'time': time,
+        'url': url,
       };
 }

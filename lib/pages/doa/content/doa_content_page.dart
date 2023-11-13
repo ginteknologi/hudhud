@@ -32,7 +32,7 @@ class ContentDoaPage extends StatelessWidget {
                               children: [
                                 ListCardUiWidget(
                                   id: 1,
-                                  title: "Sholat Terawih",
+                                  title: "Do’a Bangun Tidur",
                                   titleStyle: context.textTheme.titleSmall
                                       ?.copyWith(
                                           fontWeight: FontWeight.bold,
@@ -46,16 +46,16 @@ class ContentDoaPage extends StatelessWidget {
                                     // ctrl.goToDetail(ctrl.listDoa[index]);
                                   },
                                   subtitle:
-                                      "Lorem ipsum dolor sit amet consectetur. Sem felis sagittis ut nunc duis nec. Pharetra tincidunt aliquam ultricies elementum blandit aliquet elit hendrerit. Sed est fames vitae non iaculis velit euismod adipiscing. Ut eget cras elementum sed ac neque amet. Vulputate aliquet ut nisi dui nisi mi vel. Eu tortor proin orci mi fringilla tellus elit laoreet sit. ",
+                                      "Alhamdulillahil ladzi ahyana ba'da ma amatana wa ilaihin nusyur. Segala puji bagi Allah, Tuhan yang menghidupkan kami setelah ia mematikan kami. Kepada-Nyalah kebangkitan hari kiamat",
                                   hasFooter: true,
                                   footerContent: [
-                                    Text("QS. Al-Baqoroh 185",
-                                        textAlign: TextAlign.start,
-                                        style: context.textTheme.labelSmall
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                letterSpacing: 0,
-                                                color: Colors.black54)),
+                                    // Text("QS. Al-Baqoroh 185",
+                                    //     textAlign: TextAlign.start,
+                                    //     style: context.textTheme.labelSmall
+                                    //         ?.copyWith(
+                                    //             fontWeight: FontWeight.bold,
+                                    //             letterSpacing: 0,
+                                    //             color: Colors.black54)),
                                     Row(
                                       children: [
                                         Icon(

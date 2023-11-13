@@ -19,21 +19,21 @@ class DoaController extends GetxController {
       {
         "id": 1,
         "title": "Do'a - Do'a Harian",
-        "subtitle": "15 Do'a",
+        "subtitle": "1 Do'a",
         "icon": "assets/icons/calendar.svg"
       },
-      {
-        "id": 2,
-        "title": "Sholat",
-        "subtitle": "25 Do'a",
-        "icon": "assets/icons/prayer.svg"
-      },
-      {
-        "id": 3,
-        "title": "Kemudahan Rezeki",
-        "subtitle": "35 Do'a",
-        "icon": "assets/icons/plant.svg"
-      },
+      // {
+      //   "id": 2,
+      //   "title": "Sholat",
+      //   "subtitle": "25 Do'a",
+      //   "icon": "assets/icons/prayer.svg"
+      // },
+      // {
+      //   "id": 3,
+      //   "title": "Kemudahan Rezeki",
+      //   "subtitle": "35 Do'a",
+      //   "icon": "assets/icons/plant.svg"
+      // },
     ];
   }
 

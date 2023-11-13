@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomCardItem extends StatelessWidget {
   CustomCardItem(
-      {this.imgPath,
+      {super.key, this.imgPath,
       this.chipText,
       this.title,
       this.kategori,
@@ -13,6 +14,9 @@ class CustomCardItem extends StatelessWidget {
       this.chipColor = Colors.red,
       this.subtitle,
       this.network = false,
+      this.islink = false,
+      this.link,
+      this.linkRoute,
       this.size = "small",
       this.positionChip = CrossAxisAlignment.end,
       this.chipTextStyle = const TextStyle(
@@ -30,11 +34,14 @@ class CustomCardItem extends StatelessWidget {
   String? title;
   String? subtitle;
   String? size;
+  String? link;
+  String? linkRoute;
   final String? kategori;
   double? width;
   double? height;
   bool isFullWidth;
   bool network;
+  bool islink;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +52,21 @@ class CustomCardItem extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               highlightColor: Colors.transparent,
-              onTap: () {
+              onTap: () async {
+                  print(linkRoute);
+                if (islink) {
+                  final Uri url = Uri.parse(link!);
+                  if (!await launchUrl(url)) {
+                    print('Tidak dapat membuka link YouTube.');
+                  }
+                }
+                if (linkRoute != null) {
+                  print("<<<<<<>>>>>>");
+                  Get.toNamed(linkRoute!);
+                }
                 //Get.toNamed(AppRoutes.detailEventScreen);
               },
-              child: Container(
+              child: SizedBox(
                 height: height,
                 width: isFullWidth == true ? Get.width : 151,
                 child: Stack(
@@ -140,7 +158,7 @@ class CustomCardItem extends StatelessWidget {
                                       Colors.black.withOpacity(0.5)
                                     ]),
                                 // color: Colors.black.withOpacity(0.5),
-                                borderRadius: BorderRadius.only(
+                                borderRadius: const BorderRadius.only(
                                     bottomLeft: Radius.circular(7),
                                     bottomRight: Radius.circular(7)),
                               ),

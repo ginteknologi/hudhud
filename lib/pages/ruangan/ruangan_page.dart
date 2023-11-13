@@ -11,7 +11,7 @@ class RuanganPage extends StatelessWidget {
   layout(RuanganController ctrl, BuildContext context) {
     return Stack(
       children: [
-        Container(
+        SizedBox(
           width: double.infinity,
           child: Image.asset(
             'assets/img/masjidRuangan.png',
@@ -25,7 +25,7 @@ class RuanganPage extends StatelessWidget {
           child: Container(
             //width: MediaQuery.of(context).size.width * 0.9,
             //margin: EdgeInsets.symmetric(horizontal: kBigBoxPadding),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 //color: Colors.pink,
                 // borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
@@ -36,7 +36,7 @@ class RuanganPage extends StatelessWidget {
                 anchor: 0,
                 slivers: [
                   SliverPadding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       top: 160,
                     ),
                     sliver: SliverPersistentHeader(
@@ -49,7 +49,7 @@ class RuanganPage extends StatelessWidget {
                             top: 10,
                             child: Card(
                                 elevation: 0,
-                                color: Color(0xFFF5F5F5),
+                                color: const Color(0xFFF5F5F5),
                                 margin: const EdgeInsets.only(
                                     top: 10, right: 0, bottom: 0, left: 0),
                                 clipBehavior: Clip.antiAlias,
@@ -72,10 +72,10 @@ class RuanganPage extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                       width: Get.width,
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 21),
                                         child: Row(
                                           children: [
@@ -101,7 +101,7 @@ class RuanganPage extends StatelessWidget {
                                                           bottom: 10),
                                                   width: 120,
                                                   height: 120,
-                                                  decoration: BoxDecoration(
+                                                  decoration: const BoxDecoration(
                                                       image: DecorationImage(
                                                           image: AssetImage(
                                                               "assets/img/logo_only_white.png"),
@@ -135,7 +135,7 @@ class RuanganPage extends StatelessWidget {
                                                                       .white),
                                                         ),
                                                       ),
-                                                      Align(
+                                                      const Align(
                                                         alignment:
                                                             Alignment.center,
                                                         child: Text(
@@ -151,7 +151,7 @@ class RuanganPage extends StatelessWidget {
                                                     ],
                                                   ),
                                                 )),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 10,
                                             ),
                                             Expanded(
@@ -162,7 +162,7 @@ class RuanganPage extends StatelessWidget {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 30,
                                                   ),
                                                   AutoSizeText(
@@ -179,7 +179,7 @@ class RuanganPage extends StatelessWidget {
                                                                 ?.fontSize),
                                                     maxLines: 1,
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 5,
                                                   ),
                                                   AutoSizeText(
@@ -210,15 +210,15 @@ class RuanganPage extends StatelessWidget {
                   ),
                   SliverToBoxAdapter(
                       child: Container(
-                    decoration: BoxDecoration(color: Color(0xFFF5F5F5)),
+                    decoration: const BoxDecoration(color: Color(0xFFF5F5F5)),
                     width: Get.width,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
-                        padding: EdgeInsets.only(top: 70),
+                        padding: const EdgeInsets.only(top: 70),
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 21),
+                              padding: const EdgeInsets.symmetric(horizontal: 21),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("Jenis Kegiatan",
@@ -228,10 +228,10 @@ class RuanganPage extends StatelessWidget {
                                             color: Colors.black)),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
-                            Container(
+                            SizedBox(
                               height: 180,
                               width: Get.width,
                               // constraints:
@@ -249,16 +249,16 @@ class RuanganPage extends StatelessWidget {
                                     constraints:
                                         BoxConstraints.loose(Size.infinite),
                                     alignment: Alignment.center,
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: const EdgeInsets.only(left: 10),
                                     clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(12))),
                                     child: Column(
                                       children: [
                                         ClipRRect(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                               Radius.circular(12)),
                                           child: Image.asset(
                                             'assets/img/masjidRuangan.png',
@@ -267,7 +267,7 @@ class RuanganPage extends StatelessWidget {
                                           ),
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 5),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
@@ -285,18 +285,18 @@ class RuanganPage extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 5),
                                           child: AutoSizeText(
                                             ctrl.listKegiatan[index]
                                                 ['subtitle'],
                                             textAlign: TextAlign.left,
                                             maxLines: 3,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 height: 1,
                                                 fontSize: 8,
                                                 fontWeight: FontWeight.normal,
@@ -310,14 +310,18 @@ class RuanganPage extends StatelessWidget {
                                 },
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
+                            const AutoSizeText("Cek tanggal",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold
+                            ),),
                             Container(
-                              margin: EdgeInsets.symmetric(horizontal: 21),
-                              decoration: BoxDecoration(color: Colors.white),
+                              margin: const EdgeInsets.symmetric(horizontal: 21),
+                              decoration: const BoxDecoration(color: Colors.white),
                               child: TableCalendar(
-                                headerStyle: HeaderStyle(
+                                headerStyle: const HeaderStyle(
                                     rightChevronMargin:
                                         EdgeInsets.only(right: 0),
                                     leftChevronMargin:
@@ -335,37 +339,39 @@ class RuanganPage extends StatelessWidget {
                                   // the time-part of compared DateTime objects.
                                   return isSameDay(ctrl.selectedDay.value, day);
                                 },
-                                onDaySelected: (selectedDay, focusedDay) {},
+                                onDaySelected: (selectedDay, focusedDay) {
+                                      Get.toNamed('${RoutesRuangan.jadwal}?tanggal=$selectedDay');
+                                },
                                 onFormatChanged: (format) {},
                                 onPageChanged: (focusedDay) {},
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 21),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Get.toNamed(RoutesRuangan.jadwal);
-                                    },
-                                    borderRadius: BorderRadius.circular(20),
-                                    splashColor: Colors.green.withOpacity(0.5),
-                                    child: Text(
-                                      "Lihat Detail",
-                                      style: TextStyle(
-                                          color: Colors.blue[700],
-                                          decoration: TextDecoration.underline),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(horizontal: 21),
+                            //   child: Align(
+                            //     alignment: Alignment.bottomRight,
+                            //     child: Material(
+                            //       color: Colors.transparent,
+                            //       child: InkWell(
+                            //         onTap: () {
+                            //           Get.toNamed(RoutesRuangan.jadwal);
+                            //         },
+                            //         borderRadius: BorderRadius.circular(20),
+                            //         splashColor: Colors.green.withOpacity(0.5),
+                            //         child: Text(
+                            //           "Lihat Detail",
+                            //           style: TextStyle(
+                            //               color: Colors.blue[700],
+                            //               decoration: TextDecoration.underline),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            const SizedBox(
                               height: 100,
                             ),
                           ],

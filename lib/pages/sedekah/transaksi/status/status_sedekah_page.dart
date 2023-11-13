@@ -23,12 +23,12 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
             physics: const ClampingScrollPhysics(),
             child: Padding(
                 padding: const EdgeInsets.only(left: 21, right: 21),
-                child: getCurrentLayout(ctrl, context, 2))));
+                child: getCurrentLayout(ctrl, context))));
   }
 
   Widget getCurrentLayout(
-      StatusSedekahController ctrl, BuildContext context, type) {
-        print(ctrl.dataPayment['metode']);
+      StatusSedekahController ctrl, BuildContext context) {
+        print('<<<<<<<<<<>>>>>>>>>>');
     if (ctrl.dataPayment['metode'] == 'va') {
       return layoutVa(ctrl, context);
     } else {
@@ -145,7 +145,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           showIcon: IconPosition.right,
           iconRight: GestureDetector(
             onTap: () {
-              final String accountNumber = ctrl.dataInvoice['detail']['nominal'].toString();
+              final String accountNumber = ctrl.dataInvoice['detail']['nominal'];
               Clipboard.setData(ClipboardData(text: accountNumber));
               Fluttertoast.showToast(
                 msg: 'Berhasil disalin',
@@ -295,7 +295,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
       persistentFooterButtons: [
         Padding(
           padding: const EdgeInsets.only(left: 21, right: 21),
-          child: Container(
+          child: SizedBox(
             width: Get.width,
             child: ButtonElevated(
               title: 'Kembali Ke Beranda',

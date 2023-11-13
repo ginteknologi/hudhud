@@ -230,13 +230,14 @@ class QuranPage extends StatelessWidget {
   }
 
   Widget getCurrentWidget(TypeViewQuran type, QuranController ctrl) {
+    print(TypeViewQuran.perayat);
     switch (type) {
       case TypeViewQuran.perayat:
-        return ListAyatQuranPage();
+        return const ListAyatQuranPage();
       case TypeViewQuran.perhalaman:
-        return HalamanQuranPage();
+        return const HalamanQuranPage();
       default:
-        return ListAyatQuranPage();
+        return const ListAyatQuranPage();
     }
   }
 
@@ -247,7 +248,7 @@ class QuranPage extends StatelessWidget {
       backgroundColor: Color(0xFFF5F5F5),
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: getCurrentWidget(typeView, ctrl),
+      body: Obx(() => ctrl.isLoadingList.value ? const Center(child: CircularProgressIndicator()) :getCurrentWidget(typeView, ctrl)),
     );
   }
 }

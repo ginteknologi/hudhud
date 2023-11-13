@@ -54,7 +54,7 @@ class SetupFirebase {
               playSound: true,
               importance: Importance.high,
               setAsGroupSummary: true,
-              sound: const UriAndroidNotificationSound("assets/suara.mp3"),
+              // sound: const UriAndroidNotificationSound("assets/suara.mp3"),
             ),
           ),
           payload: jsonString);
@@ -64,6 +64,7 @@ class SetupFirebase {
   static initFirebase() async {
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
     if (!kIsWeb) {
       channel = const AndroidNotificationChannel(
           'high_importance_channel', // id
@@ -91,9 +92,7 @@ class SetupFirebase {
               macOS: initializationSettingsMacOS);
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
-
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
+      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         alert: true,
         badge: true,
         sound: true,

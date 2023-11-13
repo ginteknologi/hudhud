@@ -87,7 +87,7 @@ class ArtikelPage extends StatelessWidget {
             height: 170,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(ctrl.listArtikels[index]['image']),
+                    image: NetworkImage(ctrl.listArtikels[index]['image']),
                     fit: BoxFit.cover)),
             titleStyle: context.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),

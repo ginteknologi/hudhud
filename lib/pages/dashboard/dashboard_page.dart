@@ -13,6 +13,7 @@ import 'package:mesjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:mesjid_app/routes/akun/index.dart';
 import 'package:mesjid_app/routes/notifikasi/index.dart';
 import 'package:mesjid_app/routes/quran/index.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:mesjid_app/routes/sedekah/index.dart';
 // import 'package:simple_moment/simple_moment.dart';
 
@@ -186,7 +187,7 @@ class DashboardPage extends StatelessWidget {
                           size: "medium",
                           positionChip: CrossAxisAlignment.start,
                           chipColor: Theme.of(context).primaryColor,
-                          chipText: '${artikel.kategori}',
+                          chipText: artikel.kategori,
                           chipTextStyle: TextStyle(
                               fontSize: Theme.of(context)
                                   .textTheme
@@ -194,9 +195,9 @@ class DashboardPage extends StatelessWidget {
                                   ?.fontSize,
                               fontWeight: FontWeight.normal,
                               color: Colors.white),
-                          title: '${artikel.title}',
+                          title: artikel.title,
                           subtitle: '${artikel.time} | ${artikel.date}',
-                          imgPath: '${artikel.image}',
+                          imgPath: artikel.image,
                         ),
                         const SizedBox(
                           height: 20,
@@ -364,6 +365,9 @@ class DashboardPage extends StatelessWidget {
             kategori: '${ctrl.listKajianLive[index]["kategori"]}',
             chipText: '${ctrl.listKajianLive[index]["flag"]}',
             imgPath: '${ctrl.listKajianLive[index]["image"]}',
+            islink: true,
+            link: '${ctrl.listKajianLive[index]["url"]}',
+            network: true,
           ));
         },
       ),
@@ -386,8 +390,7 @@ class DashboardPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
                 onTap: () {
                   if (ctrl.lastRead['ayatNumber'] > 0) {
-                    Get.toNamed(
-                        '${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
+                    Get.toNamed('${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
                     // Get.toNamed(AppRoutes.detailEventScreen);
                   }
                   print("tapped");
@@ -461,6 +464,8 @@ class DashboardPage extends StatelessWidget {
             itemCount: ctrl.listArtikel.length,
             separatorBuilder: (context, index) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
+              print("<<<<<<<<<<<<<<>>>>>>>>>>>>>>");
+              print(ctrl.listArtikel[index]);
               LatestNews item = ctrl.listArtikel[index];
               return FadeInLeft(
                   child: CustomCardItem(
@@ -470,15 +475,17 @@ class DashboardPage extends StatelessWidget {
                 size: "medium",
                 positionChip: CrossAxisAlignment.start,
                 chipColor: Theme.of(context).primaryColor,
-                chipText: '${item.kategori}',
+                chipText: '$item.kategori',
                 chipTextStyle: TextStyle(
                     fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
                     fontWeight: FontWeight.normal,
                     color: Colors.white),
-                title: '${item.title}',
-                subtitle: '${item.time} | ${item.date}',
-                imgPath: '${item.image}',
-              ));
+                title: '$item.title',
+                subtitle: '$item.time | $item.date',
+                imgPath: '$item.image',
+                linkRoute: 'asdasdsadsads',
+              ),
+              );
             },
           )
         : const Text('Loading'));
@@ -708,7 +715,7 @@ class DashboardPage extends StatelessWidget {
               : CustomModalBottomSheet(
                   typeSheet: TypeBottomSheet.typeFullscreenSheet,
                   content: [
-                    Container(
+                    SizedBox(
                       height: 30,
                       child: Text(
                         "Kajian Live".tr,
@@ -716,7 +723,7 @@ class DashboardPage extends StatelessWidget {
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                         height: MediaQuery.of(context).size.height -
                             kBottomNavigationBarHeight -
                             kToolbarHeight,
@@ -729,6 +736,15 @@ class DashboardPage extends StatelessWidget {
                             // Datum model = filteredEvents[index];
                             return FadeInUp(
                               child: ListItemUiWidget(
+                                onTap: () async {
+                                    final Uri url = Uri.parse(item['url']);
+                                    // print('asdadasdasd');
+                                    // print(item['url']);
+                                    if (!await launchUrl(url)) {
+                                      print('Tidak dapat membuka link YouTube.');
+                                    }
+                                //   //Get.toNamed(AppRoutes.detailEventScreen);
+                                },                                
                                 minHeight: 70,
                                 vjustify: true,
                                 widthContent:
@@ -740,7 +756,7 @@ class DashboardPage extends StatelessWidget {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(7),
-                                      child: Image.asset(
+                                      child: Image.network(
                                         item['image'],
                                         width: 65,
                                         height: 65,
@@ -790,7 +806,6 @@ class DashboardPage extends StatelessWidget {
                                         ))
                                   ],
                                 ),
-                                onTap: () {},
                                 titleStyle: context.textTheme.labelMedium
                                     ?.copyWith(
                                         fontWeight: FontWeight.bold,
