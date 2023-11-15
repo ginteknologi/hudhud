@@ -24,7 +24,7 @@ Future<void> main() async {
     await [
       // Permission.location,
       // Permission.storage,
-      // Permission.camera,
+      // Permission.camera,a
       Permission.notification,
       // Permission.appTrackingTransparency,
     ].request();
