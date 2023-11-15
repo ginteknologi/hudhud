@@ -50,7 +50,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               //set border radius more than 50% of height and width to make circle
             ),
-            child: SizedBox(
+            child: 
+            SizedBox(
                 width: Get.width,
                 height: 90,
                 child: Padding(
@@ -89,14 +90,16 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                         //           BoxConstraints.loose(Size.infinite),
                         //     )),
                       ],
-                    ))) //SizedBox
+                    )
+                    )
+                    ) 
             ),
         const SizedBox(
           height: 20,
         ),
         ListItemUiWidget(
           id: 1,
-          title: dataInvoice['name'],
+          title: ctrl.dataInvoice['databank']['name'],
           titleStyle: TextStyle(
               fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
               color: Colors.black,
@@ -104,8 +107,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           category: "Metode Pembayaran",
           hasRightContent: true,
           showIcon: IconPosition.right,
-          iconRight: Image.network(
-            dataInvoice['img'],
+          iconRight: Image.network(ctrl.dataInvoice['databank']['img'],
             fit: BoxFit.fitHeight,
             width: MediaQuery.of(context).size.width * 0.2,
           ),
@@ -178,7 +180,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
               width: Get.width,
               height: 60,
               shadow: false,
-            ))
+            )
+        )
       ],
     );
   }
@@ -246,7 +249,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.only(right: 13.0),
                             child: Text(
-                              'Menggunakan ${ctrl.dataInvoice['detail']['paymentSelect']['name']}',
+                              'Menggunakan ${ctrl.dataInvoice['databank']['name']}',
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: Color(0xFF212121),

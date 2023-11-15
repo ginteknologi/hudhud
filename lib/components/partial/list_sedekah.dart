@@ -142,7 +142,7 @@ class ListItemSedekahWidget extends StatelessWidget {
                                                 ?.fontSize,
                                           ),
                                           const SizedBox(width: 5),
-                                          Text("$dueDay Hari",
+                                          Text(dueDay != null ? "$dueDay Hari" : '∞',
                                               style: TextStyle(
                                                   fontSize: Theme.of(context)
                                                       .textTheme

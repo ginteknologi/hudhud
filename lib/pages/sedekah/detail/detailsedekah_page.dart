@@ -16,6 +16,7 @@ class DetailSedekahPage extends StatelessWidget {
   const DetailSedekahPage({super.key});
 
   layout(DetailSedekahController ctrl, BuildContext context) {
+    print(ctrl.detail['sedekahs'] != []);
     return NestedScrollView(
         controller: ctrl.scrollController,
         headerSliverBuilder: (context, value) {
@@ -165,7 +166,7 @@ class DetailSedekahPage extends StatelessWidget {
                                       .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w500)),
-                          Text('${ctrl.detail['deadline']} hari',
+                          Text(ctrl.detail['deadline'] != null ? "${ctrl.detail['deadline']} Hari" : '∞',
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -240,15 +241,20 @@ class DetailSedekahPage extends StatelessWidget {
         },
         body: TabBarView(
           controller: ctrl.tabController,
-          children: const [
+          children: [
             Padding(
-                padding: EdgeInsets.only(left: 21, right: 21),
-                child: DonaturTab()),
+                padding: const EdgeInsets.only(left: 21, right: 21),
+                child: ctrl.detail['sedekahs'].length > 0 ? const DonaturTab() : 
+                  const Align(
+                    alignment: Alignment.center,
+                    child: Text('Belum ada Donatur'),
+                  )                
+            ),
             Padding(
-                padding: EdgeInsets.only(left: 21, right: 21),
+                padding: const EdgeInsets.only(left: 21, right: 21),
                 child: Align(
                   alignment: Alignment.center,
-                  child: LaporanTab()
+                  child: ctrl.detail['penyalur_campaigns'].length > 0 ? const LaporanTab() : const Text('Belum ada laporan dari DKM')
                   // Text("Belum Ada Laporan dari DKM")
                   ,
                 )),

@@ -221,7 +221,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
               controller: _controller,
               visible: _visible,
               child: AppBarWSWidget.getAppbarWidget(
-                  title: "Alfatihah",
+                  title: "Al-Quran",
                   context: context,
                   elevation: 0,
                   iconRight: Container(

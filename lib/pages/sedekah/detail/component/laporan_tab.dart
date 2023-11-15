@@ -35,7 +35,7 @@ class LaporanTab extends StatelessWidget {
                       SizedBox(
                         height: 50,
                         child: Align(
-                          child: Text( DateFormat('dd MMMM yyyy').format(DateTime.now()),
+                          child: Text('Laporan Sedekah',
                             style: context.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),

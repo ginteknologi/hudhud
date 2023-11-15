@@ -15,11 +15,11 @@ class DonaturTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Text(
-            ctrl.listDonatur.length.toString() + " Donatur",
+            "${ctrl.listDonatur.length} Donatur",
             style: context.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black87),
           ),
