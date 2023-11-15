@@ -18,17 +18,17 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await GetStorage.init();
-  await initializeDateFormatting('id_ID',null);
+  await initializeDateFormatting('id_ID', null);
 
   if (!kIsWeb) {
-    SetupFirebase.initFirebase();
     await [
-      Permission.location,
-      Permission.storage,
+      // Permission.location,
+      // Permission.storage,
       // Permission.camera,
       Permission.notification,
       // Permission.appTrackingTransparency,
     ].request();
+    SetupFirebase.initFirebase();
   }
   // InAppUpdate.checkForUpdate().then((updateInfo) {
   //   if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
@@ -73,8 +73,9 @@ class MyApp extends StatelessWidget {
       getPages: AppPages.list,
     );
   }
-  
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   Future<void> scheduleNotification() async {
     var androidDetails = const AndroidNotificationDetails(
@@ -82,8 +83,7 @@ class MyApp extends StatelessWidget {
       'channelName',
       importance: Importance.high,
     );
-    var platformChannelSpecifics =
-        NotificationDetails(android: androidDetails);
+    var platformChannelSpecifics = NotificationDetails(android: androidDetails);
 
     var scheduledTime = tz.TZDateTime.local(
       tz.local as int,

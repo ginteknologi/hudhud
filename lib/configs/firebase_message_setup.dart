@@ -61,8 +61,8 @@ class SetupFirebase {
     }
   }
 
-  static initFirebase() async {
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  static Future initFirebase() async {
+    Firebase.initializeApp(options: DefaultFirebaseOptions.android);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     print("<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
     if (!kIsWeb) {
@@ -92,7 +92,8 @@ class SetupFirebase {
               macOS: initializationSettingsMacOS);
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
-      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
         alert: true,
         badge: true,
         sound: true,
