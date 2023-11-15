@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
@@ -26,9 +28,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                 child: getCurrentLayout(ctrl, context))));
   }
 
-  Widget getCurrentLayout(
-      StatusSedekahController ctrl, BuildContext context) {
-        print('<<<<<<<<<<>>>>>>>>>>');
+  Widget getCurrentLayout(StatusSedekahController ctrl, BuildContext context) {
+    print('<<<<<<<<<<>>>>>>>>>>');
     if (ctrl.dataPayment['metode'] == 'va') {
       return layoutVa(ctrl, context);
     } else {
@@ -37,6 +38,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
   }
 
   layoutVa(StatusSedekahController ctrl, BuildContext context) {
+    var dataInvoice = jsonDecode(ctrl.dataInvoice['detail']['paymentSelect']);
     return Column(
       children: [
         Card(
@@ -67,7 +69,9 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                         ),
                         AutoSizeText(
                           // "Senin, 13 September 2023, 10 : 10",
-                          DateFormat('EEEE, dd MMMM yyyy, HH : mm').format(DateTime.parse(ctrl.dataInvoice['paymentMethod']['expiration_date'])),
+                          DateFormat('EEEE, dd MMMM yyyy, HH : mm').format(
+                              DateTime.parse(ctrl.dataInvoice['paymentMethod']
+                                  ['expiration_date'])),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: Theme.of(context)
@@ -92,7 +96,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
         ),
         ListItemUiWidget(
           id: 1,
-          title: ctrl.dataInvoice['detail']['paymentSelect']['name'],
+          title: dataInvoice['name'],
           titleStyle: TextStyle(
               fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
               color: Colors.black,
@@ -101,7 +105,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           hasRightContent: true,
           showIcon: IconPosition.right,
           iconRight: Image.network(
-            ctrl.dataInvoice['detail']['paymentSelect']['img'],
+            dataInvoice['img'],
             fit: BoxFit.fitHeight,
             width: MediaQuery.of(context).size.width * 0.2,
           ),
@@ -118,7 +122,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           showIcon: IconPosition.right,
           iconRight: GestureDetector(
             onTap: () {
-              final String accountNumber = ctrl.dataInvoice['paymentMethod']['account_number'];
+              final String accountNumber =
+                  ctrl.dataInvoice['paymentMethod']['account_number'];
               Clipboard.setData(ClipboardData(text: accountNumber));
               Fluttertoast.showToast(
                 msg: 'Berhasil disalin',
@@ -145,7 +150,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           showIcon: IconPosition.right,
           iconRight: GestureDetector(
             onTap: () {
-              final String accountNumber = ctrl.dataInvoice['detail']['nominal'];
+              final String accountNumber =
+                  ctrl.dataInvoice['detail']['nominal'];
               Clipboard.setData(ClipboardData(text: accountNumber));
               Fluttertoast.showToast(
                 msg: 'Berhasil disalin',
@@ -255,7 +261,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                         //   width: MediaQuery.of(context).size.width * 0.2,
                         // )
                       ],
-                    ),  
+                    ),
                     const Divider(
                       color: Colors.black45,
                     ),
@@ -270,7 +276,9 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                               style: context.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black)),
-                          Text(priceFormat.format(ctrl.dataInvoice['detail']['nominal']),
+                          Text(
+                              priceFormat.format(
+                                  ctrl.dataInvoice['detail']['nominal']),
                               style: context.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: Colors.black)),
@@ -291,7 +299,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Menunggu Pembayaran", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
+      body: Obx(() =>
+          ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
       persistentFooterButtons: [
         Padding(
           padding: const EdgeInsets.only(left: 21, right: 21),

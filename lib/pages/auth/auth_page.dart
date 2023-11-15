@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/outlinebutton.dart';
@@ -16,10 +17,8 @@ class AuthPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Align(
-              alignment: Alignment.center,
-              child: Image.asset("assets/img/masjid2.png", height: 200)),
-          const Text("Assalamu’alaikum",
+          const Text("Assalamu’alaikum \n Warahmatullahi Wabarakatuh",
+              textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: "DMSerifDisplay",
                   color: Color(0xFF048C7C),
@@ -28,12 +27,21 @@ class AuthPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
-                child: Text('Selamat datang di aplikasi \n Masjid An-Ni’mah',
+                child: Text('Selamat datang di aplikasi',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.black54, fontSize: 14)),
               )
             ],
           ),
+          SizedBox(
+            height: 30,
+          ),
+          Align(
+              alignment: Alignment.center,
+              child: SvgPicture.asset(
+                'assets/img/new-logo.svg',
+                width: 170,
+              )),
           // const Padding(
           //     padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
           //     child: Flexible(

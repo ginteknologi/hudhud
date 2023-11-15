@@ -97,7 +97,7 @@ class RiwayatPage extends StatelessWidget {
                                                 priceFormat.format(5000000000),
                                                 textAlign: TextAlign.start,
                                                 style: context
-                                                    .textTheme.titleMedium
+                                                    .textTheme.headlineSmall
                                                     ?.copyWith(
                                                         fontWeight:
                                                             FontWeight.w900,
@@ -172,8 +172,10 @@ class RiwayatPage extends StatelessWidget {
                                               textAlign: TextAlign.end,
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              )),
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      color: Theme.of(context)
+                                                          .primaryColor)),
                                           Text(
                                               ctrl.listRiwayat[index]
                                                       ['tanggal'] +
