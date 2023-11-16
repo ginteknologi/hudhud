@@ -390,7 +390,8 @@ class DashboardPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
                 onTap: () {
                   if (ctrl.lastRead['ayatNumber'] > 0) {
-                    Get.toNamed('${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
+                    Get.toNamed(
+                        '${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
                     // Get.toNamed(AppRoutes.detailEventScreen);
                   }
                   print("tapped");
@@ -468,23 +469,24 @@ class DashboardPage extends StatelessWidget {
               print(ctrl.listArtikel[index]);
               LatestNews item = ctrl.listArtikel[index];
               return FadeInLeft(
-                  child: CustomCardItem(
-                network: true,
-                isFullWidth: true,
-                height: 165,
-                size: "medium",
-                positionChip: CrossAxisAlignment.start,
-                chipColor: Theme.of(context).primaryColor,
-                chipText: '$item.kategori',
-                chipTextStyle: TextStyle(
-                    fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white),
-                title: '$item.title',
-                subtitle: '$item.time | $item.date',
-                imgPath: '$item.image',
-                linkRoute: 'asdasdsadsads',
-              ),
+                child: CustomCardItem(
+                  network: true,
+                  isFullWidth: true,
+                  height: 165,
+                  size: "medium",
+                  positionChip: CrossAxisAlignment.start,
+                  chipColor: Theme.of(context).primaryColor,
+                  chipText: '$item.kategori',
+                  chipTextStyle: TextStyle(
+                      fontSize:
+                          Theme.of(context).textTheme.labelLarge?.fontSize,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white),
+                  title: '$item.title',
+                  subtitle: '$item.time | $item.date',
+                  imgPath: '$item.image',
+                  linkRoute: 'asdasdsadsads',
+                ),
               );
             },
           )
@@ -653,6 +655,8 @@ class DashboardPage extends StatelessWidget {
                                                 ? context.textTheme.bodySmall
                                                     ?.copyWith(
                                                         letterSpacing: 1,
+                                                        fontSize:
+                                                            Get.width / 32,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Theme.of(context)
@@ -660,6 +664,8 @@ class DashboardPage extends StatelessWidget {
                                                 : context.textTheme.bodySmall
                                                     ?.copyWith(
                                                         letterSpacing: 1,
+                                                        fontSize:
+                                                            Get.width / 32,
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         color: Colors.black54),
@@ -673,6 +679,8 @@ class DashboardPage extends StatelessWidget {
                                                 ? context.textTheme.bodySmall
                                                     ?.copyWith(
                                                         letterSpacing: 1,
+                                                        fontSize:
+                                                            Get.width / 33,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Theme.of(context)
@@ -680,6 +688,8 @@ class DashboardPage extends StatelessWidget {
                                                 : context.textTheme.bodySmall
                                                     ?.copyWith(
                                                         letterSpacing: 1,
+                                                        fontSize:
+                                                            Get.width / 33,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         color: Colors.black),
@@ -737,14 +747,14 @@ class DashboardPage extends StatelessWidget {
                             return FadeInUp(
                               child: ListItemUiWidget(
                                 onTap: () async {
-                                    final Uri url = Uri.parse(item['url']);
-                                    // print('asdadasdasd');
-                                    // print(item['url']);
-                                    if (!await launchUrl(url)) {
-                                      print('Tidak dapat membuka link YouTube.');
-                                    }
-                                //   //Get.toNamed(AppRoutes.detailEventScreen);
-                                },                                
+                                  final Uri url = Uri.parse(item['url']);
+                                  // print('asdadasdasd');
+                                  // print(item['url']);
+                                  if (!await launchUrl(url)) {
+                                    print('Tidak dapat membuka link YouTube.');
+                                  }
+                                  //   //Get.toNamed(AppRoutes.detailEventScreen);
+                                },
                                 minHeight: 70,
                                 vjustify: true,
                                 widthContent:

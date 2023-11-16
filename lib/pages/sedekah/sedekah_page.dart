@@ -166,8 +166,7 @@ class SedekahPage extends StatelessWidget {
                             ),
                             getList(ctrl, context)
                           ],
-                        )
-                      ),
+                        )),
                   ],
                 ))));
   }
@@ -203,7 +202,9 @@ class SedekahPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Sedekah", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? const Text("loading") : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value
+          ? const Text("loading")
+          : layout(ctrl, context)),
     );
   }
 }

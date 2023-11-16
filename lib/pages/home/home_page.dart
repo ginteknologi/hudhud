@@ -1,4 +1,3 @@
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
@@ -57,7 +56,7 @@ class HomePage extends StatelessWidget {
                 ),
                 child: Container(
                     width: Get.width,
-                    height: 65,
+                    height: Get.height * 0.10,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
@@ -104,7 +103,7 @@ class HomePage extends StatelessWidget {
                 ),
                 child: Container(
                     width: Get.width,
-                    height: 65,
+                    height: Get.height * 0.10,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
                       padding: const EdgeInsets.all(10),

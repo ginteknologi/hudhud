@@ -40,9 +40,12 @@ class DashboardController extends GetxController {
       "data": {
         "artikel": {
           "id": 1,
-          "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-          "judul": "Sedekah yang Paling Utama adalah yang Paling Sesuai dengan Kondisi Penerima Sedekah",
-          "isi": "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
+          "image":
+              "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
+          "judul":
+              "Sedekah yang Paling Utama adalah yang Paling Sesuai dengan Kondisi Penerima Sedekah",
+          "isi":
+              "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
           "tanggal": "2023-10-31T12:59:58.000Z",
           "url": 'artikel/1',
           "createdAt": "2023-10-31T13:00:02.000Z",
@@ -51,7 +54,8 @@ class DashboardController extends GetxController {
         "doa": {
           "id": 1,
           // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-          "image": "https://harakahdaily.net/wp-content/uploads/2020/03/Doa-Mohon-Perlindungan-Dari-Ilmu-Tak-Bermanfaat-IslamRamah.co_.jpeg",
+          "image":
+              "https://harakahdaily.net/wp-content/uploads/2020/03/Doa-Mohon-Perlindungan-Dari-Ilmu-Tak-Bermanfaat-IslamRamah.co_.jpeg",
           "judul": "Doa Bangun Tidur",
           "isi": "Ini isinya",
           "tanggal": "2023-10-31T12:59:58.000Z",
@@ -62,9 +66,11 @@ class DashboardController extends GetxController {
         "campaign": {
           "id": 1,
           // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-          "image": "https://masjidannimah.id/wp-content/uploads/2023/10/image-36.png",
+          "image":
+              "https://masjidannimah.id/wp-content/uploads/2023/10/image-36.png",
           "judul": "Sedekah Mesjid",
-          "isi": "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
+          "isi":
+              "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
           "tanggal": "2023-10-31T12:59:58.000Z",
           "url": "sedekah/1",
           "createdAt": "2023-10-31T13:00:02.000Z",
