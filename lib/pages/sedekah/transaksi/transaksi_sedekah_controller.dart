@@ -51,7 +51,7 @@ class TransactionSedekahController extends GetxController {
     inputNominal.text = nominal;
   }
 
-  getData() async {
+  Future getData() async {
     final result = await DetailSedekahService().getList();
     list.value = result['data'];
     isLoadingList.value = false;
@@ -93,9 +93,9 @@ class TransactionSedekahController extends GetxController {
   }
 
   @override
-  void onInit() {
-    getDenom();
+  void onInit() async {
     getData();
+    getDenom();
     super.onInit();
   }
 }

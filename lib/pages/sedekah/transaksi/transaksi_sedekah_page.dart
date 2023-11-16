@@ -30,44 +30,48 @@ class TransaksiSedekahPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                             //set border radius more than 50% of height and width to make circle
                           ),
-                          child: SizedBox(
-                              width: Get.width,
-                              // height: Get.height / 7,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'sedekah',
-                                        style: context.textTheme.titleMedium
-                                            ?.copyWith(
-                                          fontWeight: FontWeight.bold,
+                          child: Obx(() {
+                            return SizedBox(
+                                width: Get.width,
+                                // height: Get.height / 7,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        AutoSizeText(
+                                          ctrl.list['judul'].toString(),
+                                          maxLines: 1,
+                                          style: context.textTheme.titleMedium
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      AutoSizeText(
-                                        "Disalurkan untuk pembiayaan operasional dan pemeliharaan Mesjid An-Ni’mah",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall
-                                                ?.fontSize,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.normal),
-                                        maxLines: 2,
-                                      ),
-                                      // Flexible(
-                                      //     flex: 1,
-                                      //     child: Container(
-                                      //       constraints:
-                                      //           BoxConstraints.loose(Size.infinite),
-                                      //     )),
-                                    ],
-                                  ))) //SizedBox
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        AutoSizeText(
+                                          ctrl.list['subjudul'].toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall
+                                                  ?.fontSize,
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.normal),
+                                          maxLines: 2,
+                                        ),
+                                        // Flexible(
+                                        //     flex: 1,
+                                        //     child: Container(
+                                        //       constraints:
+                                        //           BoxConstraints.loose(Size.infinite),
+                                        //     )),
+                                      ],
+                                    )));
+                          }) //SizedBox
                           ),
                       const SizedBox(height: 10),
                       Align(
