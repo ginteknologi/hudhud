@@ -3,8 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mesjid_app/pages/quran/quran_service.dart';
+
 class DetailAyatQuranController extends GetxController {
-  
   final dataStore = GetStorage();
   final surahId = Get.parameters['id'];
   final surahName = Get.parameters['nama_surah'];
@@ -26,15 +26,16 @@ class DetailAyatQuranController extends GetxController {
     final result = await QuranService().getDetail(surahId.toString());
     detail.value = result['data'];
     listAyat = detail['verses'];
-    listAyatBookmarked = List.generate(detail['numberOfVerses'], (index) => false.obs);
+    listAyatBookmarked =
+        List.generate(detail['numberOfVerses'], (index) => false.obs);
     detailLastRead.value = dataStore.read('perAyatLastRead');
     if (detailLastRead['ayatNumber'] > 0) {
-      listAyatBookmarked[detailLastRead['ayatNumber'] -1]= true.obs;
+      listAyatBookmarked[detailLastRead['ayatNumber'] - 1] = true.obs;
     }
     isLoadingDetail.value = false;
   }
 
-  bookmark() async { 
+  bookmark() async {
     Fluttertoast.showToast(
         msg: "Ayat Berhasil Ditandai",
         toastLength: Toast.LENGTH_SHORT,

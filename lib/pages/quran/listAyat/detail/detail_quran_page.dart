@@ -405,7 +405,9 @@ class DetailAyatQuranPage extends StatelessWidget {
               );
             },
           )
-        : const Text('Loading'));
+        : const Center(
+            child: CircularProgressIndicator(),
+          ));
   }
 
   @override
@@ -419,7 +421,9 @@ class DetailAyatQuranPage extends StatelessWidget {
         appBar: AppBarWSWidget.getAppbarWidget(
             title: ctrl.surahName.toString(), context: context, elevation: 0),
         body: Obx(() => ctrl.isLoadingDetail.value
-            ? const Text('Loading')
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
             : layout(ctrl, context)));
   }
 }

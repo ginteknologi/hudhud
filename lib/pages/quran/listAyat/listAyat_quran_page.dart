@@ -251,7 +251,9 @@ class ListAyatQuranPage extends StatelessWidget {
                                           );
                                         },
                                       )
-                                    : const Text('Loading'))
+                                    : const Center(
+                                        child: CircularProgressIndicator(),
+                                      ))
                               ],
                             )),
                       )
