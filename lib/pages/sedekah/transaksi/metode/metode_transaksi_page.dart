@@ -35,7 +35,8 @@ class _MetodeTransaksiSedekahPageState
                       height: 10,
                     ),
                     Column(
-                      children: List.generate(ctrl.dataBillProduct['ewallet'].length,(index) {
+                      children: List.generate(
+                          ctrl.dataBillProduct['ewallet'].length, (index) {
                         final getInfo = ctrl.dataBillProduct['ewallet'][index];
                         return Column(
                           children: [
@@ -75,7 +76,8 @@ class _MetodeTransaksiSedekahPageState
                                 });
                               },
                             ),
-                            if (ctrl.dataBillProduct['bank'].length != index + 1)
+                            if (ctrl.dataBillProduct['bank'].length !=
+                                index + 1)
                               const Divider(),
                           ],
                         );
@@ -147,7 +149,8 @@ class _MetodeTransaksiSedekahPageState
                                 });
                               },
                             ),
-                            if (ctrl.dataBillProduct['bank'].length != index + 1)
+                            if (ctrl.dataBillProduct['bank'].length !=
+                                index + 1)
                               const Divider(),
                           ],
                         );
@@ -166,10 +169,7 @@ class _MetodeTransaksiSedekahPageState
                       height: 20,
                     ),
                   ],
-                )
-              )
-            )
-          );
+                ))));
   }
 
   @override
@@ -179,23 +179,33 @@ class _MetodeTransaksiSedekahPageState
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
-        body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
+        // body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
+        body: Obx(() {
+          if (ctrl.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return layout(ctrl, context);
+          }
+        }),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
             child: SizedBox(
               width: Get.width,
-              child: ButtonElevated(
-                title: 'Bayar Sekarang',
-                width: Get.width,
-                bgcolor: Theme.of(context).primaryColor,
-                height: 45,
-                color: Colors.white,
-                radius: 5,
-                onPressed: () {
-                  ctrl.goToNextPage(ctrl.inputPembayaran.value);
-                },
-              ),
+              child: Obx(() {
+                return ButtonElevated(
+                  disabled: ctrl.isLoading.value,
+                  title: 'Bayar Sekarang',
+                  width: Get.width,
+                  bgcolor: Theme.of(context).primaryColor,
+                  height: 45,
+                  color: Colors.white,
+                  radius: 5,
+                  onPressed: () {
+                    ctrl.goToNextPage(ctrl.inputPembayaran.value);
+                  },
+                );
+              }),
             ),
           )
         ]);

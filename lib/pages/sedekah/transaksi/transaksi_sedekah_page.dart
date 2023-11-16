@@ -32,7 +32,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                           ),
                           child: SizedBox(
                               width: Get.width,
-                              height: 120,
+                              // height: Get.height / 7,
                               child: Padding(
                                   padding: const EdgeInsets.all(10),
                                   child: Column(

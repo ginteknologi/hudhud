@@ -122,7 +122,7 @@ class MetodeTransaksiController extends GetxController {
       print(e);
     }
     isLoading.value = false;
-    return status;    
+    return status;
   }
 
   goToEwallet(id) {

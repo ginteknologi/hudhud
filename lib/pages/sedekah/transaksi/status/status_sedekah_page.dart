@@ -50,10 +50,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               //set border radius more than 50% of height and width to make circle
             ),
-            child: 
-            SizedBox(
+            child: SizedBox(
                 width: Get.width,
-                height: 90,
                 child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Column(
@@ -90,10 +88,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
                         //           BoxConstraints.loose(Size.infinite),
                         //     )),
                       ],
-                    )
-                    )
-                    ) 
-            ),
+                    )))),
         const SizedBox(
           height: 20,
         ),
@@ -107,7 +102,8 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
           category: "Metode Pembayaran",
           hasRightContent: true,
           showIcon: IconPosition.right,
-          iconRight: Image.network(ctrl.dataInvoice['databank']['img'],
+          iconRight: Image.network(
+            ctrl.dataInvoice['databank']['img'],
             fit: BoxFit.fitHeight,
             width: MediaQuery.of(context).size.width * 0.2,
           ),
@@ -180,8 +176,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
               width: Get.width,
               height: 60,
               shadow: false,
-            )
-        )
+            ))
       ],
     );
   }

@@ -45,7 +45,8 @@ class TransactionSedekahController extends GetxController {
     } catch (e) {
       dataStore.write('userLogin', {});
     }
-  }  
+  }
+
   setSedekah(nominal) async {
     inputNominal.text = nominal;
   }
@@ -70,6 +71,7 @@ class TransactionSedekahController extends GetxController {
     denomSelected = List.generate(denom.length, (index) => false.obs);
     return denom;
   }
+
   postInput() {
     var status = {
       "code": 400,
