@@ -5,7 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CustomCardItem extends StatelessWidget {
   CustomCardItem(
-      {super.key, this.imgPath,
+      {super.key,
+      this.imgPath,
       this.chipText,
       this.title,
       this.kategori,
@@ -53,7 +54,7 @@ class CustomCardItem extends StatelessWidget {
             child: InkWell(
               highlightColor: Colors.transparent,
               onTap: () async {
-                  print(linkRoute);
+                print(linkRoute);
                 if (islink) {
                   final Uri url = Uri.parse(link!);
                   if (!await launchUrl(url)) {
@@ -95,140 +96,141 @@ class CustomCardItem extends StatelessWidget {
                     ),
                     Align(
                       alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: positionChip,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                                margin: positionChip == CrossAxisAlignment.end
-                                    ? const EdgeInsets.only(right: 5, top: 10)
-                                    : const EdgeInsets.only(left: 5, top: 10),
-                                decoration: BoxDecoration(
-                                  color: chipColor,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(7),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 3),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Visibility(
-                                          visible: size == 'small',
-                                          child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 5),
-                                              child: SvgPicture.asset(
-                                                  'assets/icons/live.svg',
-                                                  height: 10,
-                                                  width: 10))),
-                                      Text('$chipText',
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.start,
-                                          style: chipTextStyle
-                                          // TextStyle(
-                                          //     color: Colors.white,
-                                          //     fontWeight: FontWeight.bold,
-                                          //     fontStyle: size == 'small'
-                                          //         ? FontStyle.italic
-                                          //         : FontStyle.normal,
-                                          //     fontSize: chipSize
-                                          // ),
-                                          ),
-                                    ],
-                                  ),
-                                )),
-                            Container(
-                              width: isFullWidth == true ? Get.width : 151,
-                              clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: positionChip,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              margin: positionChip == CrossAxisAlignment.end
+                                  ? const EdgeInsets.only(right: 5, top: 10)
+                                  : const EdgeInsets.only(left: 5, top: 10),
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.5)
-                                    ]),
-                                // color: Colors.black.withOpacity(0.5),
-                                borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(7),
-                                    bottomRight: Radius.circular(7)),
+                                color: chipColor,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(7),
+                                ),
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      width:
-                                          isFullWidth == true ? Get.width : 151,
-                                      margin: const EdgeInsets.only(
-                                          left: 6, top: 5, right: 12),
-                                      child: Row(
-                                        children: [
-                                          Flexible(
-                                            child: Text(
-                                              '$title',
-                                              maxLines: size == 'small' ? 1 : 2,
-                                              softWrap: true,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w900,
-                                                  height: 1.2,
-                                                  fontSize: size == 'small'
-                                                      ? Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall
-                                                          ?.fontSize
-                                                      : Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium
-                                                          ?.fontSize),
-                                            ),
-                                          )
-                                        ],
-                                      )),
-                                  Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 3),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Visibility(
+                                        visible: size == 'small',
+                                        child: Container(
+                                            margin:
+                                                const EdgeInsets.only(right: 5),
+                                            child: SvgPicture.asset(
+                                                'assets/icons/live.svg',
+                                                height: 10,
+                                                width: 10))),
+                                    Text('$chipText',
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        style: chipTextStyle
+                                        // TextStyle(
+                                        //     color: Colors.white,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     fontStyle: size == 'small'
+                                        //         ? FontStyle.italic
+                                        //         : FontStyle.normal,
+                                        //     fontSize: chipSize
+                                        // ),
+                                        ),
+                                  ],
+                                ),
+                              )),
+                          Container(
+                            width: isFullWidth == true ? Get.width : 151,
+                            clipBehavior: Clip.antiAlias,
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 15),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    // Colors.transparent,
+                                    Colors.black.withOpacity(0.0),
+                                    Colors.black.withOpacity(0.3),
+                                    Colors.black.withOpacity(0.5),
+                                    Colors.black.withOpacity(0.7)
+                                  ]),
+                              // color: Colors.black.withOpacity(0.5),
+                              borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(7),
+                                  bottomRight: Radius.circular(7)),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
                                     width:
                                         isFullWidth == true ? Get.width : 151,
                                     margin: const EdgeInsets.only(
-                                        left: 6, right: 12, top: 2),
-                                    child: Text(
-                                      '$subtitle',
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: size == 'small'
-                                              ? Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall
-                                                  ?.fontSize
-                                              : Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.fontSize),
-                                    ),
+                                        left: 6, top: 5, right: 12),
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            '$title',
+                                            maxLines: size == 'small' ? 1 : 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900,
+                                                height: 1.2,
+                                                fontSize: size == 'small'
+                                                    ? Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.fontSize
+                                                    : Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium
+                                                        ?.fontSize),
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                                Container(
+                                  width: isFullWidth == true ? Get.width : 151,
+                                  margin: const EdgeInsets.only(
+                                      left: 6, right: 12, top: 2),
+                                  child: Text(
+                                    '$subtitle',
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: size == 'small'
+                                            ? Theme.of(context)
+                                                .textTheme
+                                                .labelSmall
+                                                ?.fontSize
+                                            : Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.fontSize),
                                   ),
-                                  const SizedBox(height: 15),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(height: 15),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

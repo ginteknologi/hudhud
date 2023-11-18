@@ -24,6 +24,7 @@ class DetailSedekahController extends GetxController
     detail.value = result['data'];
     listDonatur = result['data']['sedekahs'];
     listPenyaluran = result['data']['penyalur_campaigns'];
+    print(listPenyaluran);
     isLoadingList.value = false;
   }
 
@@ -39,8 +40,6 @@ class DetailSedekahController extends GetxController
       }
     ];
   }
-
-
 
   @override
   void onInit() {

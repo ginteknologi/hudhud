@@ -261,6 +261,8 @@ class DashboardController extends GetxController {
         "title": "PALESTINA BUKAN SEKEDAR ISU KEMANUSIAAN | MT Sakinah",
         "subtitle": "Ustadzh Umi Irena Handono & Ustadzh Sally",
         "flag": "LIVE",
+        "time": "17:40",
+        "date": "17 Agustus 2023",
         "image": "https://img.youtube.com/vi/uMFFFymo21w/0.jpg",
         "url": "https://www.youtube.com/watch?v=uMFFFymo21w",
         "id": 1
@@ -269,6 +271,8 @@ class DashboardController extends GetxController {
         "title": "30 Hari Setelah BADAI AL-AQSA | Kajian Subuh",
         "subtitle": "Ust. Ihsan Tanjung, Lc, MA ",
         "flag": "LIVE",
+        "time": "17:40",
+        "date": "17 Agustus 2023",
         "image": "https://img.youtube.com/vi/AkEPZYUGZvE/0.jpg",
         "url": "https://www.youtube.com/watch?v=AkEPZYUGZvE",
         "id": 2
@@ -277,6 +281,8 @@ class DashboardController extends GetxController {
         "title": "Shalat adalah Penolongmu | Kajian Maghrib",
         "subtitle": "Ust. DR. Iqbal Subhan Nugraha, Lc, MA",
         "flag": "LIVE",
+        "time": "17:40",
+        "date": "17 Agustus 2023",
         "image": "https://img.youtube.com/vi/a2YodUWUhTE/0.jpg",
         "url": "https://www.youtube.com/watch?v=a2YodUWUhTE",
         "id": 3
@@ -285,6 +291,8 @@ class DashboardController extends GetxController {
         "title": "Info Palestina | Kajian Subuh",
         "subtitle": "Ust. DR. Arifin Nugroho, Lc, MA",
         "flag": "LIVE",
+        "time": "17:40",
+        "date": "17 Agustus 2023",
         "image": "https://img.youtube.com/vi/U-Hg6wQD5CA/0.jpg",
         "url": "https://www.youtube.com/watch?v=U-Hg6wQD5CA",
         "id": 4
@@ -293,6 +301,8 @@ class DashboardController extends GetxController {
         "title": "Memberi Menerangkan Hati | Kajian Umum",
         "subtitle": "Ust. Derry Sulaiman",
         "flag": "LIVE",
+        "time": "17:40",
+        "date": "17 Agustus 2023",
         "image": "https://img.youtube.com/vi/ivay-bfTUDg/0.jpg",
         "url": "https://www.youtube.com/watch?v=ivay-bfTUDg",
         "id": 5
@@ -424,39 +434,74 @@ class DashboardController extends GetxController {
       title: '',
       titleStyle: TextStyle(height: 0),
       titlePadding: EdgeInsets.all(0),
-      content: Container(
-        constraints: BoxConstraints.loose(Size.infinite),
-        height: 400,
-        width: Get.width - 42,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: dialogPopupInfaq == DialogPopupInfaq.pagi
-                  ? AssetImage('assets/img/infaq_pagi.png')
-                  : AssetImage('assets/img/infaq_subuh.png'),
-              fit: BoxFit.fill,
-              alignment: Alignment.topCenter),
-        ),
-      ),
-      confirm: ButtonElevated(
-        title: 'Bismillah Infaq',
-        width: 165,
-        bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
-            ? Color(0xFFD9A04A)
-            : Get.theme.primaryColor,
-        height: 45,
-        color: Colors.white,
-        radius: 7,
-        shadow: false,
-        onPressed: () {
-          // Navigator.pop(context);
-          // Get.back();
-          // print(showPopupInfaq.value);
-          // showPopupInfaq.value = false;
-          Get.toNamed('${RoutesSedekah.root}/1');
-        },
+      content:
+          // Container(
+          //   constraints: BoxConstraints.loose(Size.infinite),
+          //   height: 400,
+          //   width: Get.width - 42,
+          //   decoration: BoxDecoration(
+          //     image: DecorationImage(
+          //         image: dialogPopupInfaq == DialogPopupInfaq.pagi
+          //             ? AssetImage('assets/img/infaq_pagi.png')
+          //             : AssetImage('assets/img/infaq_subuh.png'),
+          //         fit: BoxFit.fill,
+          //         alignment: Alignment.topCenter),
+          //   ),
+          // ),
+          Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: Text("")),
+              ButtonIcon(
+                onTap: () {
+                  Get.back();
+                },
+                bgcolor: Colors.transparent,
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            constraints: BoxConstraints.loose(Size.infinite),
+            height: 400,
+            width: Get.width - 42,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: dialogPopupInfaq == DialogPopupInfaq.pagi
+                      ? AssetImage('assets/img/infaq_pagi.png')
+                      : AssetImage('assets/img/infaq_subuh.png'),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.topCenter),
+            ),
+          ),
+          Container(
+              width: Get.width,
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(color: Colors.white),
+              child: ButtonElevated(
+                title: 'Siap, Bismillah Infaq',
+                width: 165,
+                bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
+                    ? Color(0xFFD9A04A)
+                    : Get.theme.primaryColor,
+                height: 45,
+                color: Colors.white,
+                radius: 7,
+                shadow: false,
+                onPressed: () {
+                  // Navigator.pop(context);
+                  Get.back();
+                  Get.toNamed('${RoutesSedekah.root}/1');
+                },
+              ))
+        ],
       ),
       // confirm: ButtonElevated(
-      //   title: 'Siap, Bismillah Infaq',
+      //   title: 'Bismillah Infaq',
       //   width: 165,
       //   bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
       //       ? Color(0xFFD9A04A)
@@ -467,7 +512,10 @@ class DashboardController extends GetxController {
       //   shadow: false,
       //   onPressed: () {
       //     // Navigator.pop(context);
-      //     Get.back();
+      //     // Get.back();
+      //     // print(showPopupInfaq.value);
+      //     // showPopupInfaq.value = false;
+      //     Get.toNamed('${RoutesSedekah.root}/1');
       //   },
       // ),
     );

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_page.dart';
 import 'package:mesjid_app/pages/sedekah/sedekah_page.dart';
+import 'package:mesjid_app/pages/sedekah/transaksi/instruksi/instruksi_page.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/metode/metode_transaksi_page.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_page.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/status/status_sedekah_page.dart';
@@ -38,6 +39,11 @@ class PagesSedekah {
       page: () => const StatusTransaksiSedekahPage(),
       transition: Transition.cupertino,
     ),
+    GetPage(
+      name: RoutesSedekah.intruksi,
+      page: () => const InstruksiPage(),
+      transition: Transition.cupertino,
+    ),
   ];
 }
 
@@ -48,4 +54,5 @@ class RoutesSedekah {
   static const String metode = '/sedekah/:id/transaksi/metode';
   static const String payment = '/sedekah/:id/transaksi/payment';
   static const String status = '/sedekah/:id/transaksi/status';
+  static const String intruksi = '/sedekah/transaksi/intruksi';
 }

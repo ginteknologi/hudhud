@@ -163,8 +163,10 @@ class RiwayatPage extends StatelessWidget {
                                             .textTheme.titleMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
-                                                color: Theme.of(context)
-                                                    .primaryColor),
+                                                color: Color(0xFF189A8C)
+                                                // Theme.of(context)
+                                                //     .primaryColor
+                                                ),
                                         hasRightContent: true,
                                         showIcon: IconPosition.left,
                                         rightContent: [
@@ -174,8 +176,10 @@ class RiwayatPage extends StatelessWidget {
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.w900,
-                                                      color: Theme.of(context)
-                                                          .primaryColor)),
+                                                      color: Color(0xFF189A8C)
+                                                      // Theme.of(context)
+                                                      //     .primaryColor
+                                                      )),
                                           Text(
                                               ctrl.listRiwayat[index]
                                                       ['tanggal'] +

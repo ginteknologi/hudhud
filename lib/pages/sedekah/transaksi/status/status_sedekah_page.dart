@@ -11,6 +11,7 @@ import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/sedekah/transaksi/status/status_sedekah_controller.dart';
 import 'package:mesjid_app/routes/home/index.dart';
+import 'package:mesjid_app/routes/sedekah/index.dart';
 // import 'package:mesjid_app/routes/onboard/index.dart';
 import 'package:mesjid_app/theme.dart';
 import 'package:flutter/services.dart';
@@ -168,7 +169,9 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
             margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
             child: ButtonOutline(
               justify: true,
-              onPressed: () {},
+              onPressed: () {
+                Get.toNamed('${RoutesSedekah.root}/transaksi/intruksi');
+              },
               radius: 5,
               showIcon: "right",
               iconRight: const Icon(Icons.chevron_right_rounded),

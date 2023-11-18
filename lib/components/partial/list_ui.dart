@@ -28,6 +28,8 @@ class ListItemUiWidget extends StatelessWidget {
       this.minHeight,
       this.widthContent,
       this.activeColor,
+      this.footerText,
+      this.footerTextStyle,
       this.image});
 
   int id;
@@ -36,6 +38,8 @@ class ListItemUiWidget extends StatelessWidget {
   TextStyle? titleStyle;
   String? subTitle;
   TextStyle? subtitleStyle;
+  String? footerText;
+  TextStyle? footerTextStyle;
   final List<Widget> rightContent;
   final Widget? iconLeft;
   final bool justify;
@@ -170,6 +174,26 @@ class ListItemUiWidget extends StatelessWidget {
                                           textAlign: TextAlign.start,
                                           minFontSize: 14,
                                           style: subtitleStyle ??
+                                              TextStyle(
+                                                  fontSize: Theme.of(context)
+                                                      .textTheme
+                                                      .titleSmall
+                                                      ?.fontSize,
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w500),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      if (footerText != null)
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                      if (footerText != null)
+                                        AutoSizeText(
+                                          '$footerText',
+                                          textAlign: TextAlign.start,
+                                          minFontSize: 14,
+                                          style: footerTextStyle ??
                                               TextStyle(
                                                   fontSize: Theme.of(context)
                                                       .textTheme

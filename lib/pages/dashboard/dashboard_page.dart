@@ -552,7 +552,11 @@ class DashboardPage extends StatelessWidget {
                                                 ?.copyWith(
                                                     letterSpacing: 1,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
+                                                    color:
+                                                        activeCard['label'] ==
+                                                                'Dzuhur'
+                                                            ? Colors.black
+                                                            : Colors.white),
                                           ),
                                           AutoSizeText(ctrl.todayDate.value,
                                               maxLines: 1,
@@ -563,7 +567,11 @@ class DashboardPage extends StatelessWidget {
                                                       letterSpacing: 1,
                                                       fontWeight:
                                                           FontWeight.normal,
-                                                      color: Colors.white)),
+                                                      color:
+                                                          activeCard['label'] ==
+                                                                  'Dzuhur'
+                                                              ? Colors.black
+                                                              : Colors.white)),
                                         ]),
                                     Column(
                                         crossAxisAlignment:
@@ -576,7 +584,11 @@ class DashboardPage extends StatelessWidget {
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.normal,
-                                                      color: Colors.white)),
+                                                      color:
+                                                          activeCard['label'] ==
+                                                                  'Dzuhur'
+                                                              ? Colors.black
+                                                              : Colors.white)),
                                           AutoSizeText(
                                               activeCard['waktu'] + " WIB",
                                               maxLines: 1,
@@ -585,7 +597,11 @@ class DashboardPage extends StatelessWidget {
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.w900,
-                                                      color: Colors.white,
+                                                      color:
+                                                          activeCard['label'] ==
+                                                                  'Dzuhur'
+                                                              ? Colors.black
+                                                              : Colors.white,
                                                       height: 1))
                                         ]),
                                     // SizedBox(
@@ -602,7 +618,11 @@ class DashboardPage extends StatelessWidget {
                                                     ?.copyWith(
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Colors.white),
+                                                        color: activeCard[
+                                                                    'label'] ==
+                                                                'Dzuhur'
+                                                            ? Colors.black
+                                                            : Colors.white),
                                               )),
                                           Text("Menuju " + activeCard['label'],
                                               style: context
@@ -610,7 +630,11 @@ class DashboardPage extends StatelessWidget {
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.normal,
-                                                      color: Colors.white,
+                                                      color:
+                                                          activeCard['label'] ==
+                                                                  'Dzuhur'
+                                                              ? Colors.black
+                                                              : Colors.white,
                                                       height: 1)),
                                         ]),
                                   ],
@@ -659,8 +683,8 @@ class DashboardPage extends StatelessWidget {
                                                             Get.width / 32,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Theme.of(context)
-                                                            .primaryColor)
+                                                        color:
+                                                            Color(0xFF1FC54E))
                                                 : context.textTheme.bodySmall
                                                     ?.copyWith(
                                                         letterSpacing: 1,
@@ -683,8 +707,8 @@ class DashboardPage extends StatelessWidget {
                                                             Get.width / 33,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Theme.of(context)
-                                                            .primaryColor)
+                                                        color:
+                                                            Color(0xFF1FC54E))
                                                 : context.textTheme.bodySmall
                                                     ?.copyWith(
                                                         letterSpacing: 1,
@@ -756,7 +780,7 @@ class DashboardPage extends StatelessWidget {
                                   //   //Get.toNamed(AppRoutes.detailEventScreen);
                                 },
                                 minHeight: 70,
-                                vjustify: true,
+                                vjustify: false,
                                 widthContent:
                                     MediaQuery.of(context).size.width - 130,
                                 id: item['id'],
@@ -823,6 +847,12 @@ class DashboardPage extends StatelessWidget {
                                 subTitle: item['subtitle'],
                                 subtitleStyle: context.textTheme.labelMedium
                                     ?.copyWith(
+                                        fontWeight: FontWeight.w100,
+                                        color: Colors.black),
+                                footerText: item['time'] + ' | ' + item['date'],
+                                footerTextStyle: context.textTheme.labelSmall
+                                    ?.copyWith(
+                                        letterSpacing: 0,
                                         fontWeight: FontWeight.w100,
                                         color: Colors.black),
                               ),
