@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mesjid_app/components/button/elevatedbutton.dart';
+import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:mesjid_app/configs/main_service.dart';
+import 'package:mesjid_app/routes/sedekah/index.dart';
 import 'package:simple_moment/simple_moment.dart';
 // import 'package:mesjid_app/pages/akun/profile/profile_service.dart';
 
@@ -12,14 +16,19 @@ class MainController extends GetxController {
   var isLogin = false.obs;
   var userLogin = {}.obs;
 
-  // data waktu Solat
+  //  ============ data dialog infaq
+  var showPopupInfaq = true.obs;
+  DialogPopupInfaq dialogPopupInfaq = DialogPopupInfaq.subuh;
+  // ============ end data dialog infaq
+
+  // ============ data waktu Solat
   var loadingwaktusolat = true.obs;
   var todayDate = "".obs;
   var dataTerbaru = {}.obs;
   var duration = 0.obs;
   var txttime = "".obs;
   var listWaktu = [].obs;
-  // end data waktu Solat
+  // ============ end data waktu Solat
 
   Future waktusolatData() async {
     try {
@@ -93,6 +102,16 @@ class MainController extends GetxController {
         }
       }
     }
+
+    if (timeleft.hour > 6 && timeleft.hour < 10) {
+      dialogPopupInfaq = DialogPopupInfaq.pagi;
+      showPopupInfaq.value = true;
+    } else if (timeleft.hour > 2 && timeleft.hour < 6) {
+      dialogPopupInfaq = DialogPopupInfaq.subuh;
+      showPopupInfaq.value = true;
+    } else {
+      showPopupInfaq.value = false;
+    }
   }
 
   startWaktu() {
@@ -126,6 +145,70 @@ class MainController extends GetxController {
     var hDisplay = h > 0 ? '$h jam ' : '';
     var mDisplay = m > 0 ? '$m menit' : '';
     return hDisplay + mDisplay;
+  }
+
+  void showPopup() {
+    Get.defaultDialog(
+      backgroundColor: Colors.transparent,
+      barrierDismissible: true,
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      title: '',
+      titleStyle: const TextStyle(height: 0),
+      titlePadding: const EdgeInsets.all(0),
+      content: Column(
+        children: [
+          Row(
+            children: [
+              const Expanded(child: Text("")),
+              ButtonIcon(
+                onTap: () {
+                  Get.back();
+                },
+                bgcolor: Colors.transparent,
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            constraints: BoxConstraints.loose(Size.infinite),
+            height: 400,
+            width: Get.width - 42,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: dialogPopupInfaq == DialogPopupInfaq.pagi
+                      ? const AssetImage('assets/img/infaq_pagi.png')
+                      : const AssetImage('assets/img/infaq_subuh.png'),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.topCenter),
+            ),
+          ),
+          Container(
+              width: Get.width,
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(color: Colors.white),
+              child: ButtonElevated(
+                title: 'Siap, Bismillah Infaq',
+                width: 165,
+                bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
+                    ? const Color(0xFFD9A04A)
+                    : Get.theme.primaryColor,
+                height: 45,
+                color: Colors.white,
+                radius: 7,
+                shadow: false,
+                onPressed: () {
+                  // Navigator.pop(context);
+                  Get.back();
+                  Get.toNamed('${RoutesSedekah.root}/1');
+                },
+              ))
+        ],
+      ),
+    );
   }
 
   loadStorage() async {
@@ -170,3 +253,5 @@ class MainController extends GetxController {
     super.onInit();
   }
 }
+
+enum DialogPopupInfaq { subuh, pagi }

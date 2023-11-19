@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:mesjid_app/configs/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
 
 class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
+
   final dataStore = GetStorage();
   var isLoadingList = true.obs;
   var list = {}.obs;
@@ -27,8 +25,8 @@ class DashboardController extends GetxController {
   var duration = 0.obs;
   var txttime = "".obs;
 
-  RxBool showPopupInfaq = true.obs;
-  DialogPopupInfaq dialogPopupInfaq = DialogPopupInfaq.subuh;
+  // RxBool showPopupInfaq = true.obs;
+  // DialogPopupInfaq dialogPopupInfaq = DialogPopupInfaq.subuh;
 
   getData() async {
     // final result = await DashboardService().getList();
@@ -344,88 +342,6 @@ class DashboardController extends GetxController {
     latestDoa = item['doa'];
   }
 
-  void _showPopup() {
-    Get.defaultDialog(
-      backgroundColor: Colors.transparent,
-      barrierDismissible: true,
-      contentPadding:
-          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
-      title: '',
-      titleStyle: const TextStyle(height: 0),
-      titlePadding: const EdgeInsets.all(0),
-      content: Column(
-        children: [
-          Row(
-            children: [
-              const Expanded(child: Text("")),
-              ButtonIcon(
-                onTap: () {
-                  Get.back();
-                },
-                bgcolor: Colors.transparent,
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            constraints: BoxConstraints.loose(Size.infinite),
-            height: 400,
-            width: Get.width - 42,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: dialogPopupInfaq == DialogPopupInfaq.pagi
-                      ? const AssetImage('assets/img/infaq_pagi.png')
-                      : const AssetImage('assets/img/infaq_subuh.png'),
-                  fit: BoxFit.fill,
-                  alignment: Alignment.topCenter),
-            ),
-          ),
-          Container(
-              width: Get.width,
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(color: Colors.white),
-              child: ButtonElevated(
-                title: 'Siap, Bismillah Infaq',
-                width: 165,
-                bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
-                    ? const Color(0xFFD9A04A)
-                    : Get.theme.primaryColor,
-                height: 45,
-                color: Colors.white,
-                radius: 7,
-                shadow: false,
-                onPressed: () {
-                  // Navigator.pop(context);
-                  Get.back();
-                  Get.toNamed('${RoutesSedekah.root}/1');
-                },
-              ))
-        ],
-      ),
-      // confirm: ButtonElevated(
-      //   title: 'Bismillah Infaq',
-      //   width: 165,
-      //   bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
-      //       ? Color(0xFFD9A04A)
-      //       : Get.theme.primaryColor,
-      //   height: 45,
-      //   color: Colors.white,
-      //   radius: 7,
-      //   shadow: false,
-      //   onPressed: () {
-      //     // Navigator.pop(context);
-      //     // Get.back();
-      //     // print(showPopupInfaq.value);
-      //     // showPopupInfaq.value = false;
-      //     Get.toNamed('${RoutesSedekah.root}/1');
-      //   },
-      // ),
-    );
-  }
-
   @override
   void onInit() async {
     getData();
@@ -433,11 +349,10 @@ class DashboardController extends GetxController {
     getKajianLive();
     getAllMenu();
     getListKota();
-
-    if (showPopupInfaq.value) {
+    if (ctrlmain.showPopupInfaq.isTrue) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showPopup();
-        showPopupInfaq.value = false;
+        ctrlmain.showPopup();
+        ctrlmain.showPopupInfaq.value = false;
       });
     }
 
