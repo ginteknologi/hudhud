@@ -9,13 +9,12 @@ import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:mesjid_app/components/layout/custom_card_item.dart';
 import 'package:mesjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
+import 'package:mesjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:mesjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:mesjid_app/routes/akun/index.dart';
 import 'package:mesjid_app/routes/notifikasi/index.dart';
 import 'package:mesjid_app/routes/quran/index.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:mesjid_app/routes/sedekah/index.dart';
-// import 'package:simple_moment/simple_moment.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -158,7 +157,7 @@ class DashboardPage extends StatelessWidget {
                             )
                           ],
                         ),
-                        getCardBanner(ctrl, context),
+                        const WaktuSolat(),
                         getGridMenu(ctrl),
                         Container(
                           margin: const EdgeInsets.only(top: 25),
@@ -209,7 +208,7 @@ class DashboardPage extends StatelessWidget {
                           size: "medium",
                           positionChip: CrossAxisAlignment.start,
                           chipColor: Theme.of(context).primaryColor,
-                          chipText: '${doa.kategori}',
+                          chipText: doa.kategori,
                           chipTextStyle: TextStyle(
                               fontSize: Theme.of(context)
                                   .textTheme
@@ -217,9 +216,9 @@ class DashboardPage extends StatelessWidget {
                                   ?.fontSize,
                               fontWeight: FontWeight.normal,
                               color: Colors.white),
-                          title: '${doa.title}',
+                          title: doa.title,
                           subtitle: '${doa.time} | ${doa.date}',
-                          imgPath: '${doa.image}',
+                          imgPath: doa.image,
                         ),
                         const SizedBox(
                           height: 20,
@@ -231,7 +230,7 @@ class DashboardPage extends StatelessWidget {
                           size: "medium",
                           positionChip: CrossAxisAlignment.start,
                           chipColor: Theme.of(context).primaryColor,
-                          chipText: '${campaign.kategori}',
+                          chipText: campaign.kategori,
                           chipTextStyle: TextStyle(
                               fontSize: Theme.of(context)
                                   .textTheme
@@ -239,9 +238,9 @@ class DashboardPage extends StatelessWidget {
                                   ?.fontSize,
                               fontWeight: FontWeight.normal,
                               color: Colors.white),
-                          title: '${campaign.title}',
+                          title: campaign.title,
                           subtitle: '${campaign.time} | ${campaign.date}',
-                          imgPath: '${campaign.image}',
+                          imgPath: campaign.image,
                         ),
                         const SizedBox(
                           height: 100,
@@ -491,242 +490,6 @@ class DashboardPage extends StatelessWidget {
             },
           )
         : const Text('Loading'));
-  }
-
-  getCardBanner(DashboardController ctrl, BuildContext context) {
-    var activeCard;
-    for (var element in ctrl.listWaktu) {
-      if (element['active']) {
-        activeCard = element;
-      }
-    }
-    return Card(
-      elevation: 0,
-      color: const Color(0xFFF5F5F5),
-      margin: const EdgeInsets.only(top: 20),
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        //set border radius more than 50% of height and width to make circle
-      ),
-      child: activeCard == null
-          ? SizedBox(
-              width: Get.width,
-              height: 220,
-            )
-          : SizedBox(
-              width: Get.width,
-              height: 220,
-              child: Column(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Container(
-                          width: Get.width,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          constraints: BoxConstraints.loose(Size.infinite),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(activeCard['cardImage']),
-                                  fit: BoxFit.fill)),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width:
-                                    (MediaQuery.of(context).size.width * 0.5) -
-                                        41,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          AutoSizeText(
-                                            "Ahad, 9 Muharram 1444",
-                                            maxLines: 1,
-                                            style: context.textTheme.labelSmall
-                                                ?.copyWith(
-                                                    letterSpacing: 1,
-                                                    fontWeight: FontWeight.bold,
-                                                    color:
-                                                        activeCard['label'] ==
-                                                                'Dzuhur'
-                                                            ? Colors.black
-                                                            : Colors.white),
-                                          ),
-                                          AutoSizeText(ctrl.todayDate.value,
-                                              maxLines: 1,
-                                              style: context
-                                                  .textTheme.labelSmall
-                                                  ?.copyWith(
-                                                      height: 1,
-                                                      letterSpacing: 1,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color:
-                                                          activeCard['label'] ==
-                                                                  'Dzuhur'
-                                                              ? Colors.black
-                                                              : Colors.white)),
-                                        ]),
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          AutoSizeText(activeCard['label'],
-                                              maxLines: 1,
-                                              style: context
-                                                  .textTheme.headlineSmall
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color:
-                                                          activeCard['label'] ==
-                                                                  'Dzuhur'
-                                                              ? Colors.black
-                                                              : Colors.white)),
-                                          AutoSizeText(
-                                              activeCard['waktu'] + " WIB",
-                                              maxLines: 1,
-                                              style: context
-                                                  .textTheme.displayMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w900,
-                                                      color:
-                                                          activeCard['label'] ==
-                                                                  'Dzuhur'
-                                                              ? Colors.black
-                                                              : Colors.white,
-                                                      height: 1))
-                                        ]),
-                                    // SizedBox(
-                                    //   height: 2,
-                                    // ),
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Obx(() => Text(
-                                                ctrl.txttime.value,
-                                                style: context
-                                                    .textTheme.labelMedium
-                                                    ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: activeCard[
-                                                                    'label'] ==
-                                                                'Dzuhur'
-                                                            ? Colors.black
-                                                            : Colors.white),
-                                              )),
-                                          Text("Menuju " + activeCard['label'],
-                                              style: context
-                                                  .textTheme.labelMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color:
-                                                          activeCard['label'] ==
-                                                                  'Dzuhur'
-                                                              ? Colors.black
-                                                              : Colors.white,
-                                                      height: 1)),
-                                        ]),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ))),
-                  SizedBox(
-                      height: 62,
-                      child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                          child: GridView.count(
-                            crossAxisCount: 5,
-                            shrinkWrap: false,
-                            mainAxisSpacing: 0,
-                            crossAxisSpacing: 0,
-                            padding: const EdgeInsets.all(0),
-                            physics: const NeverScrollableScrollPhysics(),
-                            childAspectRatio: 0.5,
-                            children:
-                                List.generate(ctrl.listWaktu.length, (index) {
-                              return SizedBox(
-                                  height: 20,
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1,
-                                                  color: index == 4
-                                                      ? Colors.transparent
-                                                      : const Color(
-                                                          0xFFA5A5A5)))),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          AutoSizeText(
-                                            ctrl.listWaktu[index]['label'],
-                                            textAlign: TextAlign.center,
-                                            style: ctrl.listWaktu[index]
-                                                    ['active']
-                                                ? context.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                        letterSpacing: 1,
-                                                        fontSize:
-                                                            Get.width / 32,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Color(0xFF1FC54E))
-                                                : context.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                        letterSpacing: 1,
-                                                        fontSize:
-                                                            Get.width / 32,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        color: Colors.black54),
-                                            maxLines: 1,
-                                          ),
-                                          AutoSizeText(
-                                            ctrl.listWaktu[index]['waktu'],
-                                            textAlign: TextAlign.center,
-                                            style: ctrl.listWaktu[index]
-                                                    ['active']
-                                                ? context.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                        letterSpacing: 1,
-                                                        fontSize:
-                                                            Get.width / 33,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Color(0xFF1FC54E))
-                                                : context.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                        letterSpacing: 1,
-                                                        fontSize:
-                                                            Get.width / 33,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors.black),
-                                            maxLines: 1,
-                                          ),
-                                        ],
-                                      )));
-                            }),
-                          )))
-                ],
-              ),
-            ), //SizedBox
-    );
   }
 
   void showSheet(DashboardController ctrl, BuildContext context, bool flag) {

@@ -1,13 +1,14 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
 import 'package:mesjid_app/components/button/iconbutton.dart';
+import 'package:mesjid_app/configs/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
 
 class DashboardController extends GetxController {
+  final ctrlmain = Get.find<MainController>();
   final dataStore = GetStorage();
   var isLoadingList = true.obs;
   var list = {}.obs;
@@ -85,130 +86,47 @@ class DashboardController extends GetxController {
     isLoadingList.value = false;
   }
 
-  getList() async {
-    return listWaktu = [
-      {
-        "label": "Subuh",
-        "waktu": "05.15",
-        "active": false,
-        "id": 1,
-        "cardImage": "assets/img/card/card_subuh.png"
-      },
-      {
-        "label": "Dzuhur",
-        "waktu": "12.30",
-        "active": false,
-        "id": 2,
-        "cardImage": "assets/img/card/card_dzuhur.png"
-      },
-      {
-        "label": "Ashar",
-        "waktu": "15.40",
-        "active": false,
-        "id": 3,
-        "cardImage": "assets/img/card/card_ashar.png"
-      },
-      {
-        "label": "Maghrib",
-        "waktu": "18.34",
-        "active": false,
-        "id": 4,
-        "cardImage": "assets/img/card/card_maghrib.png"
-      },
-      {
-        "label": "Isya",
-        "waktu": "19.32",
-        "active": false,
-        "id": 5,
-        "cardImage": "assets/img/card/card_isya.png"
-      }
-    ];
-  }
+  // getList() async {
+  //   print("===================================== subuh");
 
-  getWaktu() async {
-    var timeleft = DateTime.now();
-    todayDate.value =
-        Moment.parse("$timeleft").format("EEEE, dd MMMM", localeOverride: 'id');
-    var hourAndMinutes = "${timeleft.hour}.${timeleft.minute}";
-    int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
-
-    var tmptime = ("05.10").split('.');
-    var setTimeTo = new DateTime(timeleft.year, timeleft.month,
-        timeleft.day + 1, int.parse(tmptime[0]), int.parse(tmptime[1]));
-
-    var thistime = getNextLargerNumber(hourminutes, listWaktu);
-    if (thistime == -1) {
-      listWaktu[0]['active'] = true;
-      var time = listWaktu[0]['waktu'].split('.');
-      var setTimeTo = new DateTime(timeleft.year, timeleft.month,
-          timeleft.day + 1, int.parse(time[0]), int.parse(time[1]));
-      duration.value = timesBetween(timeleft, setTimeTo);
-    } else {
-      for (var el in listWaktu) {
-        el['active'] = false;
-        if (thistime['id'] == el['id']) {
-          el['active'] = true;
-          var time = el['waktu'].split('.');
-          var setTimeTo = new DateTime(timeleft.year, timeleft.month,
-              timeleft.day, int.parse(time[0]), int.parse(time[1]));
-          duration.value = timesBetween(timeleft, setTimeTo);
-          // var setTime = new DateTime(
-          //     timeleft.year, timeleft.month, timeleft.day, time[0], time[1]);
-        }
-      }
-    }
-    // ======
-    if (timeleft.hour > 6 && timeleft.hour < 23) {
-      dialogPopupInfaq = DialogPopupInfaq.pagi;
-      showPopupInfaq.value = true;
-    } else if (timeleft.hour > 2 && timeleft.hour < 6) {
-      dialogPopupInfaq = DialogPopupInfaq.subuh;
-      showPopupInfaq.value = true;
-    } else {
-      showPopupInfaq.value = false;
-    }
-    // showPopupInfaq.value = true;
-  }
-
-  startWaktu() {
-    Timer.periodic(new Duration(seconds: 1), (timer) {
-      txttime.value = getTimeRemaining(duration.value);
-      if (duration.value == 0) {
-        getWaktu();
-      }
-      duration.value--;
-    });
-  }
-
-  getNextLargerNumber(int number, List array) {
-    for (var i = 0; i < array.length; i++) {
-      var numberTime = int.parse(array[i]['waktu'].split('.').join());
-      if (number < numberTime) {
-        return array[i];
-      }
-    }
-    return -1;
-  }
-
-  int timesBetween(DateTime from, DateTime to) {
-    // from = DateTime(from.year, from.month, from.day, from.hour, fr);
-    // to = DateTime(to.year, to.month, to.day);
-    return (to.difference(from).inSeconds);
-  }
-
-  getTimeRemaining(waktu) {
-    var detik = waktu;
-    var h = (detik / 3600).floor();
-    var m = ((detik % 3600) / 60).floor();
-    // var s = ((detik % 3600) % 60).floor();
-
-    // var hDisplay = h > 0 ? '${h}${h == 1 ? " jam " : " jam "}' : "";
-    // var mDisplay = m > 0 ? '${m}${m == 1 ? " menit " : " menit "}' : "";
-    // var sDisplay = s > 0 ? '${s}${s == 1 ? " detik" : " detik"}' : "";
-    var hDisplay = h > 0 ? '${h} jam ' : '';
-    var mDisplay = m > 0 ? '${m} menit' : '';
-    return hDisplay + mDisplay;
-  }
+  //   return listWaktu = [
+  //     {
+  //       "label": "Subuh",
+  //       "waktu": "12.30",
+  //       "active": false,
+  //       "id": 1,
+  //       "cardImage": "assets/img/card/card_subuh.png"
+  //     },
+  //     {
+  //       "label": "Dzuhur",
+  //       "waktu": "12.30",
+  //       "active": false,
+  //       "id": 2,
+  //       "cardImage": "assets/img/card/card_dzuhur.png"
+  //     },
+  //     {
+  //       "label": "Ashar",
+  //       "waktu": "15.40",
+  //       "active": false,
+  //       "id": 3,
+  //       "cardImage": "assets/img/card/card_ashar.png"
+  //     },
+  //     {
+  //       "label": "Maghrib",
+  //       "waktu": "18.34",
+  //       "active": false,
+  //       "id": 4,
+  //       "cardImage": "assets/img/card/card_maghrib.png"
+  //     },
+  //     {
+  //       "label": "Isya",
+  //       "waktu": "19.32",
+  //       "active": false,
+  //       "id": 5,
+  //       "cardImage": "assets/img/card/card_isya.png"
+  //     }
+  //   ];
+  // }
 
   getMenuHome() async {
     return listMenuHome = [
@@ -430,29 +348,16 @@ class DashboardController extends GetxController {
     Get.defaultDialog(
       backgroundColor: Colors.transparent,
       barrierDismissible: true,
-      contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
       title: '',
-      titleStyle: TextStyle(height: 0),
-      titlePadding: EdgeInsets.all(0),
-      content:
-          // Container(
-          //   constraints: BoxConstraints.loose(Size.infinite),
-          //   height: 400,
-          //   width: Get.width - 42,
-          //   decoration: BoxDecoration(
-          //     image: DecorationImage(
-          //         image: dialogPopupInfaq == DialogPopupInfaq.pagi
-          //             ? AssetImage('assets/img/infaq_pagi.png')
-          //             : AssetImage('assets/img/infaq_subuh.png'),
-          //         fit: BoxFit.fill,
-          //         alignment: Alignment.topCenter),
-          //   ),
-          // ),
-          Column(
+      titleStyle: const TextStyle(height: 0),
+      titlePadding: const EdgeInsets.all(0),
+      content: Column(
         children: [
           Row(
             children: [
-              Expanded(child: Text("")),
+              const Expanded(child: Text("")),
               ButtonIcon(
                 onTap: () {
                   Get.back();
@@ -472,21 +377,21 @@ class DashboardController extends GetxController {
             decoration: BoxDecoration(
               image: DecorationImage(
                   image: dialogPopupInfaq == DialogPopupInfaq.pagi
-                      ? AssetImage('assets/img/infaq_pagi.png')
-                      : AssetImage('assets/img/infaq_subuh.png'),
+                      ? const AssetImage('assets/img/infaq_pagi.png')
+                      : const AssetImage('assets/img/infaq_subuh.png'),
                   fit: BoxFit.fill,
                   alignment: Alignment.topCenter),
             ),
           ),
           Container(
               width: Get.width,
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(color: Colors.white),
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(color: Colors.white),
               child: ButtonElevated(
                 title: 'Siap, Bismillah Infaq',
                 width: 165,
                 bgcolor: dialogPopupInfaq == DialogPopupInfaq.pagi
-                    ? Color(0xFFD9A04A)
+                    ? const Color(0xFFD9A04A)
                     : Get.theme.primaryColor,
                 height: 45,
                 color: Colors.white,
@@ -524,13 +429,9 @@ class DashboardController extends GetxController {
   @override
   void onInit() async {
     getData();
-    getList();
     getMenuHome();
     getKajianLive();
-    // getListArtikel();
-    startWaktu();
     getAllMenu();
-    getWaktu();
     getListKota();
 
     if (showPopupInfaq.value) {
