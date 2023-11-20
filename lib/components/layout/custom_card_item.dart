@@ -54,7 +54,6 @@ class CustomCardItem extends StatelessWidget {
             child: InkWell(
               highlightColor: Colors.transparent,
               onTap: () async {
-                print(linkRoute);
                 if (islink) {
                   final Uri url = Uri.parse(link!);
                   if (!await launchUrl(url)) {
@@ -63,6 +62,7 @@ class CustomCardItem extends StatelessWidget {
                 }
                 if (linkRoute != null) {
                   print("<<<<<<>>>>>>");
+                  print(linkRoute);
                   Get.toNamed(linkRoute!);
                 }
                 //Get.toNamed(AppRoutes.detailEventScreen);

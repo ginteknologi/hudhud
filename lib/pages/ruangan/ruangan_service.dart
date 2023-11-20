@@ -27,9 +27,9 @@ class RuanganService extends GetConnect {
       return json;
     }
   }
-  Future getDetail(bulan, tahun) async {
+  Future getDetail(tanggal,bulan, tahun) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/ruangan/booking?bulan=$bulan&tahun=$tahun"),
+        Uri.parse("${RemoteData.api}/ruangan/booking?tanggal=$tanggal&bulan=$bulan&tahun=$tahun"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

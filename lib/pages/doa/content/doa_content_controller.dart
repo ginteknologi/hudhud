@@ -11,8 +11,8 @@ class ContentDoaController extends GetxController {
   var txtController = TextEditingController();
 
   getData() async {
-    final result = await DoaService().getList(page: 0, limit: 10);
-    list.value = result['data'];
+    final result = await DoaService().getDetail();
+    list.value = result;
     isLoadingList.value = false;
   }
 
@@ -172,7 +172,8 @@ class ContentDoaController extends GetxController {
   goToDetail(param) {}
 
   @override
-  void onInit() {
+  void onInit() async {
+    await getData();
     getListDoa();
     super.onInit();
   }

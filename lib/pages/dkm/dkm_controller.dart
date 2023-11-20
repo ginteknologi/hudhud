@@ -26,9 +26,12 @@ class DkmController extends GetxController {
 
   getListMemberDkm() async {
     listMemberDkm = [
-      {"id": 1, "nama": "Ust. Arwani Amin, Lc, MA", "role": "Ketua"},
-      {"id": 2, "nama": "Ust. Insan Jati, Lc, MA", "role": "Sekretaris"},
-      {"id": 3, "nama": "Ust. Herdi Junaedi, Lc, MA", "role": "Bendahara"},
+      {"id": 1, "nama": "Fajar Sidiq", "role": "Ketua"},
+      {"id": 2, "nama": "Bambang Martono", "role": "Sekretaris"},
+      {"id": 3, "nama": "Denny Sukmaputra", "role": "Bendahara"},
+      {"id": 4, "nama": "Sugeng Pribadi", "role": "Ketua Bidang Keagamaan"},
+      {"id": 5, "nama": "Ponca Kaliga", "role": "Ketua Bidang Sosial"},
+      {"id": 6, "nama": "Ramdhan A Maruto", "role": "Ketua Bidang Kemanusiaan"},
     ];
     return listDkm;
   }
@@ -39,20 +42,23 @@ class DkmController extends GetxController {
         "id": 1,
         "title": "+62-8575-647-xxxx",
         "category": "Telepon/WhatsApp",
-        "icon": "assets/icons/wa.svg"
+        "icon": "assets/icons/wa.svg",
+        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
       },
       {
         "id": 1,
         "title":
             "CitraGran Cibubur, RT005/011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
         "category": "Alamat",
-        "icon": "assets/icons/pinpoint.svg"
+        "icon": "assets/icons/pinpoint.svg",
+        'link': 'https://goo.gl/maps/1Hw5yqj5qzJY5kEj8'
       },
       {
         "id": 1,
         "title": "https://linktr.ee/AnNimahTV",
         "category": "LinkTree",
-        "icon": "assets/icons/tele.svg"
+        "icon": "assets/icons/tele.svg",
+        "link": "https://linktr.ee/AnNimahTV"
       },
     ];
     return listKontak;

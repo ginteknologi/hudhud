@@ -9,7 +9,7 @@ class DoaController extends GetxController {
   List listTypesDoa = [].obs;
 
   getData() async {
-    final result = await DoaService().getList(page: 0, limit: 10);
+    final result = await DoaService().getList();
     list.value = result['data'];
     isLoadingList.value = false;
   }

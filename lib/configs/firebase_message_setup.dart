@@ -50,7 +50,7 @@ class SetupFirebase {
               channel.name,
               channelDescription: channel.description,
               groupKey: group,
-              icon: '@mipmap/ic_launcher',
+              icon: 'assets/icons/app_icon.png',
               playSound: true,
               importance: Importance.high,
               setAsGroupSummary: true,

@@ -198,6 +198,7 @@ class DashboardPage extends StatelessWidget {
                           title: artikel.title,
                           subtitle: '${artikel.time} | ${artikel.date}',
                           imgPath: artikel.image,
+                          linkRoute: '/artikel/${artikel.id}',
                         ),
                         const SizedBox(
                           height: 20,
@@ -220,6 +221,7 @@ class DashboardPage extends StatelessWidget {
                           title: '${doa.title}',
                           subtitle: '${doa.time} | ${doa.date}',
                           imgPath: '${doa.image}',
+                          linkRoute: '/doa/1/${doa.id}',
                         ),
                         const SizedBox(
                           height: 20,
@@ -242,6 +244,7 @@ class DashboardPage extends StatelessWidget {
                           title: '${campaign.title}',
                           subtitle: '${campaign.time} | ${campaign.date}',
                           imgPath: '${campaign.image}',
+                          linkRoute: '/sedekah/${campaign.id}',
                         ),
                         const SizedBox(
                           height: 100,
@@ -455,43 +458,41 @@ class DashboardPage extends StatelessWidget {
                     )))));
   }
 
-  getListItemVertical(DashboardController ctrl, BuildContext context) {
-    return Obx(() => !ctrl.isLoadingList.value
-        ? ListView.separated(
-            // padding: EdgeInsets.only(left: 24, right: 24),
-            scrollDirection: Axis.vertical,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: ctrl.listArtikel.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 10),
-            itemBuilder: (context, index) {
-              print("<<<<<<<<<<<<<<>>>>>>>>>>>>>>");
-              print(ctrl.listArtikel[index]);
-              LatestNews item = ctrl.listArtikel[index];
-              return FadeInLeft(
-                child: CustomCardItem(
-                  network: true,
-                  isFullWidth: true,
-                  height: 165,
-                  size: "medium",
-                  positionChip: CrossAxisAlignment.start,
-                  chipColor: Theme.of(context).primaryColor,
-                  chipText: '$item.kategori',
-                  chipTextStyle: TextStyle(
-                      fontSize:
-                          Theme.of(context).textTheme.labelLarge?.fontSize,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white),
-                  title: '$item.title',
-                  subtitle: '$item.time | $item.date',
-                  imgPath: '$item.image',
-                  linkRoute: 'asdasdsadsads',
-                ),
-              );
-            },
-          )
-        : const Text('Loading'));
-  }
+  // getListItemVertical(DashboardController ctrl, BuildContext context) {
+  //   return Obx(() => !ctrl.isLoadingList.value
+  //       ? ListView.separated(
+  //           // padding: EdgeInsets.only(left: 24, right: 24),
+  //           scrollDirection: Axis.vertical,
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           shrinkWrap: true,
+  //           itemCount: ctrl.listArtikel.length,
+  //           separatorBuilder: (context, index) => const SizedBox(height: 10),
+  //           itemBuilder: (context, index) {
+  //             LatestNews item = ctrl.listArtikel[index];
+  //             return FadeInLeft(
+  //               child: CustomCardItem(
+  //                 network: true,
+  //                 isFullWidth: true,
+  //                 height: 165,
+  //                 size: "medium",
+  //                 positionChip: CrossAxisAlignment.start,
+  //                 chipColor: Theme.of(context).primaryColor,
+  //                 chipText: '$item.kategori',
+  //                 chipTextStyle: TextStyle(
+  //                     fontSize:
+  //                         Theme.of(context).textTheme.labelLarge?.fontSize,
+  //                     fontWeight: FontWeight.normal,
+  //                     color: Colors.white),
+  //                 title: '$item.title',
+  //                 subtitle: '$item.time | $item.date',
+  //                 imgPath: '$item.image',
+  //                 linkRoute: 'asdasdsadsads',
+  //               ),
+  //             );
+  //           },
+  //         )
+  //       : const Text('Loading'));
+  // }
 
   getCardBanner(DashboardController ctrl, BuildContext context) {
     var activeCard;

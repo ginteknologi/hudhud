@@ -1,10 +1,10 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/partial/list_card_ui.dart';
 import 'package:mesjid_app/pages/artikel/artikel_controller.dart';
-
 class ArtikelPage extends StatelessWidget {
   const ArtikelPage({super.key});
 
@@ -43,7 +43,7 @@ class ArtikelPage extends StatelessWidget {
                     side: const BorderSide(width: 1, color: Colors.black12)),
                 selected: ctrl.listCategoryFilterSelected[index].value,
                 label: Text(
-                  ctrl.listCategoryFilter[index]['label'],
+                  ctrl.listCategoryFilter[index]['name'],
                   style: TextStyle(
                       fontSize:
                           Theme.of(context).textTheme.labelMedium?.fontSize,
@@ -81,13 +81,13 @@ class ArtikelPage extends StatelessWidget {
         return FadeInUp(
           child: ListCardUiWidget(
             id: ctrl.listArtikels[index]['id'],
-            title: ctrl.listArtikels[index]['title'],
+            title: ctrl.listArtikels[index]['title']['rendered'],
             position: MainAxisAlignment.end,
             usingDivider: false,
             height: 170,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(ctrl.listArtikels[index]['image']),
+                    image: NetworkImage(ctrl.listArtikels[index]['_embedded']['wp:featuredmedia'][0]['source_url']),
                     fit: BoxFit.cover)),
             titleStyle: context.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
@@ -99,10 +99,7 @@ class ArtikelPage extends StatelessWidget {
             },
             hasFooter: true,
             footerContent: [
-              Text(
-                  ctrl.listArtikels[index]['time'] +
-                      '  |  ' +
-                      ctrl.listArtikels[index]['date'],
+              Text(DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(ctrl.listArtikels[index]['date'])),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,
@@ -110,18 +107,18 @@ class ArtikelPage extends StatelessWidget {
                       color: Colors.white)),
               Row(
                 children: [
-                  Icon(
-                    Icons.remove_red_eye_rounded,
-                    color: Colors.white,
-                    size: context.textTheme.labelLarge?.fontSize,
-                  ),
+                  // Icon(
+                  //   Icons.remove_red_eye_rounded,
+                  //   color: Colors.white,
+                  //   size: context.textTheme.labelLarge?.fontSize,
+                  // ),
                   SizedBox(
                     width: 5,
                   ),
-                  Text(ctrl.listArtikels[index]['viewer'],
-                      textAlign: TextAlign.end,
-                      style: context.textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w300, color: Colors.white)),
+                  // Text(ctrl.listArtikels[index]['viewer'],
+                  //     textAlign: TextAlign.end,
+                  //     style: context.textTheme.labelMedium?.copyWith(
+                  //         fontWeight: FontWeight.w300, color: Colors.white)),
                 ],
               )
             ],
@@ -139,7 +136,7 @@ class ArtikelPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel / Informasi", context: context, elevation: 0),
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoadingList.value ? const Text("Loading") : layout(ctrl, context)),
     );
   }
 }

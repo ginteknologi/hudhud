@@ -53,61 +53,62 @@ class JadwalRuanganPage extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: const BorderRadius.all(Radius.circular(7))),
-                    constraints: BoxConstraints.loose(Size.infinite),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 160,
-                          // decoration: BoxDecoration(color: Colors.white),
-                          child: Obx(() => InputDropdown(
-                              placeholder: "Bulan..",
-                              input: ctrl.inputBulan.value,
-                              label: '',
-                              dropdownColor: Colors.white,
-                              filled: true,
-                              fillColor: Colors.white,
-                              data: ctrl.months.map((month) {
-                                return {"id": month['id'].toString(), "label": month['label'].toString()};
-                              }).toList(),
-                              onChanged: (newValue) {
-                                ctrl.inputBulan.value = newValue.toString();
-                                ctrl.getData();
-                              },
-                            )
-                          ),
-                        ),
-                        SizedBox(
-                          width: 120,
-                          // decoration: BoxDecoration(color: Colors.white),
-                          child: Obx(() => InputDropdown(
-                              placeholder: "Tahun..",
-                              input: ctrl.inputTahun.value,
-                              label: '',
-                              dropdownColor: Colors.white,
-                              filled: true,
-                              fillColor: Colors.white,
-                              data: ctrl.years.map((year) {
-                                return {"id": year, "label": year.toString()};
-                              }).toList(),
-                              onChanged: (newValue) {
-                                ctrl.inputTahun.value = newValue;
-                              },
-                            )
-                            ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const Divider(
-                    color: Colors.black26,
-                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //   decoration: BoxDecoration(
+                  //       color: Theme.of(context).primaryColor,
+                  //       borderRadius: const BorderRadius.all(Radius.circular(7))),
+                  //   constraints: BoxConstraints.loose(Size.infinite),
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       SizedBox(
+                  //         width: 160,
+                  //         // decoration: BoxDecoration(color: Colors.white),
+                  //         child: Obx(() => InputDropdown(
+                  //             placeholder: "Bulan..",
+                  //             input: ctrl.inputBulan.value,
+                  //             label: '',
+                  //             dropdownColor: Colors.white,
+                  //             filled: true,
+                  //             fillColor: Colors.white,
+                  //             data: ctrl.months.map((month) {
+                  //               return {"id": month['id'].toString(), "label": month['label'].toString()};
+                  //             }).toList(),
+                  //             onChanged: (newValue) {
+                  //               ctrl.inputBulan.value = newValue.toString();
+                  //               ctrl.getData();
+                  //             },
+                  //           )
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         width: 120,
+                  //         // decoration: BoxDecoration(color: Colors.white),
+                  //         child: Obx(() => InputDropdown(
+                  //             placeholder: "Tahun..",
+                  //             input: ctrl.inputTahun.value,
+                  //             label: '',
+                  //             dropdownColor: Colors.white,
+                  //             filled: true,
+                  //             fillColor: Colors.white,
+                  //             data: ctrl.years.map((year) {
+                  //               return {"id": year, "label": year.toString()};
+                  //             }).toList(),
+                  //             onChanged: (newValue) {
+                  //               ctrl.inputTahun.value = newValue;
+                  //             },
+                  //           )
+                  //           ),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+                  // const Divider(
+                  //   color: Colors.black26,
+                  // ),
+                   
                   const Row(
                     children: [
                       Expanded(flex: 1, child: Text("Tanggal")),
@@ -117,74 +118,72 @@ class JadwalRuanganPage extends StatelessWidget {
                   const Divider(
                     color: Colors.black26,
                   ),
-                  ListView.builder(
+                  ctrl.list.length > 0 ? ListView.builder(
                     physics: const ClampingScrollPhysics(),
                     itemCount: ctrl.list.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      print(ctrl.list);
-                      // Datum model = filteredEvents[index];
-                      return FadeInUp(
-                        child: ListItemUiWidget(
-                          id: 1,
-                          widthContent:
-                              MediaQuery.of(context).size.width * 0.55,
-                          title: ctrl.list[index]['nama_kegiatan'],
-                          titleStyle: context.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold, color: Colors.black),
-                          subTitle: ctrl.list[index]['nama_pemesan'],
-                          subtitleStyle: context.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black54),
-                          showIcon: IconPosition.leftFlex,
-                          start: true,
-                          iconLeft: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(DateTime.parse(ctrl.list[index]['tanggal']).day.toString(),
-                                        style: context.textTheme.bodyMedium
+                        return FadeInUp(
+                          child: ListItemUiWidget(
+                            id: 1,
+                            widthContent:
+                                MediaQuery.of(context).size.width * 0.55,
+                            title: ctrl.list[index]['nama_kegiatan'],
+                            titleStyle: context.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold, color: Colors.black),
+                            subTitle: ctrl.list[index]['nama_pemesan'],
+                            subtitleStyle: context.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black54),
+                            showIcon: IconPosition.leftFlex,
+                            start: true,
+                            iconLeft: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(DateTime.parse(ctrl.list[index]['tanggal']).day.toString(),
+                                          style: context.textTheme.bodyMedium
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 0,
+                                                  color: Theme.of(context)
+                                                      .primaryColor)),
+                                    ),
+                                    Text(DateFormat('MMMM', 'id').format(DateTime.parse(ctrl.list[index]['tanggal'])),
+                                      style: context.textTheme.labelSmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.normal,
+                                              letterSpacing: 0,
+                                              color:
+                                                  Theme.of(context).primaryColor),
+                                    ),
+                                    Text('${int.parse(ctrl.list[index]['jam_mulai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_mulai'].split(':')[1])} - ' + '${int.parse(ctrl.list[index]['jam_selesai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_selesai'].split(':')[1])}',
+                                        style: context.textTheme.labelSmall
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 letterSpacing: 0,
                                                 color: Theme.of(context)
                                                     .primaryColor)),
-                                  ),
-                                  Text(DateFormat('MMMM', 'id').format(DateTime.parse(ctrl.list[index]['tanggal'])),
-                                    style: context.textTheme.labelSmall
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            letterSpacing: 0,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                  ),
-                                  Text('${int.parse(ctrl.list[index]['jam_mulai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_mulai'].split(':')[1])} - ' + '${int.parse(ctrl.list[index]['jam_selesai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_selesai'].split(':')[1])}',
-                                      style: context.textTheme.labelSmall
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 0,
-                                              color: Theme.of(context)
-                                                  .primaryColor)),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 70,
-                                child: VerticalDivider(
-                                  thickness: 1,
-                                  width: 20,
-                                  color: Colors.black26,
+                                  ],
                                 ),
-                              )
-                            ],
+                                const SizedBox(
+                                  height: 70,
+                                  child: VerticalDivider(
+                                    thickness: 1,
+                                    width: 20,
+                                    color: Colors.black26,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      );
+                        );
                     },
-                  ),
+                  ) : Text('Tidak ada data booking'),
                   const SizedBox(
                     height: 20,
                   ),

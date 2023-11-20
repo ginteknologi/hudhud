@@ -74,34 +74,34 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
 
-  Future<void> scheduleNotification() async {
-    var androidDetails = const AndroidNotificationDetails(
-      'channelId',
-      'channelName',
-      importance: Importance.high,
-    );
-    var platformChannelSpecifics = NotificationDetails(android: androidDetails);
+  // Future<void> scheduleNotification() async {
+  //   var androidDetails = const AndroidNotificationDetails(
+  //     'channelId',
+  //     'channelName',
+  //     importance: Importance.high,
+  //   );
+  //   var platformChannelSpecifics = NotificationDetails(android: androidDetails);
 
-    var scheduledTime = tz.TZDateTime.local(
-      tz.local as int,
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      10,
-      44,
-    );
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0, // ID notifikasi (dapat diubah sesuai kebutuhan)
-      'Judul Notifikasi',
-      'Isi Notifikasi akan muncul pada jam 10:00.',
-      scheduledTime,
-      platformChannelSpecifics,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-    );
-  }
+  //   var scheduledTime = tz.TZDateTime.local(
+  //     tz.local as int,
+  //     DateTime.now().year,
+  //     DateTime.now().month,
+  //     DateTime.now().day,
+  //     10,
+  //     44,
+  //   );
+  //   await flutterLocalNotificationsPlugin.zonedSchedule(
+  //     0, // ID notifikasi (dapat diubah sesuai kebutuhan)
+  //     'Judul Notifikasi',
+  //     'Isi Notifikasi akan muncul pada jam 10:00.',
+  //     scheduledTime,
+  //     platformChannelSpecifics,
+  //     uiLocalNotificationDateInterpretation:
+  //         UILocalNotificationDateInterpretation.absoluteTime,
+  //     androidAllowWhileIdle: true,
+  //   );
+  // }
 }

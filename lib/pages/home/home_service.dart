@@ -28,4 +28,47 @@ class HomeService extends GetConnect {
       return json;
     }
   }
+
+  Future cekToken(token) async {
+    final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
+    var api = '${RemoteData.api}/fcm?token=$token&user=${dataUser['id']}';
+    final response = await http.get(Uri.parse(api));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return jsonDecode(jsonEncode(json));
+    }
+  }
+
+  Future setToken(token) => cekToken(token).then((hasilcek) async {
+    final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
+    if (hasilcek['data'].length > 0) {
+      var api = '${RemoteData.api}/fcm/${hasilcek['data'][0]['_id']}';
+      final response = await http.put(
+        Uri.parse(api),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'user': dataUser['id'],
+          'token': token,
+        }),
+      );
+      return response;
+    } else {
+      var api = '${RemoteData.api}/fcm/add';
+      final response = await http.post(
+        Uri.parse(api),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'user': dataUser['id'],
+          'token': token,
+        }),
+      );
+      return response;
+    }
+  });
+    
 }

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
 import 'package:mesjid_app/theme.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class ListCardUiWidget extends StatelessWidget {
   ListCardUiWidget(
       {required this.id,
+      this.type,
       this.title,
       this.subtitle,
       this.titleStyle,
@@ -22,6 +24,7 @@ class ListCardUiWidget extends StatelessWidget {
       this.usingDivider = true});
 
   int id;
+  String? type;
   String? title;
   TextStyle? titleStyle;
   String? subtitle;
@@ -91,7 +94,8 @@ class ListCardUiWidget extends StatelessWidget {
                             if (subtitle != null)
                               Align(
                                   alignment: Alignment.centerLeft,
-                                  child: AutoSizeText(
+                                  child: type == 'wp' ? Html(data: subtitle!, style: {"p": Style(fontSize: FontSize(13.0))}) :
+                                  AutoSizeText(
                                     subtitle!,
                                     textAlign: TextAlign.start,
                                     style: subtitleStyle ??

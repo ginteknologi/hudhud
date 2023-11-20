@@ -6,8 +6,11 @@ import 'package:mesjid_app/components/button/iconbutton.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:mesjid_app/pages/dashboard/dashboard_service.dart';
+import 'package:mesjid_app/configs/main_controller.dart';
 
 class DashboardController extends GetxController {
+  final mainCtrl = Get.find<MainController>();
   final dataStore = GetStorage();
   var isLoadingList = true.obs;
   var list = {}.obs;
@@ -30,57 +33,55 @@ class DashboardController extends GetxController {
   DialogPopupInfaq dialogPopupInfaq = DialogPopupInfaq.subuh;
 
   getData() async {
-    // final result = await DashboardService().getList();
-    // dataTerbaru.value = result['data'];
-    // print(dataTerbaru);
+    final result = await DashboardService().getList();
+    dataTerbaru.value = result['data'];
     lastRead.value = dataStore.read('perAyatLastRead');
-    dataTerbaru.value = {
-      "success": true,
-      "message": "Success",
-      "data": {
-        "artikel": {
-          "id": 1,
-          "image":
-              "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-          "judul":
-              "Sedekah yang Paling Utama adalah yang Paling Sesuai dengan Kondisi Penerima Sedekah",
-          "isi":
-              "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
-          "tanggal": "2023-10-31T12:59:58.000Z",
-          "url": 'artikel/1',
-          "createdAt": "2023-10-31T13:00:02.000Z",
-          "updatedAt": "2023-10-31T13:00:03.000Z"
-        },
-        "doa": {
-          "id": 1,
-          // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-          "image":
-              "https://harakahdaily.net/wp-content/uploads/2020/03/Doa-Mohon-Perlindungan-Dari-Ilmu-Tak-Bermanfaat-IslamRamah.co_.jpeg",
-          "judul": "Doa Bangun Tidur",
-          "isi": "Ini isinya",
-          "tanggal": "2023-10-31T12:59:58.000Z",
-          "url": 'doa/1',
-          "createdAt": "2023-10-31T13:00:02.000Z",
-          "updatedAt": "2023-10-31T13:00:03.000Z"
-        },
-        "campaign": {
-          "id": 1,
-          // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-          "image":
-              "https://masjidannimah.id/wp-content/uploads/2023/10/image-36.png",
-          "judul": "Sedekah Mesjid",
-          "isi":
-              "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
-          "tanggal": "2023-10-31T12:59:58.000Z",
-          "url": "sedekah/1",
-          "createdAt": "2023-10-31T13:00:02.000Z",
-          "updatedAt": "2023-10-31T13:00:03.000Z"
-        }
-      }
-    };
-    var newdata = constructDataTerbaru(dataTerbaru.value);
+    // dataTerbaru.value = {
+    //   "success": true,
+    //   "message": "Success",
+    //   "data": {
+    //     "artikel": {
+    //       "id": 1,
+    //       "image":
+    //           "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
+    //       "judul":
+    //           "Sedekah yang Paling Utama adalah yang Paling Sesuai dengan Kondisi Penerima Sedekah",
+    //       "isi":
+    //           "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
+    //       "tanggal": "2023-10-31T12:59:58.000Z",
+    //       "url": 'artikel/1',
+    //       "createdAt": "2023-10-31T13:00:02.000Z",
+    //       "updatedAt": "2023-10-31T13:00:03.000Z"
+    //     },
+    //     "doa": {
+    //       "id": 1,
+    //       // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
+    //       "image":
+    //           "https://harakahdaily.net/wp-content/uploads/2020/03/Doa-Mohon-Perlindungan-Dari-Ilmu-Tak-Bermanfaat-IslamRamah.co_.jpeg",
+    //       "judul": "Doa Bangun Tidur",
+    //       "isi": "Ini isinya",
+    //       "tanggal": "2023-10-31T12:59:58.000Z",
+    //       "url": 'doa/1',
+    //       "createdAt": "2023-10-31T13:00:02.000Z",
+    //       "updatedAt": "2023-10-31T13:00:03.000Z"
+    //     },
+    //     "campaign": {
+    //       "id": 1,
+    //       // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
+    //       "image":
+    //           "https://masjidannimah.id/wp-content/uploads/2023/10/image-36.png",
+    //       "judul": "Sedekah Mesjid",
+    //       "isi":
+    //           "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
+    //       "tanggal": "2023-10-31T12:59:58.000Z",
+    //       "url": "sedekah/1",
+    //       "createdAt": "2023-10-31T13:00:02.000Z",
+    //       "updatedAt": "2023-10-31T13:00:03.000Z"
+    //     }
+    //   }
+    // };
+    var newdata = constructDataTerbaru(dataTerbaru);
     // constructLatestData(dataTerbaru.value);
-    // print(jsonEncode(newdata));
     listArtikel = newdata;
     isLoadingList.value = false;
   }
@@ -392,14 +393,14 @@ class DashboardController extends GetxController {
   constructDataTerbaru(data) {
     if (data != null) {
       List<LatestNews> items = [];
-      var item = data['data'];
+      var item = data;
       var keys = item.keys;
       for (var key in keys) {
         var el = item[key];
         var tgl = "";
         var timeleft;
-        if (el['tanggal'] != null) {
-          timeleft = DateTime.parse(el['tanggal']);
+        if (el['createdAt'] != null) {
+          timeleft = DateTime.parse(el['createdAt']);
           tgl = Moment.parse("$timeleft")
               .format("dd MMMM yyyy", localeOverride: 'id');
         }
@@ -411,8 +412,7 @@ class DashboardController extends GetxController {
           title: el['judul'],
           subtitle: el['isi'],
           image: el['image'] ?? 'https://dummyimage.com/600x400/000/fff',
-          kategori: key,
-          url: el['url'],
+          kategori: 'test',
         ));
       }
       return items;
@@ -548,16 +548,18 @@ enum DialogPopupInfaq { subuh, pagi }
 
 class LatestNews {
   int id;
-  String title, subtitle, kategori, image, time, date, url;
+  String title, subtitle, kategori, image, time, date;
   LatestNews(
-      {required this.id,
+    {
+      required this.id,
       required this.title,
       required this.subtitle,
       required this.kategori,
       required this.image,
       required this.time,
-      required this.date,
-      required this.url});
+      required this.date
+    }
+  );
 
   Map toJson() => {
         'title': title,
@@ -565,6 +567,5 @@ class LatestNews {
         'kategori': kategori,
         'image': image,
         'time': time,
-        'url': url,
       };
 }

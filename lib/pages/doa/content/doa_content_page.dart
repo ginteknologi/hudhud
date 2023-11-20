@@ -1,14 +1,11 @@
-import 'package:animate_do/animate_do.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
 import 'package:mesjid_app/components/layout/app_bar_ws.dart';
 import 'package:mesjid_app/components/partial/list_card_ui.dart';
 import 'package:mesjid_app/pages/doa/content/doa_content_controller.dart';
-import 'package:mesjid_app/theme.dart';
 
 class ContentDoaPage extends StatelessWidget {
   const ContentDoaPage({super.key});
@@ -49,6 +46,9 @@ class ContentDoaPage extends StatelessWidget {
                                       "Alhamdulillahil ladzi ahyana ba'da ma amatana wa ilaihin nusyur. Segala puji bagi Allah, Tuhan yang menghidupkan kami setelah ia mematikan kami. Kepada-Nyalah kebangkitan hari kiamat",
                                   hasFooter: true,
                                   footerContent: [
+                                    Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list['date'])),
+                                      style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
+                                    ),                                    
                                     // Text("QS. Al-Baqoroh 185",
                                     //     textAlign: TextAlign.start,
                                     //     style: context.textTheme.labelSmall
@@ -56,25 +56,25 @@ class ContentDoaPage extends StatelessWidget {
                                     //             fontWeight: FontWeight.bold,
                                     //             letterSpacing: 0,
                                     //             color: Colors.black54)),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.remove_red_eye_rounded,
-                                          color: Colors.black54,
-                                          size: context
-                                              .textTheme.labelLarge?.fontSize,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text("10",
-                                            textAlign: TextAlign.end,
-                                            style: context.textTheme.labelMedium
-                                                ?.copyWith(
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.black54)),
-                                      ],
-                                    )
+                                    // Row(
+                                    //   children: [
+                                    //     Icon(
+                                    //       Icons.remove_red_eye_rounded,
+                                    //       color: Colors.black54,
+                                    //       size: context
+                                    //           .textTheme.labelLarge?.fontSize,
+                                    //     ),
+                                    //     SizedBox(
+                                    //       width: 5,
+                                    //     ),
+                                    //     Text("10",
+                                    //         textAlign: TextAlign.end,
+                                    //         style: context.textTheme.labelMedium
+                                    //             ?.copyWith(
+                                    //                 fontWeight: FontWeight.w300,
+                                    //                 color: Colors.black54)),
+                                    //   ],
+                                    // )
                                   ],
                                 ),
                                 SizedBox(
@@ -114,10 +114,11 @@ class ContentDoaPage extends StatelessWidget {
                                             height: 35,
                                             color: Colors.black,
                                             radius: 5,
-                                            size: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.fontSize,
+                                            size: 12,
+                                            // size: Theme.of(context)
+                                            //     .textTheme
+                                            //     .bodySmall
+                                            //     ?.fontSize,
                                             showIcon: "right",
                                             iconRight: Icon(
                                               Icons.share,
@@ -149,7 +150,7 @@ class ContentDoaPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a > Do'a Harian > Detail", context: context, elevation: 0),
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoadingList.value ? const Text('Loading') : layout(ctrl, context)),
     );
   }
 }

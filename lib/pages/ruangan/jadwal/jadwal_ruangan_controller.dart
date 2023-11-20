@@ -58,11 +58,12 @@ class JadwalRuanganController extends GetxController {
     }
   ];
   Rx<DateTime> selectedDay = DateTime.now().obs;
+  RxString inputTanggal = "".obs;
   RxString inputBulan = "".obs;
   RxString inputTahun = "".obs;
 
   getData() async {
-    final result = await RuanganService().getDetail(inputBulan, inputTahun);
+    final result = await RuanganService().getDetail(inputTanggal, inputBulan, inputTahun);
     list.value = result['data'];
     isLoadingList.value = false;
     }
@@ -118,6 +119,7 @@ class JadwalRuanganController extends GetxController {
       years.add(i.toString());
     }        
     DateTime parsedDate = DateTime.parse(Get.parameters['tanggal']!);    
+    inputTanggal.value = parsedDate.day.toString();
     inputBulan.value = parsedDate.month.toString();
     inputTahun.value = parsedDate.year.toString();   
     getData();

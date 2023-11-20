@@ -27,5 +27,5 @@ class PagesDoa {
 class RoutesDoa {
   static const String root = '/doa';
   static const String detail = '/doa/:id';
-  static const String content = '/doa/:id/content';
+  static const String content = '/doa/:id/:content';
 }

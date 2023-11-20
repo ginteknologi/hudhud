@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mesjid_app/components/partial/list_ui.dart';
 import 'package:mesjid_app/pages/dkm/dkm_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DkmPage extends StatelessWidget {
   const DkmPage({super.key});
@@ -99,8 +100,7 @@ class DkmPage extends StatelessWidget {
                                 iconLeft: Row(children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(90),
-                                    child: Image.network(
-                                      "https://picsum.photos/60",
+                                    child: Image.asset("assets/icons/app_icon.png",
                                       height: 60,
                                       width: 60,
                                       fit: BoxFit.cover,
@@ -152,6 +152,12 @@ class DkmPage extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black),
                                 category: ctrl.listKontak[index]['category'],
+                                onTap: () async {
+                                    final Uri url = Uri.parse(ctrl.listKontak[index]['link']);
+                                    if (!await launchUrl(url)) {
+                                      print('Tidak dapat membuka link YouTube.');
+                                    }
+                                },                                
                                 // subtitleStyle: context.textTheme.bodySmall
                                 //     ?.copyWith(
                                 //         fontWeight: FontWeight.normal,
