@@ -32,131 +32,34 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
             constraints: BoxConstraints.loose(Size.infinite),
             child: Stack(
               children: [
-                Padding(
-                    padding: const EdgeInsets.only(left: 21, right: 21),
-                    child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _visible = !_visible;
-                            _show = !_show;
-                            // Timer(Duration(milliseconds: 10), () {
-                            //   _show = !_show;
-                            // });
-                          });
-                          ctrlHome.visible.value = !ctrlHome.visible.value;
-                          ctrlHome.selectedIdx.value = 1;
-                        },
-                        child: EasyImageViewPager(
-                            onTap: (int index) {
-                              showPopup(ctrl, context, ctrlHome);
-                            },
-                            idxInitial: ctrlHome.idxLastReadHalaman.value,
-                            imageProviders: ctrl.listSurah)))
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Expanded(
-                //         flex: 1,
-                //         child: Padding(
-                //             padding: const EdgeInsets.only(left: 21, right: 21),
-                //             child: GestureDetector(
-                //                 onTap: () {
-                //                   setState(() {
-                //                     _visible = !_visible;
-                //                     _show = !_show;
-                //                     // Timer(Duration(milliseconds: 10), () {
-                //                     //   _show = !_show;
-                //                     // });
-                //                   });
-                //                   ctrlHome.visible.value =
-                //                       !ctrlHome.visible.value;
-                //                   ctrlHome.selectedIdx.value = 1;
-                //                 },
-                //                 child: EasyImageViewPager(
-                //                     onTap: (int index) {
-                //                       showPopup(ctrl, context, ctrlHome);
-                //                     },
-                //                     idxInitial:
-                //                         ctrlHome.idxLastReadHalaman.value,
-                //                     imageProviders: ctrl.listSurah)
-
-                //                 // PageView.builder(
-                //                 //     itemCount: ctrl.listSurah.length,
-                //                 //     pageSnapping: true,
-                //                 //     reverse: true,
-                //                 //     itemBuilder: (context, pagePosition) {
-                //                 //       return Container(
-                //                 //           margin: EdgeInsets.all(10),
-                //                 //           child: Image.asset(
-                //                 //               ctrl.listSurah[pagePosition]));
-                //                 //     })
-
-                //                 // Container(
-                //                 //   decoration: const BoxDecoration(
-                //                 //       image: DecorationImage(
-                //                 //     image: AssetImage(
-                //                 //         "assets/img/quran/quran_page_1.png"),
-                //                 //     fit: BoxFit.contain,
-                //                 //     alignment: Alignment.center,
-                //                 //   )),
-                //                 //   width: Get.width,
-                //                 // ),
-                //                 )))
-                //   ],
-                // ),
-                // Obx(() => Positioned(
-                //       top: ctrl.bookmarked.value ? 0 : -20,
-                //       right: 10,
-                //       child: GestureDetector(
-                //         child: SvgPicture.asset(
-                //           'assets/icons/bookmark-page.svg',
-                //           height: 60,
-                //         ),
-                //         onTap: () {
-                //           showPopup(ctrl, context, ctrlHome);
-                //         },
-                //       ),
-                //     )),
+                GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _visible = !_visible;
+                        _show = !_show;
+                      });
+                      ctrlHome.visible.value = !ctrlHome.visible.value;
+                      ctrlHome.selectedIdx.value = 1;
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: EasyImageViewPager(
+                              onTap: (int index) {
+                                showPopup(ctrl, context, ctrlHome);
+                              },
+                              idxInitial: ctrlHome.idxLastReadHalaman.value,
+                              imageProviders: ctrl.listSurah),
+                        ),
+                      ],
+                    ))
               ],
-            )
-
-            // SingleChildScrollView(
-            //     physics: const ClampingScrollPhysics(),
-            //     child: Padding(
-            //         padding: const EdgeInsets.only(left: 21, right: 21),
-            //         child: GestureDetector(
-            //           onTap: () {
-            //             setState(() {
-            //               _visible = !_visible;
-            //               _show = !_show;
-            //               // Timer(Duration(milliseconds: 10), () {
-            //               //   _show = !_show;
-            //               // });
-            //             });
-
-            //             ctrlHome.visible.value = !ctrlHome.visible.value;
-            //           },
-            //           child: Container(
-            //             decoration: const BoxDecoration(
-            //                 image: DecorationImage(
-            //               image:
-            //                   AssetImage("assets/img/quran/quran_page_1.png"),
-            //               fit: BoxFit.contain,
-            //               alignment: Alignment.topCenter,
-            //             )),
-            //             height: MediaQuery.of(context).size.height -
-            //                 kBottomNavigationBarHeight -
-            //                 MediaQuery.of(context).padding.top -
-            //                 kToolbarHeight,
-            //             width: Get.width,
-            //           ),
-            //         )))
-
-            ));
+            )));
   }
 
-  bool _visible = true;
-  bool _show = true;
+  bool _visible = false;
+  bool _show = false;
   late final AnimationController _controller;
 
   void showPopup(
@@ -227,7 +130,6 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                   iconRight: Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(right: 40),
-                    // padding: const EdgeInsets.only(right: 20.0),
                     child: Material(
                         color: Colors.transparent,
                         child: InkWell(

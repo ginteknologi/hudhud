@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
                 ),
                 child: Container(
                     width: Get.width,
-                    height: Get.height * 0.10,
+                    // height: Get.height * 0.10,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
@@ -103,7 +103,7 @@ class HomePage extends StatelessWidget {
                 ),
                 child: Container(
                     width: Get.width,
-                    height: Get.height * 0.10,
+                    // height: Get.height * 0.10,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
@@ -159,10 +159,6 @@ class HomePage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // SvgPicture.asset(
-                              //     'assets/icons/quran_listayat.svg',
-                              //     height: 30,
-                              //     width: 30),
                               Image.asset('assets/icons/icon_perayat.png',
                                   height: 30, width: 30),
                               SizedBox(

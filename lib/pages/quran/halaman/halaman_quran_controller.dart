@@ -35,18 +35,13 @@ class HalamanQuranController extends GetxController
   getQuran() async {
     lastReadPerhalaman.value = dataStore.read('perHalamanLastRead');
     listSurah = [
-      {'id': 1, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/1.png'},
-      {'id': 2, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/2.png'},
-      {'id': 3, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/3.png'},
-      {'id': 4, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/4.png'},
-      {'id': 5, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/5.png'},
-      {'id': 6, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/6.png'},
-      {'id': 7, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/7.png'},
-      {'id': 8, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/8.png'},
-      {'id': 9, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/9.png'},
-      {'id': 10, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/10.png'},
+      {'id': 1, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/1.jpg'},
+      {'id': 2, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/2.jpg'},
+      {'id': 3, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/3.jpg'},
+      {'id': 4, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/4.jpg'},
+      {'id': 5, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/5.jpg'},
+      {'id': 6, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/6.jpg'},
     ];
-    // listSurah.sort((b, a) => a.compareTo(b));
     return listSurah;
   }
 

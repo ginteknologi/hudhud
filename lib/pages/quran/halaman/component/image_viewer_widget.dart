@@ -43,35 +43,14 @@ class _EasyImageViewPagerState extends State<EasyImageViewPager> {
       controller: _pageController,
       itemBuilder: (context, index) {
         final image = widget.imageProviders[index]['image'];
-        return Stack(children: [
-          SizedBox(
-            width: Get.width - 42,
-            child: EasyImageView(
-              imageProvider: image,
-              onScaleChanged: (scale) {
-                setState(() {
-                  print(index);
-                  // Disable paging when image is zoomed-in
-                  // _pagingEnabled = scale <= 1.0;
-                });
-              },
-            ),
-          ),
-          Positioned(
-            top: 0,
-            right: 10,
-            child: GestureDetector(
-              child: SvgPicture.asset(
-                'assets/icons/bookmark-page.svg',
-                height: 60,
-              ),
-              onTap: () {
-                widget.onTap(index);
-                // showPopup(ctrl, context, ctrlHome);
-              },
-            ),
-          ),
-        ]);
+        return EasyImageView(
+          imageProvider: image,
+          onScaleChanged: (scale) {
+            setState(() {
+              print(index);
+            });
+          },
+        );
 
         //     EasyImageView(
         //   imageProvider: image,
@@ -137,7 +116,8 @@ class _EasyImageViewState extends State<EasyImageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+        // color: Colors.amber,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).orientation != Orientation.portrait
             ? double.infinity
@@ -149,8 +129,10 @@ class _EasyImageViewState extends State<EasyImageView> {
           maxScale: widget.maxScale,
           child: Image.asset(
             widget.imageProvider,
-            width: MediaQuery.of(context).size.width - 42,
-            fit: BoxFit.fitWidth,
+            width: Get.width,
+            height: Get.height - (Get.height * 0.1),
+            // width: MediaQuery.of(context).size.width - 42,
+            // fit: BoxFit.fitWidth,
           ),
           onInteractionEnd: (scaleEndDetails) {
             double scale = _transformationController.value.getMaxScaleOnAxis();
