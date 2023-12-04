@@ -1,4 +1,4 @@
-# mesjid_app
+# masjid_app
 
 A new Flutter project.
 

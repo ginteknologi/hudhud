@@ -4,20 +4,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/button/iconbutton.dart';
-import 'package:mesjid_app/configs/main_service.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
-import 'package:mesjid_app/pages/home/home_service.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/button/iconbutton.dart';
+import 'package:masjid_app/configs/main_service.dart';
+import 'package:masjid_app/routes/sedekah/index.dart';
+import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:simple_moment/simple_moment.dart';
-// import 'package:mesjid_app/pages/akun/profile/profile_service.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:masjid_app/routes/auth/index.dart';
+// import 'package:masjid_app/pages/akun/profile/profile_service.dart';
 
+enum DialogPopupInfaq { subuh, pagi }
 class MainController extends GetxController {
   final dataStore = GetStorage();
   var isLogin = false.obs;
   var userLogin = {}.obs;
   var perAyatLastRead = {}.obs;
   var perHalamanLastRead = {}.obs;
+  var lokasiSaatIni = "";
 
   //  ============ data dialog infaq
   var showPopupInfaq = true.obs;
@@ -31,10 +35,16 @@ class MainController extends GetxController {
   var duration = 0.obs;
   var txttime = "".obs;
   var listWaktu = [].obs;
+  var HijriDate = '';
+  // DateTime hijriDate ;
   // ============ end data waktu Solat
 
   Future waktusolatData() async {
     try {
+      var hijriDateNow = HijriCalendar.now();
+      HijriDate = hijriDateNow.toFormat('MMMM dd yyyy');
+      lokasiSaatIni = dataStore.read('lokasiSaatIni') ?? "Pilih Lokasi";
+      print(lokasiSaatIni);
       final getdata = await MainService().waktuSolat();
       listWaktu.value = [
         {
@@ -73,21 +83,21 @@ class MainController extends GetxController {
           "cardImage": "assets/img/card/card_isya.png"
         }
       ];
-      loadingwaktusolat.value = false;
+      dataStore.write('waktusolat', listWaktu);
     } catch (e) {
-      dataStore.write('isLogin', false);
+      // dataStore.write('isLogin', false);
       isLogin.value = false;
     }
   }
 
   getWaktu() async {
     var timeleft = DateTime.now();
-    todayDate.value =
-        Moment.parse("$timeleft").format("EEEE, dd MMMM", localeOverride: 'id');
+    todayDate.value = Moment.parse("$timeleft").format("EEEE, dd MMMM", localeOverride: 'id');
     int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
-
     var thistime = getNextLargerNumber(hourminutes, listWaktu);
+    print(thistime);
     if (thistime == -1) {
+      print(thistime);
       listWaktu[0]['active'] = true;
       var time = listWaktu[0]['waktu'].split(':');
       var setTimeTo = DateTime(timeleft.year, timeleft.month, timeleft.day + 1,
@@ -121,7 +131,7 @@ class MainController extends GetxController {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       txttime.value = getTimeRemaining(duration.value);
       if (duration.value == 0) {
-        getWaktu();
+        // getWaktu();
       }
       duration.value--;
     });
@@ -231,30 +241,29 @@ class MainController extends GetxController {
 
   loadHistoryQuran() async {
     try {
-      print(dataStore.read('perAyatLastRead'));
       if (dataStore.read('perAyatLastRead') == null) {
-        dataStore.write(
-            'perAyatLastRead', {'id': 0, 'suratName': '', 'ayatNumber': 0});
+        dataStore.write('perAyatLastRead', {'id': 0, 'suratName': '', 'ayatNumber': 0});
       }
-      print(dataStore.read('perHalamanLastRead'));
       if (dataStore.read('perHalamanLastRead') == null) {
-        dataStore
-            .write('perHalamanLastRead', {'id': 0, 'suratName': '', 'page': 0});
+        dataStore.write('perHalamanLastRead', {'id': 0, 'suratName': '', 'page': 0});
       }
+      perAyatLastRead.value = dataStore.read('perAyatLastRead');
+      perHalamanLastRead.value = dataStore.read('perHalamanLastRead');
     } catch (e) {
       print(e);
     }
   }
 
-  Future logout() async {
+  logout() async {
     try {
-      dataStore.remove('userInfo');
+      dataStore.remove('userLogin');
       dataStore.remove('isLogin');
-      dataStore.remove('token');
+      // dataStore.remove('token');
       isLogin.value = false;
-      dataStore.write('token', "");
-      userLogin.value = dataStore.read('userInfo');
+      // dataStore.write('token', "");
+      Get.offAllNamed(RoutesAuth.root);
     } catch (e) {
+      print(e);
       print('gk ada session');
     }
   }
@@ -267,6 +276,24 @@ class MainController extends GetxController {
     }
   }
 
+  updateLokasi(updateLokasi) async {
+    dataStore.write('lokasiSaatIni', updateLokasi);
+    lokasiSaatIni = updateLokasi;
+  }
+
+  saveStorage(json) async {
+    dataStore.write('isLogin', true);
+    dataStore.write('userLogin', json);
+    isLogin.value = true;
+    userLogin.value = json;
+  }
+
+  removeStorage() async {
+    dataStore.remove('userLogin');
+    dataStore.remove('isLogin');
+    isLogin.value = false;
+    userLogin.value = {};
+  }
   @override
   void onInit() async {
     await waktusolatData();
@@ -274,8 +301,11 @@ class MainController extends GetxController {
     startWaktu();
     loadStorage();
     loadHistoryQuran();
+    // await Scheduling();
+    loadingwaktusolat.value = false;
     super.onInit();
   }
 }
 
-enum DialogPopupInfaq { subuh, pagi }
+
+

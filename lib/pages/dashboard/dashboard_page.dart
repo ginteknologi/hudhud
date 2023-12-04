@@ -4,22 +4,27 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/button/iconbutton.dart';
-import 'package:mesjid_app/components/layout/custom_card_item.dart';
-import 'package:mesjid_app/components/layout/custom_modal_bottom_sheet.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/dashboard/component/waktusolat.dart';
-import 'package:mesjid_app/pages/dashboard/dashboard_controller.dart';
-import 'package:mesjid_app/routes/akun/index.dart';
-import 'package:mesjid_app/routes/notifikasi/index.dart';
-import 'package:mesjid_app/routes/quran/index.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/button/iconbutton.dart';
+import 'package:masjid_app/components/layout/custom_card_item.dart';
+import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
+import 'package:masjid_app/pages/dashboard/dashboard_controller.dart';
+import 'package:masjid_app/routes/akun/index.dart';
+import 'package:masjid_app/routes/notifikasi/index.dart';
+import 'package:masjid_app/routes/quran/index.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/configs/firebase_message_setup.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
-  layout(DashboardController ctrl, BuildContext context) {
+  layout(DashboardController ctrl, MainController gctrl, BuildContext context) {
     LatestNews artikel = ctrl.listArtikel[0];
     LatestNews doa = ctrl.listArtikel[1];
     LatestNews campaign = ctrl.listArtikel[2];
@@ -67,7 +72,7 @@ class DashboardPage extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.only(top: 0),
                                         child: AutoSizeText(
-                                            "Muhammad Fahmi Zulmeinidar".tr,
+                                            gctrl.userLogin['name'].toString(),
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.start,
                                             maxLines: 1,
@@ -80,15 +85,17 @@ class DashboardPage extends StatelessWidget {
                                     Material(
                                         color: Colors.transparent,
                                         child: InkWell(
-                                          onTap: () {
-                                            showPopup(
-                                                ctrl, context, null, null);
+                                          onTap: () async {        
+                                            showPopup(ctrl, gctrl, context, dialogTerkini(ctrl, gctrl, context), 200);
+
+                                            // showPopup(
+                                            //     ctrl, gctrl, context, null, null);
                                           },
                                           borderRadius:
                                               BorderRadius.circular(20),
                                           splashColor:
                                               Colors.green.withOpacity(0.5),
-                                          child: const Align(
+                                          child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 10),
@@ -102,12 +109,13 @@ class DashboardPage extends StatelessWidget {
                                                   Padding(
                                                       padding: EdgeInsets.only(
                                                           left: 5),
-                                                      child: Text(
-                                                          "Kota Jakarta, Indonesia",
+                                                      child:  Text(gctrl.lokasiSaatIni,
                                                           style: TextStyle(
                                                               color: Color(
                                                                   0xFFFFECB7),
-                                                              fontSize: 12)))
+                                                              fontSize: 12)
+                                                              )
+                                                              )
                                                 ],
                                               ),
                                             ),
@@ -141,11 +149,16 @@ class DashboardPage extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),
-                                        child: Image.asset(
-                                          "assets/icons/image-item1.png",
+                                        child: gctrl.userLogin['photo'] == null ? Image.asset(
+                                          "assets/icons/app_icon.png",
                                           height: 35,
                                           width: 35,
-                                        ),
+                                        ) :
+                                        Image.network(
+                                          gctrl.userLogin['photo'],
+                                          height: 35,
+                                          width: 35,
+                                        )
                                         // Image.network(
                                         //   "https://picsum.photos/50",
                                         //   height: 35,
@@ -652,7 +665,7 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  void showPopup(ctrl, context, Widget? content, double? height) {
+  void showPopup(ctrl, gctrl, context, Widget? content, double? height) {
     showDialog(
         context: context,
         builder: (BuildContext bc) {
@@ -663,7 +676,7 @@ class DashboardPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7.0)),
             child: Container(
                 padding: const EdgeInsets.all(10),
-                height: height ?? 185,
+                height: height ?? 165,
                 child: content ??
                     Column(
                       children: [
@@ -687,37 +700,36 @@ class DashboardPage extends StatelessWidget {
                           shadow: false,
                           onPressed: () {
                             Navigator.pop(context);
-                            showPopup(ctrl, bc, dialogTerkini(context), 200);
+                            showPopup(ctrl, gctrl, bc, dialogTerkini(ctrl, gctrl, context), 200);
                           },
                         ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        ButtonElevated(
-                          title: 'Pilih Lokasi',
-                          width: Get.width,
-                          bgcolor: Colors.white,
-                          height: 45,
-                          color: Colors.black,
-                          radius: 7,
-                          onPressed: () {
-                            Navigator.pop(context);
-                            showPopup(
-                                ctrl, bc, dialogCari(ctrl, context, bc), 220);
-                          },
-                          shadow: false,
-                        )
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
+                        // ButtonElevated(
+                        //   title: 'Aktifkan Pengingat Adzan',
+                        //   width: Get.width,
+                        //   bgcolor: Colors.white,
+                        //   height: 45,
+                        //   color: Colors.black,
+                        //   radius: 7,
+                        //   onPressed: () {
+                        //     Navigator.pop(context);
+                        //     showPopup(ctrl, gctrl, dialogCari(ctrl, gctrl, context, bc), 200);
+                        //   },
+                        //   shadow: false,
+                        // )
                       ],
                     )),
           );
         });
   }
 
-  dialogTerkini(BuildContext context) {
+  dialogTerkini(DashboardController ctrl, MainController gctrl, BuildContext context) {
     return Column(
       children: [
         Text(
-          "Dengan anda memilih Lokasi Saat Ini, Anda setuju apikasi ini berjalan di belakang layar dan akan menguras baterai anda.",
+          "Dengan melanjutkan pilih lokasi anda akan mendapatkan pengingat adzan. Apakah anda yakin ingin melanjutkan ?",
           style: context.textTheme.titleSmall?.copyWith(
               letterSpacing: 0,
               fontWeight: FontWeight.normal,
@@ -726,6 +738,17 @@ class DashboardPage extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
+        Obx(() => ctrl.isLoadingList.value ? 
+          ButtonElevated(
+            title: 'Loading', 
+            width: Get.width,
+            bgcolor: Theme.of(context).primaryColor,
+            height: 45,
+            color: Colors.white,
+            radius: 7,
+            shadow: false,            
+            onPressed: () {},) 
+        : 
         ButtonElevated(
           title: 'Lanjutkan',
           width: Get.width,
@@ -734,15 +757,33 @@ class DashboardPage extends StatelessWidget {
           color: Colors.white,
           radius: 7,
           shadow: false,
-          onPressed: () {
-            Navigator.pop(context);
+          onPressed: () async {
+            var statusLokasi = await Permission.location.request();
+            if (statusLokasi.isGranted) {
+              ctrl.isLoadingList.value = true;
+              Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+              List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);              
+              Placemark place =placemarks[0];
+              gctrl.updateLokasi('${place.locality.toString()}, ${place.country.toString()}');
+              await Scheduling();
+              ctrl.isLoadingList.value = false;
+              Navigator.pop(context);
+            } else if (statusLokasi.isDenied) {
+              print('Izin ditolak');
+              Navigator.pop(context);
+            } else if (statusLokasi.isPermanentlyDenied) {
+              // Pengguna menolak izin secara permanen, buka pengaturan aplikasi
+              openAppSettings();
+            }              
           },
-        ),
+        )        
+        )
+,
       ],
     );
   }
 
-  dialogCari(DashboardController ctrl, BuildContext context, bc) {
+  dialogCari(DashboardController ctrl, gctrl, BuildContext context, bc) {
     return Column(
       children: [
         Text(
@@ -769,6 +810,7 @@ class DashboardPage extends StatelessWidget {
             Navigator.pop(context);
             showPopup(
                 ctrl,
+                gctrl,
                 context,
                 dialogKota(context, ctrl),
                 MediaQuery.of(context).size.height -
@@ -860,6 +902,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(DashboardController());
+    final gctrl = Get.find<MainController>();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
@@ -871,6 +914,6 @@ class DashboardPage extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         body: Obx(() => ctrl.isLoadingList.value
             ? const Center(child: CircularProgressIndicator())
-            : layout(ctrl, context)));
+            : layout(ctrl, gctrl, context)));
   }
 }

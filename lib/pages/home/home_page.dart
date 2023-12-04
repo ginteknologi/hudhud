@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
-import 'package:mesjid_app/components/layout/custom_modal_bottom_sheet.dart';
-import 'package:mesjid_app/components/layout/sliding_widget.dart';
-import 'package:mesjid_app/pages/dashboard/dashboard_page.dart';
-import 'package:mesjid_app/pages/dkm/dkm_page.dart';
-import 'package:mesjid_app/pages/home/home_controller.dart';
-import 'package:mesjid_app/pages/quran/quran_page.dart';
-import 'package:mesjid_app/pages/ruangan/ruangan_page.dart';
+import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
+import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
+import 'package:masjid_app/components/layout/sliding_widget.dart';
+import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
+import 'package:masjid_app/pages/dkm/dkm_page.dart';
+import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/pages/quran/quran_page.dart';
+import 'package:masjid_app/pages/ruangan/ruangan_page.dart';
+import 'package:masjid_app/configs/main_controller.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -27,7 +28,7 @@ class HomePage extends StatelessWidget {
     }
   }
 
-  void showSheet(HomeController ctrl, BuildContext context) {
+  void showSheet(HomeController ctrl, MainController gctrl, BuildContext context) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -76,8 +77,8 @@ class HomePage extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                                ctrl.lastReadPerayat['ayatNumber'] > 0
-                                    ? '${ctrl.lastReadPerayat['suratName']} : ${ctrl.lastReadPerayat['ayatNumber']}'
+                                gctrl.perAyatLastRead['ayatNumber'] > 0
+                                    ? '${gctrl.perAyatLastRead['suratName']} : ${gctrl.perAyatLastRead['ayatNumber']}'
                                     : 'Belum baca Al-quran',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -207,11 +208,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(HomeController());
-
-    ctrl.obs.listen((value) {
-      print(value);
-    });
-    // print(ctrl.visible.value);
+    final gctrl = Get.find<MainController>();
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         extendBodyBehindAppBar: true,
@@ -232,7 +229,7 @@ class HomePage extends StatelessWidget {
                   selectedIdx: ctrl.selectedIdx.value,
                   onChanged: (BottomBarEnum type) {
                     if (type == BottomBarEnum.alquran) {
-                      showSheet(ctrl, context);
+                      showSheet(ctrl,gctrl, context);
                     } else {
                       ctrl.type.value = type;
                     }

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/doa/doa_service.dart';
-import 'package:mesjid_app/routes/doa/index.dart';
+import 'package:masjid_app/pages/doa/doa_service.dart';
+import 'package:masjid_app/routes/doa/index.dart';
 
 class DoaController extends GetxController {
   var isLoadingList = true.obs;

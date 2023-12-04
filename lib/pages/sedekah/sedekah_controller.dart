@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/sedekah/sedekah_service.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:masjid_app/pages/sedekah/sedekah_service.dart';
+import 'package:masjid_app/routes/sedekah/index.dart';
 
 class SedekahController extends GetxController {
   var isLoadingList = true.obs;

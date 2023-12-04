@@ -2,11 +2,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/doa/doa_controller.dart';
-import 'package:mesjid_app/pages/notifikasi/notifikasi_controller.dart';
-import 'package:mesjid_app/theme.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/notifikasi/notifikasi_controller.dart';
+import 'package:masjid_app/theme.dart';
 
 class NotifikasiPage extends StatelessWidget {
   const NotifikasiPage({super.key});
@@ -19,7 +18,8 @@ class NotifikasiPage extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 21),
-                child: ListView.builder(
+                child: ctrl.listNotif.length > 0 ? 
+                ListView.builder(
                   physics: const ClampingScrollPhysics(),
                   itemCount: ctrl.listNotif.length,
                   shrinkWrap: true,
@@ -67,9 +67,32 @@ class NotifikasiPage extends StatelessWidget {
                       ),
                     );
                   },
-                ),
-              ),
-            )));
+                ) 
+                :
+                Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.notifications_off,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Belum ada notifikasi',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),                
+                  ),
+                )
+              )
+            )
+          );
   }
 
   @override

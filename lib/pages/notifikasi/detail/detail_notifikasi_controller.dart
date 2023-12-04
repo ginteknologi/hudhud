@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/doa/doa_service.dart';
-import 'package:mesjid_app/pages/notifikasi/notifikasi_service.dart';
-import 'package:mesjid_app/routes/notifikasi/index.dart';
+import 'package:masjid_app/pages/doa/doa_service.dart';
+import 'package:masjid_app/pages/notifikasi/notifikasi_service.dart';
+import 'package:masjid_app/routes/notifikasi/index.dart';
 
 class DetailNotifikasiController extends GetxController {
   var isLoadingList = true.obs;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/quran/quran_service.dart';
+import 'package:masjid_app/pages/quran/quran_service.dart';
 
 class QuranController extends GetxController {
   var isLoadingList = true.obs;

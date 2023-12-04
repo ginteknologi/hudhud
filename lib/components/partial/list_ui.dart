@@ -2,8 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
-import 'package:mesjid_app/theme.dart';
+import 'package:masjid_app/routes/sedekah/index.dart';
+import 'package:masjid_app/theme.dart';
 
 class ListItemUiWidget extends StatelessWidget {
   ListItemUiWidget(

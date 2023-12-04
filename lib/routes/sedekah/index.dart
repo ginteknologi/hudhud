@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_page.dart';
-import 'package:mesjid_app/pages/sedekah/sedekah_page.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/instruksi/instruksi_page.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/metode/metode_transaksi_page.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_page.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/status/status_sedekah_page.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/transaksi_sedekah_page.dart';
+import 'package:masjid_app/pages/sedekah/detail/detailsedekah_page.dart';
+import 'package:masjid_app/pages/sedekah/sedekah_page.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/instruksi/instruksi_page.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/metode/metode_transaksi_page.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_page.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/status/status_sedekah_page.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_page.dart';
 
 class PagesSedekah {
   static var pages = [

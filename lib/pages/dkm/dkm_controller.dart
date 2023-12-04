@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/dkm/dkm_service.dart';
+import 'package:masjid_app/pages/dkm/dkm_service.dart';
 
 class DkmController extends GetxController {
   var isLoadingList = true.obs;

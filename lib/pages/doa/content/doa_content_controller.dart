@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/doa/doa_service.dart';
+import 'package:masjid_app/pages/doa/doa_service.dart';
 
 class ContentDoaController extends GetxController {
   var isLoadingList = true.obs;

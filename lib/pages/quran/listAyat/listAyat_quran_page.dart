@@ -3,17 +3,18 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
-// import 'package:mesjid_app/theme.dart';
-import 'package:mesjid_app/routes/quran/index.dart';
+import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
+// import 'package:masjid_app/theme.dart';
+import 'package:masjid_app/routes/quran/index.dart';
 
 class ListAyatQuranPage extends StatelessWidget {
   const ListAyatQuranPage({super.key});
 
-  layout(ListAyatQuranController ctrl, BuildContext context) {
-    var lasRead = ctrl.lastRead['id'] ?? 0;
+  layout(ListAyatQuranController ctrl,MainController gctrl , BuildContext context) {
+    var lasRead = gctrl.perAyatLastRead['id'] ?? 0;
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -65,7 +66,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                             ),
                                             Text(
                                               lasRead > 0
-                                                  ? '${ctrl.lastRead['id']}'
+                                                  ? '${gctrl.perAyatLastRead['id']}'
                                                   : '-',
                                               style: context
                                                   .textTheme.titleSmall
@@ -81,8 +82,8 @@ class ListAyatQuranPage extends StatelessWidget {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: AutoSizeText(
-                                                ctrl.lastRead['ayatNumber'] > 0
-                                                    ? '${ctrl.lastRead['suratName']}'
+                                                gctrl.perAyatLastRead['ayatNumber'] > 0
+                                                    ? '${gctrl.perAyatLastRead['suratName']}'
                                                     : 'Belum baca',
                                                 textAlign: TextAlign.start,
                                                 style: context
@@ -98,7 +99,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                 alignment: Alignment.centerLeft,
                                                 child: AutoSizeText(
                                                   'Ayat No : '
-                                                  "${ctrl.lastRead['ayatNumber'] > 0 ? '${ctrl.lastRead['ayatNumber']}' : '-'}",
+                                                  "${gctrl.perAyatLastRead['ayatNumber'] > 0 ? '${gctrl.perAyatLastRead['ayatNumber']}' : '-'}",
                                                   textAlign: TextAlign.start,
                                                   style: context
                                                       .textTheme.titleSmall
@@ -181,7 +182,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                   ['translation']['id'],
                                               hasRightContent: true,
                                               showIcon: IconPosition.left,
-                                              activeColor: ctrl.lastRead[
+                                              activeColor: gctrl.perAyatLastRead[
                                                           'suratName'] ==
                                                       item['name'][
                                                               'transliteration']
@@ -263,12 +264,18 @@ class ListAyatQuranPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(ListAyatQuranController());
-    print(ctrl.list.length);
-
+    final gctrl = Get.find<MainController>();
     return Scaffold(
         backgroundColor: Color(0xFFF5F5F5),
         extendBodyBehindAppBar: false,
         resizeToAvoidBottomInset: false,
-        body: layout(ctrl, context));
+        body: Obx(() => ctrl.isLoadingList.value ? 
+          const Center(
+            child: CircularProgressIndicator() 
+          ) 
+          : 
+          layout(ctrl, gctrl, context)
+        )
+      );
   }
 }

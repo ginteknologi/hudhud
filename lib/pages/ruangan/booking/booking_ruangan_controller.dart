@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/ruangan/ruangan_service.dart';
+import 'package:masjid_app/pages/ruangan/ruangan_service.dart';
 
 class BookingRuanganController extends GetxController {
   var isLoadingList = false.obs;

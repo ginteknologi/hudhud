@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/doa/content/doa_content_page.dart';
-import 'package:mesjid_app/pages/doa/detail/detail_doa_page.dart';
-import 'package:mesjid_app/pages/doa/doa_page.dart';
-// import 'package:mesjid_app/pages/doa/detail/detaildoa_page.dart';
+import 'package:masjid_app/pages/doa/content/doa_content_page.dart';
+import 'package:masjid_app/pages/doa/detail/detail_doa_page.dart';
+import 'package:masjid_app/pages/doa/doa_page.dart';
+// import 'package:masjid_app/pages/doa/detail/detaildoa_page.dart';
 
 class PagesDoa {
   static var pages = [

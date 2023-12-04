@@ -3,9 +3,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/dkm/dkm_controller.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/dkm/dkm_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'full_screen_image_dialog.dart'; // Pastikan impor ini sudah disertakan
 
 class DkmPage extends StatelessWidget {
   const DkmPage({super.key});
@@ -120,6 +121,19 @@ class DkmPage extends StatelessWidget {
                             );
                           },
                         ),
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return FullScreenImageDialog(
+                                  imagePath: 'assets/img/struktur.jpeg',
+                                );
+                              },
+                            );
+                          },
+                          child: Text('Lihat lebih lengkap'),
+                        ),                        
                         SizedBox(
                           height: 30,
                         ),

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/routes/sedekah/index.dart';
+import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/transaksi_sedekah_service.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_service.dart';
 
 class MetodeTransaksiController extends GetxController {
   final dataStore = GetStorage();

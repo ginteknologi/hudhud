@@ -1,8 +1,8 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/outlinebutton.dart';
-import 'package:mesjid_app/pages/auth/auth_controller.dart';
+import 'package:masjid_app/components/button/outlinebutton.dart';
+import 'package:masjid_app/pages/auth/auth_controller.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -16,7 +16,7 @@ class AuthPage extends StatelessWidget {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
+        children: [    
           const Text("Assalamu’alaikum \n Warahmatullahi Wabarakatuh",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -35,13 +35,15 @@ class AuthPage extends StatelessWidget {
           ),
           SizedBox(
             height: 30,
-          ),
+          ),          
           Align(
               alignment: Alignment.center,
-              child: SvgPicture.asset(
-                'assets/img/new-logo.svg',
-                width: 170,
+              child: Image.asset('assets/img/new-logo.png',width: 256,
               )),
+              // child: SvgPicture.asset(
+                // 'assets/img/new-logo.png',
+                // width: 170,
+              // )),
           // const Padding(
           //     padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
           //     child: Flexible(
@@ -49,11 +51,25 @@ class AuthPage extends StatelessWidget {
           //           textAlign: TextAlign.center,
           //           style: TextStyle(color: Colors.black54, fontSize: 14)),
           //     )),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: 
+              ButtonOutline(
+                onPressed: () {
+                  ctrl.loginGuest();
+                },
+                radius: 40,
+                showIcon: "left",
+                title: "Guest Login",
+                width: 250,
+                shadow: false,
+              ),  
+          ),
           Container(
               margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
               child: ButtonOutline(
                 onPressed: () {
-                  ctrl.goToHome();
+                  ctrl.loginGoogle();
                 },
                 radius: 40,
                 showIcon: "left",
@@ -64,7 +80,8 @@ class AuthPage extends StatelessWidget {
                 title: "Login dengan Google",
                 width: 250,
                 shadow: false,
-              ))
+              )
+            ),
         ],
       ));
     }

@@ -1,6 +1,6 @@
 {
-    "name": "mesjid_app",
-    "short_name": "mesjid_app",
+    "name": "masjid_app",
+    "short_name": "masjid_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

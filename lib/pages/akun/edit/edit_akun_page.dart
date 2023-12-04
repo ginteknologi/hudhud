@@ -1,13 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/buttonvariant.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/akun/akun_controller.dart';
-import 'package:mesjid_app/pages/akun/edit/edit_akun_controller.dart';
-import 'package:mesjid_app/routes/home/index.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/pages/akun/edit/edit_akun_controller.dart';
+import 'package:masjid_app/routes/home/index.dart';
 
 class EditAkunPage extends StatelessWidget {
   const EditAkunPage({super.key});
@@ -44,10 +41,20 @@ class EditAkunPage extends StatelessWidget {
                                           ],
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(70))),
-                                      child: CircleAvatar(
+                                      child: Obx(() => ctrl.inputFoto.value.length < 1 && !ctrl.isNewfile.value ?
+                                      CircleAvatar(
                                         radius: 70,
-                                        backgroundImage: NetworkImage(
-                                            "https://picsum.photos/1000"),
+                                        backgroundImage: AssetImage("assets/icons/app_icon.png")
+                                      ) 
+                                      : !ctrl.isNewfile.value ? CircleAvatar(
+                                        radius: 70,
+                                        backgroundImage: NetworkImage(ctrl.inputFoto.value),
+                                      ) 
+                                      :
+                                      CircleAvatar(
+                                        radius: 70,
+                                        backgroundImage: FileImage(ctrl.newfile!),
+                                      )
                                       ),
                                     ),
                                     Positioned(
@@ -107,18 +114,19 @@ class EditAkunPage extends StatelessWidget {
                           },
                         ),
                         InputText(
+                          inputType: TextInputType.number,
                           labelPosition: 'outside',
-                          label: "Email",
+                          label: "Nomor Handphone",
                           isFill: false,
                           labelStyle: Theme.of(context).textTheme.bodySmall,
                           margin: EdgeInsets.symmetric(vertical: 5),
-                          placeholder: "Do'a Anda",
+                          placeholder: "08xxxxxxx",
                           placeholderStyle:
                               Theme.of(context).textTheme.bodySmall,
                           inputPadding: const EdgeInsets.all(15),
                           multiText: false,
                           maxLine: 1,
-                          controller: ctrl.emailController,
+                          controller: ctrl.phoneController,
                           onSubmit: (newValue) {},
                           onEditingComplete: () {},
                           onChanged: (newValue) {},

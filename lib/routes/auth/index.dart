@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/auth/auth_page.dart';
-import 'package:mesjid_app/pages/auth/logout/logout_page.dart';
+import 'package:masjid_app/pages/auth/auth_page.dart';
+import 'package:masjid_app/pages/auth/logout/logout_page.dart';
 
 class PagesAuth {
   static var pages = [

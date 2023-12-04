@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:mesjid_app/configs/remote_data.dart';
+import 'package:masjid_app/configs/remote_data.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 

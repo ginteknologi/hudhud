@@ -1,20 +1,19 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/buttonvariant.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/akun/akun_controller.dart';
-import 'package:mesjid_app/pages/home/home_controller.dart';
-import 'package:mesjid_app/routes/akun/index.dart';
-import 'package:mesjid_app/routes/auth/index.dart';
-import 'package:mesjid_app/routes/home/index.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/pages/akun/akun_controller.dart';
+import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/routes/akun/index.dart';
+import 'package:masjid_app/routes/home/index.dart';
 
 class AkunPage extends StatelessWidget {
   const AkunPage({super.key});
 
-  layout(BuildContext context, HomeController hctrl) {
+  layout(BuildContext context, HomeController hctrl, MainController gctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -33,26 +32,33 @@ class AkunPage extends StatelessWidget {
                                   alignment: Alignment.topCenter,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(90),
-                                    child: Image.network(
-                                      "https://picsum.photos/1000",
+                                    child: gctrl.userLogin['photo'] == null ? Image.asset(
+                                      "assets/icons/app_icon.png",
                                       height: 110,
                                       width: 110,
                                       fit: BoxFit.cover,
-                                    ),
+                                    ) 
+                                    :
+                                    Image.network(
+                                      gctrl.userLogin['photo'],
+                                      height: 110,
+                                      width: 110,
+                                      fit: BoxFit.cover,
+                                    ) 
                                   ),
                                 ),
                                 SizedBox(
                                   height: 20,
                                 ),
                                 Text(
-                                  "Muhammad Fahmi Zulmeinidar",
+                                  gctrl.userLogin['name'],
                                   textAlign: TextAlign.center,
                                   style: context.textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  "insanjati@gmail.com",
+                                  gctrl.userLogin['email'],
                                   textAlign: TextAlign.center,
                                   style: context.textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.normal,
@@ -123,7 +129,8 @@ class AkunPage extends StatelessWidget {
                           color: Colors.white,
                           radius: 7,
                           onPressed: () {
-                            Get.offAllNamed(RoutesAuth.logout);
+                            gctrl.logout();
+                            // Get.offAllNamed(RoutesAuth.logout);
                           },
                         )
                       ],
@@ -133,13 +140,14 @@ class AkunPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(AkunController());
+    final gctrl = Get.find<MainController>();
     final hctrl = Get.find<HomeController>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Profile", context: context, elevation: 0),
-      body: layout(context, hctrl),
+      body: layout(context, hctrl, gctrl),
     );
   }
 }

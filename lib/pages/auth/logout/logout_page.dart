@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/button/outlinebutton.dart';
-import 'package:mesjid_app/pages/auth/auth_controller.dart';
-import 'package:mesjid_app/routes/auth/index.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/button/outlinebutton.dart';
+import 'package:masjid_app/pages/auth/auth_controller.dart';
+import 'package:masjid_app/routes/auth/index.dart';
 
 class LogOutPage extends StatelessWidget {
   const LogOutPage({super.key});

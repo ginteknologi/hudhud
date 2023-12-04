@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/kiblat/kiblat_page.dart';
+import 'package:masjid_app/pages/kiblat/kiblat_page.dart';
 
 class PagesKiblat {
   static var pages = [
