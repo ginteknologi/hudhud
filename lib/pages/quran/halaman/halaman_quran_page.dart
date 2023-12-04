@@ -42,7 +42,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                       ctrlHome.selectedIdx.value = 1;
                     },
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Flexible(
                           child: EasyImageViewPager(

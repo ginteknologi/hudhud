@@ -116,6 +116,7 @@ class _EasyImageViewState extends State<EasyImageView> {
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).orientation);
     return Container(
         // color: Colors.amber,
         width: MediaQuery.of(context).size.width,
@@ -130,9 +131,11 @@ class _EasyImageViewState extends State<EasyImageView> {
           child: Image.asset(
             widget.imageProvider,
             width: Get.width,
-            height: Get.height - (Get.height * 0.1),
+            height: MediaQuery.of(context).orientation == Orientation.portrait
+                ? Get.height - (Get.height * 0.1)
+                : null,
             // width: MediaQuery.of(context).size.width - 42,
-            // fit: BoxFit.fitWidth,
+            fit: BoxFit.fitWidth,
           ),
           onInteractionEnd: (scaleEndDetails) {
             double scale = _transformationController.value.getMaxScaleOnAxis();
