@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
-import 'package:mesjid_app/routes/auth/index.dart';
+import 'package:masjid_app/routes/auth/index.dart';
 
 class KiblatController extends GetxController {
   var isLoadingList = true.obs;

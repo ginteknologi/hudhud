@@ -119,7 +119,8 @@ class _EasyImageViewState extends State<EasyImageView> {
     return Container(
         // color: Colors.amber,
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).orientation != Orientation.portrait
+        height:  
+        MediaQuery.of(context).orientation != Orientation.portrait
             ? double.infinity
             : MediaQuery.of(context).size.height,
         child: InteractiveViewer(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/components/button/buttonvariant.dart';
-import 'package:mesjid_app/theme.dart';
-import 'package:mesjid_app/fonts.dart';
+import 'package:masjid_app/components/button/buttonvariant.dart';
+import 'package:masjid_app/theme.dart';
+import 'package:masjid_app/fonts.dart';
 
 class AppUi {
   static loading({

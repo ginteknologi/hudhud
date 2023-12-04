@@ -3,12 +3,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/quran/halaman/halaman_quran_page.dart';
-import 'package:mesjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
-import 'package:mesjid_app/pages/quran/quran_controller.dart';
-import 'package:mesjid_app/theme.dart';
+import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
+import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
+import 'package:masjid_app/pages/quran/quran_controller.dart';
+import 'package:masjid_app/theme.dart';
 
 class QuranPage extends StatelessWidget {
   final TypeViewQuran typeView;

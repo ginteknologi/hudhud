@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/akun/akun_service.dart';
+import 'package:masjid_app/pages/akun/akun_service.dart';
 
 class AkunController extends GetxController{
   

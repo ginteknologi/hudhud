@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_controller.dart';
-import 'package:mesjid_app/theme.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_controller.dart';
+import 'package:masjid_app/theme.dart';
 
 class PaymentTransaksiSedekahPage extends StatelessWidget {
   const PaymentTransaksiSedekahPage({super.key});

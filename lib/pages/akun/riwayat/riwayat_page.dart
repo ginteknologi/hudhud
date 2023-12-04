@@ -3,12 +3,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/iconbutton.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/akun/riwayat/riwayat_controller.dart';
-import 'package:mesjid_app/theme.dart';
+import 'package:masjid_app/components/button/iconbutton.dart';
+import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/akun/riwayat/riwayat_controller.dart';
+import 'package:masjid_app/theme.dart';
 
 class RiwayatPage extends StatelessWidget {
   const RiwayatPage({super.key});
@@ -94,7 +94,7 @@ class RiwayatPage extends StatelessWidget {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: AutoSizeText(
-                                                priceFormat.format(5000000000),
+                                                priceFormat.format(ctrl.totalSedekah),
                                                 textAlign: TextAlign.start,
                                                 style: context
                                                     .textTheme.headlineSmall
@@ -140,7 +140,7 @@ class RiwayatPage extends StatelessWidget {
                                 left: 21, right: 21, top: 21),
                             child: Column(
                               children: [
-                                ListView.builder(
+                                ctrl.listRiwayat.isEmpty ? ListView.builder(
                                   physics: const ClampingScrollPhysics(),
                                   itemCount: ctrl.listRiwayat.length,
                                   shrinkWrap: true,
@@ -195,7 +195,16 @@ class RiwayatPage extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                )
+                                ) 
+                                :
+                                SizedBox(height: 16),
+                                Text(
+                                  'Belum ada sedekah',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  )   
+                                )                             
                               ],
                             )),
                       )

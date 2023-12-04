@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:math' show pi;
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'package:mesjid_app/pages/kiblat/kiblat_error.dart';
+import 'package:masjid_app/pages/kiblat/kiblat_error.dart';
 
 class KiblatCompass extends StatefulWidget {
   const KiblatCompass({Key? key}) : super(key: key);

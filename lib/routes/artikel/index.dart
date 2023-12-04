@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/artikel/artikel_page.dart';
-import 'package:mesjid_app/pages/artikel/detail/detail_artikel_page.dart';
-// import 'package:mesjid_app/pages/artikel/detail/detailartikel_page.dart';
+import 'package:masjid_app/pages/artikel/artikel_page.dart';
+import 'package:masjid_app/pages/artikel/detail/detail_artikel_page.dart';
+// import 'package:masjid_app/pages/artikel/detail/detailartikel_page.dart';
 
 class PagesArtikel {
   static var pages = [

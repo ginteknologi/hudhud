@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/configs/main_controller.dart';
+import 'package:masjid_app/configs/main_controller.dart';
 
 class WaktuSolat extends StatelessWidget {
   const WaktuSolat({super.key});
@@ -60,7 +60,7 @@ class WaktuSolat extends StatelessWidget {
                                 SizedBox(
                                   width: (MediaQuery.of(context).size.width *
                                           0.5) -
-                                      41,
+                                      10,
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
@@ -72,7 +72,7 @@ class WaktuSolat extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             AutoSizeText(
-                                              "Ahad, 9 Muharram 1444",
+                                              ctrl.HijriDate,
                                               maxLines: 1,
                                               style: context
                                                   .textTheme.labelSmall

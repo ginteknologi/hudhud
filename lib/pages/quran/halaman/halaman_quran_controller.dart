@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/home/home_controller.dart';
-// import 'package:mesjid_app/pages/quran/halaman/halaman_quran_page.dart';
-import 'package:mesjid_app/pages/quran/quran_controller.dart';
-import 'package:mesjid_app/pages/quran/quran_service.dart';
+import 'package:masjid_app/pages/home/home_controller.dart';
+// import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
+import 'package:masjid_app/pages/quran/quran_controller.dart';
+import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
 
 class HalamanQuranController extends GetxController
@@ -41,6 +41,10 @@ class HalamanQuranController extends GetxController
       {'id': 4, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/4.jpg'},
       {'id': 5, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/5.jpg'},
       {'id': 6, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/6.jpg'},
+      {'id': 7, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/7.jpg'},
+      {'id': 8, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/8.jpg'},
+      {'id': 9, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/9.jpg'},
+      {'id': 10, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/10.jpg'},
     ];
     return listSurah;
   }

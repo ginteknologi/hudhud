@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/quran/listAyat/detail/detail_quran_page.dart';
-import 'package:mesjid_app/pages/quran/quran_page.dart';
-import 'package:mesjid_app/pages/quran/halaman/halaman_quran_page.dart';
+import 'package:masjid_app/pages/quran/listAyat/detail/detail_quran_page.dart';
+import 'package:masjid_app/pages/quran/quran_page.dart';
+import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
 
 class PagesQuran {
   static var pages = [

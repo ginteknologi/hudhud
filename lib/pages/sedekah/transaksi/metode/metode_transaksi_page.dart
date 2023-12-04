@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/pages/sedekah/transaksi/metode/metode_transaksi_controller.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/pages/sedekah/transaksi/metode/metode_transaksi_controller.dart';
 
 class MetodeTransaksiSedekahPage extends StatefulWidget {
   const MetodeTransaksiSedekahPage({super.key});

@@ -17,7 +17,6 @@ class ListCardAyatWidget extends StatelessWidget {
       this.audioFile,
       this.onTap,
       this.activeColor,
-      required this.bookmark,
       required this.bookmarked});
 
   int id;
@@ -28,7 +27,6 @@ class ListCardAyatWidget extends StatelessWidget {
   String? audioFile;
   bool bookmarked;
   VoidCallback? onTap;
-  RxBool bookmark = false.obs;
   RxBool onplay = false.obs;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration? audioPosition;
@@ -104,10 +102,7 @@ class ListCardAyatWidget extends StatelessWidget {
                                 children: [
                                   InkWell(
                                     onTap: onTap,
-                                    child: SvgPicture.asset(
-                                      bookmark.value
-                                          ? 'assets/icons/active_bookmark.svg'
-                                          : 'assets/icons/bookmark.svg',
+                                    child: SvgPicture.asset( bookmarked ? 'assets/icons/active_bookmark.svg' : 'assets/icons/bookmark.svg',
                                       alignment: Alignment.center,
                                       width: 28,
                                       height: 28,

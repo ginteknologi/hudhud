@@ -44,37 +44,41 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB12LB5PUmpsL0Fluw4qvmuiPHY6wVhz5E',
-    appId: '1:878574490380:web:72e72804d3cfaabfe06f29',
-    messagingSenderId: '878574490380',
-    projectId: 'mesjid-app',
-    authDomain: 'mesjid-app.firebaseapp.com',
-    storageBucket: 'mesjid-app.appspot.com',
+    apiKey: 'AIzaSyDr6AUsW41l3PXITnu9kN73JkyH9ZnLNyE',
+    appId: '1:317872716423:web:7743dedf8c6253c6f91622',
+    messagingSenderId: '317872716423',
+    projectId: 'masjid-app-a497c',
+    authDomain: 'masjid-app-a497c.firebaseapp.com',
+    storageBucket: 'masjid-app-a497c.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAnQBXg_BJozd55FUYe16KG5julGyqpIHE',
-    appId: '1:878574490380:android:4a18ade3d4add018e06f29',
-    messagingSenderId: '878574490380',
-    projectId: 'mesjid-app',
-    storageBucket: 'mesjid-app.appspot.com',
+    apiKey: 'AIzaSyDU7HGo1CM8RQEGEJXamrGSUAyN4qZ3LVE',
+    appId: '1:317872716423:android:8c8755d608577775f91622',
+    messagingSenderId: '317872716423',
+    projectId: 'masjid-app-a497c',
+    storageBucket: 'masjid-app-a497c.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBZomjA_jNzw8ir1Sz45_9s9OAtOAN0pnE',
-    appId: '1:878574490380:ios:e0065d98bd67b99ce06f29',
-    messagingSenderId: '878574490380',
-    projectId: 'mesjid-app',
-    storageBucket: 'mesjid-app.appspot.com',
+    apiKey: 'AIzaSyCjd4kWfd4jxbWmQBfJ8k1KE2oIh6Id4vU',
+    appId: '1:317872716423:ios:7bc9e2af0cc53430f91622',
+    messagingSenderId: '317872716423',
+    projectId: 'masjid-app-a497c',
+    storageBucket: 'masjid-app-a497c.appspot.com',
+    androidClientId: '317872716423-8r51gien9igj81hu3keujjmim5d4ddbp.apps.googleusercontent.com',
+    iosClientId: '317872716423-7mpmhbsnml5uld2go6chp7artnorgof8.apps.googleusercontent.com',
     iosBundleId: 'com.mesjidApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBZomjA_jNzw8ir1Sz45_9s9OAtOAN0pnE',
-    appId: '1:878574490380:ios:e1b2c87e04389113e06f29',
-    messagingSenderId: '878574490380',
-    projectId: 'mesjid-app',
-    storageBucket: 'mesjid-app.appspot.com',
+    apiKey: 'AIzaSyCjd4kWfd4jxbWmQBfJ8k1KE2oIh6Id4vU',
+    appId: '1:317872716423:ios:be3c6e071f091918f91622',
+    messagingSenderId: '317872716423',
+    projectId: 'masjid-app-a497c',
+    storageBucket: 'masjid-app-a497c.appspot.com',
+    androidClientId: '317872716423-8r51gien9igj81hu3keujjmim5d4ddbp.apps.googleusercontent.com',
+    iosClientId: '317872716423-i2pb1k3j0pi4ua751pjii02ur6qvb05i.apps.googleusercontent.com',
     iosBundleId: 'com.mesjidApp.RunnerTests',
   );
 }

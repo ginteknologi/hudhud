@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_service.dart';
+import 'package:masjid_app/pages/sedekah/detail/detailsedekah_service.dart';
 
 class DetailSedekahController extends GetxController
     with GetSingleTickerProviderStateMixin {

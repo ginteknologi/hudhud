@@ -1,35 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/components/layout/custom_bottom_bar.dart';
-import 'package:mesjid_app/pages/quran/quran_page.dart';
-// import 'package:mesjid_app/pages/home/home_service.dart';
+import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
+import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/pages/quran/quran_page.dart';
+// import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:masjid_app/routes/auth/index.dart';
 
-class HomeController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
+  final gctrl = Get.find<MainController>();
   final dataStore = GetStorage();
-  var lastReadPerayat = {}.obs;
   var isLoadingList = true.obs;
   var idxLastReadHalaman = 0.obs;
   var list = {}.obs;
-  Rx<BottomBarEnum> type = BottomBarEnum.alquran.obs;
-  Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perhalaman.obs;
+  // Rx<BottomBarEnum> type = BottomBarEnum.alquran.obs;
+  // Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perhalaman.obs;
 
-  // Rx<BottomBarEnum> type = BottomBarEnum.beranda.obs;
-  // Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perayat.obs;
+  Rx<BottomBarEnum> type = BottomBarEnum.beranda.obs;
+  Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perayat.obs;
 
-  var visible = false.obs;
+  var visible = true.obs;
   late AnimationController animateController;
   var selectedIdx = 0.obs;
 
-  getData() async {
-    lastReadPerayat.value = dataStore.read('perAyatLastRead');
-    isLoadingList.value = false;
-  }
-
   @override
   void onInit() {
-    getData();
+    if (!gctrl.isLogin.value) {
+      Get.offAllNamed(RoutesAuth.root);
+    }
     animateController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 400),

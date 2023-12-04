@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mesjid_app/configs/main_controller.dart';
+import 'package:masjid_app/configs/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mesjid_app/pages/dashboard/dashboard_service.dart';
+import 'package:masjid_app/pages/dashboard/dashboard_service.dart';
 
 class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
@@ -33,97 +33,10 @@ class DashboardController extends GetxController {
     final result = await DashboardService().getList();
     dataTerbaru.value = result['data'];
     lastRead.value = dataStore.read('perAyatLastRead');
-    // dataTerbaru.value = {
-    //   "success": true,
-    //   "message": "Success",
-    //   "data": {
-    //     "artikel": {
-    //       "id": 1,
-    //       "image":
-    //           "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-    //       "judul":
-    //           "Sedekah yang Paling Utama adalah yang Paling Sesuai dengan Kondisi Penerima Sedekah",
-    //       "isi":
-    //           "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
-    //       "tanggal": "2023-10-31T12:59:58.000Z",
-    //       "url": 'artikel/1',
-    //       "createdAt": "2023-10-31T13:00:02.000Z",
-    //       "updatedAt": "2023-10-31T13:00:03.000Z"
-    //     },
-    //     "doa": {
-    //       "id": 1,
-    //       // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-    //       "image":
-    //           "https://harakahdaily.net/wp-content/uploads/2020/03/Doa-Mohon-Perlindungan-Dari-Ilmu-Tak-Bermanfaat-IslamRamah.co_.jpeg",
-    //       "judul": "Doa Bangun Tidur",
-    //       "isi": "Ini isinya",
-    //       "tanggal": "2023-10-31T12:59:58.000Z",
-    //       "url": 'doa/1',
-    //       "createdAt": "2023-10-31T13:00:02.000Z",
-    //       "updatedAt": "2023-10-31T13:00:03.000Z"
-    //     },
-    //     "campaign": {
-    //       "id": 1,
-    //       // "image": "https://storage.nu.or.id/storage/post/16_9/big/gambar-whatsapp-2023-08-21-pukul-175147_1692615363.webp",
-    //       "image":
-    //           "https://masjidannimah.id/wp-content/uploads/2023/10/image-36.png",
-    //       "judul": "Sedekah Mesjid",
-    //       "isi":
-    //           "Disalurkan untuk biaya operasional dan pemeliharaan Masjid An-Ni’ma",
-    //       "tanggal": "2023-10-31T12:59:58.000Z",
-    //       "url": "sedekah/1",
-    //       "createdAt": "2023-10-31T13:00:02.000Z",
-    //       "updatedAt": "2023-10-31T13:00:03.000Z"
-    //     }
-    //   }
-    // };
     var newdata = constructDataTerbaru(dataTerbaru);
-    // constructLatestData(dataTerbaru.value);
     listArtikel = newdata;
     isLoadingList.value = false;
   }
-
-  // getList() async {
-  //   print("===================================== subuh");
-
-  //   return listWaktu = [
-  //     {
-  //       "label": "Subuh",
-  //       "waktu": "12.30",
-  //       "active": false,
-  //       "id": 1,
-  //       "cardImage": "assets/img/card/card_subuh.png"
-  //     },
-  //     {
-  //       "label": "Dzuhur",
-  //       "waktu": "12.30",
-  //       "active": false,
-  //       "id": 2,
-  //       "cardImage": "assets/img/card/card_dzuhur.png"
-  //     },
-  //     {
-  //       "label": "Ashar",
-  //       "waktu": "15.40",
-  //       "active": false,
-  //       "id": 3,
-  //       "cardImage": "assets/img/card/card_ashar.png"
-  //     },
-  //     {
-  //       "label": "Maghrib",
-  //       "waktu": "18.34",
-  //       "active": false,
-  //       "id": 4,
-  //       "cardImage": "assets/img/card/card_maghrib.png"
-  //     },
-  //     {
-  //       "label": "Isya",
-  //       "waktu": "19.32",
-  //       "active": false,
-  //       "id": 5,
-  //       "cardImage": "assets/img/card/card_isya.png"
-  //     }
-  //   ];
-  // }
 
   getMenuHome() async {
     return listMenuHome = [
@@ -225,48 +138,6 @@ class DashboardController extends GetxController {
     ];
   }
 
-  // getListArtikel() async {
-  //   return listArtikel = [
-  //     {
-  //       "title": "Memurnikan Akikah Menebarkan Sunnah",
-  //       "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
-  //       "kategori": "Artikel",
-  //       "image": "assets/icons/image-item1.png",
-  //       "time": "17:40",
-  //       "date": "17 Agustus 2023",
-  //       "url": ""
-  //     },
-  //     {
-  //       "title":
-  //           "Do’a Sebelum Masuk Mesjid اللَّهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ",
-  //       "subtitle": "Ust. Abdullah Sholeh Hadrami",
-  //       "kategori": "Artikel",
-  //       "image": "assets/icons/image-item1.png",
-  //       "time": "17:40",
-  //       "date": "17 Agustus 2023",
-  //       "url": ""
-  //     },
-  //     {
-  //       "title": "Penyaluran Sedekah Untuk Biaya Pengobatan",
-  //       "subtitle": "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH",
-  //       "kategori": "Artikel",
-  //       "image": "assets/icons/image-item1.png",
-  //       "time": "17:40",
-  //       "date": "17 Agustus 2023",
-  //       "url": ""
-  //     },
-  //     {
-  //       "title": '"Sampaikanlah dariku walau hanya satu ayat." (HR. Bukhari)',
-  //       "subtitle": "Ust. Abdullah Sholeh Hadrami",
-  //       "kategori": "Artikel",
-  //       "image": "assets/icons/image-item1.png",
-  //       "time": "17:40",
-  //       "date": "17 Agustus 2023",
-  //       "url": ""
-  //     },
-  //   ];
-  // }
-
   getListKota() {
     return listKota = [
       {
@@ -318,7 +189,13 @@ class DashboardController extends GetxController {
           tgl = Moment.parse("$timeleft")
               .format("dd MMMM yyyy", localeOverride: 'id');
         }
-
+        if (key == 'artikel') {
+          el['kategori'] = 'Artikel';
+        }else if(key == 'campaign'){
+          el['kategori'] = 'Campaign';
+        }else{
+          el['kategori'] = 'Doa';
+        }
         items.add(LatestNews(
           id: el['id'],
           date: tgl,
@@ -326,7 +203,7 @@ class DashboardController extends GetxController {
           title: el['judul'],
           subtitle: el['isi'],
           image: el['image'] ?? 'https://dummyimage.com/600x400/000/fff',
-          kategori: 'test',
+          kategori: el['kategori'],
         ));
       }
       return items;

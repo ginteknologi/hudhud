@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/onboarding/onboard_page.dart';
+import 'package:masjid_app/pages/onboarding/onboard_page.dart';
 
 class PagesOnboard {
   static var pages = [

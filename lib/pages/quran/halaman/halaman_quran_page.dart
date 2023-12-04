@@ -2,19 +2,19 @@
 // import 'package:animate_do/animate_do.dart';
 // import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/button/elevatedbutton.dart';
-// import 'package:mesjid_app/components/input/InputText.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/layout/sliding_app_bar.dart';
-// import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/home/home_controller.dart';
-import 'package:mesjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
-import 'package:mesjid_app/pages/quran/halaman/halaman_quran_controller.dart';
-import 'package:mesjid_app/pages/quran/quran_controller.dart';
-// import 'package:mesjid_app/theme.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+// import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/components/layout/sliding_app_bar.dart';
+// import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
+import 'package:masjid_app/pages/quran/halaman/halaman_quran_controller.dart';
+// import 'package:masjid_app/pages/quran/quran_controller.dart';
+// import 'package:masjid_app/theme.dart';
 
 class HalamanQuranPage extends StatefulWidget {
   const HalamanQuranPage({super.key});

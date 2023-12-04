@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/pages/ruangan/ruangan_controller.dart';
-import 'package:mesjid_app/routes/ruangan/index.dart';
+import 'package:masjid_app/pages/ruangan/ruangan_controller.dart';
+import 'package:masjid_app/routes/ruangan/index.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class RuanganPage extends StatelessWidget {

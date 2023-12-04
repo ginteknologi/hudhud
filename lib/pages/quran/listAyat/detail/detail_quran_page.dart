@@ -1,14 +1,15 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/partial/list_card_ayat.dart';
-import 'package:mesjid_app/pages/quran/listAyat/detail/detail_quran_controller.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/components/partial/list_card_ayat.dart';
+import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/pages/quran/listAyat/detail/detail_quran_controller.dart';
 
 class DetailAyatQuranPage extends StatelessWidget {
   const DetailAyatQuranPage({super.key});
 
-  layout(DetailAyatQuranController ctrl, BuildContext context) {
+  layout(DetailAyatQuranController ctrl, MainController gctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -16,7 +17,7 @@ class DetailAyatQuranPage extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 21),
-                  child: getList(ctrl, context)
+                  child: getList(ctrl, gctrl, context)
                   // Card(
                   //   elevation: 3,
                   //   color: Colors.white,
@@ -365,7 +366,7 @@ class DetailAyatQuranPage extends StatelessWidget {
             )));
   }
 
-  getList(ctrl, context) {
+  getList(DetailAyatQuranController ctrl, MainController gctrl, context) {
     return Obx(() => !ctrl.isLoadingDetail.value
         ? ListView.builder(
             physics: const ClampingScrollPhysics(),
@@ -375,33 +376,22 @@ class DetailAyatQuranPage extends StatelessWidget {
               // Datum model = filteredEvents[index];
               var item = ctrl.listAyat[index];
               return FadeInUp(
-                child: ListCardAyatWidget(
-                  id: item['number']['inSurah'],
-                  ayat: item['text']['arab'],
-                  descEN: item['text']['transliteration']['en'],
-                  descIDN: item['translation']['id'],
-                  nomor: item['number']['inSurah'].toString(),
-                  bookmark: ctrl.listAyatBookmarked[index],
-                  bookmarked: ctrl.listAyatBookmarked[index].value,
-                  audioFile: item['audio']['primary'],
-                  activeColor: ctrl.detailLastRead['ayatNumber'] ==
-                          item['number']['inSurah']
-                      ? Colors.green[50]
-                      : Colors.white,
-                  onTap: () {
-                    ctrl.detailLastRead['ayatNumber'] =
-                        item['number']['inSurah'];
-                    ctrl.detailLastRead['suratName'] =
-                        ctrl.surahName.toString();
-                    ctrl.detailLastRead['id'] = item['number']['inSurah'];
-                    if (ctrl.detailLastRead['ayatNumber'] ==
-                        item['number']['inSurah']) {
-                      ctrl.listAyatBookmarked[index].value =
-                          !ctrl.listAyatBookmarked[index].value;
-                      // ctrl.bookmark();
-                    }
-                  },
-                ),
+                child: Obx(() => ctrl.isLoadingDetail.value ? const Center(child: CircularProgressIndicator(),) : 
+                  ListCardAyatWidget(
+                    id: item['number']['inSurah'],
+                    ayat: item['text']['arab'],
+                    descEN: item['text']['transliteration']['en'],
+                    descIDN: item['translation']['id'],
+                    nomor: item['number']['inSurah'].toString(),
+                    bookmarked: ctrl.surahBookmarked.value ? gctrl.perAyatLastRead['ayatNumber'] == item['number']['inSurah'] ? true : false : false,
+                    audioFile: item['audio']['primary'],
+                    activeColor: ctrl.surahBookmarked.value ? gctrl.perAyatLastRead['ayatNumber'] == item['number']['inSurah'] ? Colors.green[50] : Colors.white : Colors.white,
+                    onTap: () {
+                      ctrl.ayatBookmarked.value = gctrl.perAyatLastRead['ayatNumber'] == item['number']['inSurah'] ? true : false;
+                      ctrl.bookmark(item, index);
+                    },
+                  ),
+                ) 
               );
             },
           )
@@ -413,7 +403,7 @@ class DetailAyatQuranPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(DetailAyatQuranController());
-
+    final gctrl = Get.find<MainController>();
     return Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         extendBodyBehindAppBar: false,
@@ -424,6 +414,6 @@ class DetailAyatQuranPage extends StatelessWidget {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : layout(ctrl, context)));
+            : layout(ctrl, gctrl, context)));
   }
 }

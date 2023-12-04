@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/dkm/dkm_page.dart';
+import 'package:masjid_app/pages/dkm/dkm_page.dart';
 
 class PagesDkm {
   static var pages = [

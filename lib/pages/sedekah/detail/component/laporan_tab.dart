@@ -3,9 +3,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
-import 'package:mesjid_app/theme.dart';
+// import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
+import 'package:masjid_app/theme.dart';
 
 class LaporanTab extends StatelessWidget {
   const LaporanTab({super.key});

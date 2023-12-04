@@ -4,11 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mesjid_app/components/input/InputText.dart';
-import 'package:mesjid_app/components/layout/app_bar_ws.dart';
-import 'package:mesjid_app/components/partial/list_card_ui.dart';
-// import 'package:mesjid_app/components/partial/list_ui.dart';
-import 'package:mesjid_app/pages/doa/detail/detail_doa_controller.dart';
+import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/components/partial/list_card_ui.dart';
+// import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/pages/doa/detail/detail_doa_controller.dart';
 class DetailDoaPage extends StatelessWidget {
   const DetailDoaPage({super.key});
 

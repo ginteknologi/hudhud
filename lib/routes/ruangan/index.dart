@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/ruangan/booking/booking_ruangan_page.dart';
-import 'package:mesjid_app/pages/ruangan/jadwal/jadwal_ruangan_page.dart';
-import 'package:mesjid_app/pages/ruangan/ruangan_page.dart';
+import 'package:masjid_app/pages/ruangan/booking/booking_ruangan_page.dart';
+import 'package:masjid_app/pages/ruangan/jadwal/jadwal_ruangan_page.dart';
+import 'package:masjid_app/pages/ruangan/ruangan_page.dart';
 
 class PagesRuangan {
   static var pages = [

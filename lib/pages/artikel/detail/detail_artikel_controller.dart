@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/artikel/artikel_service.dart';
-import 'package:mesjid_app/routes/artikel/index.dart';
+import 'package:masjid_app/pages/artikel/artikel_service.dart';
+import 'package:masjid_app/routes/artikel/index.dart';
 
 class DetailArtikelController extends GetxController {
   var isLoadingList = true.obs;

@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:mesjid_app/pages/akun/akun_page.dart';
-import 'package:mesjid_app/pages/notifikasi/detail/detail_notifikasi_page.dart';
-import 'package:mesjid_app/pages/notifikasi/invoice/invoice_page.dart';
-import 'package:mesjid_app/pages/notifikasi/notifikasi_page.dart';
+import 'package:masjid_app/pages/akun/akun_page.dart';
+import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_page.dart';
+import 'package:masjid_app/pages/notifikasi/invoice/invoice_page.dart';
+import 'package:masjid_app/pages/notifikasi/notifikasi_page.dart';
 
 class PagesNotifikasi {
   static var pages = [
