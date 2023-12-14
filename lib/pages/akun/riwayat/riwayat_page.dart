@@ -1,14 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/button/iconbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/akun/riwayat/riwayat_controller.dart';
 import 'package:masjid_app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RiwayatPage extends StatelessWidget {
   const RiwayatPage({super.key});
@@ -122,14 +120,14 @@ class RiwayatPage extends StatelessWidget {
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black))),
-                                ButtonIcon(
-                                  bgcolor: Theme.of(context).primaryColor,
-                                  onTap: () {},
-                                  icon: Icon(
-                                    Icons.filter_alt_rounded,
-                                    color: Colors.white,
-                                  ),
-                                )
+                                // ButtonIcon(
+                                //   bgcolor: Theme.of(context).primaryColor,
+                                //   onTap: () {},
+                                //   icon: Icon(
+                                //     Icons.filter_alt_rounded,
+                                //     color: Colors.white,
+                                //   ),
+                                // )
                               ],
                             )
                           ])),
@@ -138,54 +136,45 @@ class RiwayatPage extends StatelessWidget {
                         child: Padding(
                             padding: const EdgeInsets.only(
                                 left: 21, right: 21, top: 21),
-                            child: Column(
+                            child: ctrl.listRiwayat.length > 0 ?
+                             Column(
                               children: [
-                                ctrl.listRiwayat.isEmpty ? ListView.builder(
+                                ListView.builder(
                                   physics: const ClampingScrollPhysics(),
                                   itemCount: ctrl.listRiwayat.length,
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
-                                    // Datum model = filteredEvents[index];
                                     return FadeInUp(
                                       child: ListItemUiWidget(
                                         typeDivider: TypeDivider.dashed,
                                         id: ctrl.listRiwayat[index]['id'],
                                         title: priceFormat.format(ctrl
-                                                .listRiwayat[index]['title']) +
+                                                .listRiwayat[index]['nominal']) +
                                             ',-',
                                         onTap: () {
                                           ctrl.goToDetail(
                                               ctrl.listRiwayat[index]);
                                         },
                                         category: ctrl.listRiwayat[index]
-                                            ['category'],
+                                            ['invoice'],
                                         titleStyle: context
                                             .textTheme.titleMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Color(0xFF189A8C)
-                                                // Theme.of(context)
-                                                //     .primaryColor
                                                 ),
                                         hasRightContent: true,
                                         showIcon: IconPosition.left,
                                         rightContent: [
-                                          Text(ctrl.listRiwayat[index]['type'],
+                                          Text(ctrl.listRiwayat[index]['status'],
                                               textAlign: TextAlign.end,
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.w900,
                                                       color: Color(0xFF189A8C)
-                                                      // Theme.of(context)
-                                                      //     .primaryColor
                                                       )),
-                                          Text(
-                                              ctrl.listRiwayat[index]
-                                                      ['tanggal'] +
-                                                  ", " +
-                                                  ctrl.listRiwayat[index]
-                                                      ['jam'],
+                                          Text( DateFormat('HH:mm, dd MMMM yyyy').format(DateTime.parse(ctrl.listRiwayat[index]['createdAt'])),
                                               textAlign: TextAlign.end,
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
@@ -195,18 +184,18 @@ class RiwayatPage extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                ) 
-                                :
-                                SizedBox(height: 16),
+                                )                            
+                              ],
+                            )
+                            :
                                 Text(
                                   'Belum ada sedekah',
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.grey,
                                   )   
-                                )                             
-                              ],
-                            )),
+                                )  
+                            ),
                       )
                     ]))));
   }
@@ -219,7 +208,7 @@ class RiwayatPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoadingList.value == true ? CircularProgressIndicator() : layout(ctrl, context)),
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Riwayat Sedekah", context: context, elevation: 0),
     );

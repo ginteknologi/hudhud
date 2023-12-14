@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:masjid_app/pages/akun/akun_page.dart';
 import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_page.dart';
 import 'package:masjid_app/pages/notifikasi/invoice/invoice_page.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_page.dart';
@@ -30,5 +29,5 @@ class PagesNotifikasi {
 class RoutesNotifikasi {
   static const String root = '/notifikasi';
   static const String detail = '/notifikasi/detail/:id';
-  static const String invoice = '/notifikasi/detail/:id/invoice';
+  static const String invoice = '/notifikasi/detail/invoice/:invoice';
 }

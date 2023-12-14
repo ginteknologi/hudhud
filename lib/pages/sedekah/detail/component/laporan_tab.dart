@@ -280,7 +280,7 @@ class LaporanTab extends StatelessWidget {
                                     // padding: EdgeInsets.only(left: 24, right: 24),
                                     scrollDirection: Axis.horizontal,
                                     physics: const BouncingScrollPhysics(),
-                                    itemCount: 3,
+                                    itemCount: 1,
                                     separatorBuilder: (context, index) =>
                                         const SizedBox(width: 10),
                                     itemBuilder: (context, index) {
@@ -291,8 +291,8 @@ class LaporanTab extends StatelessWidget {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10))),
                                         child: Image.network(
-                                          // ctrl.listPenyaluran[index]['image'],
-                                          "https://picsum.photos/250",
+                                          ctrl.listPenyaluran[index]['image'],
+                                          // "https://picsum.photos/250",
                                           // width: 250,
                                         ),
                                       ));
@@ -323,181 +323,181 @@ class LaporanTab extends StatelessWidget {
               ],
             ),
           ),
-          Card(
-            borderOnForeground: false,
-            elevation: 0,
-            color: Colors.white,
-            margin: const EdgeInsets.only(top: 20),
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              //set border radius more than 50% of height and width to make circle
-            ),
-            child: Stack(
-              children: [
-                Container(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 10, bottom: 10),
-                    constraints: BoxConstraints.loose(Size.infinite),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.only(top: 20),
-                      padding: EdgeInsets.only(left: 25),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              left: BorderSide(
-                                  color: Theme.of(context).primaryColor))),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              '${DateFormat('dd MMMM yyyy').format(DateTime.parse(ctrl.listPenyaluran[index]['tanggal']))}',
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Column(
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: AutoSizeText(
-                                    ctrl.listPenyaluran[index]['judul'],
-                                    style: context.textTheme.titleSmall
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            height: 0),
-                                    maxLines: 4,
-                                  ),
-                                ),
-                                // Card(
-                                //   elevation: 0,
-                                //   color: const Color(0xFFF5F5F5),
-                                //   margin: const EdgeInsets.only(top: 20),
-                                //   clipBehavior: Clip.antiAlias,
-                                //   shape: RoundedRectangleBorder(
-                                //     borderRadius: BorderRadius.circular(15),
-                                //     //set border radius more than 50% of height and width to make circle
-                                //   ),
-                                //   child: Container(
-                                //       width: Get.width,
-                                //       constraints:
-                                //           BoxConstraints.loose(Size.infinite),
-                                //       decoration: const BoxDecoration(
-                                //         gradient: LinearGradient(
-                                //             begin: Alignment.topCenter,
-                                //             end: Alignment.bottomCenter,
-                                //             colors: [
-                                //               Color(0xFF22CDBB),
-                                //               Color(0xFF048C7C)
-                                //             ]),
-                                //       ),
-                                //       child: Padding(
-                                //         padding: EdgeInsets.all(15),
-                                //         child: Column(
-                                //           mainAxisAlignment:
-                                //               MainAxisAlignment.spaceBetween,
-                                //           crossAxisAlignment:
-                                //               CrossAxisAlignment.start,
-                                //           children: [
-                                //             Text(
-                                //               'Dana Tersalurkan',
-                                //               style: context.textTheme.bodySmall
-                                //                   ?.copyWith(
-                                //                       fontWeight:
-                                //                           FontWeight.normal,
-                                //                       color: Colors.white),
-                                //               maxLines: 1,
-                                //             ),
-                                //             AutoSizeText(
-                                //               priceFormat.format(
-                                //                   ctrl.listPenyaluran[index]
-                                //                       ['dana_tersalurkan']),
-                                //               style: context
-                                //                   .textTheme.titleLarge
-                                //                   ?.copyWith(
-                                //                       fontWeight:
-                                //                           FontWeight.w900,
-                                //                       color: Colors.white),
-                                //               maxLines: 1,
-                                //             ),
-                                //           ],
-                                //         ),
-                                //       )), //SizedBox
-                                // ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    ctrl.listPenyaluran[index]['isi'],
-                                    style: context.textTheme.bodySmall
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  height: 151,
-                                  child: ListView.separated(
-                                    // padding: EdgeInsets.only(left: 24, right: 24),
-                                    scrollDirection: Axis.horizontal,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: 3,
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(width: 10),
-                                    itemBuilder: (context, index) {
-                                      return FadeInLeft(
-                                          child: Container(
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        child: Image.network(
-                                          // ctrl.listPenyaluran[index]['image'],
-                                          "https://picsum.photos/250",
-                                          // width: 250,
-                                        ),
-                                      ));
-                                    },
-                                  ),
-                                )
-                                // Image.network(
-                                //   ctrl.listPenyaluran[index]['image'],
-                                //   width: Get.width,
-                                // )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )),
-                Positioned(
-                    top: 30,
-                    left: 3,
-                    child: Container(
-                      width: 15.0,
-                      height: 15.0,
-                      decoration: new BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                    ))
-              ],
-            ),
-          ),
+        //   Card(
+        //     borderOnForeground: false,
+        //     elevation: 0,
+        //     color: Colors.white,
+        //     margin: const EdgeInsets.only(top: 20),
+        //     clipBehavior: Clip.antiAlias,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(5),
+        //       //set border radius more than 50% of height and width to make circle
+        //     ),
+        //     child: Stack(
+        //       children: [
+        //         Container(
+        //             padding: const EdgeInsets.only(
+        //                 left: 10, right: 10, top: 10, bottom: 10),
+        //             constraints: BoxConstraints.loose(Size.infinite),
+        //             decoration: BoxDecoration(
+        //               borderRadius: BorderRadius.circular(5),
+        //             ),
+        //             child: Container(
+        //               margin: EdgeInsets.only(top: 20),
+        //               padding: EdgeInsets.only(left: 25),
+        //               decoration: BoxDecoration(
+        //                   border: Border(
+        //                       left: BorderSide(
+        //                           color: Theme.of(context).primaryColor))),
+        //               child: Column(
+        //                 crossAxisAlignment: CrossAxisAlignment.start,
+        //                 mainAxisSize: MainAxisSize.max,
+        //                 children: [
+        //                   Align(
+        //                     alignment: Alignment.centerLeft,
+        //                     child: Text(
+        //                       '${DateFormat('dd MMMM yyyy').format(DateTime.parse(ctrl.listPenyaluran[index]['tanggal']))}',
+        //                       style: context.textTheme.bodyMedium?.copyWith(
+        //                           fontWeight: FontWeight.bold,
+        //                           color: Theme.of(context).primaryColor),
+        //                     ),
+        //                   ),
+        //                   // Padding(
+        //                   //   padding: const EdgeInsets.only(top: 15),
+        //                   //   child: Column(
+        //                   //     children: [
+        //                   //       // Align(
+        //                   //       //   alignment: Alignment.centerLeft,
+        //                   //       //   child: AutoSizeText(
+        //                   //       //     ctrl.listPenyaluran[index]['judul'],
+        //                   //       //     style: context.textTheme.titleSmall
+        //                   //       //         ?.copyWith(
+        //                   //       //             fontWeight: FontWeight.bold,
+        //                   //       //             color: Colors.black,
+        //                   //       //             height: 0),
+        //                   //       //     maxLines: 4,
+        //                   //       //   ),
+        //                   //       // ),
+        //                   //       // Card(
+        //                   //       //   elevation: 0,
+        //                   //       //   color: const Color(0xFFF5F5F5),
+        //                   //       //   margin: const EdgeInsets.only(top: 20),
+        //                   //       //   clipBehavior: Clip.antiAlias,
+        //                   //       //   shape: RoundedRectangleBorder(
+        //                   //       //     borderRadius: BorderRadius.circular(15),
+        //                   //       //     //set border radius more than 50% of height and width to make circle
+        //                   //       //   ),
+        //                   //       //   child: Container(
+        //                   //       //       width: Get.width,
+        //                   //       //       constraints:
+        //                   //       //           BoxConstraints.loose(Size.infinite),
+        //                   //       //       decoration: const BoxDecoration(
+        //                   //       //         gradient: LinearGradient(
+        //                   //       //             begin: Alignment.topCenter,
+        //                   //       //             end: Alignment.bottomCenter,
+        //                   //       //             colors: [
+        //                   //       //               Color(0xFF22CDBB),
+        //                   //       //               Color(0xFF048C7C)
+        //                   //       //             ]),
+        //                   //       //       ),
+        //                   //       //       child: Padding(
+        //                   //       //         padding: EdgeInsets.all(15),
+        //                   //       //         child: Column(
+        //                   //       //           mainAxisAlignment:
+        //                   //       //               MainAxisAlignment.spaceBetween,
+        //                   //       //           crossAxisAlignment:
+        //                   //       //               CrossAxisAlignment.start,
+        //                   //       //           children: [
+        //                   //       //             Text(
+        //                   //       //               'Dana Tersalurkan',
+        //                   //       //               style: context.textTheme.bodySmall
+        //                   //       //                   ?.copyWith(
+        //                   //       //                       fontWeight:
+        //                   //       //                           FontWeight.normal,
+        //                   //       //                       color: Colors.white),
+        //                   //       //               maxLines: 1,
+        //                   //       //             ),
+        //                   //       //             AutoSizeText(
+        //                   //       //               priceFormat.format(
+        //                   //       //                   ctrl.listPenyaluran[index]
+        //                   //       //                       ['dana_tersalurkan']),
+        //                   //       //               style: context
+        //                   //       //                   .textTheme.titleLarge
+        //                   //       //                   ?.copyWith(
+        //                   //       //                       fontWeight:
+        //                   //       //                           FontWeight.w900,
+        //                   //       //                       color: Colors.white),
+        //                   //       //               maxLines: 1,
+        //                   //       //             ),
+        //                   //       //           ],
+        //                   //       //         ),
+        //                   //       //       )), //SizedBox
+        //                   //       // ),
+        //                   //       // const SizedBox(
+        //                   //       //   height: 10,
+        //                   //       // ),
+        //                   //       // Align(
+        //                   //       //   alignment: Alignment.centerLeft,
+        //                   //       //   child: Text(
+        //                   //       //     ctrl.listPenyaluran[index]['isi'],
+        //                   //       //     style: context.textTheme.bodySmall
+        //                   //       //         ?.copyWith(
+        //                   //       //             fontWeight: FontWeight.w300,
+        //                   //       //             color: Colors.black),
+        //                   //       //   ),
+        //                   //       // ),
+        //                   //       // const SizedBox(
+        //                   //       //   height: 10,
+        //                   //       // ),
+        //                   //       // SizedBox(
+        //                   //       //   height: 151,
+        //                   //       //   child: ListView.separated(
+        //                   //       //     // padding: EdgeInsets.only(left: 24, right: 24),
+        //                   //       //     scrollDirection: Axis.horizontal,
+        //                   //       //     physics: const BouncingScrollPhysics(),
+        //                   //       //     itemCount: 3,
+        //                   //       //     separatorBuilder: (context, index) =>
+        //                   //       //         const SizedBox(width: 10),
+        //                   //       //     itemBuilder: (context, index) {
+        //                   //       //       return FadeInLeft(
+        //                   //       //           child: Container(
+        //                   //       //         clipBehavior: Clip.antiAlias,
+        //                   //       //         decoration: BoxDecoration(
+        //                   //       //             borderRadius: BorderRadius.all(
+        //                   //       //                 Radius.circular(10))),
+        //                   //       //         child: Image.network(
+        //                   //       //           // ctrl.listPenyaluran[index]['image'],
+        //                   //       //           "https://picsum.photos/250",
+        //                   //       //           // width: 250,
+        //                   //       //         ),
+        //                   //       //       ));
+        //                   //       //     },
+        //                   //       //   ),
+        //                   //       // )
+        //                   //       // Image.network(
+        //                   //       //   ctrl.listPenyaluran[index]['image'],
+        //                   //       //   width: Get.width,
+        //                   //       // )
+        //                   //     ],
+        //                   //   ),
+        //                   // )
+        //                 ],
+        //               ),
+        //             )),
+        //         // Positioned(
+        //         //     top: 30,
+        //         //     left: 3,
+        //         //     child: Container(
+        //         //       width: 15.0,
+        //         //       height: 15.0,
+        //         //       decoration: new BoxDecoration(
+        //         //         color: Theme.of(context).primaryColor,
+        //         //         shape: BoxShape.circle,
+        //         //       ),
+        //         //     ))
+        //       ],
+        //     ),
+        //   ),
         ]);
       },
     );

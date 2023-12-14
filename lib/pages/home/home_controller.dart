@@ -24,7 +24,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   var selectedIdx = 0.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     if (!gctrl.isLogin.value) {
       Get.offAllNamed(RoutesAuth.root);
     }

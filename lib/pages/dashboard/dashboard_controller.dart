@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_service.dart';
@@ -217,6 +218,14 @@ class DashboardController extends GetxController {
     latestDoa = item['doa'];
   }
 
+  setFcm() async {
+    final isLogin = dataStore.read('isLogin');
+    if (isLogin.toString() == 'true') {
+      final fcm = dataStore.read('fcmtoken');
+      await HomeService().setToken(fcm);
+      print('done fcm saving');
+    }
+  }
   @override
   void onInit() async {
     getData();
@@ -224,6 +233,7 @@ class DashboardController extends GetxController {
     getKajianLive();
     getAllMenu();
     getListKota();
+    setFcm();
     if (ctrlmain.showPopupInfaq.isTrue) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ctrlmain.showPopup();

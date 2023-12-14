@@ -1,57 +1,26 @@
 import 'package:get/get.dart';
-import 'package:masjid_app/pages/doa/doa_service.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_service.dart';
-import 'package:masjid_app/routes/notifikasi/index.dart';
+import 'dart:convert';
 
 class DetailNotifikasiController extends GetxController {
+  final authStore = GetStorage();
   var isLoadingList = true.obs;
   var list = {}.obs;
   List listNotif = [].obs;
-
+  final id = Get.parameters['id'];
+  var dataUser = {};
   getData() async {
-    final result = await NotifikasiService().getList(page: 0, limit: 10);
+    final result = await NotifikasiService().getDetail(id);
+    result['data']['data'] = jsonDecode(result['data']['data']);
+    print(result['data']['data']['transaksi']['invoice']);
     list.value = result['data'];
+    dataUser = authStore.read('userLogin');
     isLoadingList.value = false;
   }
-
-  getListNotif() async {
-    return listNotif = [
-      {
-        "id": 1,
-        "title": 100000,
-        "category": "INV-00123812",
-        "type": "success",
-        "date": "10/10/2020",
-        "time": "10.10"
-      },
-      {
-        "id": 2,
-        "title": 100000,
-        "category": "INV-00123812",
-        "type": "pending",
-        "date": "10/10/2020",
-        "time": "10.10"
-      },
-      {
-        "id": 3,
-        "title": 100000,
-        "category": "INV-00123812",
-        "type": "cancel",
-        "date": "10/10/2020",
-        "time": "10.10"
-      },
-    ];
-  }
-
-  goToDetail(param) {
-    // print(RoutesSedekah.detail, id: id);
-    Get.toNamed('${RoutesNotifikasi.root}/detail/${param['id']}',
-        arguments: {"selectedNotif": param});
-  }
-
   @override
   void onInit() {
-    getListNotif();
+    getData();
     super.onInit();
   }
 }

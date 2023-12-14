@@ -43,7 +43,7 @@ class HomeService extends GetConnect {
   Future setToken(token) => cekToken(token).then((hasilcek) async {
     final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
     if (hasilcek['data'].length > 0) {
-      var api = '${RemoteData.api}/fcm/${hasilcek['data'][0]['_id']}';
+      var api = '${RemoteData.api}/fcm/${hasilcek['data'][0]['id']}';
       final response = await http.put(
         Uri.parse(api),
         headers: <String, String>{
@@ -56,7 +56,7 @@ class HomeService extends GetConnect {
       );
       return response;
     } else {
-      var api = '${RemoteData.api}/fcm/add';
+      var api = '${RemoteData.api}/fcm';
       final response = await http.post(
         Uri.parse(api),
         headers: <String, String>{

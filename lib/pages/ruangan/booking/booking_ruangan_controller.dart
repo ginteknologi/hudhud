@@ -85,6 +85,7 @@ class BookingRuanganController extends GetxController {
     isLoadingList.value = true;
     var status = {"code": 400, "message": "Mohon cek kembali koneksi anda."};
     try {
+      print(inputTanggal.value);
       var input = {
         "tanggal":inputTanggal.value,
         "jam_mulai":jamMulai.value,

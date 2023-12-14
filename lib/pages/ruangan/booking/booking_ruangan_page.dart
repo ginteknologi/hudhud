@@ -80,7 +80,7 @@ class BookingRuanganPage extends StatelessWidget {
                                     ).then((selectedDate) {
                                       if (selectedDate != null) {
                                         // Format tanggal yang dipilih ke dalam format "dd MMMM yyyy"
-                                        String formattedDate = DateFormat("dd MMMM yyyy").format(selectedDate);
+                                        String formattedDate = DateFormat("yyyy-MM-dd").format(selectedDate);
                                         // Set nilai controller dengan tanggal yang diformat
                                         data['controller'].value = formattedDate;
                                       }

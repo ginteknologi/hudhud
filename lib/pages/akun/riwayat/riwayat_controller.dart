@@ -1,118 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
-import 'package:masjid_app/pages/quran/quran_service.dart';
-import 'package:masjid_app/routes/quran/index.dart';
-
+import 'package:masjid_app/pages/akun/riwayat/riwayat_service.dart';
 class RiwayatController extends GetxController {
+  var dataUser = {};
   var isLoadingList = true.obs;
   var list = {}.obs;
-  List listRiwayat = [].obs;
+  var listRiwayat = [].obs;
   var totalSedekah = 0;
   TextEditingController inputLink = TextEditingController();
   var txtController = TextEditingController();
 
-  getData() async {
-    final result = await QuranService().getList('all');
-    list.value = result['data'];
-    isLoadingList.value = false;
-  }
-
   goToDetail(param) {
     _showPopup();
     // print(RoutesSedekah.detail, id: id);
-    // Get.toNamed('${RoutesQuran.root}/detail/${param['id']}',
-    //     arguments: {"selectedSurah": param});
   }
 
   getRiwayats() async {
-    return listRiwayat = [
-      // {
-      //   "id": 2,
-      //   "title": 100000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 3,
-      //   "title": 100000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Makiah",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 4,
-      //   "title": 120000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 5,
-      //   "title": 1000000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 6,
-      //   "title": 1200000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 7,
-      //   "title": 3000000,
-      //   "subTitle":
-      //       "Pembukaan terus menerus yaaa Pembukaan terus menerus yaaa ",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 8,
-      //   "title": 3000000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 9,
-      //   "title": 3000000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-      // {
-      //   "id": 10,
-      //   "title": 3000000,
-      //   "subTitle": "Pembukaan",
-      //   "category": "INV-00123812",
-      //   "type": "Berhasil",
-      //   "tanggal": "10/10/2020",
-      //   "jam": "10.10"
-      // },
-    ];
+    final result = await RiwayatService().getList();
+    listRiwayat.value = result['data']['history'];
+    totalSedekah = result['data']['total_sedekah'];
+    isLoadingList.value = false;    
   }
 
   void _showPopup() {

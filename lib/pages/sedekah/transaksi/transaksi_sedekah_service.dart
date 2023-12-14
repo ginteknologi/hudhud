@@ -38,6 +38,7 @@ class TransaksiSedekahServices extends GetConnect {
         'pesan': input['pesan'],
         'nominal': input['nominal'],
         'paymentMethod': input['idPayment'],
+        'id_campaign': input['id_campaign'],
         // 'phoneovo': input['phoneovo'],
       }),
     );

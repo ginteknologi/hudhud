@@ -55,7 +55,9 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                       ],
                     ))
               ],
-            )));
+            )
+            )
+            );
   }
 
   bool _visible = false;

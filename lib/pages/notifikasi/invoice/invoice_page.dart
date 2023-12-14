@@ -1,19 +1,15 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_controller.dart';
-import 'package:masjid_app/routes/home/index.dart';
+import 'package:masjid_app/pages/notifikasi/invoice/invoice_controller.dart';
 import 'package:masjid_app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class InvoiceNotifikasiPage extends StatelessWidget {
   const InvoiceNotifikasiPage({super.key});
 
-  layout(BuildContext context, DetailNotifikasiController ctrl) {
+  layout(BuildContext context, InvoiceController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -68,8 +64,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            Text(
-                                              "Lunas",
+                                            Text(ctrl.status_invoice,
                                               style: context
                                                   .textTheme.titleMedium
                                                   ?.copyWith(
@@ -79,7 +74,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                               ),
                                             ),
                                             AutoSizeText(
-                                              "Tanggal: 10 Oktober 2023",
+                                              "Tanggal: ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['updatedAt']))}",
                                               style: context
                                                   .textTheme.labelSmall
                                                   ?.copyWith(
@@ -111,8 +106,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                                 fontWeight: FontWeight.normal,
                                               ),
                                             ),
-                                            Text(
-                                              "Insan Al-Sampurna",
+                                            Text(ctrl.list['data_sedekah']['name'],
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -131,8 +125,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                                 fontWeight: FontWeight.normal,
                                               ),
                                             ),
-                                            Text(
-                                              "Virtual Account Mandiri",
+                                            Text(ctrl.list['paymentSelect']['name'],
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -152,7 +145,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              priceFormat.format(100000),
+                                              priceFormat.format(ctrl.list['nominal']),
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -183,13 +176,13 @@ class InvoiceNotifikasiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailNotifikasiController());
+    final ctrl = Get.put(InvoiceController());
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "", context: context, elevation: 0),
-      body: layout(context, ctrl),
+      body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
     );
   }
 }

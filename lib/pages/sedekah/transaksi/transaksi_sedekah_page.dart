@@ -209,6 +209,27 @@ class TransaksiSedekahPage extends StatelessWidget {
                           ),
                           InputText(
                             enabled: !ctrl.isLogin.value,
+                            controller: ctrl.inputEmail,
+                            labelPosition: "none",
+                            placeholder: "Email",
+                            isFill: true,
+                            placeholderStyle:
+                                Theme.of(context).textTheme.bodyMedium,
+                            inputAction: TextInputAction.next,
+                            onSubmit: (newValue) {
+                              FocusScope.of(context).nextFocus();
+                            },
+                            onEditingComplete: () {},
+                            onChanged: (newValue) {},
+                            validator: (newValue) {
+                              if (newValue!.isEmpty) {
+                                return "Mohon untuk diisi.";
+                              }
+                              return null;
+                            },
+                          ),
+                          InputText(
+                            enabled: !ctrl.isLogin.value,
                             controller: ctrl.inputNama,
                             labelPosition: "none",
                             placeholder: "Nama Lengkap",

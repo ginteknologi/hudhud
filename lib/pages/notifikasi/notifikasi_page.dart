@@ -1,12 +1,12 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_controller.dart';
+import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/theme.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class NotifikasiPage extends StatelessWidget {
   const NotifikasiPage({super.key});
 
@@ -18,47 +18,44 @@ class NotifikasiPage extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 21),
-                child: ctrl.listNotif.length > 0 ? 
+                child: ctrl.list.length > 0 ? 
                 ListView.builder(
                   physics: const ClampingScrollPhysics(),
-                  itemCount: ctrl.listNotif.length,
+                  itemCount: ctrl.list.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    // Datum model = filteredEvents[index];
                     return FadeInUp(
                       child: ListItemUiWidget(
-                        id: ctrl.listNotif[index]['id'],
-                        title:
-                            priceFormat.format(ctrl.listNotif[index]['title']),
+                        id: ctrl.list[index]['id'],
+                        title: ctrl.list[index]['judul'],
                         onTap: () {
-                          ctrl.goToDetail(ctrl.listNotif[index]);
+                          if (ctrl.list[index]['jenis_notifikasi'] == 'transaksi') {
+                            Get.toNamed('${RoutesNotifikasi.root}/detail/${ctrl.list[index]['id']}');
+                          } 
                         },
                         titleStyle: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).primaryColor),
-                        category: ctrl.listNotif[index]['category'],
+                        category: ctrl.list[index]['jenis_notifikasi'],
                         hasRightContent: true,
                         rightContent: [
-                          Text(
-                              ctrl.listNotif[index]['type'] == "success"
-                                  ? "Berhasil"
-                                  : ctrl.listNotif[index]['type'] == "pending"
-                                      ? "Menunggu Pembayaran"
-                                      : "Dibatalkan",
-                              textAlign: TextAlign.end,
-                              style: context.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      ctrl.listNotif[index]['type'] == "success"
-                                          ? Theme.of(context).primaryColor
-                                          : ctrl.listNotif[index]['type'] ==
-                                                  "pending"
-                                              ? Color(0xFFFFA800)
-                                              : Color(0xFFFF0000))),
-                          Text(
-                              ctrl.listNotif[index]['date'] +
-                                  ', ' +
-                                  ctrl.listNotif[index]['time'],
+                          // Text(
+                          //     ctrl.list[index]['type'] == "success"
+                          //         ? "Berhasil"
+                          //         : ctrl.list[index]['type'] == "pending"
+                          //             ? "Menunggu Pembayaran"
+                          //             : "Dibatalkan",
+                          //     textAlign: TextAlign.end,
+                          //     style: context.textTheme.bodySmall?.copyWith(
+                          //         fontWeight: FontWeight.bold,
+                          //         color:
+                          //             ctrl.list[index]['type'] == "success"
+                          //                 ? Theme.of(context).primaryColor
+                          //                 : ctrl.list[index]['type'] ==
+                          //                         "pending"
+                          //                     ? Color(0xFFFFA800)
+                          //                     : Color(0xFFFF0000))),
+                          Text(DateFormat('HH:mm, dd MMMM yyyy').format(DateTime.parse(ctrl.list[index]['createdAt'])),
                               textAlign: TextAlign.end,
                               style: context.textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.normal,
@@ -103,7 +100,7 @@ class NotifikasiPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Notifikasi", context: context, elevation: 0),
-      body: layout(context, ctrl),
+      body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
     );
   }
 }

@@ -267,15 +267,7 @@ class MainController extends GetxController {
       print('gk ada session');
     }
   }
-
-  setFcm() async {
-    if (isLogin.isTrue) {
-      final fcm = dataStore.read('fcm_token');
-      await HomeService().setToken(fcm);
-      print('done fcm saving');
-    }
-  }
-
+  
   updateLokasi(updateLokasi) async {
     dataStore.write('lokasiSaatIni', updateLokasi);
     lokasiSaatIni = updateLokasi;

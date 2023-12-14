@@ -42,7 +42,7 @@ class _EasyImageViewPagerState extends State<EasyImageViewPager> {
       itemCount: widget.imageProviders.length,
       controller: _pageController,
       itemBuilder: (context, index) {
-        final image = widget.imageProviders[index]['image'];
+        final image = "assets/img/quran/" + widget.imageProviders[index]['file'];
         return EasyImageView(
           imageProvider: image,
           onScaleChanged: (scale) {

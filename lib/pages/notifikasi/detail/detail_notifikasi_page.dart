@@ -1,15 +1,13 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_controller.dart';
 import 'package:masjid_app/routes/home/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DetailNotifikasiPage extends StatelessWidget {
   const DetailNotifikasiPage({super.key});
@@ -53,7 +51,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: Text("Insan Al-sampurna",
+                          child: Text(ctrl.dataUser['name'],
                               style: context.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black)
@@ -86,7 +84,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             AutoSizeText(
-                                                "No. Invoice : 101020/xxxx",
+                                                "No. Invoice : " + ctrl.list['data']['transaksi']['invoice'],
                                                 maxLines: 1,
                                                 style: context
                                                     .textTheme.bodyMedium
@@ -94,7 +92,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
                                                 )),
-                                            AutoSizeText("Tanggal : 11/09/2023",
+                                            AutoSizeText("Tanggal : "+ DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['createdAt'])),
                                                 maxLines: 1,
                                                 style: context
                                                     .textTheme.bodyMedium
@@ -238,8 +236,8 @@ class DetailNotifikasiPage extends StatelessWidget {
                             color: Colors.white,
                             radius: 5,
                             onPressed: () {
-                              Get.toNamed(
-                                  '${RoutesNotifikasi.root}/detail/1/invoice');
+                              print(ctrl.list['data']['transaksi']['invoice']);
+                              Get.toNamed('${RoutesNotifikasi.root}/detail/invoice/${ctrl.list['data']['transaksi']['invoice']}');
                             },
                           ),
                         ),
@@ -258,7 +256,7 @@ class DetailNotifikasiPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "", context: context, elevation: 0),
-        body: layout(context, ctrl),
+        body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),

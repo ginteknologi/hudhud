@@ -1,0 +1,3722 @@
+[
+  {
+    "id": 1,
+    "surat": "Al-Fatihah",
+    "hal": 1,
+    "file": "11.jpg"
+  },
+  {
+    "id": 2,
+    "surat": "Al-Baqarah",
+    "hal": 2,
+    "file": "12.jpg"
+  },
+  {
+    "id": 3,
+    "surat": "Al-Baqarah",
+    "hal": 3,
+    "file": "13.jpg"
+  },
+  {
+    "id": 4,
+    "surat": "Al-Baqarah",
+    "hal": 4,
+    "file": "14.jpg"
+  },
+  {
+    "id": 5,
+    "surat": "Al-Baqarah",
+    "hal": 5,
+    "file": "15.jpg"
+  },
+  {
+    "id": 6,
+    "surat": "Al-Baqarah",
+    "hal": 6,
+    "file": "16.jpg"
+  },
+  {
+    "id": 7,
+    "surat": "Al-Baqarah",
+    "hal": 7,
+    "file": "17.jpg"
+  },
+  {
+    "id": 8,
+    "surat": "Al-Baqarah",
+    "hal": 8,
+    "file": "18.jpg"
+  },
+  {
+    "id": 9,
+    "surat": "Al-Baqarah",
+    "hal": 9,
+    "file": "19.jpg"
+  },
+  {
+    "id": 10,
+    "surat": "Al-Baqarah",
+    "hal": 10,
+    "file": "110.jpg"
+  },
+  {
+    "id": 11,
+    "surat": "Al-Baqarah",
+    "hal": 11,
+    "file": "111.jpg"
+  },
+  {
+    "id": 12,
+    "surat": "Al-Baqarah",
+    "hal": 12,
+    "file": "112.jpg"
+  },
+  {
+    "id": 13,
+    "surat": "Al-Baqarah",
+    "hal": 13,
+    "file": "113.jpg"
+  },
+  {
+    "id": 14,
+    "surat": "Al-Baqarah",
+    "hal": 14,
+    "file": "114.jpg"
+  },
+  {
+    "id": 15,
+    "surat": "Al-Baqarah",
+    "hal": 15,
+    "file": "115.jpg"
+  },
+  {
+    "id": 16,
+    "surat": "Al-Baqarah",
+    "hal": 16,
+    "file": "116.jpg"
+  },
+  {
+    "id": 17,
+    "surat": "Al-Baqarah",
+    "hal": 17,
+    "file": "117.jpg"
+  },
+  {
+    "id": 18,
+    "surat": "Al-Baqarah",
+    "hal": 18,
+    "file": "118.jpg"
+  },
+  {
+    "id": 19,
+    "surat": "Al-Baqarah",
+    "hal": 19,
+    "file": "119.jpg"
+  },
+  {
+    "id": 20,
+    "surat": "Al-Baqarah",
+    "hal": 20,
+    "file": "120.jpg"
+  },
+  {
+    "id": 21,
+    "surat": "Al-Baqarah",
+    "hal": 21,
+    "file": "121.jpg"
+  },
+  {
+    "id": 22,
+    "surat": "Al-Baqarah",
+    "hal": 22,
+    "file": "122.jpg"
+  },
+  {
+    "id": 23,
+    "surat": "Al-Baqarah",
+    "hal": 23,
+    "file": "123.jpg"
+  },
+  {
+    "id": 24,
+    "surat": "Al-Baqarah",
+    "hal": 24,
+    "file": "124.jpg"
+  },
+  {
+    "id": 25,
+    "surat": "Al-Baqarah",
+    "hal": 25,
+    "file": "125.jpg"
+  },
+  {
+    "id": 26,
+    "surat": "Al-Baqarah",
+    "hal": 26,
+    "file": "126.jpg"
+  },
+  {
+    "id": 27,
+    "surat": "Al-Baqarah",
+    "hal": 27,
+    "file": "127.jpg"
+  },
+  {
+    "id": 28,
+    "surat": "Al-Baqarah",
+    "hal": 28,
+    "file": "128.jpg"
+  },
+  {
+    "id": 29,
+    "surat": "Al-Baqarah",
+    "hal": 29,
+    "file": "129.jpg"
+  },
+  {
+    "id": 30,
+    "surat": "Al-Baqarah",
+    "hal": 30,
+    "file": "130.jpg"
+  },
+  {
+    "id": 31,
+    "surat": "Al-Baqarah",
+    "hal": 31,
+    "file": "131.jpg"
+  },
+  {
+    "id": 32,
+    "surat": "Al-Baqarah",
+    "hal": 32,
+    "file": "132.jpg"
+  },
+  {
+    "id": 33,
+    "surat": "Al-Baqarah",
+    "hal": 33,
+    "file": "133.jpg"
+  },
+  {
+    "id": 34,
+    "surat": "Al-Baqarah",
+    "hal": 34,
+    "file": "134.jpg"
+  },
+  {
+    "id": 35,
+    "surat": "Al-Baqarah",
+    "hal": 35,
+    "file": "135.jpg"
+  },
+  {
+    "id": 36,
+    "surat": "Al-Baqarah",
+    "hal": 36,
+    "file": "136.jpg"
+  },
+  {
+    "id": 37,
+    "surat": "Al-Baqarah",
+    "hal": 37,
+    "file": "137.jpg"
+  },
+  {
+    "id": 38,
+    "surat": "Al-Baqarah",
+    "hal": 38,
+    "file": "138.jpg"
+  },
+  {
+    "id": 39,
+    "surat": "Al-Baqarah",
+    "hal": 39,
+    "file": "139.jpg"
+  },
+  {
+    "id": 40,
+    "surat": "Al-Baqarah",
+    "hal": 40,
+    "file": "140.jpg"
+  },
+  {
+    "id": 41,
+    "surat": "Al-Baqarah",
+    "hal": 41,
+    "file": "141.jpg"
+  },
+  {
+    "id": 42,
+    "surat": "Al-Baqarah",
+    "hal": 42,
+    "file": "142.jpg"
+  },
+  {
+    "id": 43,
+    "surat": "Al-Baqarah",
+    "hal": 43,
+    "file": "143.jpg"
+  },
+  {
+    "id": 44,
+    "surat": "Al-Baqarah",
+    "hal": 44,
+    "file": "144.jpg"
+  },
+  {
+    "id": 45,
+    "surat": "Al-Baqarah",
+    "hal": 45,
+    "file": "145.jpg"
+  },
+  {
+    "id": 46,
+    "surat": "Al-Baqarah",
+    "hal": 46,
+    "file": "146.jpg"
+  },
+  {
+    "id": 47,
+    "surat": "Al-Baqarah",
+    "hal": 47,
+    "file": "147.jpg"
+  },
+  {
+    "id": 48,
+    "surat": "Al-Baqarah",
+    "hal": 48,
+    "file": "148.jpg"
+  },
+  {
+    "id": 49,
+    "surat": "Al-Baqarah",
+    "hal": 49,
+    "file": "149.jpg"
+  },
+  {
+    "id": 50,
+    "surat": "Ali 'Imran",
+    "hal": 50,
+    "file": "150.jpg"
+  },
+  {
+    "id": 51,
+    "surat": "Ali 'Imran",
+    "hal": 51,
+    "file": "151.jpg"
+  },
+  {
+    "id": 52,
+    "surat": "Ali 'Imran",
+    "hal": 52,
+    "file": "152.jpg"
+  },
+  {
+    "id": 53,
+    "surat": "Ali 'Imran",
+    "hal": 53,
+    "file": "153.jpg"
+  },
+  {
+    "id": 54,
+    "surat": "Ali 'Imran",
+    "hal": 54,
+    "file": "154.jpg"
+  },
+  {
+    "id": 55,
+    "surat": "Ali 'Imran",
+    "hal": 55,
+    "file": "155.jpg"
+  },
+  {
+    "id": 56,
+    "surat": "Ali 'Imran",
+    "hal": 56,
+    "file": "156.jpg"
+  },
+  {
+    "id": 57,
+    "surat": "Ali 'Imran",
+    "hal": 57,
+    "file": "157.jpg"
+  },
+  {
+    "id": 58,
+    "surat": "Ali 'Imran",
+    "hal": 58,
+    "file": "158.jpg"
+  },
+  {
+    "id": 59,
+    "surat": "Ali 'Imran",
+    "hal": 59,
+    "file": "159.jpg"
+  },
+  {
+    "id": 60,
+    "surat": "Ali 'Imran",
+    "hal": 60,
+    "file": "160.jpg"
+  },
+  {
+    "id": 61,
+    "surat": "Ali 'Imran",
+    "hal": 61,
+    "file": "161.jpg"
+  },
+  {
+    "id": 62,
+    "surat": "Ali 'Imran",
+    "hal": 62,
+    "file": "162.jpg"
+  },
+  {
+    "id": 63,
+    "surat": "Ali 'Imran",
+    "hal": 63,
+    "file": "163.jpg"
+  },
+  {
+    "id": 64,
+    "surat": "Ali 'Imran",
+    "hal": 64,
+    "file": "164.jpg"
+  },
+  {
+    "id": 65,
+    "surat": "Ali 'Imran",
+    "hal": 65,
+    "file": "165.jpg"
+  },
+  {
+    "id": 66,
+    "surat": "Ali 'Imran",
+    "hal": 66,
+    "file": "166.jpg"
+  },
+  {
+    "id": 67,
+    "surat": "Ali 'Imran",
+    "hal": 67,
+    "file": "167.jpg"
+  },
+  {
+    "id": 68,
+    "surat": "Ali 'Imran",
+    "hal": 68,
+    "file": "168.jpg"
+  },
+  {
+    "id": 69,
+    "surat": "Ali 'Imran",
+    "hal": 69,
+    "file": "169.jpg"
+  },
+  {
+    "id": 70,
+    "surat": "Ali 'Imran",
+    "hal": 70,
+    "file": "170.jpg"
+  },
+  {
+    "id": 71,
+    "surat": "Ali 'Imran",
+    "hal": 71,
+    "file": "171.jpg"
+  },
+  {
+    "id": 72,
+    "surat": "Ali 'Imran",
+    "hal": 72,
+    "file": "172.jpg"
+  },
+  {
+    "id": 73,
+    "surat": "Ali 'Imran",
+    "hal": 73,
+    "file": "173.jpg"
+  },
+  {
+    "id": 74,
+    "surat": "Ali 'Imran",
+    "hal": 74,
+    "file": "174.jpg"
+  },
+  {
+    "id": 75,
+    "surat": "Ali 'Imran",
+    "hal": 75,
+    "file": "175.jpg"
+  },
+  {
+    "id": 76,
+    "surat": "Ali 'Imran",
+    "hal": 76,
+    "file": "176.jpg"
+  },
+  {
+    "id": 77,
+    "surat": "An-Nisa",
+    "hal": 77,
+    "file": "177.jpg"
+  },
+  {
+    "id": 78,
+    "surat": "An-Nisa",
+    "hal": 78,
+    "file": "178.jpg"
+  },
+  {
+    "id": 79,
+    "surat": "An-Nisa",
+    "hal": 79,
+    "file": "179.jpg"
+  },
+  {
+    "id": 80,
+    "surat": "An-Nisa",
+    "hal": 80,
+    "file": "180.jpg"
+  },
+  {
+    "id": 81,
+    "surat": "An-Nisa",
+    "hal": 81,
+    "file": "181.jpg"
+  },
+  {
+    "id": 82,
+    "surat": "An-Nisa",
+    "hal": 82,
+    "file": "182.jpg"
+  },
+  {
+    "id": 83,
+    "surat": "An-Nisa",
+    "hal": 83,
+    "file": "183.jpg"
+  },
+  {
+    "id": 84,
+    "surat": "An-Nisa",
+    "hal": 84,
+    "file": "184.jpg"
+  },
+  {
+    "id": 85,
+    "surat": "An-Nisa",
+    "hal": 85,
+    "file": "185.jpg"
+  },
+  {
+    "id": 86,
+    "surat": "An-Nisa",
+    "hal": 86,
+    "file": "186.jpg"
+  },
+  {
+    "id": 87,
+    "surat": "An-Nisa",
+    "hal": 87,
+    "file": "187.jpg"
+  },
+  {
+    "id": 88,
+    "surat": "An-Nisa",
+    "hal": 88,
+    "file": "188.jpg"
+  },
+  {
+    "id": 89,
+    "surat": "An-Nisa",
+    "hal": 89,
+    "file": "189.jpg"
+  },
+  {
+    "id": 90,
+    "surat": "An-Nisa",
+    "hal": 90,
+    "file": "190.jpg"
+  },
+  {
+    "id": 91,
+    "surat": "An-Nisa",
+    "hal": 91,
+    "file": "191.jpg"
+  },
+  {
+    "id": 92,
+    "surat": "An-Nisa",
+    "hal": 92,
+    "file": "192.jpg"
+  },
+  {
+    "id": 93,
+    "surat": "An-Nisa",
+    "hal": 93,
+    "file": "193.jpg"
+  },
+  {
+    "id": 94,
+    "surat": "An-Nisa",
+    "hal": 94,
+    "file": "194.jpg"
+  },
+  {
+    "id": 95,
+    "surat": "An-Nisa",
+    "hal": 95,
+    "file": "195.jpg"
+  },
+  {
+    "id": 96,
+    "surat": "An-Nisa",
+    "hal": 96,
+    "file": "196.jpg"
+  },
+  {
+    "id": 97,
+    "surat": "An-Nisa",
+    "hal": 97,
+    "file": "197.jpg"
+  },
+  {
+    "id": 98,
+    "surat": "An-Nisa",
+    "hal": 98,
+    "file": "198.jpg"
+  },
+  {
+    "id": 99,
+    "surat": "An-Nisa",
+    "hal": 99,
+    "file": "199.jpg"
+  },
+  {
+    "id": 100,
+    "surat": "An-Nisa",
+    "hal": 100,
+    "file": "1100.jpg"
+  },
+  {
+    "id": 101,
+    "surat": "An-Nisa",
+    "hal": 101,
+    "file": "1101.jpg"
+  },
+  {
+    "id": 102,
+    "surat": "An-Nisa",
+    "hal": 102,
+    "file": "1102.jpg"
+  },
+  {
+    "id": 103,
+    "surat": "An-Nisa",
+    "hal": 103,
+    "file": "1103.jpg"
+  },
+  {
+    "id": 104,
+    "surat": "An-Nisa",
+    "hal": 104,
+    "file": "1104.jpg"
+  },
+  {
+    "id": 105,
+    "surat": "An-Nisa",
+    "hal": 105,
+    "file": "1105.jpg"
+  },
+  {
+    "id": 106,
+    "surat": "Al-Ma'idah",
+    "hal": 106,
+    "file": "1106.jpg"
+  },
+  {
+    "id": 107,
+    "surat": "Al-Ma'idah",
+    "hal": 107,
+    "file": "1107.jpg"
+  },
+  {
+    "id": 108,
+    "surat": "Al-Ma'idah",
+    "hal": 108,
+    "file": "1108.jpg"
+  },
+  {
+    "id": 109,
+    "surat": "Al-Ma'idah",
+    "hal": 109,
+    "file": "1109.jpg"
+  },
+  {
+    "id": 110,
+    "surat": "Al-Ma'idah",
+    "hal": 110,
+    "file": "1110.jpg"
+  },
+  {
+    "id": 111,
+    "surat": "Al-Ma'idah",
+    "hal": 111,
+    "file": "1111.jpg"
+  },
+  {
+    "id": 112,
+    "surat": "Al-Ma'idah",
+    "hal": 112,
+    "file": "1112.jpg"
+  },
+  {
+    "id": 113,
+    "surat": "Al-Ma'idah",
+    "hal": 113,
+    "file": "1113.jpg"
+  },
+  {
+    "id": 114,
+    "surat": "Al-Ma'idah",
+    "hal": 114,
+    "file": "1114.jpg"
+  },
+  {
+    "id": 115,
+    "surat": "Al-Ma'idah",
+    "hal": 115,
+    "file": "1115.jpg"
+  },
+  {
+    "id": 116,
+    "surat": "Al-Ma'idah",
+    "hal": 116,
+    "file": "1116.jpg"
+  },
+  {
+    "id": 117,
+    "surat": "Al-Ma'idah",
+    "hal": 117,
+    "file": "1117.jpg"
+  },
+  {
+    "id": 118,
+    "surat": "Al-Ma'idah",
+    "hal": 118,
+    "file": "1118.jpg"
+  },
+  {
+    "id": 119,
+    "surat": "Al-Ma'idah",
+    "hal": 119,
+    "file": "1119.jpg"
+  },
+  {
+    "id": 120,
+    "surat": "Al-Ma'idah",
+    "hal": 120,
+    "file": "1120.jpg"
+  },
+  {
+    "id": 121,
+    "surat": "Al-Ma'idah",
+    "hal": 121,
+    "file": "1121.jpg"
+  },
+  {
+    "id": 122,
+    "surat": "Al-Ma'idah",
+    "hal": 122,
+    "file": "1122.jpg"
+  },
+  {
+    "id": 123,
+    "surat": "Al-Ma'idah",
+    "hal": 123,
+    "file": "1123.jpg"
+  },
+  {
+    "id": 124,
+    "surat": "Al-Ma'idah",
+    "hal": 124,
+    "file": "1124.jpg"
+  },
+  {
+    "id": 125,
+    "surat": "Al-Ma'idah",
+    "hal": 125,
+    "file": "1125.jpg"
+  },
+  {
+    "id": 126,
+    "surat": "Al-Ma'idah",
+    "hal": 126,
+    "file": "1126.jpg"
+  },
+  {
+    "id": 127,
+    "surat": "Al-Ma'idah",
+    "hal": 127,
+    "file": "1127.jpg"
+  },
+  {
+    "id": 128,
+    "surat": "Al-An'am",
+    "hal": 128,
+    "file": "1128.jpg"
+  },
+  {
+    "id": 129,
+    "surat": "Al-An'am",
+    "hal": 129,
+    "file": "1129.jpg"
+  },
+  {
+    "id": 130,
+    "surat": "Al-An'am",
+    "hal": 130,
+    "file": "1130.jpg"
+  },
+  {
+    "id": 131,
+    "surat": "Al-An'am",
+    "hal": 131,
+    "file": "1131.jpg"
+  },
+  {
+    "id": 132,
+    "surat": "Al-An'am",
+    "hal": 132,
+    "file": "1132.jpg"
+  },
+  {
+    "id": 133,
+    "surat": "Al-An'am",
+    "hal": 133,
+    "file": "1133.jpg"
+  },
+  {
+    "id": 134,
+    "surat": "Al-An'am",
+    "hal": 134,
+    "file": "1134.jpg"
+  },
+  {
+    "id": 135,
+    "surat": "Al-An'am",
+    "hal": 135,
+    "file": "1135.jpg"
+  },
+  {
+    "id": 136,
+    "surat": "Al-An'am",
+    "hal": 136,
+    "file": "1136.jpg"
+  },
+  {
+    "id": 137,
+    "surat": "Al-An'am",
+    "hal": 137,
+    "file": "1137.jpg"
+  },
+  {
+    "id": 138,
+    "surat": "Al-An'am",
+    "hal": 138,
+    "file": "1138.jpg"
+  },
+  {
+    "id": 139,
+    "surat": "Al-An'am",
+    "hal": 139,
+    "file": "1139.jpg"
+  },
+  {
+    "id": 140,
+    "surat": "Al-An'am",
+    "hal": 140,
+    "file": "1140.jpg"
+  },
+  {
+    "id": 141,
+    "surat": "Al-An'am",
+    "hal": 141,
+    "file": "1141.jpg"
+  },
+  {
+    "id": 142,
+    "surat": "Al-An'am",
+    "hal": 142,
+    "file": "1142.jpg"
+  },
+  {
+    "id": 143,
+    "surat": "Al-An'am",
+    "hal": 143,
+    "file": "1143.jpg"
+  },
+  {
+    "id": 144,
+    "surat": "Al-An'am",
+    "hal": 144,
+    "file": "1144.jpg"
+  },
+  {
+    "id": 145,
+    "surat": "Al-An'am",
+    "hal": 145,
+    "file": "1145.jpg"
+  },
+  {
+    "id": 146,
+    "surat": "Al-An'am",
+    "hal": 146,
+    "file": "1146.jpg"
+  },
+  {
+    "id": 147,
+    "surat": "Al-An'am",
+    "hal": 147,
+    "file": "1147.jpg"
+  },
+  {
+    "id": 148,
+    "surat": "Al-An'am",
+    "hal": 148,
+    "file": "1148.jpg"
+  },
+  {
+    "id": 149,
+    "surat": "Al-An'am",
+    "hal": 149,
+    "file": "1149.jpg"
+  },
+  {
+    "id": 150,
+    "surat": "Al-An'am",
+    "hal": 150,
+    "file": "1150.jpg"
+  },
+  {
+    "id": 151,
+    "surat": "Al-A'raf",
+    "hal": 151,
+    "file": "1151.jpg"
+  },
+  {
+    "id": 152,
+    "surat": "Al-A'raf",
+    "hal": 152,
+    "file": "1152.jpg"
+  },
+  {
+    "id": 153,
+    "surat": "Al-A'raf",
+    "hal": 153,
+    "file": "1153.jpg"
+  },
+  {
+    "id": 154,
+    "surat": "Al-A'raf",
+    "hal": 154,
+    "file": "1154.jpg"
+  },
+  {
+    "id": 155,
+    "surat": "Al-A'raf",
+    "hal": 155,
+    "file": "1155.jpg"
+  },
+  {
+    "id": 156,
+    "surat": "Al-A'raf",
+    "hal": 156,
+    "file": "1156.jpg"
+  },
+  {
+    "id": 157,
+    "surat": "Al-A'raf",
+    "hal": 157,
+    "file": "1157.jpg"
+  },
+  {
+    "id": 158,
+    "surat": "Al-A'raf",
+    "hal": 158,
+    "file": "1158.jpg"
+  },
+  {
+    "id": 159,
+    "surat": "Al-A'raf",
+    "hal": 159,
+    "file": "1159.jpg"
+  },
+  {
+    "id": 160,
+    "surat": "Al-A'raf",
+    "hal": 160,
+    "file": "1160.jpg"
+  },
+  {
+    "id": 161,
+    "surat": "Al-A'raf",
+    "hal": 161,
+    "file": "1161.jpg"
+  },
+  {
+    "id": 162,
+    "surat": "Al-A'raf",
+    "hal": 162,
+    "file": "1162.jpg"
+  },
+  {
+    "id": 163,
+    "surat": "Al-A'raf",
+    "hal": 163,
+    "file": "1163.jpg"
+  },
+  {
+    "id": 164,
+    "surat": "Al-A'raf",
+    "hal": 164,
+    "file": "1164.jpg"
+  },
+  {
+    "id": 165,
+    "surat": "Al-A'raf",
+    "hal": 165,
+    "file": "1165.jpg"
+  },
+  {
+    "id": 166,
+    "surat": "Al-A'raf",
+    "hal": 166,
+    "file": "1166.jpg"
+  },
+  {
+    "id": 167,
+    "surat": "Al-A'raf",
+    "hal": 167,
+    "file": "1167.jpg"
+  },
+  {
+    "id": 168,
+    "surat": "Al-A'raf",
+    "hal": 168,
+    "file": "1168.jpg"
+  },
+  {
+    "id": 169,
+    "surat": "Al-A'raf",
+    "hal": 169,
+    "file": "1169.jpg"
+  },
+  {
+    "id": 170,
+    "surat": "Al-A'raf",
+    "hal": 170,
+    "file": "1170.jpg"
+  },
+  {
+    "id": 171,
+    "surat": "Al-A'raf",
+    "hal": 171,
+    "file": "1171.jpg"
+  },
+  {
+    "id": 172,
+    "surat": "Al-A'raf",
+    "hal": 172,
+    "file": "1172.jpg"
+  },
+  {
+    "id": 173,
+    "surat": "Al-A'raf",
+    "hal": 173,
+    "file": "1173.jpg"
+  },
+  {
+    "id": 174,
+    "surat": "Al-A'raf",
+    "hal": 174,
+    "file": "1174.jpg"
+  },
+  {
+    "id": 175,
+    "surat": "Al-A'raf",
+    "hal": 175,
+    "file": "1175.jpg"
+  },
+  {
+    "id": 176,
+    "surat": "Al-A'raf",
+    "hal": 176,
+    "file": "1176.jpg"
+  },
+  {
+    "id": 177,
+    "surat": "Al-Anfal",
+    "hal": 177,
+    "file": "1177.jpg"
+  },
+  {
+    "id": 178,
+    "surat": "Al-Anfal",
+    "hal": 178,
+    "file": "1178.jpg"
+  },
+  {
+    "id": 179,
+    "surat": "Al-Anfal",
+    "hal": 179,
+    "file": "1179.jpg"
+  },
+  {
+    "id": 180,
+    "surat": "Al-Anfal",
+    "hal": 180,
+    "file": "1180.jpg"
+  },
+  {
+    "id": 181,
+    "surat": "Al-Anfal",
+    "hal": 181,
+    "file": "1181.jpg"
+  },
+  {
+    "id": 182,
+    "surat": "Al-Anfal",
+    "hal": 182,
+    "file": "1182.jpg"
+  },
+  {
+    "id": 183,
+    "surat": "Al-Anfal",
+    "hal": 183,
+    "file": "1183.jpg"
+  },
+  {
+    "id": 184,
+    "surat": "Al-Anfal",
+    "hal": 184,
+    "file": "1184.jpg"
+  },
+  {
+    "id": 185,
+    "surat": "Al-Anfal",
+    "hal": 185,
+    "file": "1185.jpg"
+  },
+  {
+    "id": 186,
+    "surat": "Al-Anfal",
+    "hal": 186,
+    "file": "1186.jpg"
+  },
+  {
+    "id": 187,
+    "surat": "At-Taubah",
+    "hal": 187,
+    "file": "1187.jpg"
+  },
+  {
+    "id": 188,
+    "surat": "At-Taubah",
+    "hal": 188,
+    "file": "1188.jpg"
+  },
+  {
+    "id": 189,
+    "surat": "At-Taubah",
+    "hal": 189,
+    "file": "1189.jpg"
+  },
+  {
+    "id": 190,
+    "surat": "At-Taubah",
+    "hal": 190,
+    "file": "1190.jpg"
+  },
+  {
+    "id": 191,
+    "surat": "At-Taubah",
+    "hal": 191,
+    "file": "1191.jpg"
+  },
+  {
+    "id": 192,
+    "surat": "At-Taubah",
+    "hal": 192,
+    "file": "1192.jpg"
+  },
+  {
+    "id": 193,
+    "surat": "At-Taubah",
+    "hal": 193,
+    "file": "1193.jpg"
+  },
+  {
+    "id": 194,
+    "surat": "At-Taubah",
+    "hal": 194,
+    "file": "1194.jpg"
+  },
+  {
+    "id": 195,
+    "surat": "At-Taubah",
+    "hal": 195,
+    "file": "1195.jpg"
+  },
+  {
+    "id": 196,
+    "surat": "At-Taubah",
+    "hal": 196,
+    "file": "1196.jpg"
+  },
+  {
+    "id": 197,
+    "surat": "At-Taubah",
+    "hal": 197,
+    "file": "1197.jpg"
+  },
+  {
+    "id": 198,
+    "surat": "At-Taubah",
+    "hal": 198,
+    "file": "1198.jpg"
+  },
+  {
+    "id": 199,
+    "surat": "At-Taubah",
+    "hal": 199,
+    "file": "1199.jpg"
+  },
+  {
+    "id": 200,
+    "surat": "At-Taubah",
+    "hal": 200,
+    "file": "1200.jpg"
+  },
+  {
+    "id": 201,
+    "surat": "At-Taubah",
+    "hal": 201,
+    "file": "1201.jpg"
+  },
+  {
+    "id": 202,
+    "surat": "At-Taubah",
+    "hal": 202,
+    "file": "1202.jpg"
+  },
+  {
+    "id": 203,
+    "surat": "At-Taubah",
+    "hal": 203,
+    "file": "1203.jpg"
+  },
+  {
+    "id": 204,
+    "surat": "At-Taubah",
+    "hal": 204,
+    "file": "1204.jpg"
+  },
+  {
+    "id": 205,
+    "surat": "At-Taubah",
+    "hal": 205,
+    "file": "1205.jpg"
+  },
+  {
+    "id": 206,
+    "surat": "At-Taubah",
+    "hal": 206,
+    "file": "1206.jpg"
+  },
+  {
+    "id": 207,
+    "surat": "At-Taubah",
+    "hal": 207,
+    "file": "1207.jpg"
+  },
+  {
+    "id": 208,
+    "surat": "Yunus",
+    "hal": 208,
+    "file": "1208.jpg"
+  },
+  {
+    "id": 209,
+    "surat": "Yunus",
+    "hal": 209,
+    "file": "1209.jpg"
+  },
+  {
+    "id": 210,
+    "surat": "Yunus",
+    "hal": 210,
+    "file": "1210.jpg"
+  },
+  {
+    "id": 211,
+    "surat": "Yunus",
+    "hal": 211,
+    "file": "1211.jpg"
+  },
+  {
+    "id": 212,
+    "surat": "Yunus",
+    "hal": 212,
+    "file": "1212.jpg"
+  },
+  {
+    "id": 213,
+    "surat": "Yunus",
+    "hal": 213,
+    "file": "1213.jpg"
+  },
+  {
+    "id": 214,
+    "surat": "Yunus",
+    "hal": 214,
+    "file": "1214.jpg"
+  },
+  {
+    "id": 215,
+    "surat": "Yunus",
+    "hal": 215,
+    "file": "1215.jpg"
+  },
+  {
+    "id": 216,
+    "surat": "Yunus",
+    "hal": 216,
+    "file": "1216.jpg"
+  },
+  {
+    "id": 217,
+    "surat": "Yunus",
+    "hal": 217,
+    "file": "1217.jpg"
+  },
+  {
+    "id": 218,
+    "surat": "Yunus",
+    "hal": 218,
+    "file": "1218.jpg"
+  },
+  {
+    "id": 219,
+    "surat": "Yunus",
+    "hal": 219,
+    "file": "1219.jpg"
+  },
+  {
+    "id": 220,
+    "surat": "Yunus",
+    "hal": 220,
+    "file": "1220.jpg"
+  },
+  {
+    "id": 221,
+    "surat": "Hud",
+    "hal": 221,
+    "file": "1221.jpg"
+  },
+  {
+    "id": 222,
+    "surat": "Hud",
+    "hal": 222,
+    "file": "1222.jpg"
+  },
+  {
+    "id": 223,
+    "surat": "Hud",
+    "hal": 223,
+    "file": "1223.jpg"
+  },
+  {
+    "id": 224,
+    "surat": "Hud",
+    "hal": 224,
+    "file": "1224.jpg"
+  },
+  {
+    "id": 225,
+    "surat": "Hud",
+    "hal": 225,
+    "file": "1225.jpg"
+  },
+  {
+    "id": 226,
+    "surat": "Hud",
+    "hal": 226,
+    "file": "1226.jpg"
+  },
+  {
+    "id": 227,
+    "surat": "Hud",
+    "hal": 227,
+    "file": "1227.jpg"
+  },
+  {
+    "id": 228,
+    "surat": "Hud",
+    "hal": 228,
+    "file": "1228.jpg"
+  },
+  {
+    "id": 229,
+    "surat": "Hud",
+    "hal": 229,
+    "file": "1229.jpg"
+  },
+  {
+    "id": 230,
+    "surat": "Hud",
+    "hal": 230,
+    "file": "1230.jpg"
+  },
+  {
+    "id": 231,
+    "surat": "Hud",
+    "hal": 231,
+    "file": "1231.jpg"
+  },
+  {
+    "id": 232,
+    "surat": "Hud",
+    "hal": 232,
+    "file": "1232.jpg"
+  },
+  {
+    "id": 233,
+    "surat": "Hud",
+    "hal": 233,
+    "file": "1233.jpg"
+  },
+  {
+    "id": 234,
+    "surat": "Hud",
+    "hal": 234,
+    "file": "1234.jpg"
+  },
+  {
+    "id": 235,
+    "surat": "Yusuf",
+    "hal": 235,
+    "file": "1235.jpg"
+  },
+  {
+    "id": 236,
+    "surat": "Yusuf",
+    "hal": 236,
+    "file": "1236.jpg"
+  },
+  {
+    "id": 237,
+    "surat": "Yusuf",
+    "hal": 237,
+    "file": "1237.jpg"
+  },
+  {
+    "id": 238,
+    "surat": "Yusuf",
+    "hal": 238,
+    "file": "1238.jpg"
+  },
+  {
+    "id": 239,
+    "surat": "Yusuf",
+    "hal": 239,
+    "file": "1239.jpg"
+  },
+  {
+    "id": 240,
+    "surat": "Yusuf",
+    "hal": 240,
+    "file": "1240.jpg"
+  },
+  {
+    "id": 241,
+    "surat": "Yusuf",
+    "hal": 241,
+    "file": "1241.jpg"
+  },
+  {
+    "id": 242,
+    "surat": "Yusuf",
+    "hal": 242,
+    "file": "1242.jpg"
+  },
+  {
+    "id": 243,
+    "surat": "Yusuf",
+    "hal": 243,
+    "file": "1243.jpg"
+  },
+  {
+    "id": 244,
+    "surat": "Yusuf",
+    "hal": 244,
+    "file": "1244.jpg"
+  },
+  {
+    "id": 245,
+    "surat": "Yusuf",
+    "hal": 245,
+    "file": "1245.jpg"
+  },
+  {
+    "id": 246,
+    "surat": "Yusuf",
+    "hal": 246,
+    "file": "1246.jpg"
+  },
+  {
+    "id": 247,
+    "surat": "Yusuf",
+    "hal": 247,
+    "file": "1247.jpg"
+  },
+  {
+    "id": 248,
+    "surat": "Yusuf",
+    "hal": 248,
+    "file": "1248.jpg"
+  },
+  {
+    "id": 249,
+    "surat": "Ar-Ra'd",
+    "hal": 249,
+    "file": "1249.jpg"
+  },
+  {
+    "id": 250,
+    "surat": "Ar-Ra'd",
+    "hal": 250,
+    "file": "1250.jpg"
+  },
+  {
+    "id": 251,
+    "surat": "Ar-Ra'd",
+    "hal": 251,
+    "file": "1251.jpg"
+  },
+  {
+    "id": 252,
+    "surat": "Ar-Ra'd",
+    "hal": 252,
+    "file": "1252.jpg"
+  },
+  {
+    "id": 253,
+    "surat": "Ar-Ra'd",
+    "hal": 253,
+    "file": "1253.jpg"
+  },
+  {
+    "id": 254,
+    "surat": "Ar-Ra'd",
+    "hal": 254,
+    "file": "1254.jpg"
+  },
+  {
+    "id": 255,
+    "surat": "Ibrahim",
+    "hal": 255,
+    "file": "1255.jpg"
+  },
+  {
+    "id": 256,
+    "surat": "Ibrahim",
+    "hal": 256,
+    "file": "1256.jpg"
+  },
+  {
+    "id": 257,
+    "surat": "Ibrahim",
+    "hal": 257,
+    "file": "1257.jpg"
+  },
+  {
+    "id": 258,
+    "surat": "Ibrahim",
+    "hal": 258,
+    "file": "1258.jpg"
+  },
+  {
+    "id": 259,
+    "surat": "Ibrahim",
+    "hal": 259,
+    "file": "1259.jpg"
+  },
+  {
+    "id": 260,
+    "surat": "Ibrahim",
+    "hal": 260,
+    "file": "1260.jpg"
+  },
+  {
+    "id": 261,
+    "surat": "Ibrahim",
+    "hal": 261,
+    "file": "1261.jpg"
+  },
+  {
+    "id": 262,
+    "surat": "Al-Hijr",
+    "hal": 262,
+    "file": "1262.jpg"
+  },
+  {
+    "id": 263,
+    "surat": "Al-Hijr",
+    "hal": 263,
+    "file": "1263.jpg"
+  },
+  {
+    "id": 264,
+    "surat": "Al-Hijr",
+    "hal": 264,
+    "file": "1264.jpg"
+  },
+  {
+    "id": 265,
+    "surat": "Al-Hijr",
+    "hal": 265,
+    "file": "1265.jpg"
+  },
+  {
+    "id": 266,
+    "surat": "Al-Hijr",
+    "hal": 266,
+    "file": "1266.jpg"
+  },
+  {
+    "id": 267,
+    "surat": "An-Nahl",
+    "hal": 267,
+    "file": "1267.jpg"
+  },
+  {
+    "id": 268,
+    "surat": "An-Nahl",
+    "hal": 268,
+    "file": "1268.jpg"
+  },
+  {
+    "id": 269,
+    "surat": "An-Nahl",
+    "hal": 269,
+    "file": "1269.jpg"
+  },
+  {
+    "id": 270,
+    "surat": "An-Nahl",
+    "hal": 270,
+    "file": "1270.jpg"
+  },
+  {
+    "id": 271,
+    "surat": "An-Nahl",
+    "hal": 271,
+    "file": "1271.jpg"
+  },
+  {
+    "id": 272,
+    "surat": "An-Nahl",
+    "hal": 272,
+    "file": "1272.jpg"
+  },
+  {
+    "id": 273,
+    "surat": "An-Nahl",
+    "hal": 273,
+    "file": "1273.jpg"
+  },
+  {
+    "id": 274,
+    "surat": "An-Nahl",
+    "hal": 274,
+    "file": "1274.jpg"
+  },
+  {
+    "id": 275,
+    "surat": "An-Nahl",
+    "hal": 275,
+    "file": "1275.jpg"
+  },
+  {
+    "id": 276,
+    "surat": "An-Nahl",
+    "hal": 276,
+    "file": "1276.jpg"
+  },
+  {
+    "id": 277,
+    "surat": "An-Nahl",
+    "hal": 277,
+    "file": "1277.jpg"
+  },
+  {
+    "id": 278,
+    "surat": "An-Nahl",
+    "hal": 278,
+    "file": "1278.jpg"
+  },
+  {
+    "id": 279,
+    "surat": "An-Nahl",
+    "hal": 279,
+    "file": "1279.jpg"
+  },
+  {
+    "id": 280,
+    "surat": "An-Nahl",
+    "hal": 280,
+    "file": "1280.jpg"
+  },
+  {
+    "id": 281,
+    "surat": "An-Nahl",
+    "hal": 281,
+    "file": "1281.jpg"
+  },
+  {
+    "id": 282,
+    "surat": "Al-Isra",
+    "hal": 282,
+    "file": "1282.jpg"
+  },
+  {
+    "id": 283,
+    "surat": "Al-Isra",
+    "hal": 283,
+    "file": "1283.jpg"
+  },
+  {
+    "id": 284,
+    "surat": "Al-Isra",
+    "hal": 284,
+    "file": "1284.jpg"
+  },
+  {
+    "id": 285,
+    "surat": "Al-Isra",
+    "hal": 285,
+    "file": "1285.jpg"
+  },
+  {
+    "id": 286,
+    "surat": "Al-Isra",
+    "hal": 286,
+    "file": "1286.jpg"
+  },
+  {
+    "id": 287,
+    "surat": "Al-Isra",
+    "hal": 287,
+    "file": "1287.jpg"
+  },
+  {
+    "id": 288,
+    "surat": "Al-Isra",
+    "hal": 288,
+    "file": "1288.jpg"
+  },
+  {
+    "id": 289,
+    "surat": "Al-Isra",
+    "hal": 289,
+    "file": "1289.jpg"
+  },
+  {
+    "id": 290,
+    "surat": "Al-Isra",
+    "hal": 290,
+    "file": "1290.jpg"
+  },
+  {
+    "id": 291,
+    "surat": "Al-Isra",
+    "hal": 291,
+    "file": "1291.jpg"
+  },
+  {
+    "id": 292,
+    "surat": "Al-Isra",
+    "hal": 292,
+    "file": "1292.jpg"
+  },
+  {
+    "id": 293,
+    "surat": "Al-Kahf",
+    "hal": 293,
+    "file": "1293.jpg"
+  },
+  {
+    "id": 294,
+    "surat": "Al-Kahf",
+    "hal": 294,
+    "file": "1294.jpg"
+  },
+  {
+    "id": 295,
+    "surat": "Al-Kahf",
+    "hal": 295,
+    "file": "1295.jpg"
+  },
+  {
+    "id": 296,
+    "surat": "Al-Kahf",
+    "hal": 296,
+    "file": "1296.jpg"
+  },
+  {
+    "id": 297,
+    "surat": "Al-Kahf",
+    "hal": 297,
+    "file": "1297.jpg"
+  },
+  {
+    "id": 298,
+    "surat": "Al-Kahf",
+    "hal": 298,
+    "file": "1298.jpg"
+  },
+  {
+    "id": 299,
+    "surat": "Al-Kahf",
+    "hal": 299,
+    "file": "1299.jpg"
+  },
+  {
+    "id": 300,
+    "surat": "Al-Kahf",
+    "hal": 300,
+    "file": "1300.jpg"
+  },
+  {
+    "id": 301,
+    "surat": "Al-Kahf",
+    "hal": 301,
+    "file": "1301.jpg"
+  },
+  {
+    "id": 302,
+    "surat": "Al-Kahf",
+    "hal": 302,
+    "file": "1302.jpg"
+  },
+  {
+    "id": 303,
+    "surat": "Al-Kahf",
+    "hal": 303,
+    "file": "1303.jpg"
+  },
+  {
+    "id": 304,
+    "surat": "Al-Kahf",
+    "hal": 304,
+    "file": "1304.jpg"
+  },
+  {
+    "id": 305,
+    "surat": "Maryam",
+    "hal": 305,
+    "file": "1305.jpg"
+  },
+  {
+    "id": 306,
+    "surat": "Maryam",
+    "hal": 306,
+    "file": "1306.jpg"
+  },
+  {
+    "id": 307,
+    "surat": "Maryam",
+    "hal": 307,
+    "file": "1307.jpg"
+  },
+  {
+    "id": 308,
+    "surat": "Maryam",
+    "hal": 308,
+    "file": "1308.jpg"
+  },
+  {
+    "id": 309,
+    "surat": "Maryam",
+    "hal": 309,
+    "file": "1309.jpg"
+  },
+  {
+    "id": 310,
+    "surat": "Maryam",
+    "hal": 310,
+    "file": "1310.jpg"
+  },
+  {
+    "id": 311,
+    "surat": "Maryam",
+    "hal": 311,
+    "file": "1311.jpg"
+  },
+  {
+    "id": 312,
+    "surat": "Taha",
+    "hal": 312,
+    "file": "1312.jpg"
+  },
+  {
+    "id": 313,
+    "surat": "Taha",
+    "hal": 313,
+    "file": "1313.jpg"
+  },
+  {
+    "id": 314,
+    "surat": "Taha",
+    "hal": 314,
+    "file": "1314.jpg"
+  },
+  {
+    "id": 315,
+    "surat": "Taha",
+    "hal": 315,
+    "file": "1315.jpg"
+  },
+  {
+    "id": 316,
+    "surat": "Taha",
+    "hal": 316,
+    "file": "1316.jpg"
+  },
+  {
+    "id": 317,
+    "surat": "Taha",
+    "hal": 317,
+    "file": "1317.jpg"
+  },
+  {
+    "id": 318,
+    "surat": "Taha",
+    "hal": 318,
+    "file": "1318.jpg"
+  },
+  {
+    "id": 319,
+    "surat": "Taha",
+    "hal": 319,
+    "file": "1319.jpg"
+  },
+  {
+    "id": 320,
+    "surat": "Taha",
+    "hal": 320,
+    "file": "1320.jpg"
+  },
+  {
+    "id": 321,
+    "surat": "Taha",
+    "hal": 321,
+    "file": "1321.jpg"
+  },
+  {
+    "id": 322,
+    "surat": "Al-Anbiya",
+    "hal": 322,
+    "file": "1322.jpg"
+  },
+  {
+    "id": 323,
+    "surat": "Al-Anbiya",
+    "hal": 323,
+    "file": "1323.jpg"
+  },
+  {
+    "id": 324,
+    "surat": "Al-Anbiya",
+    "hal": 324,
+    "file": "1324.jpg"
+  },
+  {
+    "id": 325,
+    "surat": "Al-Anbiya",
+    "hal": 325,
+    "file": "1325.jpg"
+  },
+  {
+    "id": 326,
+    "surat": "Al-Anbiya",
+    "hal": 326,
+    "file": "1326.jpg"
+  },
+  {
+    "id": 327,
+    "surat": "Al-Anbiya",
+    "hal": 327,
+    "file": "1327.jpg"
+  },
+  {
+    "id": 328,
+    "surat": "Al-Anbiya",
+    "hal": 328,
+    "file": "1328.jpg"
+  },
+  {
+    "id": 329,
+    "surat": "Al-Anbiya",
+    "hal": 329,
+    "file": "1329.jpg"
+  },
+  {
+    "id": 330,
+    "surat": "Al-Anbiya",
+    "hal": 330,
+    "file": "1330.jpg"
+  },
+  {
+    "id": 331,
+    "surat": "Al-Anbiya",
+    "hal": 331,
+    "file": "1331.jpg"
+  },
+  {
+    "id": 332,
+    "surat": "Al-Hajj",
+    "hal": 332,
+    "file": "1332.jpg"
+  },
+  {
+    "id": 333,
+    "surat": "Al-Hajj",
+    "hal": 333,
+    "file": "1333.jpg"
+  },
+  {
+    "id": 334,
+    "surat": "Al-Hajj",
+    "hal": 334,
+    "file": "1334.jpg"
+  },
+  {
+    "id": 335,
+    "surat": "Al-Hajj",
+    "hal": 335,
+    "file": "1335.jpg"
+  },
+  {
+    "id": 336,
+    "surat": "Al-Hajj",
+    "hal": 336,
+    "file": "1336.jpg"
+  },
+  {
+    "id": 337,
+    "surat": "Al-Hajj",
+    "hal": 337,
+    "file": "1337.jpg"
+  },
+  {
+    "id": 338,
+    "surat": "Al-Hajj",
+    "hal": 338,
+    "file": "1338.jpg"
+  },
+  {
+    "id": 339,
+    "surat": "Al-Hajj",
+    "hal": 339,
+    "file": "1339.jpg"
+  },
+  {
+    "id": 340,
+    "surat": "Al-Hajj",
+    "hal": 340,
+    "file": "1340.jpg"
+  },
+  {
+    "id": 341,
+    "surat": "Al-Hajj",
+    "hal": 341,
+    "file": "1341.jpg"
+  },
+  {
+    "id": 342,
+    "surat": "Al-Mu'minun",
+    "hal": 342,
+    "file": "1342.jpg"
+  },
+  {
+    "id": 343,
+    "surat": "Al-Mu'minun",
+    "hal": 343,
+    "file": "1343.jpg"
+  },
+  {
+    "id": 344,
+    "surat": "Al-Mu'minun",
+    "hal": 344,
+    "file": "1344.jpg"
+  },
+  {
+    "id": 345,
+    "surat": "Al-Mu'minun",
+    "hal": 345,
+    "file": "1345.jpg"
+  },
+  {
+    "id": 346,
+    "surat": "Al-Mu'minun",
+    "hal": 346,
+    "file": "1346.jpg"
+  },
+  {
+    "id": 347,
+    "surat": "Al-Mu'minun",
+    "hal": 347,
+    "file": "1347.jpg"
+  },
+  {
+    "id": 348,
+    "surat": "Al-Mu'minun",
+    "hal": 348,
+    "file": "1348.jpg"
+  },
+  {
+    "id": 349,
+    "surat": "Al-Mu'minun",
+    "hal": 349,
+    "file": "1349.jpg"
+  },
+  {
+    "id": 350,
+    "surat": "An-Nur",
+    "hal": 350,
+    "file": "1350.jpg"
+  },
+  {
+    "id": 351,
+    "surat": "An-Nur",
+    "hal": 351,
+    "file": "1351.jpg"
+  },
+  {
+    "id": 352,
+    "surat": "An-Nur",
+    "hal": 352,
+    "file": "1352.jpg"
+  },
+  {
+    "id": 353,
+    "surat": "An-Nur",
+    "hal": 353,
+    "file": "1353.jpg"
+  },
+  {
+    "id": 354,
+    "surat": "An-Nur",
+    "hal": 354,
+    "file": "1354.jpg"
+  },
+  {
+    "id": 355,
+    "surat": "An-Nur",
+    "hal": 355,
+    "file": "1355.jpg"
+  },
+  {
+    "id": 356,
+    "surat": "An-Nur",
+    "hal": 356,
+    "file": "1356.jpg"
+  },
+  {
+    "id": 357,
+    "surat": "An-Nur",
+    "hal": 357,
+    "file": "1357.jpg"
+  },
+  {
+    "id": 358,
+    "surat": "An-Nur",
+    "hal": 358,
+    "file": "1358.jpg"
+  },
+  {
+    "id": 359,
+    "surat": "Al-Furqan",
+    "hal": 359,
+    "file": "1359.jpg"
+  },
+  {
+    "id": 360,
+    "surat": "Al-Furqan",
+    "hal": 360,
+    "file": "1360.jpg"
+  },
+  {
+    "id": 361,
+    "surat": "Al-Furqan",
+    "hal": 361,
+    "file": "1361.jpg"
+  },
+  {
+    "id": 362,
+    "surat": "Al-Furqan",
+    "hal": 362,
+    "file": "1362.jpg"
+  },
+  {
+    "id": 363,
+    "surat": "Al-Furqan",
+    "hal": 363,
+    "file": "1363.jpg"
+  },
+  {
+    "id": 364,
+    "surat": "Al-Furqan",
+    "hal": 364,
+    "file": "1364.jpg"
+  },
+  {
+    "id": 365,
+    "surat": "Al-Furqan",
+    "hal": 365,
+    "file": "1365.jpg"
+  },
+  {
+    "id": 366,
+    "surat": "Al-Furqan",
+    "hal": 366,
+    "file": "1366.jpg"
+  },
+  {
+    "id": 367,
+    "surat": "Asy-Syu'ara",
+    "hal": 367,
+    "file": "1367.jpg"
+  },
+  {
+    "id": 368,
+    "surat": "Asy-Syu'ara",
+    "hal": 368,
+    "file": "1368.jpg"
+  },
+  {
+    "id": 369,
+    "surat": "Asy-Syu'ara",
+    "hal": 369,
+    "file": "1369.jpg"
+  },
+  {
+    "id": 370,
+    "surat": "Asy-Syu'ara",
+    "hal": 370,
+    "file": "1370.jpg"
+  },
+  {
+    "id": 371,
+    "surat": "Asy-Syu'ara",
+    "hal": 371,
+    "file": "1371.jpg"
+  },
+  {
+    "id": 372,
+    "surat": "Asy-Syu'ara",
+    "hal": 372,
+    "file": "1372.jpg"
+  },
+  {
+    "id": 373,
+    "surat": "Asy-Syu'ara",
+    "hal": 373,
+    "file": "1373.jpg"
+  },
+  {
+    "id": 374,
+    "surat": "Asy-Syu'ara",
+    "hal": 374,
+    "file": "1374.jpg"
+  },
+  {
+    "id": 375,
+    "surat": "Asy-Syu'ara",
+    "hal": 375,
+    "file": "1375.jpg"
+  },
+  {
+    "id": 376,
+    "surat": "Asy-Syu'ara",
+    "hal": 376,
+    "file": "1376.jpg"
+  },
+  {
+    "id": 377,
+    "surat": "An-Naml",
+    "hal": 377,
+    "file": "1377.jpg"
+  },
+  {
+    "id": 378,
+    "surat": "An-Naml",
+    "hal": 378,
+    "file": "1378.jpg"
+  },
+  {
+    "id": 379,
+    "surat": "An-Naml",
+    "hal": 379,
+    "file": "1379.jpg"
+  },
+  {
+    "id": 380,
+    "surat": "An-Naml",
+    "hal": 380,
+    "file": "1380.jpg"
+  },
+  {
+    "id": 381,
+    "surat": "An-Naml",
+    "hal": 381,
+    "file": "1381.jpg"
+  },
+  {
+    "id": 382,
+    "surat": "An-Naml",
+    "hal": 382,
+    "file": "1382.jpg"
+  },
+  {
+    "id": 383,
+    "surat": "An-Naml",
+    "hal": 383,
+    "file": "1383.jpg"
+  },
+  {
+    "id": 384,
+    "surat": "An-Naml",
+    "hal": 384,
+    "file": "1384.jpg"
+  },
+  {
+    "id": 385,
+    "surat": "Al-Qasas",
+    "hal": 385,
+    "file": "1385.jpg"
+  },
+  {
+    "id": 386,
+    "surat": "Al-Qasas",
+    "hal": 386,
+    "file": "1386.jpg"
+  },
+  {
+    "id": 387,
+    "surat": "Al-Qasas",
+    "hal": 387,
+    "file": "1387.jpg"
+  },
+  {
+    "id": 388,
+    "surat": "Al-Qasas",
+    "hal": 388,
+    "file": "1388.jpg"
+  },
+  {
+    "id": 389,
+    "surat": "Al-Qasas",
+    "hal": 389,
+    "file": "1389.jpg"
+  },
+  {
+    "id": 390,
+    "surat": "Al-Qasas",
+    "hal": 390,
+    "file": "1390.jpg"
+  },
+  {
+    "id": 391,
+    "surat": "Al-Qasas",
+    "hal": 391,
+    "file": "1391.jpg"
+  },
+  {
+    "id": 392,
+    "surat": "Al-Qasas",
+    "hal": 392,
+    "file": "1392.jpg"
+  },
+  {
+    "id": 393,
+    "surat": "Al-Qasas",
+    "hal": 393,
+    "file": "1393.jpg"
+  },
+  {
+    "id": 394,
+    "surat": "Al-Qasas",
+    "hal": 394,
+    "file": "1394.jpg"
+  },
+  {
+    "id": 395,
+    "surat": "Al-Qasas",
+    "hal": 395,
+    "file": "1395.jpg"
+  },
+  {
+    "id": 396,
+    "surat": "Al-'Ankabut",
+    "hal": 396,
+    "file": "1396.jpg"
+  },
+  {
+    "id": 397,
+    "surat": "Al-'Ankabut",
+    "hal": 397,
+    "file": "1397.jpg"
+  },
+  {
+    "id": 398,
+    "surat": "Al-'Ankabut",
+    "hal": 398,
+    "file": "1398.jpg"
+  },
+  {
+    "id": 399,
+    "surat": "Al-'Ankabut",
+    "hal": 399,
+    "file": "1399.jpg"
+  },
+  {
+    "id": 400,
+    "surat": "Al-'Ankabut",
+    "hal": 400,
+    "file": "1400.jpg"
+  },
+  {
+    "id": 401,
+    "surat": "Al-'Ankabut",
+    "hal": 401,
+    "file": "1401.jpg"
+  },
+  {
+    "id": 402,
+    "surat": "Al-'Ankabut",
+    "hal": 402,
+    "file": "1402.jpg"
+  },
+  {
+    "id": 403,
+    "surat": "Al-'Ankabut",
+    "hal": 403,
+    "file": "1403.jpg"
+  },
+  {
+    "id": 404,
+    "surat": "Ar-Rum",
+    "hal": 404,
+    "file": "1404.jpg"
+  },
+  {
+    "id": 405,
+    "surat": "Ar-Rum",
+    "hal": 405,
+    "file": "1405.jpg"
+  },
+  {
+    "id": 406,
+    "surat": "Ar-Rum",
+    "hal": 406,
+    "file": "1406.jpg"
+  },
+  {
+    "id": 407,
+    "surat": "Ar-Rum",
+    "hal": 407,
+    "file": "1407.jpg"
+  },
+  {
+    "id": 408,
+    "surat": "Ar-Rum",
+    "hal": 408,
+    "file": "1408.jpg"
+  },
+  {
+    "id": 409,
+    "surat": "Ar-Rum",
+    "hal": 409,
+    "file": "1409.jpg"
+  },
+  {
+    "id": 410,
+    "surat": "Ar-Rum",
+    "hal": 410,
+    "file": "1410.jpg"
+  },
+  {
+    "id": 411,
+    "surat": "Luqman",
+    "hal": 411,
+    "file": "1411.jpg"
+  },
+  {
+    "id": 412,
+    "surat": "Luqman",
+    "hal": 412,
+    "file": "1412.jpg"
+  },
+  {
+    "id": 413,
+    "surat": "Luqman",
+    "hal": 413,
+    "file": "1413.jpg"
+  },
+  {
+    "id": 414,
+    "surat": "Luqman",
+    "hal": 414,
+    "file": "1414.jpg"
+  },
+  {
+    "id": 415,
+    "surat": "As-Sajdah",
+    "hal": 415,
+    "file": "1415.jpg"
+  },
+  {
+    "id": 416,
+    "surat": "As-Sajdah",
+    "hal": 416,
+    "file": "1416.jpg"
+  },
+  {
+    "id": 417,
+    "surat": "As-Sajdah",
+    "hal": 417,
+    "file": "1417.jpg"
+  },
+  {
+    "id": 418,
+    "surat": "Al-Ahzab",
+    "hal": 418,
+    "file": "1418.jpg"
+  },
+  {
+    "id": 419,
+    "surat": "Al-Ahzab",
+    "hal": 419,
+    "file": "1419.jpg"
+  },
+  {
+    "id": 420,
+    "surat": "Al-Ahzab",
+    "hal": 420,
+    "file": "1420.jpg"
+  },
+  {
+    "id": 421,
+    "surat": "Al-Ahzab",
+    "hal": 421,
+    "file": "1421.jpg"
+  },
+  {
+    "id": 422,
+    "surat": "Al-Ahzab",
+    "hal": 422,
+    "file": "1422.jpg"
+  },
+  {
+    "id": 423,
+    "surat": "Al-Ahzab",
+    "hal": 423,
+    "file": "1423.jpg"
+  },
+  {
+    "id": 424,
+    "surat": "Al-Ahzab",
+    "hal": 424,
+    "file": "1424.jpg"
+  },
+  {
+    "id": 425,
+    "surat": "Al-Ahzab",
+    "hal": 425,
+    "file": "1425.jpg"
+  },
+  {
+    "id": 426,
+    "surat": "Al-Ahzab",
+    "hal": 426,
+    "file": "1426.jpg"
+  },
+  {
+    "id": 427,
+    "surat": "Al-Ahzab",
+    "hal": 427,
+    "file": "1427.jpg"
+  },
+  {
+    "id": 428,
+    "surat": "Saba",
+    "hal": 428,
+    "file": "1428.jpg"
+  },
+  {
+    "id": 429,
+    "surat": "Saba",
+    "hal": 429,
+    "file": "1429.jpg"
+  },
+  {
+    "id": 430,
+    "surat": "Saba",
+    "hal": 430,
+    "file": "1430.jpg"
+  },
+  {
+    "id": 431,
+    "surat": "Saba",
+    "hal": 431,
+    "file": "1431.jpg"
+  },
+  {
+    "id": 432,
+    "surat": "Saba",
+    "hal": 432,
+    "file": "1432.jpg"
+  },
+  {
+    "id": 433,
+    "surat": "Saba",
+    "hal": 433,
+    "file": "1433.jpg"
+  },
+  {
+    "id": 434,
+    "surat": "Fatir",
+    "hal": 434,
+    "file": "1434.jpg"
+  },
+  {
+    "id": 435,
+    "surat": "Fatir",
+    "hal": 435,
+    "file": "1435.jpg"
+  },
+  {
+    "id": 436,
+    "surat": "Fatir",
+    "hal": 436,
+    "file": "1436.jpg"
+  },
+  {
+    "id": 437,
+    "surat": "Fatir",
+    "hal": 437,
+    "file": "1437.jpg"
+  },
+  {
+    "id": 438,
+    "surat": "Fatir",
+    "hal": 438,
+    "file": "1438.jpg"
+  },
+  {
+    "id": 439,
+    "surat": "Fatir",
+    "hal": 439,
+    "file": "1439.jpg"
+  },
+  {
+    "id": 440,
+    "surat": "Yasin",
+    "hal": 440,
+    "file": "1440.jpg"
+  },
+  {
+    "id": 441,
+    "surat": "Yasin",
+    "hal": 441,
+    "file": "1441.jpg"
+  },
+  {
+    "id": 442,
+    "surat": "Yasin",
+    "hal": 442,
+    "file": "1442.jpg"
+  },
+  {
+    "id": 443,
+    "surat": "Yasin",
+    "hal": 443,
+    "file": "1443.jpg"
+  },
+  {
+    "id": 444,
+    "surat": "Yasin",
+    "hal": 444,
+    "file": "1444.jpg"
+  },
+  {
+    "id": 445,
+    "surat": "Yasin",
+    "hal": 445,
+    "file": "1445.jpg"
+  },
+  {
+    "id": 446,
+    "surat": "As-Saffat",
+    "hal": 446,
+    "file": "1446.jpg"
+  },
+  {
+    "id": 447,
+    "surat": "As-Saffat",
+    "hal": 447,
+    "file": "1447.jpg"
+  },
+  {
+    "id": 448,
+    "surat": "As-Saffat",
+    "hal": 448,
+    "file": "1448.jpg"
+  },
+  {
+    "id": 449,
+    "surat": "As-Saffat",
+    "hal": 449,
+    "file": "1449.jpg"
+  },
+  {
+    "id": 450,
+    "surat": "As-Saffat",
+    "hal": 450,
+    "file": "1450.jpg"
+  },
+  {
+    "id": 451,
+    "surat": "As-Saffat",
+    "hal": 451,
+    "file": "1451.jpg"
+  },
+  {
+    "id": 452,
+    "surat": "As-Saffat",
+    "hal": 452,
+    "file": "1452.jpg"
+  },
+  {
+    "id": 453,
+    "surat": "Sad",
+    "hal": 453,
+    "file": "1453.jpg"
+  },
+  {
+    "id": 454,
+    "surat": "Sad",
+    "hal": 454,
+    "file": "1454.jpg"
+  },
+  {
+    "id": 455,
+    "surat": "Sad",
+    "hal": 455,
+    "file": "1455.jpg"
+  },
+  {
+    "id": 456,
+    "surat": "Sad",
+    "hal": 456,
+    "file": "1456.jpg"
+  },
+  {
+    "id": 457,
+    "surat": "Sad",
+    "hal": 457,
+    "file": "1457.jpg"
+  },
+  {
+    "id": 458,
+    "surat": "Az-Zumar",
+    "hal": 458,
+    "file": "1458.jpg"
+  },
+  {
+    "id": 459,
+    "surat": "Az-Zumar",
+    "hal": 459,
+    "file": "1459.jpg"
+  },
+  {
+    "id": 460,
+    "surat": "Az-Zumar",
+    "hal": 460,
+    "file": "1460.jpg"
+  },
+  {
+    "id": 461,
+    "surat": "Az-Zumar",
+    "hal": 461,
+    "file": "1461.jpg"
+  },
+  {
+    "id": 462,
+    "surat": "Az-Zumar",
+    "hal": 462,
+    "file": "1462.jpg"
+  },
+  {
+    "id": 463,
+    "surat": "Az-Zumar",
+    "hal": 463,
+    "file": "1463.jpg"
+  },
+  {
+    "id": 464,
+    "surat": "Az-Zumar",
+    "hal": 464,
+    "file": "1464.jpg"
+  },
+  {
+    "id": 465,
+    "surat": "Az-Zumar",
+    "hal": 465,
+    "file": "1465.jpg"
+  },
+  {
+    "id": 466,
+    "surat": "Az-Zumar",
+    "hal": 466,
+    "file": "1466.jpg"
+  },
+  {
+    "id": 467,
+    "surat": "Gafir",
+    "hal": 467,
+    "file": "1467.jpg"
+  },
+  {
+    "id": 468,
+    "surat": "Gafir",
+    "hal": 468,
+    "file": "1468.jpg"
+  },
+  {
+    "id": 469,
+    "surat": "Gafir",
+    "hal": 469,
+    "file": "1469.jpg"
+  },
+  {
+    "id": 470,
+    "surat": "Gafir",
+    "hal": 470,
+    "file": "1470.jpg"
+  },
+  {
+    "id": 471,
+    "surat": "Gafir",
+    "hal": 471,
+    "file": "1471.jpg"
+  },
+  {
+    "id": 472,
+    "surat": "Gafir",
+    "hal": 472,
+    "file": "1472.jpg"
+  },
+  {
+    "id": 473,
+    "surat": "Gafir",
+    "hal": 473,
+    "file": "1473.jpg"
+  },
+  {
+    "id": 474,
+    "surat": "Gafir",
+    "hal": 474,
+    "file": "1474.jpg"
+  },
+  {
+    "id": 475,
+    "surat": "Gafir",
+    "hal": 475,
+    "file": "1475.jpg"
+  },
+  {
+    "id": 476,
+    "surat": "Gafir",
+    "hal": 476,
+    "file": "1476.jpg"
+  },
+  {
+    "id": 477,
+    "surat": "Fussilat",
+    "hal": 477,
+    "file": "1477.jpg"
+  },
+  {
+    "id": 478,
+    "surat": "Fussilat",
+    "hal": 478,
+    "file": "1478.jpg"
+  },
+  {
+    "id": 479,
+    "surat": "Fussilat",
+    "hal": 479,
+    "file": "1479.jpg"
+  },
+  {
+    "id": 480,
+    "surat": "Fussilat",
+    "hal": 480,
+    "file": "1480.jpg"
+  },
+  {
+    "id": 481,
+    "surat": "Fussilat",
+    "hal": 481,
+    "file": "1481.jpg"
+  },
+  {
+    "id": 482,
+    "surat": "Fussilat",
+    "hal": 482,
+    "file": "1482.jpg"
+  },
+  {
+    "id": 483,
+    "surat": "Asy-Syura",
+    "hal": 483,
+    "file": "1483.jpg"
+  },
+  {
+    "id": 484,
+    "surat": "Asy-Syura",
+    "hal": 484,
+    "file": "1484.jpg"
+  },
+  {
+    "id": 485,
+    "surat": "Asy-Syura",
+    "hal": 485,
+    "file": "1485.jpg"
+  },
+  {
+    "id": 486,
+    "surat": "Asy-Syura",
+    "hal": 486,
+    "file": "1486.jpg"
+  },
+  {
+    "id": 487,
+    "surat": "Asy-Syura",
+    "hal": 487,
+    "file": "1487.jpg"
+  },
+  {
+    "id": 488,
+    "surat": "Asy-Syura",
+    "hal": 488,
+    "file": "1488.jpg"
+  },
+  {
+    "id": 489,
+    "surat": "Az-Zukhruf",
+    "hal": 489,
+    "file": "1489.jpg"
+  },
+  {
+    "id": 490,
+    "surat": "Az-Zukhruf",
+    "hal": 490,
+    "file": "1490.jpg"
+  },
+  {
+    "id": 491,
+    "surat": "Az-Zukhruf",
+    "hal": 491,
+    "file": "1491.jpg"
+  },
+  {
+    "id": 492,
+    "surat": "Az-Zukhruf",
+    "hal": 492,
+    "file": "1492.jpg"
+  },
+  {
+    "id": 493,
+    "surat": "Az-Zukhruf",
+    "hal": 493,
+    "file": "1493.jpg"
+  },
+  {
+    "id": 494,
+    "surat": "Az-Zukhruf",
+    "hal": 494,
+    "file": "1494.jpg"
+  },
+  {
+    "id": 495,
+    "surat": "Az-Zukhruf",
+    "hal": 495,
+    "file": "1495.jpg"
+  },
+  {
+    "id": 496,
+    "surat": "Ad-Dukhan",
+    "hal": 496,
+    "file": "1496.jpg"
+  },
+  {
+    "id": 497,
+    "surat": "Ad-Dukhan",
+    "hal": 497,
+    "file": "1497.jpg"
+  },
+  {
+    "id": 498,
+    "surat": "Ad-Dukhan",
+    "hal": 498,
+    "file": "1498.jpg"
+  },
+  {
+    "id": 499,
+    "surat": "Al-Jasiyah",
+    "hal": 499,
+    "file": "1499.jpg"
+  },
+  {
+    "id": 500,
+    "surat": "Al-Jasiyah",
+    "hal": 500,
+    "file": "1500.jpg"
+  },
+  {
+    "id": 501,
+    "surat": "Al-Jasiyah",
+    "hal": 501,
+    "file": "1501.jpg"
+  },
+  {
+    "id": 502,
+    "surat": "Al-Ahqaf",
+    "hal": 502,
+    "file": "1502.jpg"
+  },
+  {
+    "id": 503,
+    "surat": "Al-Ahqaf",
+    "hal": 503,
+    "file": "1503.jpg"
+  },
+  {
+    "id": 504,
+    "surat": "Al-Ahqaf",
+    "hal": 504,
+    "file": "1504.jpg"
+  },
+  {
+    "id": 505,
+    "surat": "Al-Ahqaf",
+    "hal": 505,
+    "file": "1505.jpg"
+  },
+  {
+    "id": 506,
+    "surat": "Al-Ahqaf",
+    "hal": 506,
+    "file": "1506.jpg"
+  },
+  {
+    "id": 507,
+    "surat": "Muhammad",
+    "hal": 507,
+    "file": "1507.jpg"
+  },
+  {
+    "id": 508,
+    "surat": "Muhammad",
+    "hal": 508,
+    "file": "1508.jpg"
+  },
+  {
+    "id": 509,
+    "surat": "Muhammad",
+    "hal": 509,
+    "file": "1509.jpg"
+  },
+  {
+    "id": 510,
+    "surat": "Muhammad",
+    "hal": 510,
+    "file": "1510.jpg"
+  },
+  {
+    "id": 511,
+    "surat": "Al-Fath",
+    "hal": 511,
+    "file": "1511.jpg"
+  },
+  {
+    "id": 512,
+    "surat": "Al-Fath",
+    "hal": 512,
+    "file": "1512.jpg"
+  },
+  {
+    "id": 513,
+    "surat": "Al-Fath",
+    "hal": 513,
+    "file": "1513.jpg"
+  },
+  {
+    "id": 514,
+    "surat": "Al-Fath",
+    "hal": 514,
+    "file": "1514.jpg"
+  },
+  {
+    "id": 515,
+    "surat": "Al-Hujurat",
+    "hal": 515,
+    "file": "1515.jpg"
+  },
+  {
+    "id": 516,
+    "surat": "Al-Hujurat",
+    "hal": 516,
+    "file": "1516.jpg"
+  },
+  {
+    "id": 517,
+    "surat": "Al-Hujurat",
+    "hal": 517,
+    "file": "1517.jpg"
+  },
+  {
+    "id": 518,
+    "surat": "Qaf",
+    "hal": 518,
+    "file": "1518.jpg"
+  },
+  {
+    "id": 519,
+    "surat": "Qaf",
+    "hal": 519,
+    "file": "1519.jpg"
+  },
+  {
+    "id": 520,
+    "surat": "Az-Zariyat",
+    "hal": 520,
+    "file": "1520.jpg"
+  },
+  {
+    "id": 521,
+    "surat": "Az-Zariyat",
+    "hal": 521,
+    "file": "1521.jpg"
+  },
+  {
+    "id": 522,
+    "surat": "Az-Zariyat",
+    "hal": 522,
+    "file": "1522.jpg"
+  },
+  {
+    "id": 523,
+    "surat": "At-Tur",
+    "hal": 523,
+    "file": "1523.jpg"
+  },
+  {
+    "id": 524,
+    "surat": "At-Tur",
+    "hal": 524,
+    "file": "1524.jpg"
+  },
+  {
+    "id": 525,
+    "surat": "At-Tur",
+    "hal": 525,
+    "file": "1525.jpg"
+  },
+  {
+    "id": 526,
+    "surat": "An-Najm",
+    "hal": 526,
+    "file": "1526.jpg"
+  },
+  {
+    "id": 527,
+    "surat": "An-Najm",
+    "hal": 527,
+    "file": "1527.jpg"
+  },
+  {
+    "id": 528,
+    "surat": "Al-Qamar",
+    "hal": 528,
+    "file": "1528.jpg"
+  },
+  {
+    "id": 529,
+    "surat": "Al-Qamar",
+    "hal": 529,
+    "file": "1529.jpg"
+  },
+  {
+    "id": 530,
+    "surat": "Al-Qamar",
+    "hal": 530,
+    "file": "1530.jpg"
+  },
+  {
+    "id": 531,
+    "surat": "Ar-Rahman",
+    "hal": 531,
+    "file": "1531.jpg"
+  },
+  {
+    "id": 532,
+    "surat": "Ar-Rahman",
+    "hal": 532,
+    "file": "1532.jpg"
+  },
+  {
+    "id": 533,
+    "surat": "Ar-Rahman",
+    "hal": 533,
+    "file": "1533.jpg"
+  },
+  {
+    "id": 534,
+    "surat": "Al-Waqi'ah",
+    "hal": 534,
+    "file": "1534.jpg"
+  },
+  {
+    "id": 535,
+    "surat": "Al-Waqi'ah",
+    "hal": 535,
+    "file": "1535.jpg"
+  },
+  {
+    "id": 536,
+    "surat": "Al-Waqi'ah",
+    "hal": 536,
+    "file": "1536.jpg"
+  },
+  {
+    "id": 537,
+    "surat": "Al-Hadid",
+    "hal": 537,
+    "file": "1537.jpg"
+  },
+  {
+    "id": 538,
+    "surat": "Al-Hadid",
+    "hal": 538,
+    "file": "1538.jpg"
+  },
+  {
+    "id": 539,
+    "surat": "Al-Hadid",
+    "hal": 539,
+    "file": "1539.jpg"
+  },
+  {
+    "id": 540,
+    "surat": "Al-Hadid",
+    "hal": 540,
+    "file": "1540.jpg"
+  },
+  {
+    "id": 541,
+    "surat": "Al-Hadid",
+    "hal": 541,
+    "file": "1541.jpg"
+  },
+  {
+    "id": 542,
+    "surat": "Al-Mujadalah",
+    "hal": 542,
+    "file": "1542.jpg"
+  },
+  {
+    "id": 543,
+    "surat": "Al-Mujadalah",
+    "hal": 543,
+    "file": "1543.jpg"
+  },
+  {
+    "id": 544,
+    "surat": "Al-Mujadalah",
+    "hal": 544,
+    "file": "1544.jpg"
+  },
+  {
+    "id": 545,
+    "surat": "Al-Hashr",
+    "hal": 545,
+    "file": "1545.jpg"
+  },
+  {
+    "id": 546,
+    "surat": "Al-Hashr",
+    "hal": 546,
+    "file": "1546.jpg"
+  },
+  {
+    "id": 547,
+    "surat": "Al-Hashr",
+    "hal": 547,
+    "file": "1547.jpg"
+  },
+  {
+    "id": 548,
+    "surat": "Al-Hashr",
+    "hal": 548,
+    "file": "1548.jpg"
+  },
+  {
+    "id": 549,
+    "surat": "Al-Mumtahanah",
+    "hal": 549,
+    "file": "1549.jpg"
+  },
+  {
+    "id": 550,
+    "surat": "Al-Mumtahanah",
+    "hal": 550,
+    "file": "1550.jpg"
+  },
+  {
+    "id": 551,
+    "surat": "As-Saff",
+    "hal": 551,
+    "file": "1551.jpg"
+  },
+  {
+    "id": 552,
+    "surat": "As-Saff",
+    "hal": 552,
+    "file": "1552.jpg"
+  },
+  {
+    "id": 553,
+    "surat": "Al-Jumu'ah",
+    "hal": 553,
+    "file": "1553.jpg"
+  },
+  {
+    "id": 554,
+    "surat": "Al-Munafiqun",
+    "hal": 554,
+    "file": "1554.jpg"
+  },
+  {
+    "id": 555,
+    "surat": "Al-Munafiqun",
+    "hal": 555,
+    "file": "1555.jpg"
+  },
+  {
+    "id": 556,
+    "surat": "At-Tagabun",
+    "hal": 556,
+    "file": "1556.jpg"
+  },
+  {
+    "id": 557,
+    "surat": "At-Tagabun",
+    "hal": 557,
+    "file": "1557.jpg"
+  },
+  {
+    "id": 558,
+    "surat": "At-Talaq",
+    "hal": 558,
+    "file": "1558.jpg"
+  },
+  {
+    "id": 559,
+    "surat": "At-Talaq",
+    "hal": 559,
+    "file": "1559.jpg"
+  },
+  {
+    "id": 560,
+    "surat": "At-Tahrim",
+    "hal": 560,
+    "file": "1560.jpg"
+  },
+  {
+    "id": 561,
+    "surat": "At-Tahrim",
+    "hal": 561,
+    "file": "1561.jpg"
+  },
+  {
+    "id": 562,
+    "surat": "Al-Mulk",
+    "hal": 562,
+    "file": "1562.jpg"
+  },
+  {
+    "id": 563,
+    "surat": "Al-Mulk",
+    "hal": 563,
+    "file": "1563.jpg"
+  },
+  {
+    "id": 564,
+    "surat": "Al-Qalam",
+    "hal": 564,
+    "file": "1564.jpg"
+  },
+  {
+    "id": 565,
+    "surat": "Al-Qalam",
+    "hal": 565,
+    "file": "1565.jpg"
+  },
+  {
+    "id": 566,
+    "surat": "Al-Haqqah",
+    "hal": 566,
+    "file": "1566.jpg"
+  },
+  {
+    "id": 567,
+    "surat": "Al-Haqqah",
+    "hal": 567,
+    "file": "1567.jpg"
+  },
+  {
+    "id": 568,
+    "surat": "Al-Ma'arij",
+    "hal": 568,
+    "file": "1568.jpg"
+  },
+  {
+    "id": 569,
+    "surat": "Al-Ma'arij",
+    "hal": 569,
+    "file": "1569.jpg"
+  },
+  {
+    "id": 570,
+    "surat": "Nuh",
+    "hal": 570,
+    "file": "1570.jpg"
+  },
+  {
+    "id": 571,
+    "surat": "Nuh",
+    "hal": 571,
+    "file": "1571.jpg"
+  },
+  {
+    "id": 572,
+    "surat": "Al-Jinn",
+    "hal": 572,
+    "file": "1572.jpg"
+  },
+  {
+    "id": 573,
+    "surat": "Al-Jinn",
+    "hal": 573,
+    "file": "1573.jpg"
+  },
+  {
+    "id": 574,
+    "surat": "Al-Muzzammil",
+    "hal": 574,
+    "file": "1574.jpg"
+  },
+  {
+    "id": 575,
+    "surat": "Al-Muddassir",
+    "hal": 575,
+    "file": "1575.jpg"
+  },
+  {
+    "id": 576,
+    "surat": "Al-Muddassir",
+    "hal": 576,
+    "file": "1576.jpg"
+  },
+  {
+    "id": 577,
+    "surat": "Al-Qiyamah",
+    "hal": 577,
+    "file": "1577.jpg"
+  },
+  {
+    "id": 578,
+    "surat": "Al-Insan",
+    "hal": 578,
+    "file": "1578.jpg"
+  },
+  {
+    "id": 579,
+    "surat": "Al-Insan",
+    "hal": 579,
+    "file": "1579.jpg"
+  },
+  {
+    "id": 580,
+    "surat": "Al-Mursalat",
+    "hal": 580,
+    "file": "1580.jpg"
+  },
+  {
+    "id": 581,
+    "surat": "Al-Mursalat",
+    "hal": 581,
+    "file": "1581.jpg"
+  },
+  {
+    "id": 582,
+    "surat": "An-Naba",
+    "hal": 582,
+    "file": "1582.jpg"
+  },
+  {
+    "id": 583,
+    "surat": "An-Nazi'at",
+    "hal": 583,
+    "file": "1583.jpg"
+  },
+  {
+    "id": 584,
+    "surat": "An-Nazi'at",
+    "hal": 584,
+    "file": "1584.jpg"
+  },
+  {
+    "id": 585,
+    "surat": "Abasa",
+    "hal": 585,
+    "file": "1585.jpg"
+  },
+  {
+    "id": 586,
+    "surat": "At-Takwir",
+    "hal": 586,
+    "file": "1586.jpg"
+  },
+  {
+    "id": 587,
+    "surat": "Al-Infitar",
+    "hal": 587,
+    "file": "1587.jpg"
+  },
+  {
+    "id": 588,
+    "surat": "Al-Mutaffifin",
+    "hal": 587,
+    "file": "1587.jpg"
+  },
+  {
+    "id": 589,
+    "surat": "Al-Mutaffifin",
+    "hal": 588,
+    "file": "1588.jpg"
+  },
+  {
+    "id": 590,
+    "surat": "Al-Insyiqaq",
+    "hal": 589,
+    "file": "1589.jpg"
+  },
+  {
+    "id": 591,
+    "surat": "Al-Buruj",
+    "hal": 590,
+    "file": "1590.jpg"
+  },
+  {
+    "id": 592,
+    "surat": "At-Tariq",
+    "hal": 591,
+    "file": "1591.jpg"
+  },
+  {
+    "id": 593,
+    "surat": "Al-A'la",
+    "hal": 591,
+    "file": "1591.jpg"
+  },
+  {
+    "id": 594,
+    "surat": "Al-Gasyiyah",
+    "hal": 592,
+    "file": "1592.jpg"
+  },
+  {
+    "id": 595,
+    "surat": "Al-Fajr",
+    "hal": 593,
+    "file": "1593.jpg"
+  },
+  {
+    "id": 596,
+    "surat": "Al-Balad",
+    "hal": 594,
+    "file": "1594.jpg"
+  },
+  {
+    "id": 597,
+    "surat": "Asy-Syams",
+    "hal": 595,
+    "file": "1595.jpg"
+  },
+  {
+    "id": 598,
+    "surat": "Al-Lail",
+    "hal": 595,
+    "file": "1595.jpg"
+  },
+  {
+    "id": 599,
+    "surat": "Ad-Duha",
+    "hal": 596,
+    "file": "1596.jpg"
+  },
+  {
+    "id": 600,
+    "surat": "Ash-Sharh",
+    "hal": 596,
+    "file": "1596.jpg"
+  },
+  {
+    "id": 601,
+    "surat": "At-Tin",
+    "hal": 597,
+    "file": "1597.jpg"
+  },
+  {
+    "id": 602,
+    "surat": "Al-Alaq",
+    "hal": 597,
+    "file": "1597.jpg"
+  },
+  {
+    "id": 603,
+    "surat": "Al-Qadr",
+    "hal": 598,
+    "file": "1598.jpg"
+  },
+  {
+    "id": 604,
+    "surat": "Al-Bayyinah",
+    "hal": 598,
+    "file": "1598.jpg"
+  },
+  {
+    "id": 605,
+    "surat": "Az-Zalzalah",
+    "hal": 599,
+    "file": "1599.jpg"
+  },
+  {
+    "id": 606,
+    "surat": "Al-'Adiyat",
+    "hal": 599,
+    "file": "1599.jpg"
+  },
+  {
+    "id": 607,
+    "surat": "Al-Qari'ah",
+    "hal": 600,
+    "file": "1600.jpg"
+  },
+  {
+    "id": 608,
+    "surat": "At-Takasur",
+    "hal": 600,
+    "file": "1600.jpg"
+  },
+  {
+    "id": 609,
+    "surat": "Al-'Asr",
+    "hal": 601,
+    "file": "1601.jpg"
+  },
+  {
+    "id": 610,
+    "surat": "Al-Humazah",
+    "hal": 601,
+    "file": "1601.jpg"
+  },
+  {
+    "id": 611,
+    "surat": "Al-Fil",
+    "hal": 601,
+    "file": "1601.jpg"
+  },
+  {
+    "id": 612,
+    "surat": "Quraisy",
+    "hal": 602,
+    "file": "1602.jpg"
+  },
+  {
+    "id": 613,
+    "surat": "Al-Ma'un",
+    "hal": 602,
+    "file": "1602.jpg"
+  },
+  {
+    "id": 614,
+    "surat": "Al-Kausar",
+    "hal": 602,
+    "file": "1602.jpg"
+  },
+  {
+    "id": 615,
+    "surat": "Al-Kafirun",
+    "hal": 603,
+    "file": "1603.jpg"
+  },
+  {
+    "id": 616,
+    "surat": "An-Nasr",
+    "hal": 603,
+    "file": "1603.jpg"
+  },
+  {
+    "id": 617,
+    "surat": "Al-Lahab",
+    "hal": 603,
+    "file": "1603.jpg"
+  },
+  {
+    "id": 618,
+    "surat": "Al-Ikhlas",
+    "hal": 604,
+    "file": "1604.jpg"
+  },
+  {
+    "id": 619,
+    "surat": "Al-Falaq",
+    "hal": 604,
+    "file": "1604.jpg"
+  },
+  {
+    "id": 620,
+    "surat": "An-Nas",
+    "hal": 604,
+    "file": "1604.jpg"
+  }
+]

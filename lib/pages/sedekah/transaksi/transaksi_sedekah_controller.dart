@@ -82,10 +82,11 @@ class TransactionSedekahController extends GetxController {
       final input = {
         "nominal": inputNominal.numberValue,
         'nama': inputNama.text,
-        'email': 'ariqamuharam@gmail.com', // ganti sama email login
+        'email': inputEmail.text, // ganti sama email login
         'nomor': inputNomor.text,
         'anonim': inputAnonymous.value,
         'pesan': inputPesan.text,
+        'id_campaign': list['id'],
       };
       dataStore.write('inputDataPembayaran', input);
     }

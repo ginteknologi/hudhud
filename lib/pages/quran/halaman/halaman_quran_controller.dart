@@ -6,6 +6,8 @@ import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/quran_controller.dart';
 import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 class HalamanQuranController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -34,18 +36,8 @@ class HalamanQuranController extends GetxController
 
   getQuran() async {
     lastReadPerhalaman.value = dataStore.read('perHalamanLastRead');
-    listSurah = [
-      {'id': 1, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/1.jpg'},
-      {'id': 2, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/2.jpg'},
-      {'id': 3, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/3.jpg'},
-      {'id': 4, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/4.jpg'},
-      {'id': 5, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/5.jpg'},
-      {'id': 6, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/6.jpg'},
-      {'id': 7, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/7.jpg'},
-      {'id': 8, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/8.jpg'},
-      {'id': 9, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/9.jpg'},
-      {'id': 10, 'name': 'Al-Fatihah', 'image': 'assets/img/quran/10.jpg'},
-    ];
+    final String jsonString = await rootBundle.loadString('assets/img/quran/quran-page.json');
+    listSurah = json.decode(jsonString);
     return listSurah;
   }
 
@@ -66,7 +58,6 @@ class HalamanQuranController extends GetxController
       duration: Duration(milliseconds: 400),
     );
     getQuran();
-    print(listSurah);
     super.onInit();
   }
 }

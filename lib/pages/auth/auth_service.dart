@@ -34,6 +34,7 @@ class AuthService extends GetConnect {
       }
     } catch (e) {
       print('<<<<<<<start>>>>>>>');
+      print('Login Error');
       print(e);
     }
   }

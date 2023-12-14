@@ -12,6 +12,7 @@ class AuthController extends GetxController {
   loginGoogle() async {
     try {
     final result = await GoogleLogin().googleSignIn();
+    print(result);
     final userGoogle = {
       "id": result['data']['_id'],
       "name": result['data']['name'],
@@ -45,6 +46,7 @@ class AuthController extends GetxController {
       "name": result['data']['nama'],
       "email": result['data']['email'],
       "photo": result['data']['photo'],
+      "total_sedekah": result['data']['total_sedekah'],
     };    
     gctrl.saveStorage(json);
     Get.offAllNamed(RoutesHome.root);
