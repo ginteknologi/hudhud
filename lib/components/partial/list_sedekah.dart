@@ -74,7 +74,7 @@ class ListItemSedekahWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                               child: Image.network(
                                 image!,
-                                height: 120,
+                                height: 130,
                                 width: 110,
                                 fit: BoxFit.cover,
                               )),
@@ -185,6 +185,9 @@ class ListItemSedekahWidget extends StatelessWidget {
                                               ?.fontSize,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black)),
+                                  // SizedBox(
+                                  //   height: 10,
+                                  // ),
                                   Row(
                                     children: [
                                       Flexible(

@@ -11,47 +11,58 @@ class AuthController extends GetxController {
 
   loginGoogle() async {
     try {
-    final result = await GoogleLogin().googleSignIn();
-    print(result);
-    final userGoogle = {
-      "id": result['data']['_id'],
-      "name": result['data']['name'],
-      "email": result['data']['email'],
-      "photo": result['data']['photo'],
-    };    
-    getProfile(userGoogle);
+      final result = await GoogleLogin().googleSignIn();
+      print(result);
+      final userGoogle = {
+        "id": result['data']['_id'],
+        "name": result['data']['name'],
+        "email": result['data']['email'],
+        "photo": result['data']['photo'],
+      };
+      getProfile(userGoogle);
     } catch (e) {
-      print(e);      
+      print(e);
     }
   }
+
   loginGuest() async {
+    print('this');
     try {
-    final userGoogle = {
-      "name": 'Guest Account',
-      "email": 'guest@mail.com',
-      "photo": '',
-    };    
-    getProfile(userGoogle);
+      final userGoogle = {
+        "name": 'Guest Account',
+        "email": 'guest@mail.com',
+        "photo": '',
+      };
+      // getProfile(userGoogle);
+      final json = {
+        "id": 1,
+        "name": "guest",
+        "email": "guest@gmail.com",
+        "photo": "",
+        "total_sedekah": 100000,
+      };
+      gctrl.saveStorage(json);
+      Get.offAllNamed(RoutesHome.root);
     } catch (e) {
-      print(e);      
+      print(e);
     }
   }
 
   getProfile(userGoogle) async {
     try {
-    final result = await AuthService().getProfile(userGoogle);
-    print(result);
-    final json = {
-      "id": result['data']['id'],
-      "name": result['data']['nama'],
-      "email": result['data']['email'],
-      "photo": result['data']['photo'],
-      "total_sedekah": result['data']['total_sedekah'],
-    };    
-    gctrl.saveStorage(json);
-    Get.offAllNamed(RoutesHome.root);
+      final result = await AuthService().getProfile(userGoogle);
+      print(result);
+      final json = {
+        "id": result['data']['id'],
+        "name": result['data']['nama'],
+        "email": result['data']['email'],
+        "photo": result['data']['photo'],
+        "total_sedekah": result['data']['total_sedekah'],
+      };
+      gctrl.saveStorage(json);
+      Get.offAllNamed(RoutesHome.root);
     } catch (e) {
-      print(e);      
+      print(e);
     }
   }
 

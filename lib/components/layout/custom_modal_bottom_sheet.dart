@@ -135,10 +135,11 @@ class CustomModalBottomSheet extends StatelessWidget {
                                       SvgPicture.asset(dataGrid?[index]['icon'],
                                           height: 35, width: 35),
                                       const SizedBox(height: 5),
-                                      AutoSizeText(
+                                      Text(
                                         '${dataGrid?[index]["label"]}',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
+                                            height: 1,
                                             fontSize: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall

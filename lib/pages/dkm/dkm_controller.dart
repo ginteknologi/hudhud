@@ -42,7 +42,7 @@ class DkmController extends GetxController {
         "id": 1,
         "title": "+62-8575-647-xxxx",
         "category": "Telepon/WhatsApp",
-        "icon": "assets/icons/wa.svg",
+        "icon": "assets/icons/wa-solid.svg",
         'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
       },
       {
@@ -50,16 +50,44 @@ class DkmController extends GetxController {
         "title":
             "CitraGran Cibubur, RT005/011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
         "category": "Alamat",
-        "icon": "assets/icons/pinpoint.svg",
+        "icon": "assets/icons/pin-solid.svg",
         'link': 'https://goo.gl/maps/1Hw5yqj5qzJY5kEj8'
       },
       {
         "id": 1,
-        "title": "https://linktr.ee/AnNimahTV",
-        "category": "LinkTree",
-        "icon": "assets/icons/tele.svg",
-        "link": "https://linktr.ee/AnNimahTV"
+        "title": "Marbot Aplikasi",
+        "category": "Youtube",
+        "icon": "assets/icons/youtube-solid.svg",
+        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
       },
+      {
+        "id": 1,
+        "title": "Marbot Aplikasi",
+        "category": "Instagram",
+        "icon": "assets/icons/instagram-solid.svg",
+        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+      },
+      {
+        "id": 1,
+        "title": "Marbot Aplikasi",
+        "category": "Facebook Page",
+        "icon": "assets/icons/fb-solid.svg",
+        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+      },
+      {
+        "id": 1,
+        "title": "Marbot Aplikasi",
+        "category": "Tik Tok",
+        "icon": "assets/icons/tiktok-solid.svg",
+        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+      },
+      // {
+      //   "id": 1,
+      //   "title": "https://linktr.ee/AnNimahTV",
+      //   "category": "LinkTree",
+      //   "icon": "assets/icons/tele.svg",
+      //   "link": "https://linktr.ee/AnNimahTV"
+      // },
     ];
     return listKontak;
   }
@@ -67,7 +95,7 @@ class DkmController extends GetxController {
   @override
   void onInit() {
     getListDkm();
-    getListMemberDkm();
+    // getListMemberDkm();
     getListKontak();
     super.onInit();
   }

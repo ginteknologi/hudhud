@@ -55,13 +55,11 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                       ],
                     ))
               ],
-            )
-            )
-            );
+            )));
   }
 
-  bool _visible = false;
-  bool _show = false;
+  bool _visible = true;
+  bool _show = true;
   late final AnimationController _controller;
 
   void showPopup(

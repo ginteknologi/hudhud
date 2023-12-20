@@ -20,14 +20,15 @@ class CustomBottomBar extends StatelessWidget {
         title: "Al-Qur'an".tr,
         navType: BottomBarEnum.alquran),
     BottomMenuModel(
-        icon: 'assets/icons/ruangan.png',
-        activeIcon: 'assets/icons/ruangan_a.png',
+        icon: 'assets/icons/ruangan_blur.png',
+        activeIcon: 'assets/icons/ruangan_blur.png',
         title: "Ruangan".tr,
+        // navType: BottomBarEnum.ruangan
         navType: BottomBarEnum.ruangan),
     BottomMenuModel(
         icon: 'assets/icons/dkm.png',
         activeIcon: 'assets/icons/dkm_a.png',
-        title: "DKM".tr,
+        title: "Marbot".tr,
         navType: BottomBarEnum.dkm)
   ];
 

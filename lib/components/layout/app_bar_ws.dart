@@ -32,9 +32,11 @@ class AppBarWSWidget {
       title: Align(
         alignment: noBack == false && defaultPlace
             ? Alignment.centerRight
-            : Alignment.center,
+            : iconRight != null
+                ? Alignment.centerLeft
+                : Alignment.center,
         child: Text(title,
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: titleSize ??
                     Theme.of(context).textTheme.titleMedium?.fontSize,

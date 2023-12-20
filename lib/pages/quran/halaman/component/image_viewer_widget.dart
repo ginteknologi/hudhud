@@ -42,7 +42,9 @@ class _EasyImageViewPagerState extends State<EasyImageViewPager> {
       itemCount: widget.imageProviders.length,
       controller: _pageController,
       itemBuilder: (context, index) {
-        final image = "assets/img/quran/" + widget.imageProviders[index]['file'];
+        print(widget.imageProviders[index]['file']);
+        final image =
+            "assets/img/quran/" + widget.imageProviders[index]['file'];
         return EasyImageView(
           imageProvider: image,
           onScaleChanged: (scale) {
@@ -120,8 +122,7 @@ class _EasyImageViewState extends State<EasyImageView> {
     return Container(
         // color: Colors.amber,
         width: MediaQuery.of(context).size.width,
-        height:  
-        MediaQuery.of(context).orientation != Orientation.portrait
+        height: MediaQuery.of(context).orientation != Orientation.portrait
             ? double.infinity
             : MediaQuery.of(context).size.height,
         child: InteractiveViewer(

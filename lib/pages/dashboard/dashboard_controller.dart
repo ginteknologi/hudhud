@@ -43,8 +43,8 @@ class DashboardController extends GetxController {
     return listMenuHome = [
       {
         "label": "Sedekah",
-        "icon": "assets/icons/sedekah.svg",
-        "urlNav": "/sedekah"
+        "icon": "assets/icons/sedekah_blur.svg",
+        "urlNav": ""
       },
       {
         "label": "Kiblat",
@@ -64,8 +64,9 @@ class DashboardController extends GetxController {
     return listAllMenu = [
       {
         "label": "Sedekah",
-        "icon": "assets/icons/sedekah.svg",
-        "urlNav": "/sedekah"
+        "icon": "assets/icons/sedekah_blur.svg",
+        // "urlNav": "/sedekah"
+        "urlNav": ""
       },
       {
         "label": "Kiblat",
@@ -79,6 +80,11 @@ class DashboardController extends GetxController {
         "label": "Artikel/Informasi",
         "icon": "assets/icons/artikel.svg",
         "urlNav": "/artikel"
+      },
+      {
+        "label": "Dzikir Pagi Petang",
+        "icon": "assets/icons/dzikir_pagi_petang_blur.svg",
+        "urlNav": ""
       },
       // {"label": "DKM", "icon": "assets/icons/dkm.svg", "urlNav": "dkm"},
     ];
@@ -192,9 +198,9 @@ class DashboardController extends GetxController {
         }
         if (key == 'artikel') {
           el['kategori'] = 'Artikel';
-        }else if(key == 'campaign'){
+        } else if (key == 'campaign') {
           el['kategori'] = 'Campaign';
-        }else{
+        } else {
           el['kategori'] = 'Doa';
         }
         items.add(LatestNews(
@@ -226,6 +232,7 @@ class DashboardController extends GetxController {
       print('done fcm saving');
     }
   }
+
   @override
   void onInit() async {
     getData();
@@ -251,16 +258,13 @@ class LatestNews {
   int id;
   String title, subtitle, kategori, image, time, date;
   LatestNews(
-    {
-      required this.id,
+      {required this.id,
       required this.title,
       required this.subtitle,
       required this.kategori,
       required this.image,
       required this.time,
-      required this.date
-    }
-  );
+      required this.date});
 
   Map toJson() => {
         'title': title,

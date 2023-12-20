@@ -20,7 +20,8 @@ class HomePage extends StatelessWidget {
       case BottomBarEnum.alquran:
         return QuranPage(typeView: ctrl.typeViewQuran.value);
       case BottomBarEnum.ruangan:
-        return const RuanganPage();
+        // return const RuanganPage();
+        return getDefaultWidget();
       case BottomBarEnum.dkm:
         return const DkmPage();
       default:
@@ -28,7 +29,8 @@ class HomePage extends StatelessWidget {
     }
   }
 
-  void showSheet(HomeController ctrl, MainController gctrl, BuildContext context) {
+  void showSheet(
+      HomeController ctrl, MainController gctrl, BuildContext context) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -229,7 +231,7 @@ class HomePage extends StatelessWidget {
                   selectedIdx: ctrl.selectedIdx.value,
                   onChanged: (BottomBarEnum type) {
                     if (type == BottomBarEnum.alquran) {
-                      showSheet(ctrl,gctrl, context);
+                      showSheet(ctrl, gctrl, context);
                     } else {
                       ctrl.type.value = type;
                     }

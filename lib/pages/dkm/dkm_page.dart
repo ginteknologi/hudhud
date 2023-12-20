@@ -39,16 +39,9 @@ class DkmPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
-                          "assets/img/logo_only_white.png",
-                          height: 80,
-                          width: 80,
-                        ),
-                        Text(
-                          "Masjid An-Ni'mah",
-                          style: context.textTheme.titleLarge?.copyWith(
-                              fontFamily: "DMSerifDisplay",
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
+                          "assets/img/new-logo-text.png",
+                          height: 85,
+                          width: 180,
                         ),
                         SizedBox(
                           height: 10,
@@ -79,48 +72,49 @@ class DkmPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 21),
                     child: Column(
                       children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text("Member DKM Kami",
-                              style: context.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black38)),
-                        ),
-                        ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: ctrl.listMemberDkm.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            // Datum model = filteredEvents[index];
-                            return FadeInUp(
-                              child: ListItemUiWidget(
-                                id: ctrl.listMemberDkm[index]['id'],
-                                title: ctrl.listMemberDkm[index]['nama'],
-                                widthContent: MediaQuery.of(context).size.width,
-                                showIcon: IconPosition.left,
-                                iconLeft: Row(children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(90),
-                                    child: Image.asset("assets/icons/app_icon.png",
-                                      height: 60,
-                                      width: 60,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ]),
-                                titleStyle: context.textTheme.bodyMedium
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                subTitle: ctrl.listMemberDkm[index]['role'],
-                                subtitleStyle: context.textTheme.bodySmall
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.black),
-                              ),
-                            );
-                          },
-                        ),
+                        // Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: Text("Member DKM Kami",
+                        //       style: context.textTheme.bodySmall?.copyWith(
+                        //           fontWeight: FontWeight.bold,
+                        //           color: Colors.black38)),
+                        // ),
+                        // ListView.builder(
+                        //   physics: const ClampingScrollPhysics(),
+                        //   itemCount: ctrl.listMemberDkm.length,
+                        //   shrinkWrap: true,
+                        //   itemBuilder: (context, index) {
+                        //     // Datum model = filteredEvents[index];
+                        //     return FadeInUp(
+                        //       child: ListItemUiWidget(
+                        //         id: ctrl.listMemberDkm[index]['id'],
+                        //         title: ctrl.listMemberDkm[index]['nama'],
+                        //         widthContent: MediaQuery.of(context).size.width,
+                        //         showIcon: IconPosition.left,
+                        //         iconLeft: Row(children: [
+                        //           ClipRRect(
+                        //             borderRadius: BorderRadius.circular(90),
+                        //             child: Image.asset(
+                        //               "assets/icons/app_icon.png",
+                        //               height: 60,
+                        //               width: 60,
+                        //               fit: BoxFit.cover,
+                        //             ),
+                        //           ),
+                        //         ]),
+                        //         titleStyle: context.textTheme.bodyMedium
+                        //             ?.copyWith(
+                        //                 fontWeight: FontWeight.bold,
+                        //                 color: Colors.black),
+                        //         subTitle: ctrl.listMemberDkm[index]['role'],
+                        //         subtitleStyle: context.textTheme.bodySmall
+                        //             ?.copyWith(
+                        //                 fontWeight: FontWeight.normal,
+                        //                 color: Colors.black),
+                        //       ),
+                        //     );
+                        //   },
+                        // ),
                         ElevatedButton(
                           onPressed: () {
                             showDialog(
@@ -133,7 +127,7 @@ class DkmPage extends StatelessWidget {
                             );
                           },
                           child: Text('Lihat lebih lengkap'),
-                        ),                        
+                        ),
                         SizedBox(
                           height: 30,
                         ),
@@ -167,11 +161,12 @@ class DkmPage extends StatelessWidget {
                                         color: Colors.black),
                                 category: ctrl.listKontak[index]['category'],
                                 onTap: () async {
-                                    final Uri url = Uri.parse(ctrl.listKontak[index]['link']);
-                                    if (!await launchUrl(url)) {
-                                      print('Tidak dapat membuka link YouTube.');
-                                    }
-                                },                                
+                                  final Uri url =
+                                      Uri.parse(ctrl.listKontak[index]['link']);
+                                  if (!await launchUrl(url)) {
+                                    print('Tidak dapat membuka link YouTube.');
+                                  }
+                                },
                                 // subtitleStyle: context.textTheme.bodySmall
                                 //     ?.copyWith(
                                 //         fontWeight: FontWeight.normal,
