@@ -174,6 +174,64 @@ class DkmPage extends StatelessWidget {
                               ),
                             );
                           },
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Marbot Apps Supporting Formasi Satu",
+                                style: context.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            Image.asset(
+                              "assets/img/formasi-satu.png",
+                              // height: 85,
+                              width: 180,
+                              alignment: Alignment.centerLeft,
+                            ),
+                          ],
+                        ),
+                        ListView.builder(
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: ctrl.listKontakv2.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            // Datum model = filteredEvents[index];
+                            return FadeInUp(
+                              child: ListItemUiWidget(
+                                id: ctrl.listKontakv2[index]['id'],
+                                title: ctrl.listKontakv2[index]['title'],
+                                widthContent:
+                                    MediaQuery.of(context).size.width * 0.7,
+                                showIcon: IconPosition.left,
+                                iconLeft: SvgPicture.asset(
+                                    ctrl.listKontakv2[index]['icon'],
+                                    height: 30,
+                                    width: 30),
+                                titleStyle: context.textTheme.bodySmall
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                category: ctrl.listKontakv2[index]['category'],
+                                onTap: () async {
+                                  final Uri url = Uri.parse(
+                                      ctrl.listKontakv2[index]['link']);
+                                  if (!await launchUrl(url)) {
+                                    print('Tidak dapat membuka link YouTube.');
+                                  }
+                                },
+                                // subtitleStyle: context.textTheme.bodySmall
+                                //     ?.copyWith(
+                                //         fontWeight: FontWeight.normal,
+                                //         color: Colors.black),
+                              ),
+                            );
+                          },
                         )
                       ],
                     ))
