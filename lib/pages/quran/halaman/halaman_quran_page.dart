@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 // import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:masjid_app/components/layout/sliding_app_bar.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
@@ -152,7 +153,14 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                           ),
                         )),
                   ),
-                  noBack: true),
+                  iconLeft: GestureDetector(
+                      onTap: () {
+                        hctrl.selectedIdx.value = 0;
+                        hctrl.type.value = BottomBarEnum.beranda;
+                      },
+                      child: const Icon(Icons.arrow_back_rounded)),
+                  defaultPlace: false,
+                  noBack: false),
             )
           : null,
     );

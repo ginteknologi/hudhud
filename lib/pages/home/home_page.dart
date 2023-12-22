@@ -211,6 +211,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(HomeController());
     final gctrl = Get.find<MainController>();
+    print(ctrl.type.value);
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         extendBodyBehindAppBar: true,
