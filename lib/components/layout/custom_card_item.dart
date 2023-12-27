@@ -81,13 +81,13 @@ class CustomCardItem extends StatelessWidget {
                         child: network
                             ? Image.network(
                                 imgPath ??
-                                    'https://dummyimage.com/600x400/000/fff',
+                                    'https://masjidannimah.id/wp-admin/admin-ajax.php?action=imgedit-preview&_ajax_nonce=682b18d276&postid=2013&rand=30724',
                                 height: height,
                                 width: isFullWidth == true ? Get.width : 151,
                                 fit: BoxFit.cover,
                               )
                             : Image.asset(
-                                imgPath ?? 'assets/icons/image-item1.png',
+                                imgPath ?? 'assets/icons/doa.jpg',
                                 height: height,
                                 width: isFullWidth == true ? Get.width : 151,
                                 fit: BoxFit.cover,
