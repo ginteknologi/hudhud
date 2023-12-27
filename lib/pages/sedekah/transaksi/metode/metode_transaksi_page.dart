@@ -179,7 +179,7 @@ class _MetodeTransaksiSedekahPageState
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
-        // body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
+        // body: Obx(() => ctrl.isLoading.value ? CircularProgressIndicator()) : layout(ctrl, context)),
         body: Obx(() {
           if (ctrl.isLoading.value) {
             return const Center(child: CircularProgressIndicator());

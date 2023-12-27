@@ -136,7 +136,7 @@ class ArtikelPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel / Informasi", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? const Text("Loading") : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
     );
   }
 }

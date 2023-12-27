@@ -134,7 +134,7 @@ class DetailArtikelPage extends StatelessWidget {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: ButtonElevated(
-                                  title: 'Bagikan Sekarang!',
+                                  title: 'Bagikan',
                                   width: Get.width,
                                   bgcolor: const Color(0xFF92E3A9),
                                   height: 35,
@@ -241,7 +241,7 @@ class DetailArtikelPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? const Text("Loading") : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
     );
   }
 }

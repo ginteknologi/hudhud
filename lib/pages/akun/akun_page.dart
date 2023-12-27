@@ -32,7 +32,7 @@ class AkunPage extends StatelessWidget {
                                   alignment: Alignment.topCenter,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(90),
-                                    child: gctrl.userLogin['photo'] == null ? Image.asset(
+                                    child: gctrl.userLogin['photo'] == null || gctrl.userLogin['photo'] == "" ? Image.asset(
                                       "assets/icons/app_icon.png",
                                       height: 110,
                                       width: 110,
@@ -83,21 +83,21 @@ class AkunPage extends StatelessWidget {
                         SizedBox(
                           height: 30,
                         ),
-                        ListItemUiWidget(
-                          id: 1,
-                          title: "Riwayat Sedekah",
-                          titleStyle: context.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold, color: Colors.black),
-                          showIcon: IconPosition.left,
-                          iconLeft: Icon(
-                            Icons.history_rounded,
-                            color: Theme.of(context).primaryColor,
-                            size: 30,
-                          ),
-                          onTap: () {
-                            Get.toNamed(RoutesAkun.riwayat);
-                          },
-                        ),
+                        // ListItemUiWidget(
+                        //   id: 1,
+                        //   title: "Riwayat Sedekah",
+                        //   titleStyle: context.textTheme.bodyMedium?.copyWith(
+                        //       fontWeight: FontWeight.bold, color: Colors.black),
+                        //   showIcon: IconPosition.left,
+                        //   iconLeft: Icon(
+                        //     Icons.history_rounded,
+                        //     color: Theme.of(context).primaryColor,
+                        //     size: 30,
+                        //   ),
+                        //   onTap: () {
+                        //     Get.toNamed(RoutesAkun.riwayat);
+                        //   },
+                        // ),
                         ListItemUiWidget(
                           id: 1,
                           title: "Tentang Kami",

@@ -169,7 +169,7 @@ class BookingRuanganPage extends StatelessWidget {
             title: "Ruangan > List Jadwal > Booking Ruangan",
             context: context,
             elevation: 0),
-        body: Obx(() => ctrl.isLoadingList.value ? Text('Loading') : layout(ctrl, context)),
+        body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),

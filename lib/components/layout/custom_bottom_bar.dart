@@ -134,7 +134,7 @@ Widget getDefaultWidget() {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Something went wrong',
+            'Dalam Pengembangan',
             style: TextStyle(
               fontSize: 18,
             ),

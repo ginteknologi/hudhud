@@ -149,7 +149,7 @@ class DashboardPage extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),
-                                        child: gctrl.userLogin['photo'] == null ? Image.asset(
+                                        child: gctrl.userLogin['photo'] == null || gctrl.userLogin['photo'] == "" ? Image.asset(
                                           "assets/icons/app_icon.png",
                                           height: 35,
                                           width: 35,
@@ -216,7 +216,7 @@ class DashboardPage extends StatelessWidget {
                           height: 20,
                         ),
                         CustomCardItem(
-                          network: true,
+                          network: false,
                           isFullWidth: true,
                           height: 165,
                           size: "medium",
@@ -232,32 +232,31 @@ class DashboardPage extends StatelessWidget {
                               color: Colors.white),
                           title: doa.title,
                           subtitle: '${doa.time} | ${doa.date}',
-                          imgPath: '${doa.image}',
                           linkRoute: '/doa/1/${doa.id}',
                         ),
                         const SizedBox(
                           height: 20,
                         ),
-                        CustomCardItem(
-                          network: true,
-                          isFullWidth: true,
-                          height: 165,
-                          size: "medium",
-                          positionChip: CrossAxisAlignment.start,
-                          chipColor: Theme.of(context).primaryColor,
-                          chipText: campaign.kategori,
-                          chipTextStyle: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.fontSize,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
-                          title: campaign.title,
-                          subtitle: '${campaign.time} | ${campaign.date}',
-                          imgPath: '${campaign.image}',
-                          linkRoute: '/sedekah/${campaign.id}',
-                        ),
+                        // CustomCardItem(
+                        //   network: true,
+                        //   isFullWidth: true,
+                        //   height: 165,
+                        //   size: "medium",
+                        //   positionChip: CrossAxisAlignment.start,
+                        //   chipColor: Theme.of(context).primaryColor,
+                        //   chipText: campaign.kategori,
+                        //   chipTextStyle: TextStyle(
+                        //       fontSize: Theme.of(context)
+                        //           .textTheme
+                        //           .labelLarge
+                        //           ?.fontSize,
+                        //       fontWeight: FontWeight.normal,
+                        //       color: Colors.white),
+                        //   title: campaign.title,
+                        //   subtitle: '${campaign.time} | ${campaign.date}',
+                        //   imgPath: '${campaign.image}',
+                        //   linkRoute: '/sedekah/${campaign.id}',
+                        // ),
                         const SizedBox(
                           height: 100,
                         )

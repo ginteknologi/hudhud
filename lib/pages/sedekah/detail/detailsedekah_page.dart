@@ -290,7 +290,7 @@ class DetailSedekahPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Detail Sedekah", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? const Text('Loading') : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
     );
   }
 }

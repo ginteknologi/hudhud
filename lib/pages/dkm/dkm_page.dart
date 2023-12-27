@@ -115,19 +115,19 @@ class DkmPage extends StatelessWidget {
                         //     );
                         //   },
                         // ),
-                        ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return FullScreenImageDialog(
-                                  imagePath: 'assets/img/struktur.jpeg',
-                                );
-                              },
-                            );
-                          },
-                          child: Text('Lihat lebih lengkap'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     showDialog(
+                        //       context: context,
+                        //       builder: (BuildContext context) {
+                        //         return FullScreenImageDialog(
+                        //           imagePath: 'assets/img/struktur.jpeg',
+                        //         );
+                        //       },
+                        //     );
+                        //   },
+                        //   child: Text('Lihat lebih lengkap'),
+                        // ),
                         SizedBox(
                           height: 30,
                         ),
@@ -232,6 +232,18 @@ class DkmPage extends StatelessWidget {
                               ),
                             );
                           },
+                        Text("Marbot Apps Supporting Formasi Satu", style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.normal, color: Colors.black38)),
+                        SizedBox(
+                          child: Container(
+                            height: 50,
+                            width: Get.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset("assets/icons/logof1.png", height: 75, width: 100),
+                              ]
+                            ),
+                          ),
                         )
                       ],
                     ))

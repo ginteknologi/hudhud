@@ -203,7 +203,7 @@ class SedekahPage extends StatelessWidget {
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Sedekah", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value
-          ? const Text("loading")
+          ? CircularProgressIndicator()
           : layout(ctrl, context)),
     );
   }

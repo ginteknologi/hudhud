@@ -19,7 +19,7 @@ class DoaController extends GetxController {
       {
         "id": 1,
         "title": "Do'a - Do'a Harian",
-        "subtitle": "1 Do'a",
+        // "subtitle": "1 Do'a",
         "icon": "assets/icons/calendar.svg"
       },
       // {

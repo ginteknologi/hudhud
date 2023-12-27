@@ -138,7 +138,7 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
-        body: Obx(() => ctrl.isLoading.value ? const Text("Loading") : layout(ctrl, context)),
+        body: Obx(() => ctrl.isLoading.value ? CircularProgressIndicator() : layout(ctrl, context)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
