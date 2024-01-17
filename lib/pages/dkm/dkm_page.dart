@@ -49,7 +49,7 @@ class DkmPage extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: AutoSizeText(
-                              "Di bawah Naungan Allah, kita bersatu dalam keimanan di Masjid An-Ni’mah, tempat keberkahan dan ketenangan merajut jalinan kasih dan do’a",
+                              "Di bawah Naungan Allah, kita bersatu dalam keimanan di Masjid, tempat keberkahan dan ketenangan merajut jalinan kasih dan do'a.",
                               maxLines: 4,
                               textAlign: TextAlign.center,
                               style: context.textTheme.labelSmall?.copyWith(
@@ -232,18 +232,6 @@ class DkmPage extends StatelessWidget {
                               ),
                             );
                           },
-                        Text("Marbot Apps Supporting Formasi Satu", style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.normal, color: Colors.black38)),
-                        SizedBox(
-                          child: Container(
-                            height: 50,
-                            width: Get.width,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset("assets/icons/logof1.png", height: 75, width: 100),
-                              ]
-                            ),
-                          ),
                         )
                       ],
                     ))

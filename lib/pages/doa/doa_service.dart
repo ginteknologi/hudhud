@@ -27,6 +27,7 @@ class DoaService extends GetConnect {
     }
   }
   Future getDetail() async {
+    print(Get.parameters['content']);
     final response = await http.get(
         Uri.parse("${RemoteData.apiWp}/posts/${Get.parameters['content']}"),
         headers: <String, String>{

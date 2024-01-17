@@ -192,7 +192,7 @@ class DashboardPage extends StatelessWidget {
                           height: 10,
                         ),
                         // getListItemVertical(ctrl, context),
-                        CustomCardItem(
+                        ctrl.listArtikel.isNotEmpty && ctrl.listArtikel[0] != null ? CustomCardItem(
                           network: true,
                           isFullWidth: true,
                           height: 165,
@@ -211,10 +211,12 @@ class DashboardPage extends StatelessWidget {
                           subtitle: '${artikel.time} | ${artikel.date}',
                           imgPath: artikel.image,
                           linkRoute: '/artikel/${artikel.id}',
-                        ),
+                        )
+                        : Container(), 
                         const SizedBox(
                           height: 20,
-                        ),
+                        ),                        
+                        ctrl.listArtikel.isNotEmpty && ctrl.listArtikel[1] != null ?
                         CustomCardItem(
                           network: false,
                           isFullWidth: true,
@@ -233,7 +235,9 @@ class DashboardPage extends StatelessWidget {
                           title: doa.title,
                           subtitle: '${doa.time} | ${doa.date}',
                           linkRoute: '/doa/1/${doa.id}',
-                        ),
+                        )
+                        :
+                        Container(),
                         const SizedBox(
                           height: 20,
                         ),

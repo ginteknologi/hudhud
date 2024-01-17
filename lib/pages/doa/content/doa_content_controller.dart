@@ -12,6 +12,7 @@ class ContentDoaController extends GetxController {
 
   getData() async {
     final result = await DoaService().getDetail();
+    print(result);
     list.value = result;
     isLoadingList.value = false;
   }

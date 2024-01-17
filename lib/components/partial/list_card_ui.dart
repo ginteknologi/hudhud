@@ -94,15 +94,19 @@ class ListCardUiWidget extends StatelessWidget {
                             if (subtitle != null)
                               Align(
                                   alignment: Alignment.centerLeft,
-                                  child: type == 'wp' ? Html(data: subtitle!, style: {"p": Style(fontSize: FontSize(13.0))}) :
-                                  AutoSizeText(
-                                    subtitle!,
-                                    textAlign: TextAlign.start,
-                                    style: subtitleStyle ??
-                                        context.textTheme.labelMedium?.copyWith(
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                  ))
+                                  child: type == 'wp'
+                                      ? Html(data: subtitle!, style: {
+                                          "p": Style(fontSize: FontSize(13.0))
+                                        })
+                                      : AutoSizeText(
+                                          subtitle!,
+                                          textAlign: TextAlign.start,
+                                          style: subtitleStyle ??
+                                              context.textTheme.labelMedium
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                        ))
                           ],
                         ),
                         SizedBox(

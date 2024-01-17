@@ -69,7 +69,7 @@ class DkmController extends GetxController {
       },
       {
         "id": 1,
-        "title": "+62-8575-647-xxxx",
+        "title": "0812-9380-700 ( Official Marbot )",
         "category": "Telepon/WhatsApp",
         "icon": "assets/icons/wa-solid.svg",
         'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
@@ -77,7 +77,7 @@ class DkmController extends GetxController {
       {
         "id": 1,
         "title":
-            "CitraGran Cibubur, RT005/011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
+            "Masjid An Nimah, CitraGran Cibubur, RT005/011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
         "category": "Alamat",
         "icon": "assets/icons/pin-solid.svg",
         'link': 'https://goo.gl/maps/1Hw5yqj5qzJY5kEj8'
@@ -93,33 +93,33 @@ class DkmController extends GetxController {
     return listKontak;
   }
 
-  getListKontakv2() async {
-    listKontakv2 = [
-      {
-        "id": 1,
-        "title": "+62-8575-647-xxxx",
-        "category": "Telepon/WhatsApp",
-        "icon": "assets/icons/wa-solid.svg",
-        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
-      },
-      {
-        "id": 2,
-        "title":
-            "Masjid An Nimah, CitraGran Cibubur, RT.005/RW.011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
-        "category": "Alamat",
-        "icon": "assets/icons/pin-solid.svg",
-        'link': 'https://goo.gl/maps/1Hw5yqj5qzJY5kEj8'
-      },
-    ];
-    return listKontakv2;
-  }
+  // getListKontakv2() async {
+  //   listKontakv2 = [
+  //     {
+  //       "id": 1,
+  //       "title": "+62-8575-647-xxxx",
+  //       "category": "Telepon/WhatsApp",
+  //       "icon": "assets/icons/wa-solid.svg",
+  //       'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+  //     },
+  //     {
+  //       "id": 2,
+  //       "title":
+  //           "Masjid An Nimah, CitraGran Cibubur, RT.005/RW.011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
+  //       "category": "Alamat",
+  //       "icon": "assets/icons/pin-solid.svg",
+  //       'link': 'https://goo.gl/maps/1Hw5yqj5qzJY5kEj8'
+  //     },
+  //   ];
+  //   return listKontakv2;
+  // }
 
   @override
   void onInit() {
     getListDkm();
     // getListMemberDkm();
     getListKontak();
-    getListKontakv2();
+    // getListKontakv2();
     super.onInit();
   }
 }

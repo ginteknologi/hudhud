@@ -6,6 +6,7 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/pages/doa/content/doa_content_controller.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class ContentDoaPage extends StatelessWidget {
   const ContentDoaPage({super.key});
@@ -29,7 +30,7 @@ class ContentDoaPage extends StatelessWidget {
                               children: [
                                 ListCardUiWidget(
                                   id: 1,
-                                  title: "Do’a Bangun Tidur",
+                                  title: ctrl.list['title']['rendered'],
                                   titleStyle: context.textTheme.titleSmall
                                       ?.copyWith(
                                           fontWeight: FontWeight.bold,
@@ -43,38 +44,17 @@ class ContentDoaPage extends StatelessWidget {
                                     // ctrl.goToDetail(ctrl.listDoa[index]);
                                   },
                                   subtitle:
-                                      "Alhamdulillahil ladzi ahyana ba'da ma amatana wa ilaihin nusyur. Segala puji bagi Allah, Tuhan yang menghidupkan kami setelah ia mematikan kami. Kepada-Nyalah kebangkitan hari kiamat",
+                                      ctrl.list['content']['rendered'],
+                                  type:'wp',
                                   hasFooter: true,
                                   footerContent: [
-                                    Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list['date'])),
-                                      style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
-                                    ),                                    
-                                    // Text("QS. Al-Baqoroh 185",
-                                    //     textAlign: TextAlign.start,
-                                    //     style: context.textTheme.labelSmall
-                                    //         ?.copyWith(
-                                    //             fontWeight: FontWeight.bold,
-                                    //             letterSpacing: 0,
-                                    //             color: Colors.black54)),
-                                    // Row(
-                                    //   children: [
-                                    //     Icon(
-                                    //       Icons.remove_red_eye_rounded,
-                                    //       color: Colors.black54,
-                                    //       size: context
-                                    //           .textTheme.labelLarge?.fontSize,
-                                    //     ),
-                                    //     SizedBox(
-                                    //       width: 5,
-                                    //     ),
-                                    //     Text("10",
-                                    //         textAlign: TextAlign.end,
-                                    //         style: context.textTheme.labelMedium
-                                    //             ?.copyWith(
-                                    //                 fontWeight: FontWeight.w300,
-                                    //                 color: Colors.black54)),
-                                    //   ],
-                                    // )
+                                    Text(
+                                      DateFormat('dd MMMM yyyy').format(
+                                          DateTime.parse(ctrl.list['date'])),
+                                      style: context.textTheme.labelSmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.w300),
+                                    ),
                                   ],
                                 ),
                                 SizedBox(
@@ -150,7 +130,9 @@ class ContentDoaPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a > Do'a Harian > Detail", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value
+          ? CircularProgressIndicator()
+          : layout(ctrl, context)),
     );
   }
 }
