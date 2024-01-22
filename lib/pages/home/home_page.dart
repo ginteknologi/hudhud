@@ -6,6 +6,7 @@ import 'package:masjid_app/components/layout/sliding_widget.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
 import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
 import 'package:masjid_app/pages/quran/quran_page.dart';
 import 'package:masjid_app/pages/ruangan/ruangan_page.dart';
 import 'package:masjid_app/configs/main_controller.dart';
@@ -18,7 +19,8 @@ class HomePage extends StatelessWidget {
       case BottomBarEnum.beranda:
         return const DashboardPage();
       case BottomBarEnum.alquran:
-        return QuranPage(typeView: ctrl.typeViewQuran.value);
+        // return QuranPage(typeView: ctrl.typeViewQuran.value);
+        return AlquranPage();
       case BottomBarEnum.ruangan:
         // return const RuanganPage();
         return getDefaultWidget();
@@ -29,183 +31,183 @@ class HomePage extends StatelessWidget {
     }
   }
 
-  void showSheet(
-      HomeController ctrl, MainController gctrl, BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20.0),
-          ),
-        ),
-        builder: (BuildContext bc) {
-          return CustomModalBottomSheet(
-            typeSheet: TypeBottomSheet.typeCustomSheet,
-            content: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Tilawah",
-                    style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900, color: Colors.black)),
-              ),
-              Card(
-                elevation: 0,
-                color: Theme.of(context).primaryColor,
-                margin: const EdgeInsets.only(top: 10),
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  //set border radius more than 50% of height and width to make circle
-                ),
-                child: Container(
-                    width: Get.width,
-                    // height: Get.height * 0.10,
-                    constraints: BoxConstraints.loose(Size.infinite),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Tilawah Perayat",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.textTheme.labelLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                                gctrl.perAyatLastRead['ayatNumber'] > 0
-                                    ? '${gctrl.perAyatLastRead['suratName']} : ${gctrl.perAyatLastRead['ayatNumber']}'
-                                    : 'Belum baca Al-quran',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.textTheme.labelMedium?.copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white)),
-                          ),
-                        ],
-                      ),
-                    )), //SizedBox
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Card(
-                elevation: 0,
-                color: Theme.of(context).primaryColor,
-                margin: const EdgeInsets.only(top: 10),
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  //set border radius more than 50% of height and width to make circle
-                ),
-                child: Container(
-                    width: Get.width,
-                    // height: Get.height * 0.10,
-                    constraints: BoxConstraints.loose(Size.infinite),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Tilawah Perhalaman",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.textTheme.labelLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Belum baca Al-Quran",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.textTheme.labelMedium?.copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white)),
-                          ),
-                        ],
-                      ),
-                    )), //SizedBox
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Al-Quran",
-                    style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900, color: Colors.black)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Material(
-                  color: Colors.transparent,
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          ctrl.typeViewQuran.value = TypeViewQuran.perayat;
-                          ctrl.type.value = BottomBarEnum.alquran;
-                        },
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/icons/icon_perayat.png',
-                                  height: 30, width: 30),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text("Perayat",
-                                  style: context.textTheme.labelMedium
-                                      ?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.black54))
-                            ]),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
-                          ctrl.type.value = BottomBarEnum.alquran;
-                          ctrl.idxLastReadHalaman.value = 3;
-                        },
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/icons/quran_halaman.png',
-                                  height: 30, width: 30),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text("Perhalaman",
-                                  style: context.textTheme.labelMedium
-                                      ?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.black54))
-                            ]),
-                      )
-                    ],
-                  ))
-            ],
-          );
-        });
-  }
+  // void showSheet(
+  //     HomeController ctrl, MainController gctrl, BuildContext context) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       shape: const RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.vertical(
+  //           top: Radius.circular(20.0),
+  //         ),
+  //       ),
+  //       builder: (BuildContext bc) {
+  //         return CustomModalBottomSheet(
+  //           typeSheet: TypeBottomSheet.typeCustomSheet,
+  //           content: [
+  //             Align(
+  //               alignment: Alignment.centerLeft,
+  //               child: Text("Tilawah",
+  //                   style: context.textTheme.titleMedium?.copyWith(
+  //                       fontWeight: FontWeight.w900, color: Colors.black)),
+  //             ),
+  //             Card(
+  //               elevation: 0,
+  //               color: Theme.of(context).primaryColor,
+  //               margin: const EdgeInsets.only(top: 10),
+  //               clipBehavior: Clip.antiAlias,
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(6),
+  //                 //set border radius more than 50% of height and width to make circle
+  //               ),
+  //               child: Container(
+  //                   width: Get.width,
+  //                   // height: Get.height * 0.10,
+  //                   constraints: BoxConstraints.loose(Size.infinite),
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.all(10),
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Align(
+  //                           alignment: Alignment.centerLeft,
+  //                           child: Text("Tilawah Perayat",
+  //                               maxLines: 1,
+  //                               overflow: TextOverflow.ellipsis,
+  //                               style: context.textTheme.labelLarge?.copyWith(
+  //                                   fontWeight: FontWeight.bold,
+  //                                   color: Colors.white)),
+  //                         ),
+  //                         Align(
+  //                           alignment: Alignment.centerLeft,
+  //                           child: Text(
+  //                               gctrl.perAyatLastRead['ayatNumber'] > 0
+  //                                   ? '${gctrl.perAyatLastRead['suratName']} : ${gctrl.perAyatLastRead['ayatNumber']}'
+  //                                   : 'Belum baca Al-quran',
+  //                               maxLines: 1,
+  //                               overflow: TextOverflow.ellipsis,
+  //                               style: context.textTheme.labelMedium?.copyWith(
+  //                                   fontWeight: FontWeight.normal,
+  //                                   color: Colors.white)),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )), //SizedBox
+  //             ),
+  //             const SizedBox(
+  //               height: 5,
+  //             ),
+  //             Card(
+  //               elevation: 0,
+  //               color: Theme.of(context).primaryColor,
+  //               margin: const EdgeInsets.only(top: 10),
+  //               clipBehavior: Clip.antiAlias,
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(6),
+  //                 //set border radius more than 50% of height and width to make circle
+  //               ),
+  //               child: Container(
+  //                   width: Get.width,
+  //                   // height: Get.height * 0.10,
+  //                   constraints: BoxConstraints.loose(Size.infinite),
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.all(10),
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Align(
+  //                           alignment: Alignment.centerLeft,
+  //                           child: Text("Tilawah Perhalaman",
+  //                               maxLines: 1,
+  //                               overflow: TextOverflow.ellipsis,
+  //                               style: context.textTheme.labelLarge?.copyWith(
+  //                                   fontWeight: FontWeight.bold,
+  //                                   color: Colors.white)),
+  //                         ),
+  //                         Align(
+  //                           alignment: Alignment.centerLeft,
+  //                           child: Text("Belum baca Al-Quran",
+  //                               maxLines: 1,
+  //                               overflow: TextOverflow.ellipsis,
+  //                               style: context.textTheme.labelMedium?.copyWith(
+  //                                   fontWeight: FontWeight.normal,
+  //                                   color: Colors.white)),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )), //SizedBox
+  //             ),
+  //             const SizedBox(
+  //               height: 10,
+  //             ),
+  //             Align(
+  //               alignment: Alignment.centerLeft,
+  //               child: Text("Al-Quran",
+  //                   style: context.textTheme.titleMedium?.copyWith(
+  //                       fontWeight: FontWeight.w900, color: Colors.black)),
+  //             ),
+  //             const SizedBox(
+  //               height: 10,
+  //             ),
+  //             Material(
+  //                 color: Colors.transparent,
+  //                 child: Row(
+  //                   children: [
+  //                     InkWell(
+  //                       onTap: () {
+  //                         Navigator.pop(context);
+  //                         ctrl.typeViewQuran.value = TypeViewQuran.perayat;
+  //                         ctrl.type.value = BottomBarEnum.alquran;
+  //                       },
+  //                       child: Column(
+  //                           mainAxisAlignment: MainAxisAlignment.center,
+  //                           crossAxisAlignment: CrossAxisAlignment.center,
+  //                           children: [
+  //                             Image.asset('assets/icons/icon_perayat.png',
+  //                                 height: 30, width: 30),
+  //                             SizedBox(
+  //                               height: 5,
+  //                             ),
+  //                             Text("Perayat",
+  //                                 style: context.textTheme.labelMedium
+  //                                     ?.copyWith(
+  //                                         fontWeight: FontWeight.w900,
+  //                                         color: Colors.black54))
+  //                           ]),
+  //                     ),
+  //                     const SizedBox(
+  //                       width: 20,
+  //                     ),
+  //                     InkWell(
+  //                       onTap: () {
+  //                         Navigator.pop(context);
+  //                         ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
+  //                         ctrl.type.value = BottomBarEnum.alquran;
+  //                         ctrl.idxLastReadHalaman.value = 3;
+  //                       },
+  //                       child: Column(
+  //                           mainAxisAlignment: MainAxisAlignment.center,
+  //                           crossAxisAlignment: CrossAxisAlignment.center,
+  //                           children: [
+  //                             Image.asset('assets/icons/quran_halaman.png',
+  //                                 height: 30, width: 30),
+  //                             const SizedBox(
+  //                               height: 5,
+  //                             ),
+  //                             Text("Perhalaman",
+  //                                 style: context.textTheme.labelMedium
+  //                                     ?.copyWith(
+  //                                         fontWeight: FontWeight.w900,
+  //                                         color: Colors.black54))
+  //                           ]),
+  //                     )
+  //                   ],
+  //                 ))
+  //           ],
+  //         );
+  //       });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -231,11 +233,11 @@ class HomePage extends StatelessWidget {
                 child: CustomBottomBar(
                   selectedIdx: ctrl.selectedIdx.value,
                   onChanged: (BottomBarEnum type) {
-                    if (type == BottomBarEnum.alquran) {
-                      showSheet(ctrl, gctrl, context);
-                    } else {
-                      ctrl.type.value = type;
-                    }
+                    // if (type == BottomBarEnum.alquran) {
+                    //   showSheet(ctrl, gctrl, context);
+                    // } else {
+                    ctrl.type.value = type;
+                    // }
                   },
                 ))
             : Container(

@@ -86,6 +86,11 @@ class DashboardController extends GetxController {
         "icon": "assets/icons/dzikir_pagi_petang_blur.svg",
         "urlNav": ""
       },
+      {
+        "label": "Hadits",
+        "icon": "assets/icons/hadits.svg",
+        "urlNav": "/hadits"
+      },
       // {"label": "DKM", "icon": "assets/icons/dkm.svg", "urlNav": "dkm"},
     ];
   }

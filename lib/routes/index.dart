@@ -2,6 +2,7 @@ import 'package:masjid_app/routes/auth/index.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/artikel/index.dart';
 import 'package:masjid_app/routes/doa/index.dart';
+import 'package:masjid_app/routes/hadits/index.dart';
 // import 'package:masjid_app/routes/dkm/index.dart';
 import 'package:masjid_app/routes/home/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
@@ -26,7 +27,8 @@ class AppPages {
     ...PagesOnboard.pages,
     ...PagesNotifikasi.pages,
     ...PagesKiblat.pages,
-    ...PagesTest.pages
+    ...PagesTest.pages,
+    ...PagesHadits.pages
   ];
   static var root = RoutesHome.splashscreen;
 }

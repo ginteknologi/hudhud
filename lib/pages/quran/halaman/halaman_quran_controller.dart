@@ -24,7 +24,7 @@ class HalamanQuranController extends GetxController
   late AnimationController animateController;
 
   final hctrl = Get.find<HomeController>();
-  final qctrl = Get.find<QuranController>();
+  // final qctrl = Get.find<QuranController>();
   var selectedSurah = Get.arguments;
   var initialPage = 0.obs;
 
@@ -36,7 +36,8 @@ class HalamanQuranController extends GetxController
 
   getQuran() async {
     lastReadPerhalaman.value = dataStore.read('perHalamanLastRead');
-    final String jsonString = await rootBundle.loadString('assets/img/quran/quran-page.json');
+    final String jsonString =
+        await rootBundle.loadString('assets/img/quran/quran-page.json');
     listSurah = json.decode(jsonString);
     return listSurah;
   }

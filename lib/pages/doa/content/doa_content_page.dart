@@ -43,9 +43,8 @@ class ContentDoaPage extends StatelessWidget {
                                   onTap: () {
                                     // ctrl.goToDetail(ctrl.listDoa[index]);
                                   },
-                                  subtitle:
-                                      ctrl.list['content']['rendered'],
-                                  type:'wp',
+                                  subtitle: ctrl.list['content']['rendered'],
+                                  type: 'wp',
                                   hasFooter: true,
                                   footerContent: [
                                     Text(
@@ -79,7 +78,7 @@ class ContentDoaPage extends StatelessWidget {
                                                       .primaryColor,
                                                   fontSize: Theme.of(context)
                                                       .textTheme
-                                                      .labelMedium
+                                                      .labelLarge
                                                       ?.fontSize,
                                                   fontWeight: FontWeight.bold)),
                                         ),

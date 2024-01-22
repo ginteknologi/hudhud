@@ -1,6 +1,7 @@
 // import 'dart:async';
 // import 'package:animate_do/animate_do.dart';
 // import 'package:auto_size_text/auto_size_text.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -116,53 +117,67 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
     final ctrl = Get.put(HalamanQuranController());
     final hctrl = Get.find<HomeController>();
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
-      extendBodyBehindAppBar: false,
-      resizeToAvoidBottomInset: false,
-      body: layout(ctrl, context, hctrl),
-      appBar: _show
-          ? SlidingAppBar(
-              controller: _controller,
-              visible: _visible,
-              child: AppBarWSWidget.getAppbarWidget(
-                  title: "Al-Quran",
-                  context: context,
-                  elevation: 0,
-                  iconRight: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(right: 40),
-                    child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            if (MediaQuery.of(context).orientation ==
-                                Orientation.portrait) {
-                              SystemChrome.setPreferredOrientations(
-                                  [DeviceOrientation.landscapeLeft]);
-                            } else {
-                              SystemChrome.setPreferredOrientations(
-                                  [DeviceOrientation.portraitUp]);
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(20),
-                          splashColor: Colors.green.withOpacity(0.5),
-                          child: Icon(
-                            Icons.zoom_in,
-                            size: 25,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        )),
-                  ),
-                  iconLeft: GestureDetector(
-                      onTap: () {
-                        hctrl.selectedIdx.value = 0;
-                        hctrl.type.value = BottomBarEnum.beranda;
-                      },
-                      child: const Icon(Icons.arrow_back_rounded)),
-                  defaultPlace: false,
-                  noBack: false),
-            )
-          : null,
-    );
+        backgroundColor: Color(0xFFF5F5F5),
+        extendBodyBehindAppBar: false,
+        resizeToAvoidBottomInset: false,
+        body: layout(ctrl, context, hctrl),
+        appBar: AppBarWSWidget.getAppbarWidget(
+          title: "Surah Ali Imran",
+          subtitle: AutoSizeText('Juz 3 - Hal.50',
+              maxLines: 1,
+              style: context.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.normal, color: Colors.white)),
+          haveSubtitle: true,
+          context: context,
+          iconTheme: IconThemeData(color: Colors.white),
+          elevation: 0,
+          color: Colors.white,
+          titleAlign: Alignment.centerLeft,
+          backgroundColor: Color(0xFF048C7C),
+        )
+        // appBar: _show
+        //     ? SlidingAppBar(
+        //         controller: _controller,
+        //         visible: _visible,
+        //         child: AppBarWSWidget.getAppbarWidget(
+        //             title: "Al-Quran",
+        //             context: context,
+        //             elevation: 0,
+        //             iconRight: Container(
+        //               alignment: Alignment.centerLeft,
+        //               margin: EdgeInsets.only(right: 40),
+        //               child: Material(
+        //                   color: Colors.transparent,
+        //                   child: InkWell(
+        //                     onTap: () {
+        //                       if (MediaQuery.of(context).orientation ==
+        //                           Orientation.portrait) {
+        //                         SystemChrome.setPreferredOrientations(
+        //                             [DeviceOrientation.landscapeLeft]);
+        //                       } else {
+        //                         SystemChrome.setPreferredOrientations(
+        //                             [DeviceOrientation.portraitUp]);
+        //                       }
+        //                     },
+        //                     borderRadius: BorderRadius.circular(20),
+        //                     splashColor: Colors.green.withOpacity(0.5),
+        //                     child: Icon(
+        //                       Icons.zoom_in,
+        //                       size: 25,
+        //                       color: Theme.of(context).primaryColor,
+        //                     ),
+        //                   )),
+        //             ),
+        //             iconLeft: GestureDetector(
+        //                 onTap: () {
+        //                   hctrl.selectedIdx.value = 0;
+        //                   hctrl.type.value = BottomBarEnum.beranda;
+        //                 },
+        //                 child: const Icon(Icons.arrow_back_rounded)),
+        //             defaultPlace: false,
+        //             noBack: false),
+        //       )
+        //     : null,
+        );
   }
 }

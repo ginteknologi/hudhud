@@ -16,10 +16,14 @@ class AppBarWSWidget {
     Alignment? titleAlign,
     bool? noBack = false,
     bool defaultPlace = true,
+    bool haveSubtitle = false,
+    Widget? subtitle,
+    IconThemeData? iconTheme,
     required BuildContext context, // Add the BuildContext parameter
   }) {
     return AppBar(
-      iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+      iconTheme:
+          iconTheme ?? IconThemeData(color: Theme.of(context).primaryColor),
       leading: noBack == true
           ? null
           : iconLeft ??
@@ -33,19 +37,32 @@ class AppBarWSWidget {
       backgroundColor: backgroundColor ?? Colors.white,
       elevation: elevation ?? 1,
       title: Align(
-        alignment: noBack == false && defaultPlace
-            ? Alignment.centerRight
-            : iconRight != null
-                ? Alignment.centerLeft
-                : Alignment.center,
-        child: Text(title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: titleSize ??
-                    Theme.of(context).textTheme.titleMedium?.fontSize,
-                letterSpacing: 0.5,
-                fontWeight: FontWeight.bold,
-                color: color ?? Theme.of(context).primaryColor)),
+        alignment: titleAlign ??
+            (noBack == false && defaultPlace
+                ? Alignment.centerRight
+                : iconRight != null
+                    ? Alignment.centerLeft
+                    : Alignment.center),
+        child: !haveSubtitle
+            ? Text(title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: titleSize ??
+                        Theme.of(context).textTheme.titleMedium?.fontSize,
+                    letterSpacing: 0.5,
+                    fontWeight: FontWeight.bold,
+                    color: color ?? Theme.of(context).primaryColor))
+            : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: titleSize ??
+                            Theme.of(context).textTheme.titleMedium?.fontSize,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.bold,
+                        color: color ?? Theme.of(context).primaryColor)),
+                if (subtitle != null) subtitle
+              ]),
       ),
       //centerTitle: false,
       actions: <Widget>[
