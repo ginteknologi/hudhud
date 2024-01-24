@@ -10,7 +10,9 @@ class ListAyatQuranController extends GetxController
   var isLoadingList = true.obs;
   var isLoadingDetail = false.obs;
   // var lastRead = {}.obs;
+  var txtController = TextEditingController();
   RxList list = [].obs;
+  RxList listReverse = [].obs;
   List listSurah = [].obs;
   RxList listAyat = [].obs;
   var detail = {}.obs;
@@ -21,6 +23,7 @@ class ListAyatQuranController extends GetxController
     // lastRead.value = dataStore.read('perAyatLastRead');
     final result = await QuranService().getList('all');
     list.value = result['data'];
+    listReverse.value = result['data'];
     isLoadingList.value = false;
     // lastRead.value = {"id": 0, "suratName": "Al-Anfal", "ayatNumber": 20};
   }

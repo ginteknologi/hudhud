@@ -19,6 +19,7 @@ class AppBarWSWidget {
     bool haveSubtitle = false,
     Widget? subtitle,
     IconThemeData? iconTheme,
+    VoidCallback? onTap,
     required BuildContext context, // Add the BuildContext parameter
   }) {
     return AppBar(
@@ -52,17 +53,61 @@ class AppBarWSWidget {
                     letterSpacing: 0.5,
                     fontWeight: FontWeight.bold,
                     color: color ?? Theme.of(context).primaryColor))
-            : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: titleSize ??
-                            Theme.of(context).textTheme.titleMedium?.fontSize,
-                        letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold,
-                        color: color ?? Theme.of(context).primaryColor)),
-                if (subtitle != null) subtitle
-              ]),
+            : onTap == null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Text(title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: titleSize ??
+                                    Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.fontSize,
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    color ?? Theme.of(context).primaryColor)),
+                        if (subtitle != null) subtitle
+                      ])
+                : Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      splashColor: Colors.white30,
+                      onTap: onTap,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(title,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: titleSize ??
+                                            Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.fontSize,
+                                        letterSpacing: 0.5,
+                                        fontWeight: FontWeight.bold,
+                                        color: color ??
+                                            Theme.of(context).primaryColor)),
+                                if (subtitle != null) subtitle
+                              ]),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.expand_more_rounded,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
       ),
       //centerTitle: false,
       actions: <Widget>[

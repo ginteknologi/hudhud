@@ -22,11 +22,19 @@ class HalamanQuranController extends GetxController
 
   var txtController = TextEditingController();
   late AnimationController animateController;
+  var searchController = TextEditingController();
 
   final hctrl = Get.find<HomeController>();
   // final qctrl = Get.find<QuranController>();
   var selectedSurah = Get.arguments;
   var initialPage = 0.obs;
+
+  getDataSearch() async {
+    // lastRead.value = dataStore.read('perAyatLastRead');
+    final result = await QuranService().getList(searchController.text);
+    list.value = result['data'];
+    isLoadingList.value = false;
+  }
 
   getData() async {
     final result = await QuranService().getList('all');

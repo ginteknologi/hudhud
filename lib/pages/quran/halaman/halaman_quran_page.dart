@@ -1,16 +1,20 @@
 // import 'dart:async';
 // import 'package:animate_do/animate_do.dart';
 // import 'package:auto_size_text/auto_size_text.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/input/InputText.dart';
 // import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
+import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/layout/sliding_app_bar.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
@@ -103,6 +107,88 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
         });
   }
 
+  void showModal(HalamanQuranController ctrl, BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        showDragHandle: false,
+        enableDrag: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(0.0),
+          ),
+        ),
+        builder: (BuildContext bc) {
+          return CustomModalBottomSheet(
+            typeSheet: TypeBottomSheet.typeFullscreenSheet,
+            content: [
+              InputText(
+                suffixIcon: Icon(Icons.search),
+                labelPosition: 'none',
+                placeholder: 'Cari',
+                radius: 5,
+                isFill: true,
+                fillColor: Colors.white,
+                placeholderStyle: Theme.of(context).textTheme.bodyMedium,
+                inputPadding: const EdgeInsets.all(15),
+                controller: ctrl.searchController,
+                onSubmit: (newValue) {},
+                onEditingComplete: () {},
+                onChanged: (newValue) {
+                  // ctrl.getDataSearch();
+                },
+                validator: (newValue) {
+                  if (newValue!.isEmpty) {
+                    return "Mohon untuk diisi.";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 30,
+                child: Text(
+                  "Surah".tr,
+                  textAlign: TextAlign.start,
+                  style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height -
+                    kBottomNavigationBarHeight -
+                    kToolbarHeight -
+                    60,
+                child: ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: ctrl.list.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    // Datum model = filteredEvents[index];
+                    var item = ctrl.list[index];
+                    return FadeInUp(
+                      child: ListItemUiWidget(
+                        showIcon: IconPosition.left,
+                        iconLeft: Text(item['number'].toString()),
+                        id: item['number'],
+                        title: item['name']['transliteration']['id'],
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        titleStyle: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                      ),
+                    );
+                  },
+                ),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -133,6 +219,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
           elevation: 0,
           color: Colors.white,
           titleAlign: Alignment.centerLeft,
+          onTap: () => {showModal(ctrl, context)},
           backgroundColor: Color(0xFF048C7C),
         )
         // appBar: _show
