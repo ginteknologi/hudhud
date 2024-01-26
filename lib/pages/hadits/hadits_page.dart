@@ -146,24 +146,24 @@ class HaditsPage extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                             const SizedBox(height: 5),
-                            Text(
+                            AutoSizeText(
                               'Hadits Arbain',
-                              textAlign: TextAlign.left,
+                              textAlign: TextAlign.start,
                               style: TextStyle(
-                                  height: 1,
+                                  height: 0.5,
                                   fontSize: Theme.of(context)
                                       .textTheme
                                       .bodySmall
                                       ?.fontSize,
                                   color: Colors.black87,
                                   fontWeight: FontWeight.bold),
-                              maxLines: 1,
                             ),
-                            Text(
+                            const SizedBox(height: 5),
+                            AutoSizeText(
                               '42 Hadits',
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                  height: 1,
+                                  height: 0.5,
                                   fontSize: Theme.of(context)
                                       .textTheme
                                       .bodySmall
@@ -171,7 +171,27 @@ class HaditsPage extends StatelessWidget {
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w300),
                               maxLines: 1,
-                            ),
+                            ),                            
+                            // AutoSizeText(
+                            //   '42 Hadits',  
+                            //   textAlign: TextAlign.start,
+                            //   style: context.textTheme.labelMedium?.copyWith(
+                            //       fontWeight: FontWeight.w300,
+                            //       fontStyle: FontStyle.italic),
+                            // )
+                            // Text(
+                            //   '42 Hadits',
+                            //   textAlign: TextAlign.left,
+                            //   style: TextStyle(
+                            //       height: 1,
+                            //       fontSize: Theme.of(context)
+                            //           .textTheme
+                            //           .bodySmall
+                            //           ?.fontSize,
+                            //       color: Colors.black87,
+                            //       fontWeight: FontWeight.w300),
+                            //   maxLines: 1,
+                            // ),
                           ],
                         )))));
       },

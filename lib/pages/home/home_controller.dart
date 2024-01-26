@@ -11,7 +11,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   final gctrl = Get.find<MainController>();
   final dataStore = GetStorage();
   var isLoadingList = true.obs;
-  var idxLastReadHalaman = 0.obs;
+  RxInt idxLastReadHalaman = 0.obs;
   var list = {}.obs;
   // Rx<BottomBarEnum> type = BottomBarEnum.alquran.obs;
   // Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perhalaman.obs;

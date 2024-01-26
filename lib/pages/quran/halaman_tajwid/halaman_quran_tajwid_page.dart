@@ -8,19 +8,19 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
-import 'package:masjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
-import 'package:masjid_app/pages/quran/halaman/halaman_quran_controller.dart';
+import 'package:masjid_app/pages/quran/halaman_tajwid/component/image_viewer_widget.dart';
+import 'package:masjid_app/pages/quran/halaman_tajwid/halaman_quran_tajwid_controller.dart';
 
-class HalamanQuranPage extends StatefulWidget {
-  const HalamanQuranPage({super.key});
+class HalamanQuranTajwidPage extends StatefulWidget {
+  const HalamanQuranTajwidPage({super.key});
 
   @override
-  State<HalamanQuranPage> createState() => _HalamanQuranPageState();
+  State<HalamanQuranTajwidPage> createState() => _HalamanQuranTajwidPageState();
 }
 
-class _HalamanQuranPageState extends State<HalamanQuranPage>
+class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
     with SingleTickerProviderStateMixin {
-  layout(HalamanQuranController ctrl, BuildContext context,
+  layout(HalamanQuranTajwidController ctrl, BuildContext context,
       HomeController ctrlHome) {
     return SafeArea(
         child: Container(
@@ -60,7 +60,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
   late final AnimationController _controller;
 
   void showPopup(
-    HalamanQuranController ctrl,
+    HalamanQuranTajwidController ctrl,
     BuildContext context,
     HomeController ctrlHome,
   ) {
@@ -98,7 +98,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
         });
   }
 
-  void showModal(HalamanQuranController ctrl, BuildContext context) {
+  void showModal(HalamanQuranTajwidController ctrl, BuildContext context) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -197,7 +197,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(HalamanQuranController());
+    final ctrl = Get.put(HalamanQuranTajwidController());
     final hctrl = Get.find<HomeController>();
     return Scaffold(
         backgroundColor: Color(0xFFF5F5F5),

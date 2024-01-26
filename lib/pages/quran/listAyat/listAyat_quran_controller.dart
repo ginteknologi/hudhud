@@ -15,7 +15,7 @@ class ListAyatQuranController extends GetxController
   RxList listReverse = [].obs;
   List listSurah = [].obs;
   RxList listAyat = [].obs;
-  var detail = {}.obs;
+  RxMap detail = {}.obs;
   var searchController = TextEditingController();
   late TabController tabController;
 
@@ -33,7 +33,6 @@ class ListAyatQuranController extends GetxController
     final result = await QuranService().getDetail(surahId.toString());
     detail.value = result['data'];
     listAyat.value = detail['verses'];
-    print(listAyat);
     isLoadingDetail.value = false;
   }
 
@@ -50,7 +49,7 @@ class ListAyatQuranController extends GetxController
     list.value = list.reversed.toList();
     tabController = TabController(
         vsync: this, length: list.length, initialIndex: list.length - 1);
-    await getDetailData(1);
+    await getDetailData(1); //first open page
     super.onInit();
   }
 

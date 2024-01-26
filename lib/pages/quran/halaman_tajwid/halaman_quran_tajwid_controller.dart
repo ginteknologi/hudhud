@@ -8,7 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
-class HalamanQuranController extends GetxController
+class HalamanQuranTajwidController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final dataStore = GetStorage();
   var lastReadPerhalaman = {}.obs;
@@ -16,7 +16,7 @@ class HalamanQuranController extends GetxController
   List list = [].obs;
   List listSurah = [].obs;
   var visible = true.obs;
-  var surahSaatIni = 'Quran Indonesia'.obs;
+  var surahSaatIni = 'Quran Tajwid'.obs;
   var bookmarked = false.obs;
 
   var txtController = TextEditingController();
@@ -31,7 +31,7 @@ class HalamanQuranController extends GetxController
 
   getQuran() async {
     lastReadPerhalaman.value = dataStore.read('perHalamanLastRead');
-    final String jsonString = await rootBundle.loadString('assets/img/quran/quran-page.json');
+    final String jsonString = await rootBundle.loadString('assets/img/quran/quran-page-tajwid.json');
     listSurah = json.decode(jsonString);
     isLoadingList.value = false;
     return listSurah;

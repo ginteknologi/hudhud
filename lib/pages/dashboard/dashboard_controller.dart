@@ -81,11 +81,11 @@ class DashboardController extends GetxController {
         "icon": "assets/icons/artikel.svg",
         "urlNav": "/artikel"
       },
-      {
-        "label": "Dzikir Pagi Petang",
-        "icon": "assets/icons/dzikir_pagi_petang_blur.svg",
-        "urlNav": ""
-      },
+      // {
+      //   "label": "Dzikir Pagi Petang",
+      //   "icon": "assets/icons/dzikir_pagi_petang_blur.svg",
+      //   "urlNav": ""
+      // },
       {
         "label": "Hadits",
         "icon": "assets/icons/hadits.svg",
@@ -246,12 +246,12 @@ class DashboardController extends GetxController {
     getAllMenu();
     getListKota();
     setFcm();
-    if (ctrlmain.showPopupInfaq.isTrue) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ctrlmain.showPopup();
-        ctrlmain.showPopupInfaq.value = false;
-      });
-    }
+    // if (ctrlmain.showPopupInfaq.isTrue) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     ctrlmain.showPopup();
+    //     ctrlmain.showPopupInfaq.value = false;
+    //   });
+    // }
 
     super.onInit();
   }
