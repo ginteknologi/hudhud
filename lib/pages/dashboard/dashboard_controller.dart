@@ -81,11 +81,11 @@ class DashboardController extends GetxController {
         "icon": "assets/icons/artikel.svg",
         "urlNav": "/artikel"
       },
-      // {
-      //   "label": "Dzikir Pagi Petang",
-      //   "icon": "assets/icons/dzikir_pagi_petang_blur.svg",
-      //   "urlNav": ""
-      // },
+      {
+        "label": "Dzikir Pagi Petang",
+        "icon": "assets/icons/dzikir_pagi_petang.svg",
+        "urlNav": "/dzikir"
+      },
       {
         "label": "Hadits",
         "icon": "assets/icons/hadits.svg",

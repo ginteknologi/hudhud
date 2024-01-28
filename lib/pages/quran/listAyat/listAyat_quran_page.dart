@@ -153,6 +153,10 @@ class ListAyatQuranPage extends StatelessWidget {
                         iconLeft: Text(item['number'].toString()),
                         id: item['number'],
                         title: item['name']['transliteration']['id'],
+                        subTitle: item['name']['translation']['id'] +
+                            ' - ' +
+                            item['numberOfVerses'].toString() +
+                            ' Ayat',
                         onTap: () {
                           Navigator.pop(context);
                         },
@@ -182,32 +186,36 @@ class ListAyatQuranPage extends StatelessWidget {
             width: 4.0,
           ),
         ))),
-        child: Obx(() => 
-        ctrl.detail.isEmpty ? const Center(child: CircularProgressIndicator()) : Scaffold(
-            backgroundColor: Color(0xFFF5F5F5),
-            extendBodyBehindAppBar: false,
-            resizeToAvoidBottomInset: false,
-            appBar: AppBarWSWidget.getAppbarWidget(
-                title: ctrl.detail.isEmpty
-                    ? "List Ayat : "
-                    : ctrl.detail['name']['transliteration']['id'],
-                subtitle: AutoSizeText(ctrl.detail.isEmpty
-                    ? "Total Ayat :"
-                    : "Jumlah Ayat : " + ctrl.detail['numberOfVerses'].toString(),
-                    maxLines: 1,
-                    style: context.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.normal, color: Colors.white)),
-                haveSubtitle: true,
-                context: context,
-                iconTheme: IconThemeData(color: Colors.white),
-                elevation: 0,
-                color: Colors.white,
-                titleAlign: Alignment.centerLeft,
-                backgroundColor: Color(0xFF048C7C),
-                bottom: listTabs(ctrl, context)
-              ),
-            body: Obx(() => ctrl.isLoadingList.value
-                ? const Center(child: CircularProgressIndicator())
-                : tabContent(ctrl, gctrl, context)))));
+        child: Obx(() => ctrl.detail.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : Scaffold(
+                backgroundColor: Color(0xFFF5F5F5),
+                extendBodyBehindAppBar: false,
+                resizeToAvoidBottomInset: false,
+                appBar: AppBarWSWidget.getAppbarWidget(
+                  title: ctrl.detail.isEmpty
+                      ? "List Ayat : "
+                      : ctrl.detail['name']['transliteration']['id'],
+                  subtitle: AutoSizeText(
+                      ctrl.detail.isEmpty
+                          ? "Total Ayat :"
+                          : "Jumlah Ayat : " +
+                              ctrl.detail['numberOfVerses'].toString(),
+                      maxLines: 1,
+                      style: context.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.normal, color: Colors.white)),
+                  haveSubtitle: true,
+                  context: context,
+                  iconTheme: IconThemeData(color: Colors.white),
+                  elevation: 0,
+                  color: Colors.white,
+                  titleAlign: Alignment.centerLeft,
+                  backgroundColor: Color(0xFF048C7C),
+                  bottom: listTabs(ctrl, context),
+                  onTap: () => {showPopup(ctrl, context)},
+                ),
+                body: Obx(() => ctrl.isLoadingList.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : tabContent(ctrl, gctrl, context)))));
   }
 }
