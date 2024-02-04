@@ -9,7 +9,26 @@ class DoaService extends GetConnect {
 
   Future getList() async {
     final response = await http.get(
-        Uri.parse("${RemoteData.apiWp}/posts?_fields=id,excerpt,title,date,categories&categories=15"),
+        Uri.parse("${RemoteData.api}/doa/category"),
+        headers: <String, String>{
+          // 'Authorization': "Bearer ${authStore.read('jwt')}",
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      // json['code'] = response.statusCode;
+      return json;
+    } else if (response.statusCode == 401) {
+      // RemoteData.authError();
+    } else {
+      final json = jsonDecode(response.body);
+      json['code'] = response.statusCode;
+      return json;
+    }
+  }
+  Future getListDoa(category) async {
+    final response = await http.get(
+        Uri.parse("${RemoteData.api}/doa/list/${category}"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -29,7 +48,7 @@ class DoaService extends GetConnect {
   Future getDetail() async {
     print(Get.parameters['content']);
     final response = await http.get(
-        Uri.parse("${RemoteData.apiWp}/posts/${Get.parameters['content']}"),
+        Uri.parse("${RemoteData.api}/doa/detail/${Get.parameters['content']}"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

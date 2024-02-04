@@ -1,10 +1,8 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
-import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
@@ -23,36 +21,37 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
   layout(HalamanQuranTajwidController ctrl, BuildContext context,
       HomeController ctrlHome) {
     return SafeArea(
-        child: Container(
-            constraints: BoxConstraints.loose(Size.infinite),
-            child: Stack(
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _visible = !_visible;
-                        _show = !_show;
-                      });
-                      ctrlHome.visible.value = !ctrlHome.visible.value;
-                      ctrlHome.selectedIdx.value = 1;
-                    },
-                    child: Column(
+        child: Obx(() => ctrl.isLoadingList.value
+            ? const Center(child: CircularProgressIndicator())
+            : Container(
+                constraints: BoxConstraints.loose(Size.infinite),
+                child: Stack(
+                  children: [
+                    GestureDetector(
+                        // onTap: () {
+                        //   setState(() {
+                        //     _visible = !_visible;
+                        //     _show = !_show;
+                        //   });
+                        //   ctrlHome.visible.value = !ctrlHome.visible.value;
+                        // },
+                        child: Column(
                       // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Flexible(
-                          child: EasyImageViewPager(
-                              onTap: (int index) {
-                                showPopup(ctrl, context, ctrlHome);
-                              },
-                              idxInitial: ctrl.toSurat > 0
-                                  ? ctrl.toSurat
-                                  : ctrlHome.idxLastReadHalaman.value,
-                              imageProviders: ctrl.listSurah),
-                        ),
+                            child: EasyImageViewPager(
+                                onTap: (int index) {
+                                  showPopup(ctrl, context, ctrlHome);
+                                },
+                                // search: ctrl.toSurat > 0 ? true : false,
+                                idxInitial: ctrl.toSurat > 0
+                                    ? ctrl.toSurat
+                                    : ctrl.lastReadPerhalaman['hal'],
+                                imageProviders: ctrl.listSurah)),
                       ],
                     ))
-              ],
-            )));
+                  ],
+                ))));
   }
 
   bool _visible = true;
@@ -168,8 +167,11 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                                   iconLeft: Text(item['number'].toString()),
                                   id: item['number'],
                                   title: item['name']['transliteration']['id'],
-                                  onTap: () {
-                                    ctrl.goToData(item);
+                                  subTitle:
+                                      '${item['name']['translation']['id']} - ${item['numberOfVerses']} ayat',
+                                  subtitleStyle: TextStyle(fontSize: 2),
+                                  onTap: () async {
+                                    await ctrl.goToData(item);
                                     Navigator.pop(context);
                                   },
                                   titleStyle: context.textTheme.titleMedium
@@ -199,63 +201,72 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
   Widget build(BuildContext context) {
     final ctrl = Get.put(HalamanQuranTajwidController());
     final hctrl = Get.find<HomeController>();
-    return Scaffold(
-        backgroundColor: Color(0xFFF5F5F5),
-        extendBodyBehindAppBar: false,
-        resizeToAvoidBottomInset: false,
-        body: Obx(() => ctrl.isLoadingList.value
-            ? const Center(child: CircularProgressIndicator())
-            : layout(ctrl, context, hctrl)),
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          leading: GestureDetector(
-              onTap: () {
-                Navigator.of(context)
-                    .pop(); // Navigate back to the previous page
-              },
-              child: const Icon(Icons.arrow_back_rounded)),
-          backgroundColor: Color(0xFF048C7C),
-          elevation: 0,
-          title: Align(
-            alignment: Alignment.centerLeft,
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                splashColor: Colors.white30,
-                // onTap: () => {showModal(ctrl, context)},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(ctrl.surahSaatIni.value,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.fontSize,
-                                  letterSpacing: 0.5,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white))
-                        ]),
-                    SizedBox(
-                      width: 5,
+    return WillPopScope(
+        onWillPop: () async {
+          // Logika yang dijalankan saat tombol kembali ditekan
+          Get.back(result: 'refresh');
+          return false; // Kembalikan false agar tidak melakukan pop secara otomatis
+        },
+        child: Scaffold(
+            backgroundColor: Color(0xFFF5F5F5),
+            extendBodyBehindAppBar: false,
+            resizeToAvoidBottomInset: false,
+            body: layout(ctrl, context, hctrl),
+            appBar: AppBar(
+              iconTheme: IconThemeData(color: Colors.white),
+              leading: GestureDetector(
+                  onTap: () {
+                    Get.back(result: 'refresh');
+                  },
+                  child: const Icon(Icons.arrow_back_rounded)),
+              backgroundColor: Color(0xFF048C7C),
+              elevation: 0,
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    splashColor: Colors.white30,
+                    onTap: () => {showModal(ctrl, context)},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Obx(() => Text(ctrl.surahSaatIni.value,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.fontSize,
+                                      letterSpacing: 0.5,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white))),
+                              Obx(() => Text("Halaman ${ctrl.halSaatIni.value}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      letterSpacing: 0.5,
+                                      color: Colors.white))),
+                            ]),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Icon(
+                          Icons.expand_more_rounded,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
-                    // Icon(
-                    //   Icons.expand_more_rounded,
-                    //   color: Colors.white,
-                    // ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ));
+            )));
     // appBar: AppBarWSWidget.getAppbarWidget(
-    //   title: ctrl.surahSaatIni.value,
+    //   title: Obx(() => ctrl.isLoadingList.value ? '' : ctrl.surahSaatIni.value),
     //   subtitle: AutoSizeText('Juz 3 - Hal.50',
     //       maxLines: 1,
     //       style: context.textTheme.bodySmall?.copyWith(

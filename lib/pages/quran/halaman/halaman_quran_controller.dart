@@ -7,16 +7,18 @@ import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-
+import 'package:masjid_app/configs/main_controller.dart';
 class HalamanQuranController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final dataStore = GetStorage();
+  final gctrl = Get.find<MainController>();
   var lastReadPerhalaman = {}.obs;
   var isLoadingList = true.obs;
   List list = [].obs;
   List listSurah = [].obs;
   var visible = true.obs;
   var surahSaatIni = 'Quran Indonesia'.obs;
+  var halSaatIni = '1'.obs;
   var bookmarked = false.obs;
 
   var txtController = TextEditingController();
@@ -30,11 +32,16 @@ class HalamanQuranController extends GetxController
   int toSurat = 0;
 
   getQuran() async {
-    lastReadPerhalaman.value = dataStore.read('perHalamanLastRead');
+    try {
+    lastReadPerhalaman.value = dataStore.read('indonesiaLastRead');
     final String jsonString = await rootBundle.loadString('assets/img/quran/quran-page.json');
     listSurah = json.decode(jsonString);
     isLoadingList.value = false;
     return listSurah;
+    } catch (e) {
+      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      print(e);
+    }
   }
   getDataSearch() async {
     try {
@@ -42,6 +49,7 @@ class HalamanQuranController extends GetxController
     isLoadingList.value = true;
     final result = await QuranService().getList(searchController.text);
     list = result['data'];
+    print(list);
     isLoadingList.value = false;
     } catch (e) {
       print('<<<<<<<<error controller getDataSearch>>>>>>>>');
@@ -52,17 +60,10 @@ class HalamanQuranController extends GetxController
     try {
       isLoadingList.value = true;
       Map filteredData = listSurah.firstWhereOrNull((item) => item['surat'].toString().toLowerCase() == itemData['name']['transliteration']['id'].toString().toLowerCase());
+      surahSaatIni.value = filteredData['surat'];
+      halSaatIni.value = filteredData['hal'].toString();
       toSurat = filteredData['id'];
-      isLoadingList.value = false;
-    } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);      
-    }
-  }
-  refreshTitle(itemData) async {
-    try {
-      isLoadingList.value = true;
-      // surahSaatIni.value = itemData;
+      print(filteredData['id']);
       isLoadingList.value = false;
     } catch (e) {
       print('<<<<<<<<error controller getDataSearch>>>>>>>>');
@@ -70,13 +71,10 @@ class HalamanQuranController extends GetxController
     }
   }
   bookmark() async {
-    Fluttertoast.showToast(
-        msg: "Halaman berhasil ditandai",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.black87,
-        timeInSecForIosWeb: 1,
-        fontSize: Get.width / 30);
+      isLoadingList.value = true;
+      print('<<<<<<<<<<<wei>>>>>>>>>>>');
+      isLoadingList.value = false;
+
   }
 
   @override
@@ -86,6 +84,9 @@ class HalamanQuranController extends GetxController
     //   duration: Duration(milliseconds: 400),
     // );
     await getQuran();
+    await getDataSearch();
+    dataStore.read('indonesiaLastRead') == null ? surahSaatIni.value = 'Quran Indonesia' : surahSaatIni.value = dataStore.read('indonesiaLastRead')['surat'];
+    dataStore.read('indonesiaLastRead') == null ? halSaatIni.value = '1' : halSaatIni.value = dataStore.read('indonesiaLastRead')['hal'].toString();
     super.onInit();
   }
 }

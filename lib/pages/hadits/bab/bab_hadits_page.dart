@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/hadits/detail/detail_hadits_controller.dart';
+import 'package:masjid_app/pages/hadits/bab/bab_hadits_controller.dart';
 import 'package:masjid_app/routes/hadits/index.dart';
 
-class DetailHaditsPage extends StatelessWidget {
-  DetailHaditsPage({super.key});
+class BabHaditsPage extends StatelessWidget {
+  BabHaditsPage({super.key});
 
-  layout(DetailHaditsController ctrl, BuildContext context) {
+  layout(BabHaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -72,11 +72,7 @@ class DetailHaditsPage extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Image.asset(
-                              "assets/icons/thumb_quran2x.png",
-                              width: 103,
-                              fit: BoxFit.cover,
-                            ),
+                            
                             SizedBox(
                               width: 20,
                             ),
@@ -85,7 +81,7 @@ class DetailHaditsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ctrl.arguments['detail']['longNama'],
+                                  ctrl.arguments['content']['Kitab_Indonesia'],
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -101,7 +97,7 @@ class DetailHaditsPage extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  ctrl.arguments['detail']['hadits'].toString() + ' Hadits',
+                                  'Bab ' + ctrl.arguments['content']['ID_Kitab'].toString(),
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -134,14 +130,10 @@ class DetailHaditsPage extends StatelessWidget {
                       // Datum model = filteredEvents[index];
                       return FadeInUp(
                         child: ListItemUiWidget(
-                          id: ctrl.list[index]['ID_Kitab'],
-                          title: ctrl.list[index]['Kitab_Indonesia'],
+                          id: ctrl.list[index]['ID_Bab'],
+                          title: ctrl.list[index]['Bab_Indonesia'],
                           onTap: () {
-                            if (ctrl.arguments['detail']['namaTabel'] == 'arbain') {
-                              Get.toNamed(RoutesHadits.content, arguments: {'content': ctrl.list[index], 'detail' : ctrl.arguments['detail'], 'bab': ctrl.list[index]});
-                            } else{
-                              Get.toNamed(RoutesHadits.bab, arguments: {'content': ctrl.list[index], 'detail': ctrl.arguments['detail']});
-                            }
+                            Get.toNamed(RoutesHadits.content, arguments: {'content': ctrl.arguments['content'], 'detail': ctrl.arguments['detail'], 'bab': ctrl.list[index]});
                           },
                           titleStyle: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.black),
@@ -166,7 +158,7 @@ class DetailHaditsPage extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          ctrl.list[index]['ID_Kitab'].toString(),
+                                          ctrl.list[index]['ID_Bab'].toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)
@@ -200,7 +192,7 @@ class DetailHaditsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailHaditsController());
+    final ctrl = Get.put(BabHaditsController());
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(

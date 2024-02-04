@@ -41,6 +41,7 @@ class HomeService extends GetConnect {
   }
 
   Future setToken(token) => cekToken(token).then((hasilcek) async {
+    try {
     final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
     if (hasilcek['data'].length > 0) {
       var api = '${RemoteData.api}/fcm/${hasilcek['data'][0]['id']}';
@@ -67,7 +68,12 @@ class HomeService extends GetConnect {
           'token': token,
         }),
       );
+      print('<<<<<<<<<response>>>>>>>>>');
       return response;
+    }
+    } catch (e) {
+      print("<<<<<<Error SetToken Service>>>>>>");
+      print(e);
     }
   });
     

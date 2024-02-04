@@ -28,8 +28,6 @@ class DetailAyatQuranController extends GetxController {
     final result = await QuranService().getDetail(surahId.toString());
     detail.value = result['data'];
     listAyat = detail['verses'];
-    print(detail['name']['transliteration']['id']);
-    print(gctrl.perAyatLastRead['suratName']);
     if (gctrl.perAyatLastRead['suratName'] == detail['name']['transliteration']['id']) {
       surahBookmarked.value = true;
     }

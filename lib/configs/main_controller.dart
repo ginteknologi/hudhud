@@ -20,7 +20,9 @@ class MainController extends GetxController {
   var isLogin = false.obs;
   var userLogin = {}.obs;
   var perAyatLastRead = {}.obs;
-  var perHalamanLastRead = {}.obs;
+  var indonesiaLastRead = {}.obs;
+  var tajwidLastRead = {}.obs;
+  var madinahLastRead = {}.obs;
   var lokasiSaatIni = "";
 
   //  ============ data dialog infaq
@@ -244,11 +246,19 @@ class MainController extends GetxController {
       if (dataStore.read('perAyatLastRead') == null) {
         dataStore.write('perAyatLastRead', {'id': 0, 'suratName': '', 'ayatNumber': 0});
       }
-      if (dataStore.read('perHalamanLastRead') == null) {
-        dataStore.write('perHalamanLastRead', {'id': 0, 'suratName': '', 'page': 0});
+      if (dataStore.read('indonesiaLastRead') == null) {
+        dataStore.write('indonesiaLastRead', {'id': 0, 'surat': '', 'hal': 0});
+      }
+      if (dataStore.read('tajwidLastRead') == null) {
+        dataStore.write('tajwidLastRead', {'id': 0, 'surat': '', 'hal': 0});
+      }
+      if (dataStore.read('madinahLastRead') == null) {
+        dataStore.write('madinahLastRead', {'id': 0, 'surat': '', 'hal': 0});
       }
       perAyatLastRead.value = dataStore.read('perAyatLastRead');
-      perHalamanLastRead.value = dataStore.read('perHalamanLastRead');
+      indonesiaLastRead.value = dataStore.read('indonesiaLastRead');
+      tajwidLastRead.value = dataStore.read('tajwidLastRead');
+      madinahLastRead.value = dataStore.read('madinahLastRead');
     } catch (e) {
       print(e);
     }

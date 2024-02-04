@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppBarWSWidget {
   static AppBar getAppbarWidget({
@@ -30,8 +31,9 @@ class AppBarWSWidget {
           : iconLeft ??
               GestureDetector(
                   onTap: () {
-                    Navigator.of(context)
-                        .pop(); // Navigate back to the previous page
+                    Get.back(result: 'refresh');
+                    // Navigator.of(context)
+                    //     .pop(); // Navigate back to the previous page
                   },
                   child: const Icon(Icons.arrow_back_rounded)),
       bottom: bottom,

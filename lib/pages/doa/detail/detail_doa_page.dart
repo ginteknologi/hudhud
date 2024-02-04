@@ -1,6 +1,6 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:easy_localization/easy_localization.dart';
-// import 'package:auto_size_text/auto_size_text.dart';
+// import 'package:easy_localization/easy_localization.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,9 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/doa/detail/detail_doa_controller.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:masjid_app/routes/doa/index.dart';
+
 class DetailDoaPage extends StatelessWidget {
   const DetailDoaPage({super.key});
 
@@ -66,27 +69,38 @@ class DetailDoaPage extends StatelessWidget {
                                       child: ListCardUiWidget(
                                         type: 'wp',
                                         id: ctrl.list[index]['id'],
-                                        title: ctrl.list[index]['title']['rendered'],
+                                        title: ctrl.list[index]['judul'],
                                         titleStyle: context.textTheme.titleSmall
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Theme.of(context)
                                                     .primaryColor),
+                                        subtitle: ctrl.list[index]['isi'],
                                         subtitleStyle: context
                                             .textTheme.labelMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black45),
                                         onTap: () {
-                                          ctrl.goToDetail(ctrl.list[index]['id']);
+                                          Get.toNamed('${RoutesDoa.root}/${Get.parameters['id']}/${ctrl.list[index]['id']}');
                                         },
-                                        subtitle: ctrl.list[index]['excerpt']['rendered'],
                                         hasFooter: true,
                                         footerContent: [
-                                          Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list[index]['date'])),
-                                          style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
-                                          ),
-                                          // Text(ctrl.listDoa[index]['kutipan'],
+                                          // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list[index]['date'])),
+                                          // style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
+                                          // ),
+
+                                          // AutoSizeText(
+                                          //   ctrl.list[index]['isi'],
+                                          //   textAlign: TextAlign.end,
+                                          //   style: context.textTheme.labelSmall
+                                          //       ?.copyWith(
+                                          //           fontWeight: FontWeight.bold,
+                                          //           letterSpacing: 0,
+                                          //           color: Colors.black54),
+                                          //   maxLines: 2,
+                                          // ),
+                                          // Text(ctrl.list[index]['isi'],
                                           //     textAlign: TextAlign.start,
                                           //     style: context
                                           //         .textTheme.labelSmall
@@ -137,7 +151,9 @@ class DetailDoaPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a > Do'a Harian", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)) ,
+      body: Obx(() => ctrl.isLoadingList.value
+          ? CircularProgressIndicator()
+          : layout(ctrl, context)),
     );
   }
 }

@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/doa/doa_service.dart';
-import 'package:masjid_app/routes/doa/index.dart';
 
 class DoaController extends GetxController {
   var isLoadingList = true.obs;
-  var list = {}.obs;
+  var list = [].obs;
 
   List listTypesDoa = [].obs;
 
@@ -37,14 +36,10 @@ class DoaController extends GetxController {
     ];
   }
 
-  goToDetail(param) {
-    Get.toNamed('${RoutesDoa.root}/${param['id']}',
-        arguments: {"selectedDoa": param});
-  }
-
   @override
   void onInit() {
     getListTypesDoa();
+    getData();
     super.onInit();
   }
 }

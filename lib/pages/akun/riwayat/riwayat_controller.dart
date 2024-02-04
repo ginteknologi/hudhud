@@ -15,7 +15,6 @@ class RiwayatController extends GetxController {
 
   goToDetail(param) {
     _showPopup();
-    // print(RoutesSedekah.detail, id: id);
   }
 
   getRiwayats() async {

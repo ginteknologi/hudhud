@@ -15,12 +15,13 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Widget getCurrentWidget(BottomBarEnum type, HomeController ctrl) {
+    print(type);
     switch (type) {
       case BottomBarEnum.beranda:
         return const DashboardPage();
       case BottomBarEnum.alquran:
         // return QuranPage(typeView: ctrl.typeViewQuran.value);
-        return AlquranPage();
+        return const AlquranPage();
       case BottomBarEnum.ruangan:
         // return const RuanganPage();
         return getDefaultWidget();

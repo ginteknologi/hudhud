@@ -18,10 +18,10 @@ class ArtikelPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  getListCategory(ctrl),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  // getListCategory(ctrl),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
                   getListArtikel(ctrl, context)
                 ]))));
   }
@@ -43,7 +43,7 @@ class ArtikelPage extends StatelessWidget {
                     side: const BorderSide(width: 1, color: Colors.black12)),
                 selected: ctrl.listCategoryFilterSelected[index].value,
                 label: Text(
-                  ctrl.listCategoryFilter[index]['name'],
+                  ctrl.listCategoryFilter[index]['n e'],
                   style: TextStyle(
                       fontSize:
                           Theme.of(context).textTheme.labelMedium?.fontSize,

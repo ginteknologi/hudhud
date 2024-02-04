@@ -8,6 +8,7 @@ import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/pages/artikel/detail/detail_artikel_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DetailArtikelPage extends StatelessWidget {
   const DetailArtikelPage({super.key});
@@ -83,8 +84,16 @@ class DetailArtikelPage extends StatelessWidget {
                 Html(data: ctrl.detail['content']['rendered'],
                   style: {
                     'h2': Style(
-                      fontSize: FontSize(24.0),
+                      fontSize: FontSize(18.0),
                       fontWeight: FontWeight.bold,
+                    ),
+                    'h3': Style(
+                      fontSize: FontSize(18.0),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    'p': Style(
+                      fontWeight: FontWeight.bold,
+                      fontSize: FontSize.small
                     ),
                     'b': Style(
                       fontWeight: FontWeight.bold,
@@ -153,7 +162,8 @@ class DetailArtikelPage extends StatelessWidget {
                                         ?.fontSize,
                                   ),
                                   onPressed: () {
-                                    // ctrl.goToDetail('1');
+                                    Share.share(ctrl.share.value,
+                                                  subject: ctrl.detail['title']['rendered']);
                                   },
                                 ),
                               ),

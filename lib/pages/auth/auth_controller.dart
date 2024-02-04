@@ -12,7 +12,6 @@ class AuthController extends GetxController {
   loginGoogle() async {
     try {
       final result = await GoogleLogin().googleSignIn();
-      print(result);
       final userGoogle = {
         "id": result['data']['_id'],
         "name": result['data']['name'],
@@ -26,7 +25,6 @@ class AuthController extends GetxController {
   }
 
   loginGuest() async {
-    print('this');
     try {
       final userGoogle = {
         "name": 'Guest Account',
@@ -51,7 +49,6 @@ class AuthController extends GetxController {
   getProfile(userGoogle) async {
     try {
       final result = await AuthService().getProfile(userGoogle);
-      print(result);
       final json = {
         "id": result['data']['id'],
         "name": result['data']['nama'],

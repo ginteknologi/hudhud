@@ -51,7 +51,11 @@ class DashboardController extends GetxController {
         "icon": "assets/icons/kiblat.svg",
         "urlNav": "/kiblat"
       },
-      {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
+      {
+        "label": "Do'a", 
+        "icon": "assets/icons/doa.svg", 
+        "urlNav": "/doa"
+      },
       {
         "label": "Lainnya",
         "icon": "assets/icons/lainnya.svg",
@@ -230,11 +234,16 @@ class DashboardController extends GetxController {
   }
 
   setFcm() async {
-    final isLogin = dataStore.read('isLogin');
-    if (isLogin.toString() == 'true') {
-      final fcm = dataStore.read('fcmtoken');
-      await HomeService().setToken(fcm);
-      print('done fcm saving');
+    try {
+      final isLogin = dataStore.read('isLogin');
+      if (isLogin.toString() == 'true') {
+        final fcm = dataStore.read('fcmtoken');
+        var res = await HomeService().setToken(fcm);
+        print('done fcm saving');
+      }
+    } catch (e) {
+      print("<<<<<<<<<<Error set fcm>>>>>>>>>>>>");
+      print(e);
     }
   }
 

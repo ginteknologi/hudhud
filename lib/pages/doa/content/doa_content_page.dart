@@ -7,6 +7,7 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/pages/doa/content/doa_content_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ContentDoaPage extends StatelessWidget {
   const ContentDoaPage({super.key});
@@ -28,34 +29,210 @@ class ContentDoaPage extends StatelessWidget {
                                 left: 21, right: 21, top: 21),
                             child: Column(
                               children: [
-                                ListCardUiWidget(
-                                  id: 1,
-                                  title: ctrl.list['title']['rendered'],
-                                  titleStyle: context.textTheme.titleSmall
-                                      ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                  subtitleStyle: context.textTheme.labelMedium
-                                      ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black45),
-                                  onTap: () {
-                                    // ctrl.goToDetail(ctrl.listDoa[index]);
-                                  },
-                                  subtitle: ctrl.list['content']['rendered'],
-                                  type: 'wp',
-                                  hasFooter: true,
-                                  footerContent: [
-                                    Text(
-                                      DateFormat('dd MMMM yyyy').format(
-                                          DateTime.parse(ctrl.list['date'])),
-                                      style: context.textTheme.labelSmall
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.w300),
-                                    ),
-                                  ],
-                                ),
+                                Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                        highlightColor: Colors.transparent,
+                                        splashColor:
+                                            Colors.green.withOpacity(0.5),
+                                        child: Card(
+                                          elevation: 0,
+                                          color: Colors.white,
+                                          margin:
+                                              const EdgeInsets.only(top: 20),
+                                          clipBehavior: Clip.antiAlias,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: Color(0xFFDADADA),
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            //set border radius more than 50% of height and width to make circle
+                                          ),
+                                          child: Container(
+                                              width: Get.width,
+                                              constraints: BoxConstraints.loose(
+                                                  Size.infinite),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 10,
+                                                    left: 10,
+                                                    right: 10,
+                                                    bottom: 5),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: AutoSizeText(
+                                                            ctrl.list['judul']!,
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                            style: context
+                                                                .textTheme
+                                                                .titleSmall
+                                                                ?.copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColor),
+                                                            maxLines: 2,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        ctrl.list['arabic'] !=
+                                                                null
+                                                            ? Align(
+                                                                alignment: Alignment
+                                                                    .bottomRight,
+                                                                child: Html(
+                                                                    data: ctrl
+                                                                            .list[
+                                                                        'arabic']!,
+                                                                    style: {
+                                                                      "p": Style(
+                                                                          fontSize:
+                                                                              FontSize(13.0))
+                                                                    }))
+                                                            : Container(),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        ctrl.list['transliteration'] !=
+                                                                null
+                                                            ? Text(
+                                                                ctrl.list[
+                                                                    'transliteration'],
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style: context
+                                                                    .textTheme
+                                                                    .labelMedium
+                                                                    ?.copyWith(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w300,
+                                                                        color: Colors
+                                                                            .black54))
+                                                            : Container(),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        ctrl.list['translations'] !=
+                                                                null
+                                                            ? Align(
+                                                                alignment: Alignment
+                                                                    .bottomRight,
+                                                                child: Html(
+                                                                    data: ctrl
+                                                                            .list[
+                                                                        'translations']!,
+                                                                    style: {
+                                                                      "p": Style(
+                                                                          fontSize:
+                                                                              FontSize(13.0))
+                                                                    }))
+                                                            : Container(),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        ctrl.list['isi'] != null
+                                                            ? Align(
+                                                                alignment: Alignment
+                                                                    .bottomRight,
+                                                                child: Html(
+                                                                    data: ctrl
+                                                                            .list[
+                                                                        'isi']!,
+                                                                    style: {
+                                                                      "p": Style(
+                                                                          fontSize:
+                                                                              FontSize(13.0))
+                                                                    }))
+                                                            : Container(),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list[index]['date'])),
+                                                        // style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
+                                                        // ),
+
+                                                        // AutoSizeText(
+                                                        //   ctrl.list[index]['isi'],
+                                                        //   textAlign: TextAlign.end,
+                                                        //   style: context.textTheme.labelSmall
+                                                        //       ?.copyWith(
+                                                        //           fontWeight: FontWeight.bold,
+                                                        //           letterSpacing: 0,
+                                                        //           color: Colors.black54),
+                                                        //   maxLines: 2,
+                                                        // ),
+                                                        // Text(ctrl.list[index]['isi'],
+                                                        //     textAlign: TextAlign.start,
+                                                        //     style: context
+                                                        //         .textTheme.labelSmall
+                                                        //         ?.copyWith(
+                                                        //             fontWeight:
+                                                        //                 FontWeight.bold,
+                                                        //             letterSpacing: 0,
+                                                        //             color: Colors.black54)),
+                                                        Row(
+                                                          children: [
+                                                            // Icon(
+                                                            //   Icons.remove_red_eye_rounded,
+                                                            //   color: Colors.black54,
+                                                            //   size: context.textTheme
+                                                            //       .labelLarge?.fontSize,
+                                                            // ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            // Text(
+                                                            //     ctrl.listDoa[index]['viewer'],
+                                                            //     textAlign: TextAlign.end,
+                                                            //     style: context
+                                                            //         .textTheme.labelMedium
+                                                            //         ?.copyWith(
+                                                            //             fontWeight:
+                                                            //                 FontWeight.w300,
+                                                            //             color:
+                                                            //                 Colors.black54)),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              )), //SizedBox
+                                        ))),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -107,7 +284,9 @@ class ContentDoaPage extends StatelessWidget {
                                                   ?.fontSize,
                                             ),
                                             onPressed: () {
-                                              // ctrl.goToDetail('1');
+                                              // Gunakan plugin share_plus untuk berbagi teks artikel
+                                              Share.share(ctrl.share.value,
+                                                  subject: ctrl.list['judul']);
                                             },
                                           ),
                                         ),

@@ -172,7 +172,7 @@ class ListItemUiWidget extends StatelessWidget {
                                         AutoSizeText(
                                           '$subTitle',
                                           textAlign: TextAlign.start,
-                                          minFontSize: 14,
+                                          minFontSize: 11,
                                           style: subtitleStyle ??
                                               TextStyle(
                                                   fontSize: Theme.of(context)

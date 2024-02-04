@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/doa/doa_controller.dart';
+import 'package:masjid_app/routes/doa/index.dart';
 
 class DoaPage extends StatelessWidget {
   const DoaPage({super.key});
@@ -19,28 +20,28 @@ class DoaPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 21),
                 child: ListView.builder(
                   physics: const ClampingScrollPhysics(),
-                  itemCount: ctrl.listTypesDoa.length,
+                  itemCount: ctrl.list.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     // Datum model = filteredEvents[index];
                     return FadeInUp(
                       child: ListItemUiWidget(
-                        id: ctrl.listTypesDoa[index]['id'],
-                        title: ctrl.listTypesDoa[index]['title'],
+                        id: ctrl.list[index]['id'],
+                        title: ctrl.list[index]['name'],
                         onTap: () {
-                          ctrl.goToDetail(ctrl.listTypesDoa[index]);
+                          Get.toNamed('${RoutesDoa.root}/${ctrl.list[index]['id']}', arguments: {"category": ctrl.list[index]});
                         },
                         titleStyle: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
-                        subTitle: ctrl.listTypesDoa[index]['subtitle'],
+                        // subTitle: ctrl.list[index]['subtitle'],
                         subtitleStyle: context.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w300, color: Colors.black),
                         hasRightContent: true,
                         showIcon: IconPosition.both,
-                        iconLeft: SvgPicture.asset(
-                            ctrl.listTypesDoa[index]['icon'],
-                            height: 35,
-                            width: 35),
+                        // iconLeft: SvgPicture.asset(
+                        //     ctrl.list[index]['icon'],
+                        //     height: 35,
+                        //     width: 35),
                         iconRight: Icon(Icons.chevron_right_rounded),
                       ),
                     );
@@ -58,7 +59,7 @@ class DoaPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a", context: context, elevation: 0),
-      body: layout(context, ctrl),
+      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(context, ctrl)),
     );
   }
 }

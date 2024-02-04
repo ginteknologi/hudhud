@@ -61,7 +61,6 @@ class CustomCardItem extends StatelessWidget {
                   }
                 }
                 if (linkRoute != null) {
-                  print("<<<<<<>>>>>>");
                   print(linkRoute);
                   Get.toNamed(linkRoute!);
                 }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/pages/quran/halaman/halaman_quran_controller.dart';
-
+import 'package:get_storage/get_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:masjid_app/pages/quran/halaman_madinah/halaman_quran_madinah_controller.dart';
+// import 'package:masjid_app/configs/main_controller.dart';
 class EasyImageViewPager extends StatefulWidget {
   final List imageProviders;
   final int idxInitial;
+  // final bool search;
   final Function(int) onTap;
 
   /// Create new instance, using the [imageProviders] to populate the [PageView]
@@ -12,6 +15,7 @@ class EasyImageViewPager extends StatefulWidget {
       {Key? key,
       required this.imageProviders,
       required this.idxInitial,
+      // required this.search,
       required this.onTap})
       : super(key: key);
 
@@ -20,54 +24,67 @@ class EasyImageViewPager extends StatefulWidget {
 }
 
 class _EasyImageViewPagerState extends State<EasyImageViewPager> {
+  final dataStore = GetStorage();
   late PageController _pageController =
-      PageController(initialPage: widget.idxInitial);
+      PageController(initialPage: widget.idxInitial - 1);
   bool _pagingEnabled = true;
 
   @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: widget.idxInitial - 1);
+  }
+
+  @override
   void dispose() {
-    _pageController = PageController(initialPage: widget.idxInitial);
     _pageController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return PageView.builder(
-      reverse: true,
-      physics: _pagingEnabled
-          ? const PageScrollPhysics()
-          : const NeverScrollableScrollPhysics(),
-      itemCount: widget.imageProviders.length,
-      controller: _pageController,
-      itemBuilder: (context, index) {
-        // print(widget.idxInitial -1);
-        // print(index);
-        // print(hctrl.idxLastReadHalaman);
-        final image = widget.imageProviders[index]['file'];
-        return EasyImageView(
-          imageSource: "server",
-          imageProvider: image,
-          onScaleChanged: (scale) {
-            setState(() {
-              print(index);
-            });
-          },
-        );
-
-        //     EasyImageView(
-        //   imageProvider: image,
-        //   onScaleChanged: (scale) {
-        //     setState(() {
-        //       print(index);
-        //       // Disable paging when image is zoomed-in
-        //       _pagingEnabled = scale <= 1.0;
-        //     });
-        //   },
-        // );
-      },
-    );
+  void didUpdateWidget(EasyImageViewPager oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.idxInitial != widget.idxInitial - 1) {
+      // Jika nilai idxInitial berubah, lompat ke halaman yang baru
+      _pageController.jumpToPage(widget.idxInitial - 1);
+    }
   }
+
+  @override
+Widget build(BuildContext context) {
+  final ctrl = Get.find<HalamanQuranMadinahController>();
+  // final gctrl = Get.find<MainController>();
+  return PageView.builder(
+onPageChanged: (index) {
+    ctrl.surahSaatIni.value = widget.imageProviders[index]['surat'];
+    ctrl.halSaatIni.value = widget.imageProviders[index]['hal'].toString();
+  print('asdssad');
+},
+    reverse: true,
+    physics: _pagingEnabled
+        ? const PageScrollPhysics()
+        : const NeverScrollableScrollPhysics(),
+    itemCount: widget.imageProviders.length,
+    controller: _pageController,
+    itemBuilder: (context, index) {
+      final image = widget.imageProviders[index]['file'];
+      dataStore.write('madinahLastRead', widget.imageProviders[index]);
+      // gctrl.madinahLastRead = widget.imageProviders[index];
+      print('<<<<<<<wei>>>>>>>');
+      print(widget.imageProviders[index]);
+      return EasyImageView(
+        imageSource: "server",
+        imageProvider: image,
+        // onScaleChanged: (scale) {
+        //   setState(() {
+        //     print(index);
+        //   });
+        // },
+      );
+    },
+  );
+}
+
 }
 
 /// A full-sized view that displays the given image, supporting pinch & zoom
@@ -122,9 +139,7 @@ class _EasyImageViewState extends State<EasyImageView> {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(HalamanQuranController());
     return Container(
-        // color: Colors.amber,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).orientation != Orientation.portrait
             ? double.infinity
@@ -134,37 +149,72 @@ class _EasyImageViewState extends State<EasyImageView> {
           transformationController: _transformationController,
           minScale: widget.minScale,
           maxScale: widget.maxScale,
-          child: widget.imageSource == "server"
-              ? Image.network(
-                  widget.imageProvider,
-                  width: Get.width,
-                  height:
-                      MediaQuery.of(context).orientation == Orientation.portrait
+          child: Stack(
+            children: [
+              // Text(widget.imageProvider.toString(), style: TextStyle(fontSize: 10)),
+              widget.imageSource == "server"
+                  ? CachedNetworkImage(
+                      imageUrl: widget.imageProvider,
+                      width: Get.width,
+                      height: MediaQuery.of(context).orientation ==
+                              Orientation.portrait
                           ? Get.height - (Get.height * 0.1)
                           : null,
-                  // loadingBuilder: (BuildContext context, Widget child,
-                  //     ImageChunkEvent? loadingProgress) {
-                  //   if (loadingProgress == null) {
-                  //     // Gambar berhasil dimuat
-                  //     ctrl.refreshTitle('testing');
-                  //     print('test');
-                  //   } else {
-                  //     // Gambar sedang dimuat
-                  //   }
-                  //   return child;
-                  // },
-                  fit: BoxFit.fitWidth,
-                )
-              : Image.asset(
-                  widget.imageProvider,
-                  width: Get.width,
-                  height:
-                      MediaQuery.of(context).orientation == Orientation.portrait
+                      fit: BoxFit.fitWidth,
+                      placeholder: (BuildContext context, String url) {
+                        // Penempatan custom placeholder
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator()
+                          ],
+                        );
+                      },
+                      errorWidget: (context, url, error) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 40,
+                                ),
+                                Text(
+                                  "image tidak bisa dibaca",
+                                  style: TextStyle(fontSize: 11),
+                                )
+                              ],
+                            ),
+                            Text("Ada masalah pada jaringan anda")
+                          ],
+                        );
+                      },
+                    )
+                  // ? Image.network(
+                  //     widget.imageProvider,
+                  //     width: Get.width,
+                  //     height: MediaQuery.of(context).orientation ==
+                  //             Orientation.portrait
+                  //         ? Get.height - (Get.height * 0.1)
+                  //         : null,
+                  //     fit: BoxFit.fitWidth,
+                  //   )
+                  : Image.asset(
+                      widget.imageProvider,
+                      width: Get.width,
+                      height: MediaQuery.of(context).orientation ==
+                              Orientation.portrait
                           ? Get.height - (Get.height * 0.1)
                           : null,
-                  // width: MediaQuery.of(context).size.width - 42,
-                  fit: BoxFit.fitWidth,
-                ),
+                      fit: BoxFit.fitWidth,
+                    )
+            ],
+          ),
           onInteractionEnd: (scaleEndDetails) {
             double scale = _transformationController.value.getMaxScaleOnAxis();
 

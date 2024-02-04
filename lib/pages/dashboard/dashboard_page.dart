@@ -216,31 +216,31 @@ class DashboardPage extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),                        
-                        ctrl.listArtikel.isNotEmpty && ctrl.listArtikel[1] != null ?
-                        CustomCardItem(
-                          network: false,
-                          isFullWidth: true,
-                          height: 165,
-                          size: "medium",
-                          positionChip: CrossAxisAlignment.start,
-                          chipColor: Theme.of(context).primaryColor,
-                          chipText: doa.kategori,
-                          chipTextStyle: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.fontSize,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
-                          title: doa.title,
-                          subtitle: '${doa.time} | ${doa.date}',
-                          linkRoute: '/doa/1/${doa.id}',
-                        )
-                        :
-                        Container(),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        // ctrl.listArtikel.isNotEmpty && ctrl.listArtikel[1] != null ?
+                        // CustomCardItem(
+                        //   network: false,
+                        //   isFullWidth: true,
+                        //   height: 165,
+                        //   size: "medium",
+                        //   positionChip: CrossAxisAlignment.start,
+                        //   chipColor: Theme.of(context).primaryColor,
+                        //   chipText: doa.kategori,
+                        //   chipTextStyle: TextStyle(
+                        //       fontSize: Theme.of(context)
+                        //           .textTheme
+                        //           .labelLarge
+                        //           ?.fontSize,
+                        //       fontWeight: FontWeight.normal,
+                        //       color: Colors.white),
+                        //   title: doa.title,
+                        //   subtitle: '${doa.time} | ${doa.date}',
+                        //   linkRoute: '/doa/1/${doa.id}',
+                        // )
+                        // :
+                        // Container(),
+                        // const SizedBox(
+                        //   height: 20,
+                        // ),
                         // CustomCardItem(
                         //   network: true,
                         //   isFullWidth: true,
@@ -290,7 +290,9 @@ class DashboardPage extends StatelessWidget {
                                 'lainnya') {
                               showSheet(ctrl, context, false);
                             } else {
-                              Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
+                              if (ctrl.listMenuHome[index]['urlNav'] != '' && ctrl.listMenuHome[index]['urlNav'] != null) {
+                                Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
+                              }
                             }
                           },
                           borderRadius: BorderRadius.circular(20),
@@ -412,7 +414,6 @@ class DashboardPage extends StatelessWidget {
                         '${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
                     // Get.toNamed(AppRoutes.detailEventScreen);
                   }
-                  print("tapped");
                 },
                 child: SizedBox(
                     width: Get.width,
@@ -601,7 +602,8 @@ class DashboardPage extends StatelessWidget {
                                                   child: SvgPicture.asset(
                                                       'assets/icons/live.svg',
                                                       height: 6,
-                                                      width: 6)),
+                                                      width: 6)
+                                                      ),
                                               const Text('Live',
                                                   overflow:
                                                       TextOverflow.ellipsis,

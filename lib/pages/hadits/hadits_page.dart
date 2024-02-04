@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/pages/hadits/hadits_controller.dart';
 import 'package:masjid_app/routes/hadits/index.dart';
 
@@ -12,8 +11,8 @@ class HaditsPage extends StatelessWidget {
   layout(HaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
-      child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+      child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Column(
@@ -105,95 +104,78 @@ class HaditsPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 21),
                     child: Column(
                       children: [
-                        DataGrid(),
+                        DataGrid(ctrl),
                       ],
-                    ))
+                    )),
+                    SizedBox(height: 29),
               ],
             ),
           )),
     );
   }
 
-  DataGrid() {
+  DataGrid(HaditsController ctrl) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 5,
+      itemCount: ctrl.list.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: (55 / 90),
+        childAspectRatio: (48 / 90),
         crossAxisCount: 3,
         mainAxisSpacing: 15,
         crossAxisSpacing: 10,
       ),
       itemBuilder: (context, index) {
-        return SizedBox(
-            child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                        onTap: () {
-                          Get.toNamed(RoutesHadits.detail);
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        splashColor: Colors.green.withOpacity(0.5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              "assets/icons/thumb_quran2x.png",
-                              width: 103,
-                              fit: BoxFit.cover,
-                            ),
-                            const SizedBox(height: 5),
-                            AutoSizeText(
-                              'Hadits Arbain',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  height: 0.5,
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.fontSize,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 5),
-                            AutoSizeText(
-                              '42 Hadits',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  height: 0.5,
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.fontSize,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w300),
-                              maxLines: 1,
-                            ),                            
-                            // AutoSizeText(
-                            //   '42 Hadits',  
-                            //   textAlign: TextAlign.start,
-                            //   style: context.textTheme.labelMedium?.copyWith(
-                            //       fontWeight: FontWeight.w300,
-                            //       fontStyle: FontStyle.italic),
-                            // )
-                            // Text(
-                            //   '42 Hadits',
-                            //   textAlign: TextAlign.left,
-                            //   style: TextStyle(
-                            //       height: 1,
-                            //       fontSize: Theme.of(context)
-                            //           .textTheme
-                            //           .bodySmall
-                            //           ?.fontSize,
-                            //       color: Colors.black87,
-                            //       fontWeight: FontWeight.w300),
-                            //   maxLines: 1,
-                            // ),
-                          ],
-                        )))));
+        return Container(
+          padding: const EdgeInsets.all(8), // Sesuaikan dengan kebutuhan Anda
+          child: InkWell(
+            onTap: () {
+              Get.toNamed(RoutesHadits.detail,
+                  arguments: {'detail': ctrl.list[index]});
+            },
+            borderRadius: BorderRadius.circular(20),
+            splashColor: Colors.green.withOpacity(0.5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/icons/thumb_quran2x.png",
+                  width: 103,
+                  fit: BoxFit.cover,
+                ),
+                Text(
+                  ctrl.list[index]['longNama'],
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${ctrl.list[index]['hadits'].toString()} Hadits',
+                  style: TextStyle(fontSize: 10),
+                ),
+                // AutoSizeText(
+                //   ctrl.list[index]['longNama'] + 'Hadits',
+                //   textAlign: TextAlign.start,
+                //   style: TextStyle(
+                //     height: 0.5,
+                //     fontSize: 10,
+                //     color: Colors.black87,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // AutoSizeText(
+                //   ctrl.list[index]['hadits'].toString(),
+                //   textAlign: TextAlign.left,
+                //   style: TextStyle(
+                //     height: 0.5,
+                //     fontSize: 6,
+                //     color: Colors.black87,
+                //     fontWeight: FontWeight.w300,
+                //   ),
+                //   maxLines: 1,
+                // ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }

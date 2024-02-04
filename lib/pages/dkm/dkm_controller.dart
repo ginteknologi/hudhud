@@ -44,35 +44,35 @@ class DkmController extends GetxController {
         "title": "Marbot Aplikasi",
         "category": "Youtube",
         "icon": "assets/icons/youtube-solid.svg",
-        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+        'link': 'https://www.youtube.com/@MarbotAplikasi'
       },
       {
         "id": 1,
         "title": "Marbot Aplikasi",
         "category": "Instagram",
         "icon": "assets/icons/instagram-solid.svg",
-        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+        'link': 'https://www.instagram.com/marbot.aplikasi/?igshid=OGQ5ZDc2ODk2ZA'
       },
       {
         "id": 1,
         "title": "Marbot Aplikasi",
         "category": "Facebook Page",
         "icon": "assets/icons/fb-solid.svg",
-        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+        'link': 'https://www.facebook.com/profile.php?id=61554376146560'
       },
       {
         "id": 1,
         "title": "Marbot Aplikasi",
         "category": "Tik Tok",
         "icon": "assets/icons/tiktok-solid.svg",
-        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+        'link': 'https://tr.ee/czO9vKBouH'
       },
       {
         "id": 1,
-        "title": "0812-9380-700 ( Official Marbot )",
+        "title": "+62 811-8752-020 ( Official Marbot )",
         "category": "Telepon/WhatsApp",
         "icon": "assets/icons/wa-solid.svg",
-        'link': 'https://api.whatsapp.com/send?phone=628575647xxxx'
+        'link': 'https://wa.me/628118752020'
       },
       {
         "id": 1,
@@ -80,7 +80,7 @@ class DkmController extends GetxController {
             "Masjid An Nimah, CitraGran Cibubur, RT005/011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
         "category": "Alamat",
         "icon": "assets/icons/pin-solid.svg",
-        'link': 'https://goo.gl/maps/1Hw5yqj5qzJY5kEj8'
+        'link': 'https://maps.app.goo.gl/wZ6DuuwS9LGNruwi6'
       }      
       // {
       //   "id": 1,

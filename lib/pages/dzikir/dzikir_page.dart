@@ -113,7 +113,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                             kToolbarHeight -
                             100,
                         child: ListView.builder(
-                          itemCount: 10,
+                          itemCount: ctrl.petang.length,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
@@ -121,8 +121,8 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                             return FadeInUp(
                               child: ListCardUiWidget(
                                 type: 'wp',
-                                id: 1,
-                                title: "Ta'awuz",
+                                id: index,
+                                title: ctrl.petang[index]['judul'],
                                 titleStyle: context.textTheme.titleSmall
                                     ?.copyWith(
                                         fontWeight: FontWeight.bold,
@@ -132,7 +132,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black45),
                                 onTap: () {},
-                                subtitle: 'Ayat Alquran',
+                                subtitle: ctrl.petang[index]['arabic'],
                                 hasFooter: true,
                                 usingDivider: false,
                                 footerContent: [
@@ -143,7 +143,8 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           AutoSizeText(
-                                              "“Lorem ipsum dolor sit amet consectetur. Diam congue in”",
+                                              ctrl.petang[index]
+                                                  ['transliteration'],
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                   fontSize: Theme.of(context)
@@ -156,7 +157,8 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                             height: 10,
                                           ),
                                           AutoSizeText(
-                                              "“Lorem ipsum dolor sit amet consectetur. Diam congue in commodo nunc odio augue sapien. Aliquam interdum ut amet consectetur faucibus scelerisque porttitor odio. Est nunc.”",
+                                              ctrl.petang[index]
+                                                  ['translations'],
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                   fontSize: Theme.of(context)
@@ -165,7 +167,35 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                                       ?.fontSize,
                                                   fontStyle: FontStyle.italic,
                                                   color: Colors.black,
-                                                  fontWeight: FontWeight.w300))
+                                                  fontWeight: FontWeight.w300)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          AutoSizeText(
+                                              ctrl.petang[index]['isi'],
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontSize: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.fontSize,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w300)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          AutoSizeText(
+                                              ctrl.petang[index]['opening'],
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontSize: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.fontSize,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold))
                                         ]),
                                   ),
                                 ],
@@ -269,7 +299,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                             kToolbarHeight -
                             100,
                         child: ListView.builder(
-                          itemCount: 10,
+                          itemCount: ctrl.pagi.length,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
@@ -277,8 +307,8 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                             return FadeInUp(
                               child: ListCardUiWidget(
                                 type: 'wp',
-                                id: 1,
-                                title: "Ta'awuz",
+                                id: index,
+                                title: ctrl.pagi[index]['judul'],
                                 titleStyle: context.textTheme.titleSmall
                                     ?.copyWith(
                                         fontWeight: FontWeight.bold,
@@ -288,7 +318,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black45),
                                 onTap: () {},
-                                subtitle: 'Ayat Alquran',
+                                subtitle: ctrl.pagi[index]['arabic'],
                                 hasFooter: true,
                                 usingDivider: false,
                                 footerContent: [
@@ -299,7 +329,8 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           AutoSizeText(
-                                              "“Lorem ipsum dolor sit amet consectetur. Diam congue in”",
+                                              ctrl.pagi[index]
+                                                  ['transliteration'],
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                   fontSize: Theme.of(context)
@@ -312,7 +343,8 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                             height: 10,
                                           ),
                                           AutoSizeText(
-                                              "“Lorem ipsum dolor sit amet consectetur. Diam congue in commodo nunc odio augue sapien. Aliquam interdum ut amet consectetur faucibus scelerisque porttitor odio. Est nunc.”",
+                                              ctrl.pagi[index]
+                                                  ['translations'],
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                   fontSize: Theme.of(context)
@@ -321,7 +353,35 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                                       ?.fontSize,
                                                   fontStyle: FontStyle.italic,
                                                   color: Colors.black,
-                                                  fontWeight: FontWeight.w300))
+                                                  fontWeight: FontWeight.w300)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          AutoSizeText(
+                                              ctrl.pagi[index]['isi'],
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontSize: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.fontSize,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w300)),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          AutoSizeText(
+                                              ctrl.pagi[index]['opening'],
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontSize: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.fontSize,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold))
                                         ]),
                                   ),
                                 ],
@@ -403,7 +463,9 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
               backgroundColor: ctrl.flagDzikir.value
                   ? Color(0xFFFFD3A2)
                   : Color(0xFF1F2838)))),
-      body: layout(ctrl, context),
+      body: Obx(() => ctrl.isLoadingList.value
+          ? Center(child: CircularProgressIndicator())
+          : layout(ctrl, context)),
     );
   }
 

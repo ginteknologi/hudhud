@@ -1,17 +1,16 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/hadits/hadits_controller.dart';
+import 'package:masjid_app/pages/hadits/content/content_hadits_controller.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ContentHaditsPage extends StatelessWidget {
   ContentHaditsPage({super.key});
 
-  layout(HaditsController ctrl, BuildContext context) {
+  layout(ContentHaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -32,7 +31,7 @@ class ContentHaditsPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            'Hadits Arbain No.1',
+                            'Hadits No.1',
                             style: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -51,7 +50,7 @@ class ContentHaditsPage extends StatelessWidget {
                                 width: 10,
                               ),
                               AutoSizeText(
-                                "Amalan bergantung pada niat",
+                                ctrl.arguments['content']['Kitab_Indonesia'],
                                 style: context.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black,
@@ -61,9 +60,15 @@ class ContentHaditsPage extends StatelessWidget {
                           )
                         ],
                       ),
-                      Icon(
-                        Icons.share,
-                        color: Colors.black,
+                      InkWell(
+                        onTap: () {
+                          Share.share("${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content']['Kitab_Indonesia']}\n\n${ctrl.list[0]['Isi_Arab']}\n\n${ctrl.list[0]['Isi_Indonesia']} \n\n Dibagikan dari aplikasi\n\n Marbot App",
+                              subject: ctrl.arguments['detail']['longNama']);
+                        },
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.black,
+                        ),
                       )
                     ],
                   ),
@@ -85,14 +90,15 @@ class ContentHaditsPage extends StatelessWidget {
                         Container(
                           height: 300,
                           child: Text(
-                            "Disini Hadits",
+                            ctrl.list[0]['Isi_Arab'],
                             textAlign: TextAlign.center,
                           ),
                         ),
                         AutoSizeText(
-                          'Lorem ipsum dolor sit amet consectetur. Massa placerat eu habitasse amet pharetra viverra nascetur mattis. Nulla ut sagittis at et. Eget nulla ultricies ipsum tellus eget amet aenean. Odio eget quis interdum nunc mattis rhoncus risus ultrices. Placerat eget nisl interdum iaculis purus sed sed turpis. Ultrices pharetra volutpat imperdiet arcu feugiat est augue fermentum sed. Mattis ultricies ipsum purus enim eget aliquam amet. Augue mattis a ipsum cursus donec interdum. Molestie at vehicula imperdiet duis urna enim orci luctus.',
+                          ctrl.list[0]['Isi_Indonesia'],
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w300,
+                            fontSize: 10,
                             color: Colors.black,
                           ),
                           softWrap: true,
@@ -107,7 +113,7 @@ class ContentHaditsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(HaditsController());
+    final ctrl = Get.put(ContentHaditsController());
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
@@ -115,7 +121,7 @@ class ContentHaditsPage extends StatelessWidget {
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
       appBar: AppBarWSWidget.getAppbarWidget(
-          title: "Hadits Arbain No. 1",
+          title: ctrl.arguments['detail']['longNama'],
           context: context,
           iconTheme: IconThemeData(color: Colors.white),
           elevation: 0,

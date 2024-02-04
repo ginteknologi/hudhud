@@ -164,7 +164,7 @@ class DkmPage extends StatelessWidget {
                                   final Uri url =
                                       Uri.parse(ctrl.listKontak[index]['link']);
                                   if (!await launchUrl(url)) {
-                                    print('Tidak dapat membuka link YouTube.');
+                                    print('Tidak dapat membuka link');
                                   }
                                 },
                                 // subtitleStyle: context.textTheme.bodySmall
@@ -222,7 +222,7 @@ class DkmPage extends StatelessWidget {
                                   final Uri url = Uri.parse(
                                       ctrl.listKontakv2[index]['link']);
                                   if (!await launchUrl(url)) {
-                                    print('Tidak dapat membuka link YouTube.');
+                                    print('Tidak dapat membuka link.');
                                   }
                                 },
                                 // subtitleStyle: context.textTheme.bodySmall

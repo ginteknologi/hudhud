@@ -18,7 +18,6 @@ class QuranService extends GetConnect {
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       json['code'] = response.statusCode;
-      print(json);
       return json;
     } else if (response.statusCode == 401) {
       // RemoteData.authError();
