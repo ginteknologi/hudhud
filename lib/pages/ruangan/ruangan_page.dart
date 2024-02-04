@@ -104,7 +104,7 @@ class RuanganPage extends StatelessWidget {
                                                   decoration: const BoxDecoration(
                                                       image: DecorationImage(
                                                           image: AssetImage(
-                                                              "assets/img/logo_only_white.png"),
+                                                              "assets/img/logo-splash.png"),
                                                           fit: BoxFit.contain)),
                                                   child: Column(
                                                     mainAxisAlignment:

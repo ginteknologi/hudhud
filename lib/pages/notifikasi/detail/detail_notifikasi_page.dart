@@ -28,7 +28,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Image.asset(
-                            "assets/img/logo_circle.png",
+                            "assets/icons/app_icon.png",
                             fit: BoxFit.fitHeight,
                             width: 100,
                           ),

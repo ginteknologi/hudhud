@@ -48,7 +48,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Image.asset(
-                                          "assets/img/logo_circle.png",
+                                          "assets/icons/app_icon.png",
                                           fit: BoxFit.fitHeight,
                                           width: 60,
                                         ),

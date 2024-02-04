@@ -20,7 +20,7 @@ class LogOutPage extends StatelessWidget {
         children: [
           Align(
               alignment: Alignment.center,
-              child: Image.asset("assets/img/logo_text_only_primary.png",
+              child: Image.asset("assets/img/new-logo-text.png",
                   height: 200)),
           // const Text("Assalamu’alaikum",
           //     style: TextStyle(
