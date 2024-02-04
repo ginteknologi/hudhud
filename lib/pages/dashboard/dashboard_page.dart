@@ -178,12 +178,12 @@ class DashboardPage extends StatelessWidget {
                               'Kajian Live', 'Lihat Semua', context, ctrl),
                         ),
                         getListItem(ctrl),
-                        Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          child: getSeparator("Sudah Baca Qur'an Hari Ini?",
-                              null, context, ctrl),
-                        ),
-                        getButtonCard(ctrl, context),
+                        // Container(
+                        //   margin: const EdgeInsets.only(top: 10),
+                        //   child: getSeparator("Sudah Baca Qur'an Hari Ini?",
+                        //       null, context, ctrl),
+                        // ),
+                        // getButtonCard(ctrl, context),
                         Container(
                           margin: const EdgeInsets.only(top: 25),
                           child: getSeparator('Terbaru', '', context, ctrl),
