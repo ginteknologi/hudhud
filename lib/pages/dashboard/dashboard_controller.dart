@@ -17,8 +17,9 @@ class DashboardController extends GetxController {
   var dataTerbaru = {}.obs;
   List listWaktu = [].obs;
   List listMenuHome = [].obs;
-  List listKajianLive = [].obs;
-  List listArtikel = [].obs;
+  List listKajianSlider = [].obs;
+  List listKajian = [].obs;
+  var listArtikel = {}.obs;
   List listAllMenu = [].obs;
   List listKota = [].obs;
   var latestArtikel = {}.obs;
@@ -32,10 +33,12 @@ class DashboardController extends GetxController {
 
   getData() async {
     final result = await DashboardService().getList();
+    final artikelbaru = await DashboardService().getListArtikelBaru();
     dataTerbaru.value = result['data'];
     lastRead.value = dataStore.read('perAyatLastRead');
-    var newdata = constructDataTerbaru(dataTerbaru);
-    listArtikel = newdata;
+    // var newdata = constructDataTerbaru(dataTerbaru);
+    print(artikelbaru['data']);
+    listArtikel.value = artikelbaru['data'];
     isLoadingList.value = false;
   }
 
@@ -100,58 +103,12 @@ class DashboardController extends GetxController {
   }
 
   getKajianLive() async {
-    return listKajianLive = [
-      {
-        "title": "PALESTINA BUKAN SEKEDAR ISU KEMANUSIAAN | MT Sakinah",
-        "subtitle": "Ustadzh Umi Irena Handono & Ustadzh Sally",
-        "flag": "LIVE",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "image": "https://img.youtube.com/vi/uMFFFymo21w/0.jpg",
-        "url": "https://www.youtube.com/watch?v=uMFFFymo21w",
-        "id": 1
-      },
-      {
-        "title": "30 Hari Setelah BADAI AL-AQSA | Kajian Subuh",
-        "subtitle": "Ust. Ihsan Tanjung, Lc, MA ",
-        "flag": "LIVE",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "image": "https://img.youtube.com/vi/AkEPZYUGZvE/0.jpg",
-        "url": "https://www.youtube.com/watch?v=AkEPZYUGZvE",
-        "id": 2
-      },
-      {
-        "title": "Shalat adalah Penolongmu | Kajian Maghrib",
-        "subtitle": "Ust. DR. Iqbal Subhan Nugraha, Lc, MA",
-        "flag": "LIVE",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "image": "https://img.youtube.com/vi/a2YodUWUhTE/0.jpg",
-        "url": "https://www.youtube.com/watch?v=a2YodUWUhTE",
-        "id": 3
-      },
-      {
-        "title": "Info Palestina | Kajian Subuh",
-        "subtitle": "Ust. DR. Arifin Nugroho, Lc, MA",
-        "flag": "LIVE",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "image": "https://img.youtube.com/vi/U-Hg6wQD5CA/0.jpg",
-        "url": "https://www.youtube.com/watch?v=U-Hg6wQD5CA",
-        "id": 4
-      },
-      {
-        "title": "Memberi Menerangkan Hati | Kajian Umum",
-        "subtitle": "Ust. Derry Sulaiman",
-        "flag": "LIVE",
-        "time": "17:40",
-        "date": "17 Agustus 2023",
-        "image": "https://img.youtube.com/vi/ivay-bfTUDg/0.jpg",
-        "url": "https://www.youtube.com/watch?v=ivay-bfTUDg",
-        "id": 5
-      }
-    ];
+  var isLoadingList = true.obs;
+    final result = await DashboardService().getSliderKajian();
+    listKajianSlider = result['data'];
+    final listresult = await DashboardService().getListKajian();
+    listKajian = listresult['data'];
+    isLoadingList.value = false;
   }
 
   getListKota() {
@@ -191,40 +148,40 @@ class DashboardController extends GetxController {
     ];
   }
 
-  constructDataTerbaru(data) {
-    if (data != null) {
-      List<LatestNews> items = [];
-      var item = data;
-      var keys = item.keys;
-      for (var key in keys) {
-        var el = item[key];
-        var tgl = "";
-        var timeleft;
-        if (el['createdAt'] != null) {
-          timeleft = DateTime.parse(el['createdAt']);
-          tgl = Moment.parse("$timeleft")
-              .format("dd MMMM yyyy", localeOverride: 'id');
-        }
-        if (key == 'artikel') {
-          el['kategori'] = 'Artikel';
-        } else if (key == 'campaign') {
-          el['kategori'] = 'Campaign';
-        } else {
-          el['kategori'] = 'Doa';
-        }
-        items.add(LatestNews(
-          id: el['id'],
-          date: tgl,
-          time: tgl != "" ? "${timeleft.hour} : ${timeleft.minute}" : '',
-          title: el['judul'],
-          subtitle: el['isi'],
-          image: el['image'] ?? 'https://dummyimage.com/600x400/000/fff',
-          kategori: el['kategori'],
-        ));
-      }
-      return items;
-    }
-  }
+  // constructDataTerbaru(data) {
+  //   if (data != null) {
+  //     List<LatestNews> items = [];
+  //     var item = data;
+  //     var keys = item.keys;
+  //     for (var key in keys) {
+  //       var el = item[key];
+  //       var tgl = "";
+  //       var timeleft;
+  //       if (el['createdAt'] != null) {
+  //         timeleft = DateTime.parse(el['createdAt']);
+  //         tgl = Moment.parse("$timeleft")
+  //             .format("dd MMMM yyyy", localeOverride: 'id');
+  //       }
+  //       if (key == 'artikel') {
+  //         el['kategori'] = 'Artikel';
+  //       } else if (key == 'campaign') {
+  //         el['kategori'] = 'Campaign';
+  //       } else {
+  //         el['kategori'] = 'Doa';
+  //       }
+  //       items.add(LatestNews(
+  //         id: el['id'],
+  //         date: tgl,
+  //         time: tgl != "" ? "${timeleft.hour} : ${timeleft.minute}" : '',
+  //         title: el['judul'],
+  //         subtitle: el['isi'],
+  //         image: el['image'] ?? 'https://dummyimage.com/600x400/000/fff',
+  //         kategori: el['kategori'],
+  //       ));
+  //     }
+  //     return items;
+  //   }
+  // }
 
   constructLatestData(data) {
     var item = data['data'];
@@ -268,23 +225,23 @@ class DashboardController extends GetxController {
 
 enum DialogPopupInfaq { subuh, pagi }
 
-class LatestNews {
-  int id;
-  String title, subtitle, kategori, image, time, date;
-  LatestNews(
-      {required this.id,
-      required this.title,
-      required this.subtitle,
-      required this.kategori,
-      required this.image,
-      required this.time,
-      required this.date});
+// class LatestNews {
+//   int id;
+//   String title, subtitle, kategori, image, time, date;
+//   LatestNews(
+//       {required this.id,
+//       required this.title,
+//       required this.subtitle,
+//       required this.kategori,
+//       required this.image,
+//       required this.time,
+//       required this.date});
 
-  Map toJson() => {
-        'title': title,
-        'subtitle': subtitle,
-        'kategori': kategori,
-        'image': image,
-        'time': time,
-      };
-}
+//   Map toJson() => {
+//         'title': title,
+//         'subtitle': subtitle,
+//         'kategori': kategori,
+//         'image': image,
+//         'time': time,
+//       };
+// }

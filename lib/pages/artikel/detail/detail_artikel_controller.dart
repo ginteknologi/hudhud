@@ -15,14 +15,19 @@ class DetailArtikelController extends GetxController {
     var document = parse(htmlString);
     return parse(document.body!.text).documentElement!.text;
   }
+
   getData() async {
+    isLoadingList.value = true;
     final result = await ArtikelService().getDetailArtikel();
-    detail.value = result;
-    String judul = _convertHtmlToText(result['title']['rendered']);
-    String content = _convertHtmlToText(result['content']['rendered']);
+    detail.value = result['data'];
+    String judul = result['data']['judul'];
+    String content = _convertHtmlToText(result['data']['isi']);
     String link = 'Dibagikan dari aplikasi\n\n Marbot App';
 
     share.value = '$judul\n\n$content\n\n$link';
+
+    final listartikel = await ArtikelService().getListArtikellain();
+    listArtikels = listartikel['data'];
     isLoadingList.value = false;
   }
 
@@ -30,15 +35,11 @@ class DetailArtikelController extends GetxController {
     Get.offAllNamed('${RoutesArtikel.root}/${param['id']}');
   }
 
-  getListArtikels() async {
-    final result = await ArtikelService().getListArtikellain();
-    listArtikels = result;
-  }
+  
 
   @override
   void onInit() {
     getData();
-    getListArtikels();
     super.onInit();
   }
 }

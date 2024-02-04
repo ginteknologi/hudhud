@@ -12,7 +12,8 @@ class ArtikelController extends GetxController {
 
   getData() async {
     final result = await ArtikelService().getListArtikel();
-    listArtikels = result;
+    print(result['data']);
+    listArtikels = result['data'];
     isLoadingList.value = false;
   }
 
@@ -22,7 +23,7 @@ class ArtikelController extends GetxController {
 
   getCategoryFilter() async {
     final result = await ArtikelService().getListTag();
-    listCategoryFilter = result;
+    listCategoryFilter = result['data'];
     listCategoryFilterSelected =
         List.generate(result.length, (index) => false.obs);
     listCategoryFilterSelected[0] = true.obs;

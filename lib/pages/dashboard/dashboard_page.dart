@@ -20,14 +20,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/configs/firebase_message_setup.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
   layout(DashboardController ctrl, MainController gctrl, BuildContext context) {
-    LatestNews artikel = ctrl.listArtikel[0];
-    LatestNews doa = ctrl.listArtikel[1];
-    LatestNews campaign = ctrl.listArtikel[2];
 
     return SafeArea(
         top: false,
@@ -85,8 +83,14 @@ class DashboardPage extends StatelessWidget {
                                     Material(
                                         color: Colors.transparent,
                                         child: InkWell(
-                                          onTap: () async {        
-                                            showPopup(ctrl, gctrl, context, dialogTerkini(ctrl, gctrl, context), 200);
+                                          onTap: () async {
+                                            showPopup(
+                                                ctrl,
+                                                gctrl,
+                                                context,
+                                                dialogTerkini(
+                                                    ctrl, gctrl, context),
+                                                200);
 
                                             // showPopup(
                                             //     ctrl, gctrl, context, null, null);
@@ -109,13 +113,12 @@ class DashboardPage extends StatelessWidget {
                                                   Padding(
                                                       padding: EdgeInsets.only(
                                                           left: 5),
-                                                      child:  Text(gctrl.lokasiSaatIni,
+                                                      child: Text(
+                                                          gctrl.lokasiSaatIni,
                                                           style: TextStyle(
                                                               color: Color(
                                                                   0xFFFFECB7),
-                                                              fontSize: 12)
-                                                              )
-                                                              )
+                                                              fontSize: 12)))
                                                 ],
                                               ),
                                             ),
@@ -147,24 +150,27 @@ class DashboardPage extends StatelessWidget {
                                       splashColor:
                                           Colors.green.withOpacity(0.5),
                                       child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: gctrl.userLogin['photo'] == null || gctrl.userLogin['photo'] == "" ? Image.asset(
-                                          "assets/icons/app_icon.png",
-                                          height: 35,
-                                          width: 35,
-                                        ) :
-                                        Image.network(
-                                          gctrl.userLogin['photo'],
-                                          height: 35,
-                                          width: 35,
-                                        )
-                                        // Image.network(
-                                        //   "https://picsum.photos/50",
-                                        //   height: 35,
-                                        //   width: 35,
-                                        // ),
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: gctrl.userLogin['photo'] ==
+                                                      null ||
+                                                  gctrl.userLogin['photo'] == ""
+                                              ? Image.asset(
+                                                  "assets/icons/app_icon.png",
+                                                  height: 35,
+                                                  width: 35,
+                                                )
+                                              : Image.network(
+                                                  gctrl.userLogin['photo'],
+                                                  height: 35,
+                                                  width: 35,
+                                                )
+                                          // Image.network(
+                                          //   "https://picsum.photos/50",
+                                          //   height: 35,
+                                          //   width: 35,
+                                          // ),
+                                          ),
                                     )),
                               ],
                             )
@@ -192,30 +198,31 @@ class DashboardPage extends StatelessWidget {
                           height: 10,
                         ),
                         // getListItemVertical(ctrl, context),
-                        ctrl.listArtikel.isNotEmpty && ctrl.listArtikel[0] != null ? CustomCardItem(
-                          network: true,
-                          isFullWidth: true,
-                          height: 165,
-                          size: "medium",
-                          positionChip: CrossAxisAlignment.start,
-                          chipColor: Theme.of(context).primaryColor,
-                          chipText: artikel.kategori,
-                          chipTextStyle: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.fontSize,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
-                          title: artikel.title,
-                          subtitle: '${artikel.time} | ${artikel.date}',
-                          imgPath: artikel.image,
-                          linkRoute: '/artikel/${artikel.id}',
-                        )
-                        : Container(), 
+                        CustomCardItem(
+                                network: true,
+                                isFullWidth: true,
+                                height: 165,
+                                size: "medium",
+                                positionChip: CrossAxisAlignment.start,
+                                chipColor: Theme.of(context).primaryColor,
+                                chipText: ctrl.listArtikel['category']['name'],
+                                chipTextStyle: TextStyle(
+                                    fontSize: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge
+                                        ?.fontSize,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white),
+                                title: ctrl.listArtikel['judul'],
+                                subtitle: Moment.parse(ctrl.listArtikel['tanggal'])
+                                    .format("dd MMMM yyyy",
+                                        localeOverride: 'id'),
+                                imgPath: ctrl.listArtikel['image'],
+                                linkRoute: '/artikel/${ctrl.listArtikel['id']}',
+                              ),
                         const SizedBox(
                           height: 20,
-                        ),                        
+                        ),
                         // ctrl.listArtikel.isNotEmpty && ctrl.listArtikel[1] != null ?
                         // CustomCardItem(
                         //   network: false,
@@ -290,7 +297,8 @@ class DashboardPage extends StatelessWidget {
                                 'lainnya') {
                               showSheet(ctrl, context, false);
                             } else {
-                              if (ctrl.listMenuHome[index]['urlNav'] != '' && ctrl.listMenuHome[index]['urlNav'] != null) {
+                              if (ctrl.listMenuHome[index]['urlNav'] != '' &&
+                                  ctrl.listMenuHome[index]['urlNav'] != null) {
                                 Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
                               }
                             }
@@ -375,18 +383,18 @@ class DashboardPage extends StatelessWidget {
         // padding: EdgeInsets.only(left: 24, right: 24),
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: ctrl.listKajianLive.length,
+        itemCount: ctrl.listKajianSlider.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
           return FadeInLeft(
               child: CustomCardItem(
-            title: '${ctrl.listKajianLive[index]["title"]}',
-            subtitle: '${ctrl.listKajianLive[index]["subtitle"]}',
-            kategori: '${ctrl.listKajianLive[index]["kategori"]}',
-            chipText: '${ctrl.listKajianLive[index]["flag"]}',
-            imgPath: '${ctrl.listKajianLive[index]["image"]}',
+            title: '${ctrl.listKajianSlider[index]["judul"]}',
+            subtitle: '${ctrl.listKajianSlider[index]["subjudul"]}',
+            kategori: '${ctrl.listKajianSlider[index]["kategori"]}',
+            chipText: 'LIVE',
+            imgPath: '${ctrl.listKajianSlider[index]["image"]}',
             islink: true,
-            link: '${ctrl.listKajianLive[index]["url"]}',
+            link: '${ctrl.listKajianSlider[index]["link"]}',
             network: true,
           ));
         },
@@ -544,17 +552,15 @@ class DashboardPage extends StatelessWidget {
                             kToolbarHeight,
                         child: ListView.builder(
                           physics: const ClampingScrollPhysics(),
-                          itemCount: ctrl.listKajianLive.length,
+                          itemCount: ctrl.listKajian.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            var item = ctrl.listKajianLive[index];
+                            var item = ctrl.listKajian[index];
                             // Datum model = filteredEvents[index];
                             return FadeInUp(
                               child: ListItemUiWidget(
                                 onTap: () async {
-                                  final Uri url = Uri.parse(item['url']);
-                                  // print('asdadasdasd');
-                                  // print(item['url']);
+                                  final Uri url = Uri.parse(item['link']);
                                   if (!await launchUrl(url)) {
                                     print('Tidak dapat membuka link YouTube.');
                                   }
@@ -565,7 +571,7 @@ class DashboardPage extends StatelessWidget {
                                 widthContent:
                                     MediaQuery.of(context).size.width - 130,
                                 id: item['id'],
-                                title: item['title'],
+                                title: item['judul'],
                                 showIcon: IconPosition.left,
                                 iconLeft: Stack(
                                   children: [
@@ -602,8 +608,7 @@ class DashboardPage extends StatelessWidget {
                                                   child: SvgPicture.asset(
                                                       'assets/icons/live.svg',
                                                       height: 6,
-                                                      width: 6)
-                                                      ),
+                                                      width: 6)),
                                               const Text('Live',
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -626,12 +631,14 @@ class DashboardPage extends StatelessWidget {
                                     ?.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black),
-                                subTitle: item['subtitle'],
+                                subTitle: item['subjudul'],
                                 subtitleStyle: context.textTheme.labelMedium
                                     ?.copyWith(
                                         fontWeight: FontWeight.w100,
                                         color: Colors.black),
-                                footerText: item['time'] + ' | ' + item['date'],
+                                footerText: Moment.parse(item['tanggal'])
+                                    .format("dd MMMM yyyy",
+                                        localeOverride: 'id'),
                                 footerTextStyle: context.textTheme.labelSmall
                                     ?.copyWith(
                                         letterSpacing: 0,
@@ -641,30 +648,6 @@ class DashboardPage extends StatelessWidget {
                             );
                           },
                         ))
-                    // ListView.builder(
-                    //   physics: const ClampingScrollPhysics(),
-                    //   itemCount: ctrl.listKajianLive.length,
-                    //   shrinkWrap: true,
-                    //   itemBuilder: (context, index) {
-                    //     var item = ctrl.listKajianLive[index];
-                    //     // Datum model = filteredEvents[index];
-                    //     return FadeInUp(
-                    //       child: ListItemUiWidget(
-                    //         id: item['id'],
-                    //         title: item['title'],
-                    //         onTap: () {},
-                    //         titleStyle: context.textTheme.titleMedium?.copyWith(
-                    //             fontWeight: FontWeight.bold,
-                    //             color: Colors.black),
-                    //         subTitle: item['subtitle'],
-                    //         subtitleStyle: context.textTheme.bodySmall
-                    //             ?.copyWith(
-                    //                 fontWeight: FontWeight.w300,
-                    //                 color: Colors.black),
-                    //       ),
-                    //     );
-                    //   },
-                    // )
                   ],
                 );
         });
@@ -705,7 +688,8 @@ class DashboardPage extends StatelessWidget {
                           shadow: false,
                           onPressed: () {
                             Navigator.pop(context);
-                            showPopup(ctrl, gctrl, bc, dialogTerkini(ctrl, gctrl, context), 200);
+                            showPopup(ctrl, gctrl, bc,
+                                dialogTerkini(ctrl, gctrl, context), 200);
                           },
                         ),
                         // const SizedBox(
@@ -730,7 +714,8 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  dialogTerkini(DashboardController ctrl, MainController gctrl, BuildContext context) {
+  dialogTerkini(
+      DashboardController ctrl, MainController gctrl, BuildContext context) {
     return Column(
       children: [
         Text(
@@ -743,47 +728,48 @@ class DashboardPage extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        Obx(() => ctrl.isLoadingList.value ? 
-          ButtonElevated(
-            title: 'Loading', 
-            width: Get.width,
-            bgcolor: Theme.of(context).primaryColor,
-            height: 45,
-            color: Colors.white,
-            radius: 7,
-            shadow: false,            
-            onPressed: () {},) 
-        : 
-        ButtonElevated(
-          title: 'Lanjutkan',
-          width: Get.width,
-          bgcolor: Theme.of(context).primaryColor,
-          height: 45,
-          color: Colors.white,
-          radius: 7,
-          shadow: false,
-          onPressed: () async {
-            var statusLokasi = await Permission.location.request();
-            if (statusLokasi.isGranted) {
-              ctrl.isLoadingList.value = true;
-              Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-              List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);              
-              Placemark place =placemarks[0];
-              gctrl.updateLokasi('${place.locality.toString()}, ${place.country.toString()}');
-              await Scheduling();
-              ctrl.isLoadingList.value = false;
-              Navigator.pop(context);
-            } else if (statusLokasi.isDenied) {
-              print('Izin ditolak');
-              Navigator.pop(context);
-            } else if (statusLokasi.isPermanentlyDenied) {
-              // Pengguna menolak izin secara permanen, buka pengaturan aplikasi
-              openAppSettings();
-            }              
-          },
-        )        
-        )
-,
+        Obx(() => ctrl.isLoadingList.value
+            ? ButtonElevated(
+                title: 'Loading',
+                width: Get.width,
+                bgcolor: Theme.of(context).primaryColor,
+                height: 45,
+                color: Colors.white,
+                radius: 7,
+                shadow: false,
+                onPressed: () {},
+              )
+            : ButtonElevated(
+                title: 'Lanjutkan',
+                width: Get.width,
+                bgcolor: Theme.of(context).primaryColor,
+                height: 45,
+                color: Colors.white,
+                radius: 7,
+                shadow: false,
+                onPressed: () async {
+                  var statusLokasi = await Permission.location.request();
+                  if (statusLokasi.isGranted) {
+                    ctrl.isLoadingList.value = true;
+                    Position position = await Geolocator.getCurrentPosition(
+                        desiredAccuracy: LocationAccuracy.high);
+                    List<Placemark> placemarks = await placemarkFromCoordinates(
+                        position.latitude, position.longitude);
+                    Placemark place = placemarks[0];
+                    gctrl.updateLokasi(
+                        '${place.locality.toString()}, ${place.country.toString()}');
+                    await Scheduling();
+                    ctrl.isLoadingList.value = false;
+                    Navigator.pop(context);
+                  } else if (statusLokasi.isDenied) {
+                    print('Izin ditolak');
+                    Navigator.pop(context);
+                  } else if (statusLokasi.isPermanentlyDenied) {
+                    // Pengguna menolak izin secara permanen, buka pengaturan aplikasi
+                    openAppSettings();
+                  }
+                },
+              )),
       ],
     );
   }

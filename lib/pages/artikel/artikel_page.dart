@@ -81,13 +81,13 @@ class ArtikelPage extends StatelessWidget {
         return FadeInUp(
           child: ListCardUiWidget(
             id: ctrl.listArtikels[index]['id'],
-            title: ctrl.listArtikels[index]['title']['rendered'],
+            title: ctrl.listArtikels[index]['judul'],
             position: MainAxisAlignment.end,
             usingDivider: false,
             height: 170,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(ctrl.listArtikels[index]['_embedded']['wp:featuredmedia'][0]['source_url']),
+                    image: NetworkImage(ctrl.listArtikels[index]['image']),
                     fit: BoxFit.cover)),
             titleStyle: context.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
@@ -99,7 +99,7 @@ class ArtikelPage extends StatelessWidget {
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(ctrl.listArtikels[index]['date'])),
+              Text(DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(ctrl.listArtikels[index]['tanggal'])),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,

@@ -9,7 +9,8 @@ class ArtikelService extends GetConnect {
 
   Future getListTag() async {
     final response = await http.get(
-        Uri.parse("${RemoteData.apiWp}/tags?_fields=id,name"),
+        // Uri.parse("${RemoteData.apiWp}/tags?_fields=id,name"),
+        Uri.parse("${RemoteData.api}/artikel/category"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -29,7 +30,8 @@ class ArtikelService extends GetConnect {
   }
   Future getListArtikel() async {
     final response = await http.get(
-        Uri.parse("${RemoteData.apiWp}/posts?categories=30&_embed=wp:featuredmedia&_fields=id,excerpt,title,date,categories,_links.wp:featuredmedia,_embedded"),
+        // Uri.parse("${RemoteData.apiWp}/posts?categories=30&_embed=wp:featuredmedia&_fields=id,excerpt,title,date,categories,_links.wp:featuredmedia,_embedded"),
+        Uri.parse("${RemoteData.api}/artikel"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -49,7 +51,8 @@ class ArtikelService extends GetConnect {
   }
   Future getListArtikellain() async {
     final response = await http.get(
-        Uri.parse("${RemoteData.apiWp}/posts?exclude[0]=${Get.parameters['id']}&categories=30&_embed=wp:featuredmedia&_fields=id,excerpt,title,date,categories,_links.wp:featuredmedia,_embedded"),
+        // Uri.parse("${RemoteData.apiWp}/posts?exclude[0]=${Get.parameters['id']}&categories=30&_embed=wp:featuredmedia&_fields=id,excerpt,title,date,categories,_links.wp:featuredmedia,_embedded"),
+        Uri.parse("${RemoteData.api}/artikel/lain/${Get.parameters['id']}"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -69,7 +72,8 @@ class ArtikelService extends GetConnect {
   }
   Future getDetailArtikel() async {
     final response = await http.get(
-        Uri.parse("${RemoteData.apiWp}/posts/${Get.parameters['id']}?categories=30&_embed=wp:featuredmedia&_fields=id,excerpt,title,date,categories,content,_links.wp:featuredmedia,_embedded"),
+        // Uri.parse("${RemoteData.apiWp}/posts/${Get.parameters['id']}?categories=30&_embed=wp:featuredmedia&_fields=id,excerpt,title,date,categories,content,_links.wp:featuredmedia,_embedded"),
+        Uri.parse("${RemoteData.api}/artikel/detail/${Get.parameters['id']}"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

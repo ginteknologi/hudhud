@@ -37,7 +37,7 @@ class DetailArtikelPage extends StatelessWidget {
                             constraints: BoxConstraints.loose(Size.infinite),
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage(ctrl.detail['_embedded']['wp:featuredmedia'][0]['source_url']),
+                                    image: NetworkImage(ctrl.detail['image']),
                                     fit: BoxFit.fill)),
                           )),
                      const SizedBox(
@@ -62,7 +62,7 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      AutoSizeText(ctrl.detail['title']['rendered'],
+                      AutoSizeText(ctrl.detail['judul'],
                         style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
                         maxLines: 4,
@@ -70,7 +70,7 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.detail['date'])),
+                      Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.detail['tanggal'])),
                           // '17:40' +
                           //     "  |  " +
                           //     '17 Agustus 2023',
@@ -81,7 +81,7 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                Html(data: ctrl.detail['content']['rendered'],
+                Html(data: ctrl.detail['isi'],
                   style: {
                     'h2': Style(
                       fontSize: FontSize(18.0),
@@ -162,8 +162,8 @@ class DetailArtikelPage extends StatelessWidget {
                                         ?.fontSize,
                                   ),
                                   onPressed: () {
-                                    Share.share(ctrl.share.value,
-                                                  subject: ctrl.detail['title']['rendered']);
+                                    // Share.share(ctrl.share.value,
+                                    //               subject: ctrl.detail['judul']);
                                   },
                                 ),
                               ),
@@ -196,13 +196,13 @@ class DetailArtikelPage extends StatelessWidget {
         return FadeInUp(
           child: ListCardUiWidget(
             id: ctrl.listArtikels[index]['id'],
-            title: ctrl.listArtikels[index]['title']['rendered'],
+            title: ctrl.listArtikels[index]['judul'],
             position: MainAxisAlignment.end,
             usingDivider: false,
             height: 170,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(ctrl.listArtikels[index]['_embedded']['wp:featuredmedia'][0]['source_url']),
+                    image: NetworkImage(ctrl.listArtikels[index]['image']),
                     fit: BoxFit.cover)),
             titleStyle: context.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
@@ -214,7 +214,7 @@ class DetailArtikelPage extends StatelessWidget {
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.listArtikels[index]['date'])),
+              Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.listArtikels[index]['tanggal'])),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,
