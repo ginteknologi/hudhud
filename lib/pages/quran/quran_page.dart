@@ -233,11 +233,11 @@ class QuranPage extends StatelessWidget {
     print(TypeViewQuran.perayat);
     switch (type) {
       case TypeViewQuran.perayat:
-        return const ListAyatQuranPage();
+        return  ListAyatQuranPage();
       case TypeViewQuran.perhalaman:
         return const HalamanQuranPage();
       default:
-        return const ListAyatQuranPage();
+        return  ListAyatQuranPage();
     }
   }
 

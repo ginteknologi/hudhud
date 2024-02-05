@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/configs/main_controller.dart';
-
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class ListAyatQuranController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final dataStore = GetStorage();
@@ -23,8 +24,10 @@ class ListAyatQuranController extends GetxController
   late TabController tabController;
   int offset = 0;
   int limit = 10;
-  
+  final ItemScrollController itemScrollController = ItemScrollController();
+
   getData() async {
+    isLoadingList.value = true;
     final result = await QuranService().getList('all');
     list.value = result['data'];
     listReverse.value = result['data'];
@@ -38,10 +41,12 @@ class ListAyatQuranController extends GetxController
     listAyat.value = detail['verses'];
     offset += limit;
     isLoadingDetail.value = false;
+    scrollToIndex();
   }
 
   getDataSearch() async {
     // lastRead.value = dataStore.read('perAyatLastRead');
+    isLoadingDetail.value = true;
     final result = await QuranService().getList(searchController.text);
     list.value = result['data'];
     isLoadingList.value = false;
@@ -62,6 +67,26 @@ bookmark(selectedData,ayatBookmarked, index) async {
     }
     isLoadingDetail.value = false;
   }
+
+  void scrollToIndex() {
+    isLoadingDetail.value = true;
+    if (itemScrollController.isAttached) {
+      if (dataStore.read('perAyatLastRead')['id'] == detail['number']) {
+      itemScrollController.scrollTo(
+        index: dataStore.read('perAyatLastRead')['ayatNumber'] - 1,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      }
+      } else {
+      print('ScrollController tidak berhasil diperoleh');
+      Timer(Duration(seconds: 1), () {
+        // Tunggu 1 detik (bisa disesuaikan) dan lakukan scrollToIndex lagi
+        scrollToIndex();
+      });
+    }
+    isLoadingDetail.value = false;
+  }
   @override
   void onInit() async {
     await getData();
@@ -72,9 +97,6 @@ bookmark(selectedData,ayatBookmarked, index) async {
     tabController = TabController(
         vsync: this, length: list.length, initialIndex: result);
     await getDetailData(dataStore.read('perAyatLastRead')['id'] > 0 ? dataStore.read('perAyatLastRead')['id'] : 1); //first open page
-    print(dataStore.read('perAyatLastRead'));
-    print(dataStore.read('perAyatLastRead')['id']);
-    print(result);
     super.onInit();
   }
 

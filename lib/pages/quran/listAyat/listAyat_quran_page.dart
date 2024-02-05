@@ -1,3 +1,4 @@
+
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
@@ -13,9 +14,32 @@ import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ListAyatQuranPage extends StatelessWidget {
-  const ListAyatQuranPage({super.key});
+  ListAyatQuranPage({super.key});
+  final dataStore = GetStorage();
+  // final ItemScrollController itemScrollController = ItemScrollController();
+  // void scrollToIndex(
+  //     BuildContext context, ListAyatQuranController ctrl, int index) {
+  //   ctrl.isLoadingDetail.value == true;
+  //   ctrl.isLoadingList.value == true;
+  //   if (itemScrollController != null && itemScrollController.isAttached) {
+  //     itemScrollController.scrollTo(
+  //       index: index - 1,
+  //       duration: Duration(milliseconds: 500),
+  //       curve: Curves.easeInOut,
+  //     );
+  //     ctrl.isLoadingDetail.value = false;
+  //   ctrl.isLoadingList.value == false;
+  //   } else {
+  //     print('ScrollController tidak berhasil diperoleh');
+  //     Timer(Duration(seconds: 1), () {
+  //       // Tunggu 1 detik (bisa disesuaikan) dan lakukan scrollToIndex lagi
+  //       scrollToIndex(context, ctrl, index);
+  //     });
+  //   }
+  // }
 
   tabMaker(data) {
     List<Tab> tabs = [];
@@ -48,6 +72,7 @@ class ListAyatQuranPage extends StatelessWidget {
   tabContent(ListAyatQuranController ctrl, MainController gctrl,
       BuildContext context) {
     return TabBarView(
+      physics: const NeverScrollableScrollPhysics(),
       controller: ctrl.tabController,
       children: <Widget>[
         for (var i in ctrl.list)
@@ -60,29 +85,38 @@ class ListAyatQuranPage extends StatelessWidget {
 
   listAyat(ListAyatQuranController ctrl, MainController gctrl,
       BuildContext context) {
-  final dataStore = GetStorage();
     AudioPlayer audioPlayer = AudioPlayer();
     // List<List<int>> onplay = List.generate(ctrl.detail['numberOfVerses'], (index) => []);
     RxList<bool> onplay =
-      RxList<bool>.generate(ctrl.detail['numberOfVerses'], (index) => false);
+        RxList<bool>.generate(ctrl.detail['numberOfVerses'], (index) => false);
     RxList<bool> surahBookmarked =
-      RxList<bool>.generate(ctrl.detail['numberOfVerses'], (index) => false);
-    RxList<Duration?> audioPosition =
-      RxList<Duration?>.generate(ctrl.detail['numberOfVerses'], (index) => null);
+        RxList<bool>.generate(ctrl.detail['numberOfVerses'], (index) => false);
+    RxList<Duration?> audioPosition = RxList<Duration?>.generate(
+        ctrl.detail['numberOfVerses'], (index) => null);
     // var onplay = [].obs;
     // Duration? audioPosition;
-
+// WidgetsBinding.instance.addPostFrameCallback((_) {
+//       print(dataStore.read('perAyatLastRead')['suratName']);
+//       print(ctrl.detail['name']['transliteration']['id']);
+//       if (ctrl.isLoadingDetail.value) {
+//         if (dataStore.read('perAyatLastRead')['suratName'] ==
+//             ctrl.detail['name']['transliteration']['id']) {
+//           scrollToIndex(
+//               context,
+//               ctrl,
+//               dataStore.read('perAyatLastRead')[
+//                   'ayatNumber']); // Ganti 5 dengan indeks yang diinginkan
+//         }
+//       }
+//     });    
     return Obx(() => !ctrl.isLoadingDetail.value
-        ? 
-        ListView.builder(
+        ? ScrollablePositionedList.builder(
+            itemScrollController: ctrl.itemScrollController,
             itemCount: ctrl.detail['numberOfVerses'],
             shrinkWrap: true,
             itemBuilder: (context, index) {
               // Datum model = filteredEvents[index];
               var item = ctrl.listAyat[index];
-              print(ctrl.detail['number'] );
-              print(dataStore.read('perAyatLastRead')['id']);
-              print(ctrl.detail['number'] == dataStore.read('perAyatLastRead')['id']);
               return FadeInUp(
                   child: Obx(() => ctrl.isLoadingDetail.value
                           ? const Center(
@@ -117,24 +151,45 @@ class ListAyatQuranPage extends StatelessWidget {
                                                 child: Stack(
                                                   children: <Widget>[
                                                     InkWell(
-                                                      onTap: () {
-                                                        surahBookmarked[index] = dataStore.read('perAyatLastRead')['ayatNumber'] == item['number']['inSurah']
-                                                            ? true
-                                                            : false;
-                                                        ctrl.bookmark(item,surahBookmarked[index],index);
-                                                        print(dataStore.read('perAyatLastRead'));
-                                                      },
-                                                      child: dataStore.read('perAyatLastRead')['ayatNumber'] == item['number']['inSurah'] && ctrl.detail['number'] == dataStore.read('perAyatLastRead')['id']
-                                                              ? SvgPicture.asset(
-                                                                  'assets/icons/active_bookmark.svg',
-                                                                  width: 28,
-                                                                  height: 28)
-                                                              : SvgPicture.asset(
-                                                                  'assets/icons/bookmark.svg',
-                                                                  width: 28,
-                                                                  height: 28)
-                                                          
-                                                    ),
+                                                        onTap: () {
+                                                          ;
+                                                          print(dataStore.read(
+                                                              'perAyatLastRead'));
+                                                          surahBookmarked[
+                                                              index] = dataStore
+                                                                          .read(
+                                                                              'perAyatLastRead')[
+                                                                      'ayatNumber'] ==
+                                                                  item['number']
+                                                                      [
+                                                                      'inSurah']
+                                                              ? true
+                                                              : false;
+                                                          ctrl.bookmark(
+                                                              item,
+                                                              surahBookmarked[
+                                                                  index],
+                                                              index);
+                                                        },
+                                                        child: dataStore.read(
+                                                                            'perAyatLastRead')[
+                                                                        'ayatNumber'] ==
+                                                                    item['number']
+                                                                        [
+                                                                        'inSurah'] &&
+                                                                ctrl.detail[
+                                                                        'number'] ==
+                                                                    dataStore.read(
+                                                                            'perAyatLastRead')[
+                                                                        'id']
+                                                            ? SvgPicture.asset(
+                                                                'assets/icons/active_bookmark.svg',
+                                                                width: 28,
+                                                                height: 28)
+                                                            : SvgPicture.asset(
+                                                                'assets/icons/bookmark.svg',
+                                                                width: 28,
+                                                                height: 28)),
                                                   ],
                                                 ),
                                               ),
@@ -179,18 +234,19 @@ class ListAyatQuranPage extends StatelessWidget {
                                                     Positioned.fill(
                                                       child: Center(
                                                         child: InkWell(
-                                                            onTap: ()  {
+                                                            onTap: () {
                                                               print(
-                                                                    audioPosition);
-                                                              if (audioPlayer.position == null) {
+                                                                  audioPosition);
+                                                              if (audioPlayer
+                                                                      .position ==
+                                                                  null) {
                                                                 print(
                                                                     "clicked play position null");
-                                                                 audioPlayer
-                                                                    .setUrl(item[
-                                                                            'audio']
+                                                                audioPlayer.setUrl(
+                                                                    item['audio']
                                                                         [
                                                                         'primary']!);
-                                                                 audioPlayer
+                                                                audioPlayer
                                                                     .play();
                                                                 onplay[index] =
                                                                     true;
@@ -198,31 +254,32 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                   index]) {
                                                                 print(
                                                                     "clicked pause");
-                                                                audioPosition[index] =
+                                                                audioPosition[
+                                                                        index] =
                                                                     audioPlayer
                                                                         .position;
-                                                                 audioPlayer
+                                                                audioPlayer
                                                                     .pause();
                                                                 onplay[index] =
                                                                     false;
                                                               } else {
                                                                 print(
                                                                     "clicked play");
-                                                                if (audioPosition[index] !=
+                                                                if (audioPosition[
+                                                                        index] !=
                                                                     null) {
-                                                                   audioPlayer
-                                                                      .seek(
-                                                                          audioPosition[index]!);
+                                                                  audioPlayer.seek(
+                                                                      audioPosition[
+                                                                          index]!);
                                                                 } else {
-                                                                   audioPlayer
-                                                                      .setUrl(item[
-                                                                              'audio']
+                                                                  audioPlayer.setUrl(
+                                                                      item['audio']
                                                                           [
                                                                           'primary']!);
                                                                 }
                                                                 onplay[index] =
                                                                     true;
-                                                                 audioPlayer
+                                                                audioPlayer
                                                                     .play();
                                                                 audioPlayer
                                                                     .playerStateStream
@@ -235,7 +292,8 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                     // File selesai diputar
                                                                     print(
                                                                         "Selesai");
-                                                                    audioPosition[index] =
+                                                                    audioPosition[
+                                                                            index] =
                                                                         null;
                                                                     onplay[index] =
                                                                         false;
@@ -475,64 +533,68 @@ class ListAyatQuranPage extends StatelessWidget {
         });
   }
 
-@override
-Widget build(BuildContext context) {
-  final ctrl = Get.put(ListAyatQuranController());
-  final gctrl = Get.find<MainController>();
+  @override
+  Widget build(BuildContext context) {
+    final ctrl = Get.put(ListAyatQuranController());
+    final gctrl = Get.find<MainController>();
 
-  return WillPopScope(
-    onWillPop: () async {
-      // Logika yang dijalankan saat tombol kembali ditekan
-      Get.back(result: 'refresh');
-      return false; // Kembalikan false agar tidak melakukan pop secara otomatis
-    },
-    child: Theme(
-      data: Theme.of(context).copyWith(
-        tabBarTheme: TabBarTheme.of(context).copyWith(
-          indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(
-              color: Colors.white,
-              width: 4.0,
+    
+    return WillPopScope(
+        onWillPop: () async {
+          // Logika yang dijalankan saat tombol kembali ditekan
+          Get.back(result: 'refresh');
+          return false; // Kembalikan false agar tidak melakukan pop secara otomatis
+        },
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            tabBarTheme: TabBarTheme.of(context).copyWith(
+              indicator: const UnderlineTabIndicator(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 4.0,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      child: Obx(() => ctrl.detail.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : Scaffold(
-              backgroundColor: Color(0xFFF5F5F5),
-              extendBodyBehindAppBar: false,
-              resizeToAvoidBottomInset: false,
-              appBar: AppBarWSWidget.getAppbarWidget(
-                title: ctrl.detail.isEmpty
-                    ? "List Ayat : "
-                    : ctrl.detail['name']['transliteration']['id'],
-                subtitle: AutoSizeText(
-                  ctrl.detail.isEmpty
-                      ? "Total Ayat :"
-                      : "Jumlah Ayat : " + ctrl.detail['numberOfVerses'].toString(),
-                  maxLines: 1,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
+          child: Obx(
+            () => ctrl.detail.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : Scaffold(
+                    backgroundColor: Color(0xFFF5F5F5),
+                    extendBodyBehindAppBar: false,
+                    resizeToAvoidBottomInset: false,
+                    appBar: AppBarWSWidget.getAppbarWidget(
+                      title: ctrl.detail.isEmpty
+                          ? "List Ayat : "
+                          : ctrl.detail['name']['transliteration']['id'],
+                      subtitle: AutoSizeText(
+                        ctrl.detail.isEmpty
+                            ? "Total Ayat :"
+                            : "Jumlah Ayat : " +
+                                ctrl.detail['numberOfVerses'].toString(),
+                        maxLines: 1,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white,
+                        ),
+                      ),
+                      haveSubtitle: true,
+                      context: context,
+                      iconTheme: IconThemeData(color: Colors.white),
+                      elevation: 0,
+                      color: Colors.white,
+                      titleAlign: Alignment.centerLeft,
+                      backgroundColor: Color(0xFF048C7C),
+                      bottom: listTabs(ctrl, gctrl, context),
+                      // onTap: () => {showPopup(ctrl, context)},
+                    ),
+                    body: Obx(
+                      () => ctrl.isLoadingList.value
+                          ? const Center(child: CircularProgressIndicator())
+                          : tabContent(ctrl, gctrl, context),
+                    ),
                   ),
-                ),
-                haveSubtitle: true,
-                context: context,
-                iconTheme: IconThemeData(color: Colors.white),
-                elevation: 0,
-                color: Colors.white,
-                titleAlign: Alignment.centerLeft,
-                backgroundColor: Color(0xFF048C7C),
-                bottom: listTabs(ctrl, gctrl, context),
-                // onTap: () => {showPopup(ctrl, context)},
-              ),
-              body: Obx(() => ctrl.isLoadingList.value
-                  ? const Center(child: CircularProgressIndicator())
-                  : tabContent(ctrl, gctrl, context),
-              ),
-            ),
-    ),
-  ));
-}
+          ),
+        ));
+  }
 }

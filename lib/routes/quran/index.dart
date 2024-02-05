@@ -22,7 +22,7 @@ class PagesQuran {
     ),
     GetPage(
       name: RoutesQuran.perayat,
-      page: () => const ListAyatQuranPage(),
+      page: () =>  ListAyatQuranPage(),
       transition: Transition.cupertino,
     ),
     GetPage(
