@@ -279,6 +279,7 @@ class AlquranPage extends StatelessWidget {
                   height: Get.height / 5.5,
                   child: Obx(() {
                     return GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.only(
                           left: Get.width / 20, right: Get.width / 20),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
