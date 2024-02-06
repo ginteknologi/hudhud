@@ -22,7 +22,7 @@ class AlquranPage extends StatelessWidget {
               children: [
                 Container(
                   width: Get.width,
-                  height: 260,
+                  height: Get.height / 3,
                   constraints: BoxConstraints.loose(Size.infinite),
                   clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(
@@ -39,7 +39,7 @@ class AlquranPage extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(left: 25, right: 25, bottom: 10),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Row(
@@ -78,7 +78,7 @@ class AlquranPage extends StatelessWidget {
                             Image.asset(
                               "assets/img/quran_banner.png",
                               // height: 85,
-                              width: 160,
+                              width: Get.width / 3,
                             ),
                           ],
                         )
@@ -108,172 +108,213 @@ class AlquranPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25, right: 25),
-                  child: Material(
-                      color: Colors.transparent,
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Get.toNamed(RoutesQuran.perayat)?.then((result) {
-                                if (result == 'refresh') {
-                                  ctrl.lastRead();
-                                }
-                              });
-                              // Navigator.pop(context);
-                              // ctrl.typeViewQuran.value = TypeViewQuran.perayat;
-                              // ctrl.type.value = BottomBarEnum.alquran;
-                            },
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/icons/icon_perayat.png',
-                                      height: 35, width: 35),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text("Perayat",
-                                      style: context.textTheme.labelMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.black54))
-                                ]),
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Get.toNamed(RoutesQuran.perpage)?.then((result) {
-                                if (result == 'refresh') {
-                                  ctrl.lastRead();
-                                }
-                              });
-                              // Navigator.pop(context);
-                              // ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
-                              // ctrl.type.value = BottomBarEnum.alquran;
-                              // ctrl.idxLastReadHalaman.value = 3;
-                            },
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/icons/quran_halaman.png',
-                                      height: 35, width: 35),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text("Indonesia",
-                                      style: context.textTheme.labelMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.black54))
-                                ]),
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Get.toNamed(RoutesQuran.perpagetajwid)
-                                  ?.then((result) {
-                                if (result == 'refresh') {
-                                  ctrl.lastRead();
-                                }
-                              });
-                            },
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/icons/quran_halaman.png',
-                                      height: 35, width: 35),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text("Tajwid Indonesia",
-                                      style: context.textTheme.labelMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.black54))
-                                ]),
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                        ],
-                      )),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(left: 25, right: 25),
+                //   child: Material(
+                //       color: Colors.transparent,
+                //       child: Row(
+                //         children: [
+                //           InkWell(
+                //             onTap: () {
+                //               Get.toNamed(RoutesQuran.perayat)?.then((result) {
+                //                 if (result == 'refresh') {
+                //                   ctrl.lastRead();
+                //                 }
+                //               });
+                //               // Navigator.pop(context);
+                //               // ctrl.typeViewQuran.value = TypeViewQuran.perayat;
+                //               // ctrl.type.value = BottomBarEnum.alquran;
+                //             },
+                //             child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   Image.asset('assets/icons/icon_perayat.png',
+                //                       height: 35, width: 35),
+                //                   SizedBox(
+                //                     height: 5,
+                //                   ),
+                //                   Text("Perayat",
+                //                       style: context.textTheme.labelMedium
+                //                           ?.copyWith(
+                //                               fontWeight: FontWeight.w900,
+                //                               color: Colors.black54))
+                //                 ]),
+                //           ),
+                //           const SizedBox(
+                //             width: 30,
+                //           ),
+                //           InkWell(
+                //             onTap: () {
+                //               Get.toNamed(RoutesQuran.perpage)?.then((result) {
+                //                 if (result == 'refresh') {
+                //                   ctrl.lastRead();
+                //                 }
+                //               });
+                //               // Navigator.pop(context);
+                //               // ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
+                //               // ctrl.type.value = BottomBarEnum.alquran;
+                //               // ctrl.idxLastReadHalaman.value = 3;
+                //             },
+                //             child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   Image.asset('assets/icons/quran_halaman.png',
+                //                       height: 35, width: 35),
+                //                   const SizedBox(
+                //                     height: 5,
+                //                   ),
+                //                   Text("Indonesia",
+                //                       style: context.textTheme.labelMedium
+                //                           ?.copyWith(
+                //                               fontWeight: FontWeight.w900,
+                //                               color: Colors.black54))
+                //                 ]),
+                //           ),
+                //           const SizedBox(
+                //             width: 30,
+                //           ),
+                //           InkWell(
+                //             onTap: () {
+                //               Get.toNamed(RoutesQuran.perpagetajwid)
+                //                   ?.then((result) {
+                //                 if (result == 'refresh') {
+                //                   ctrl.lastRead();
+                //                 }
+                //               });
+                //             },
+                //             child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   Image.asset('assets/icons/quran_halaman.png',
+                //                       height: 35, width: 35),
+                //                   const SizedBox(
+                //                     height: 5,
+                //                   ),
+                //                   Text("Tajwid Indonesia",
+                //                       style: context.textTheme.labelMedium
+                //                           ?.copyWith(
+                //                               fontWeight: FontWeight.w900,
+                //                               color: Colors.black54))
+                //                 ]),
+                //           ),
+                //           const SizedBox(
+                //             width: 30,
+                //           ),
+                //         ],
+                //       )),
+                // ),
+                // SizedBox(
+                //   height: 40,
+                // ),
+                // Padding(
+                //   padding: EdgeInsets.only(left: 25, right: 25),
+                //   child: Material(
+                //       color: Colors.transparent,
+                //       child: Row(
+                //         children: [
+                //           InkWell(
+                //             onTap: () {
+                //               Get.toNamed(RoutesQuran.perpagemadinah)
+                //                   ?.then((result) {
+                //                 if (result == 'refresh') {
+                //                   ctrl.lastRead();
+                //                 }
+                //               });
+                //               // Navigator.pop(context);
+                //               // ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
+                //               // ctrl.type.value = BottomBarEnum.alquran;
+                //               // ctrl.idxLastReadHalaman.value = 3;
+                //             },
+                //             child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   Image.asset('assets/icons/madinah.png',
+                //                       height: 35, width: 35),
+                //                   const SizedBox(
+                //                     height: 5,
+                //                   ),
+                //                   Text("Madinah",
+                //                       style: context.textTheme.labelMedium
+                //                           ?.copyWith(
+                //                               fontWeight: FontWeight.w900,
+                //                               color: Colors.black54))
+                //                 ]),
+                //           ),
+                //           const SizedBox(
+                //             width: 30,
+                //           ),
+                //           InkWell(
+                //             onTap: () {
+                //               // Navigator.pop(context);
+                //               // ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
+                //               // ctrl.type.value = BottomBarEnum.alquran;
+                //               // ctrl.idxLastReadHalaman.value = 3;
+                //               ctrl.getData();
+                //               showPopup(ctrl, context, null, null);
+                //             },
+                //             child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   Image.asset('assets/icons/gift.png',
+                //                       height: 35, width: 35),
+                //                   const SizedBox(
+                //                     height: 5,
+                //                   ),
+                //                   Text("Kejutan",
+                //                       style: context.textTheme.labelMedium
+                //                           ?.copyWith(
+                //                               fontWeight: FontWeight.w900,
+                //                               color: Colors.black54))
+                //                 ]),
+                //           ),
+                //         ],
+                //       )),
+                // ),
                 SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25, right: 25),
-                  child: Material(
-                      color: Colors.transparent,
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Get.toNamed(RoutesQuran.perpagemadinah)
-                                  ?.then((result) {
-                                if (result == 'refresh') {
-                                  ctrl.lastRead();
-                                }
-                              });
-                              // Navigator.pop(context);
-                              // ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
-                              // ctrl.type.value = BottomBarEnum.alquran;
-                              // ctrl.idxLastReadHalaman.value = 3;
-                            },
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/icons/madinah.png',
-                                      height: 35, width: 35),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text("Madinah",
+                  height: Get.height / 5.5,
+                  child: Obx(() {
+                    return GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(
+                          left: Get.width / 20, right: Get.width / 20),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                      ),
+                      itemCount: ctrl.listMenu.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: ctrl.listMenu[index]['onTap'] as Function(),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                    ctrl.listMenu[index]['image'] as String,
+                                    height: 35,
+                                    width: 35),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Expanded(
+                                  child: AutoSizeText(
+                                      ctrl.listMenu[index]['title'] as String,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.center,
                                       style: context.textTheme.labelMedium
                                           ?.copyWith(
                                               fontWeight: FontWeight.w900,
-                                              color: Colors.black54))
-                                ]),
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              // Navigator.pop(context);
-                              // ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
-                              // ctrl.type.value = BottomBarEnum.alquran;
-                              // ctrl.idxLastReadHalaman.value = 3;
-                              ctrl.getData();
-                              showPopup(ctrl, context, null, null);
-                            },
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/icons/gift.png',
-                                      height: 35, width: 35),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text("Kejutan",
-                                      style: context.textTheme.labelMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.black54))
-                                ]),
-                          ),
-                        ],
-                      )),
+                                              color: Colors.black54)),
+                                )
+                              ]),
+                        );
+                      },
+                    );
+                  }),
                 ),
                 SizedBox(
                   height: 40,
@@ -329,8 +370,7 @@ class AlquranPage extends StatelessWidget {
                                     Align(
                                         alignment: Alignment.centerLeft,
                                         child: Obx(
-                                          () => Text(
-                                              ctrl.ayatSaatIni.value,
+                                          () => Text(ctrl.ayatSaatIni.value,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: context
@@ -518,115 +558,6 @@ class AlquranPage extends StatelessWidget {
             ),
           )),
     );
-  }
-
-  void showPopup(
-      AlquranController ctrl, context, Widget? content, double? height) {
-    showDialog(
-        context: context,
-        builder: (BuildContext bc) {
-          return Dialog(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7.0)),
-            child: Container(
-                // padding: const EdgeInsets.all(10),
-                // height: height ??
-                //     (MediaQuery.of(context).size.height -
-                //             kBottomNavigationBarHeight -
-                //             kToolbarHeight) /
-                //         2,
-                child: content ??
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(7),
-                                  topRight: Radius.circular(7))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.arrow_back,
-                                color: Colors.black,
-                              ),
-                              Text(
-                                '${ctrl.list['surat']} : ${ctrl.list['nomor_ayat']} ',
-                                // "Q.S Al-Muthaffifiin :  34",
-                                style: bc.textTheme.titleMedium?.copyWith(
-                                    letterSpacing: 1,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                              SvgPicture.asset("assets/icons/share.svg",
-                                  height: 15, width: 15)
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: AutoSizeText("${ctrl.list['arab']}",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.fontSize,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w900))),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: AutoSizeText("${ctrl.list['indonesia']}",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.fontSize,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w300))),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        ButtonElevated(
-                          iconLeft: Icon(
-                            Icons.refresh_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                          showIcon: 'left',
-                          title: 'Acak Lagi',
-                          width: 129,
-                          bgcolor: Theme.of(bc).primaryColor,
-                          height: 45,
-                          color: Colors.white,
-                          radius: 7,
-                          shadow: false,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                      ],
-                    )),
-          );
-        });
   }
 
   @override
