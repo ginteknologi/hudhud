@@ -100,6 +100,7 @@ class CustomCardItem extends StatelessWidget {
                         crossAxisAlignment: positionChip,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          chipText != null ? 
                           Container(
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               margin: positionChip == CrossAxisAlignment.end
@@ -119,15 +120,15 @@ class CustomCardItem extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Visibility(
-                                        visible: size == 'small',
-                                        child: Container(
-                                            margin:
-                                                const EdgeInsets.only(right: 5),
-                                            child: SvgPicture.asset(
-                                                'assets/icons/live.svg',
-                                                height: 10,
-                                                width: 10))),
+                                    // Visibility(
+                                    //     visible: size == 'small',
+                                    //     child: Container(
+                                    //         margin:
+                                    //             const EdgeInsets.only(right: 5),
+                                    //         child: SvgPicture.asset(
+                                    //             'assets/icons/live.svg',
+                                    //             height: 10,
+                                    //             width: 10))),
                                     Text('$chipText',
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.start,
@@ -140,10 +141,11 @@ class CustomCardItem extends StatelessWidget {
                                         //         : FontStyle.normal,
                                         //     fontSize: chipSize
                                         // ),
-                                        ),
+                                        )
+                                    
                                   ],
                                 ),
-                              )),
+                              )) : Container(),
                           Container(
                             width: isFullWidth == true ? Get.width : 151,
                             clipBehavior: Clip.antiAlias,

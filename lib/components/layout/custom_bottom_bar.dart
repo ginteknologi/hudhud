@@ -22,7 +22,7 @@ class CustomBottomBar extends StatelessWidget {
     BottomMenuModel(
         icon: 'assets/icons/ruangan_blur.png',
         activeIcon: 'assets/icons/ruangan_blur.png',
-        title: "Ruangan".tr,
+        title: "Sahabat Muazin".tr,
         // navType: BottomBarEnum.ruangan
         navType: BottomBarEnum.ruangan),
     BottomMenuModel(

@@ -41,7 +41,6 @@ class ListAyatQuranController extends GetxController
     listAyat.value = detail['verses'];
     offset += limit;
     isLoadingDetail.value = false;
-    scrollToIndex();
   }
 
   getDataSearch() async {
@@ -97,6 +96,7 @@ bookmark(selectedData,ayatBookmarked, index) async {
     tabController = TabController(
         vsync: this, length: list.length, initialIndex: result);
     await getDetailData(dataStore.read('perAyatLastRead')['id'] > 0 ? dataStore.read('perAyatLastRead')['id'] : 1); //first open page
+    scrollToIndex();
     super.onInit();
   }
 

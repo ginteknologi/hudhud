@@ -47,7 +47,6 @@ class MainController extends GetxController {
       var hijriDateNow = HijriCalendar.now();
       HijriDate = hijriDateNow.toFormat('MMMM dd yyyy');
       lokasiSaatIni = dataStore.read('lokasiSaatIni') ?? "Pilih Lokasi";
-      print(lokasiSaatIni);
       final getdata = await MainService().waktuSolat();
       listWaktu.value = [
         {
@@ -303,10 +302,10 @@ class MainController extends GetxController {
   @override
   void onInit() async {
     await waktusolatData();
-    getWaktu();
-    startWaktu();
-    loadStorage();
-    loadHistoryQuran();
+    await getWaktu();
+    await startWaktu();
+    await loadStorage();
+    await loadHistoryQuran();
     // await Scheduling();
     loadingwaktusolat.value = false;
     super.onInit();
