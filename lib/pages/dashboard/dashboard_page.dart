@@ -10,6 +10,7 @@ import 'package:masjid_app/components/layout/custom_card_item.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/models/artikelData.dart';
+import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
@@ -354,27 +355,30 @@ class DashboardPage extends StatelessWidget {
   }
 
   getListItem(DashboardController ctrl) {
-    return SizedBox(
-      height: 151,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: ctrl.listKajianSlider.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 10),
-        itemBuilder: (context, index) {
-          return CustomCardItem(
-            title: '${ctrl.listKajianSlider[index]["judul"]}',
-            subtitle: '${ctrl.listKajianSlider[index]["subjudul"]}',
-            kategori: '${ctrl.listKajianSlider[index]["kategori"]}',
-            chipText: 'LIVE',
-            imgPath: '${ctrl.listKajianSlider[index]["image"]}',
-            islink: true,
-            link: '${ctrl.listKajianSlider[index]["link"]}',
-            network: true,
-          );
-        },
-      ),
-    );
+    return Obx(() {
+      return SizedBox(
+        height: 151,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          itemCount: ctrl.listKajianSlider.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 10),
+          itemBuilder: (context, index) {
+            final KajianData item = ctrl.listKajianSlider[index];
+            return CustomCardItem(
+              title: '${item.judul}',
+              subtitle: '${item.subjudul}',
+              kategori: '${item.kategori}',
+              chipText: 'LIVE',
+              imgPath: '${item.image}',
+              islink: true,
+              link: '${item.link}',
+              network: true,
+            );
+          },
+        ),
+      );
+    });
   }
 
   getButtonCard(DashboardController ctrl, BuildContext context) {

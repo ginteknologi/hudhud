@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
+import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_service.dart';
@@ -20,9 +21,34 @@ class DashboardController extends GetxController {
   var dataTerbaru = {}.obs;
   var listWaktu = [].obs;
   var listMenuHome = [].obs;
-  var listKajianSlider = [].obs;
+  var listKajianSlider = <KajianData>[
+    KajianData(
+        id: 1,
+        judul: 'judul',
+        subjudul: 'subjudul',
+        image: 'https://dummyimage.com/600x400/000/fff',
+        link: 'link'),
+    KajianData(
+        id: 1,
+        judul: 'judul',
+        subjudul: 'subjudul',
+        image: 'https://dummyimage.com/600x400/000/fff',
+        link: 'link'),
+    KajianData(
+        id: 1,
+        judul: 'judul',
+        subjudul: 'subjudul',
+        image: 'https://dummyimage.com/600x400/000/fff',
+        link: 'link'),
+  ].obs;
   var listKajian = [].obs;
-  var listArtikel = <ArtikelData>[].obs;
+  var listArtikel = <ArtikelData>[
+    ArtikelData(
+        id: 1,
+        judul: "dummy",
+        tanggal: "1992-10-10",
+        image: "https://dummyimage.com/600x400/000/fff"),
+  ].obs;
   var listAllMenu = [].obs;
   var listKota = [].obs;
   var latestArtikel = {}.obs;
@@ -40,6 +66,7 @@ class DashboardController extends GetxController {
 
   GetDataArtikel() async {
     final artikelbaru = await DashboardService().getListArtikelBaru();
+    listArtikel.value = [];
     for (var element in artikelbaru['data']) {
       listArtikel.add(ArtikelData(
           id: element['id'],
@@ -105,7 +132,15 @@ class DashboardController extends GetxController {
 
   getSliderKajianLive() async {
     final result = await DashboardService().getSliderKajian();
-    listKajianSlider.value = result['data'];
+    listKajianSlider.value = [];
+    for (var element in result['data']) {
+      listKajianSlider.add(KajianData(
+          id: element['id'],
+          judul: element['judul'],
+          subjudul: element['subjudul'],
+          image: element['image'],
+          link: element['link']));
+    }
     isLoadingKajianLive.value = false;
   }
 
