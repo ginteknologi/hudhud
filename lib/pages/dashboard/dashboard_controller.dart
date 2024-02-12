@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
-import 'package:simple_moment/simple_moment.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_service.dart';
 
@@ -10,40 +9,49 @@ class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
 
   final dataStore = GetStorage();
-  var isLoadingList = true.obs;
+  var isLoadingKajianLive = true.obs;
+  var isLoadingKajian = true.obs;
+  var isLoadingArtikel = true.obs;
+  var isLoadingLokasi = true.obs;
+  // var isLoadingList = true.obs;
   var list = {}.obs;
   var lastRead = {}.obs;
   var todayDate = "".obs;
   var dataTerbaru = {}.obs;
-  List listWaktu = [].obs;
-  List listMenuHome = [].obs;
-  List listKajianSlider = [].obs;
-  List listKajian = [].obs;
-  var listArtikel = {}.obs;
-  List listAllMenu = [].obs;
-  List listKota = [].obs;
+  var listWaktu = [].obs;
+  var listMenuHome = [].obs;
+  var listKajianSlider = [].obs;
+  var listKajian = [].obs;
+  var listArtikel = <ArtikelData>[].obs;
+  var listAllMenu = [].obs;
+  var listKota = [].obs;
   var latestArtikel = {}.obs;
   var latestDoa = {}.obs;
   var latestCampaign = {}.obs;
   var duration = 0.obs;
   var txttime = "".obs;
 
-  // RxBool showPopupInfaq = true.obs;
-  // DialogPopupInfaq dialogPopupInfaq = DialogPopupInfaq.subuh;
+  // GetDataKajian() async {
+  // final result = await DashboardService().getList();
+  // dataTerbaru.value = result['data'];
+  // lastRead.value = dataStore.read('perAyatLastRead');
+  // await Future.delayed(const Duration(seconds: 100), () {});
+  // }
 
-  getData() async {
-    final result = await DashboardService().getList();
+  GetDataArtikel() async {
     final artikelbaru = await DashboardService().getListArtikelBaru();
-    dataTerbaru.value = result['data'];
-    lastRead.value = dataStore.read('perAyatLastRead');
-    // var newdata = constructDataTerbaru(dataTerbaru);
-    print(artikelbaru['data']);
-    listArtikel.value = artikelbaru['data'];
-    isLoadingList.value = false;
+    for (var element in artikelbaru['data']) {
+      listArtikel.add(ArtikelData(
+          id: element['id'],
+          judul: element['judul'],
+          tanggal: element['tanggal'],
+          image: element['image']));
+    }
+    isLoadingArtikel.value = false;
   }
 
   getMenuHome() async {
-    return listMenuHome = [
+    return listMenuHome.value = [
       {
         "label": "Sedekah",
         "icon": "assets/icons/sedekah_blur.svg",
@@ -54,11 +62,7 @@ class DashboardController extends GetxController {
         "icon": "assets/icons/kiblat.svg",
         "urlNav": "/kiblat"
       },
-      {
-        "label": "Do'a", 
-        "icon": "assets/icons/doa.svg", 
-        "urlNav": "/doa"
-      },
+      {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
       {
         "label": "Lainnya",
         "icon": "assets/icons/lainnya.svg",
@@ -68,11 +72,10 @@ class DashboardController extends GetxController {
   }
 
   getAllMenu() async {
-    return listAllMenu = [
+    return listAllMenu.value = [
       {
         "label": "Sedekah",
         "icon": "assets/icons/sedekah_blur.svg",
-        // "urlNav": "/sedekah"
         "urlNav": ""
       },
       {
@@ -81,8 +84,6 @@ class DashboardController extends GetxController {
         "urlNav": "/kiblat"
       },
       {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
-      // {"label": "Al-Quran", "icon": "assets/icons/alquran.svg", "urlNav": ""},
-      // {"label": "Ruangan", "icon": "assets/icons/ruangan.svg", "urlNav": ""},
       {
         "label": "Artikel/Informasi",
         "icon": "assets/icons/artikel.svg",
@@ -102,17 +103,20 @@ class DashboardController extends GetxController {
     ];
   }
 
-  getKajianLive() async {
-  var isLoadingList = true.obs;
+  getSliderKajianLive() async {
     final result = await DashboardService().getSliderKajian();
-    listKajianSlider = result['data'];
+    listKajianSlider.value = result['data'];
+    isLoadingKajianLive.value = false;
+  }
+
+  Future getKajianLive() async {
     final listresult = await DashboardService().getListKajian();
-    listKajian = listresult['data'];
-    isLoadingList.value = false;
+    listKajian.value = listresult['data'];
+    isLoadingKajian.value = false;
   }
 
   getListKota() {
-    return listKota = [
+    return listKota.value = [
       {
         "id": 1,
         "label": "Jakarta",
@@ -148,41 +152,6 @@ class DashboardController extends GetxController {
     ];
   }
 
-  // constructDataTerbaru(data) {
-  //   if (data != null) {
-  //     List<LatestNews> items = [];
-  //     var item = data;
-  //     var keys = item.keys;
-  //     for (var key in keys) {
-  //       var el = item[key];
-  //       var tgl = "";
-  //       var timeleft;
-  //       if (el['createdAt'] != null) {
-  //         timeleft = DateTime.parse(el['createdAt']);
-  //         tgl = Moment.parse("$timeleft")
-  //             .format("dd MMMM yyyy", localeOverride: 'id');
-  //       }
-  //       if (key == 'artikel') {
-  //         el['kategori'] = 'Artikel';
-  //       } else if (key == 'campaign') {
-  //         el['kategori'] = 'Campaign';
-  //       } else {
-  //         el['kategori'] = 'Doa';
-  //       }
-  //       items.add(LatestNews(
-  //         id: el['id'],
-  //         date: tgl,
-  //         time: tgl != "" ? "${timeleft.hour} : ${timeleft.minute}" : '',
-  //         title: el['judul'],
-  //         subtitle: el['isi'],
-  //         image: el['image'] ?? 'https://dummyimage.com/600x400/000/fff',
-  //         kategori: el['kategori'],
-  //       ));
-  //     }
-  //     return items;
-  //   }
-  // }
-
   constructLatestData(data) {
     var item = data['data'];
     latestArtikel = item['artikel'];
@@ -206,42 +175,14 @@ class DashboardController extends GetxController {
 
   @override
   void onInit() async {
-    getData();
+    getSliderKajianLive();
+    GetDataArtikel();
     getMenuHome();
-    getKajianLive();
     getAllMenu();
     getListKota();
     setFcm();
-    // if (ctrlmain.showPopupInfaq.isTrue) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     ctrlmain.showPopup();
-    //     ctrlmain.showPopupInfaq.value = false;
-    //   });
-    // }
-
     super.onInit();
   }
 }
 
 enum DialogPopupInfaq { subuh, pagi }
-
-// class LatestNews {
-//   int id;
-//   String title, subtitle, kategori, image, time, date;
-//   LatestNews(
-//       {required this.id,
-//       required this.title,
-//       required this.subtitle,
-//       required this.kategori,
-//       required this.image,
-//       required this.time,
-//       required this.date});
-
-//   Map toJson() => {
-//         'title': title,
-//         'subtitle': subtitle,
-//         'kategori': kategori,
-//         'image': image,
-//         'time': time,
-//       };
-// }

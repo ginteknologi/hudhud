@@ -9,11 +9,13 @@ import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/layout/custom_card_item.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/routes/quran/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,253 +28,227 @@ class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
   layout(DashboardController ctrl, MainController gctrl, BuildContext context) {
-
     return SafeArea(
         top: false,
-        child: Container(
-            height: MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF189A8C), Colors.white, Colors.white]),
-            ),
-            child: Padding(
-                padding: const EdgeInsets.only(left: 21, right: 21, top: 50),
-                child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Flexible(
-                                flex: 1,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 0),
-                                        child: Text("Assalamualaikum".tr,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.start,
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white)),
+        child: Obx(() {
+          return Container(
+              height: Get.height,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF189A8C), Colors.white, Colors.white]),
+              ),
+              child: Padding(
+                  padding: EdgeInsets.only(
+                      left: Get.width / 30,
+                      right: Get.width / 30,
+                      top: Get.height / 20),
+                  child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                  flex: 1,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 0),
+                                          child: Text("Assalamualaikum".tr,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.start,
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white)),
+                                        ),
                                       ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 0),
-                                        child: AutoSizeText(
-                                            gctrl.userLogin['name'].toString(),
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.start,
-                                            maxLines: 1,
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w900)),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 0),
+                                          child: AutoSizeText(
+                                              gctrl.userLogin['name']
+                                                  .toString(),
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.start,
+                                              maxLines: 1,
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w900)),
+                                        ),
                                       ),
-                                    ),
-                                    Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () async {
-                                            showPopup(
-                                                ctrl,
-                                                gctrl,
-                                                context,
-                                                dialogTerkini(
-                                                    ctrl, gctrl, context),
-                                                200);
+                                      Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            onTap: () async {
+                                              showPopup(
+                                                  ctrl,
+                                                  gctrl,
+                                                  context,
+                                                  dialogTerkini(
+                                                      ctrl, gctrl, context),
+                                                  200);
 
-                                            // showPopup(
-                                            //     ctrl, gctrl, context, null, null);
-                                          },
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          splashColor:
-                                              Colors.green.withOpacity(0.5),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(top: 10),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.location_pin,
-                                                    size: 12,
-                                                    color: Color(0xFFFFECB7),
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 5),
-                                                      child: Text(
-                                                          gctrl.lokasiSaatIni,
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xFFFFECB7),
-                                                              fontSize: 12)))
-                                                ],
+                                              // showPopup(
+                                              //     ctrl, gctrl, context, null, null);
+                                            },
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            splashColor:
+                                                Colors.green.withOpacity(0.5),
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.location_pin,
+                                                      size: 12,
+                                                      color: Color(0xFFFFECB7),
+                                                    ),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 5),
+                                                        child: Text(
+                                                            gctrl.lokasiSaatIni,
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    0xFFFFECB7),
+                                                                fontSize: 12)))
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ))
-                                  ],
-                                )),
-                            Row(
-                              children: [
-                                ButtonIcon(
-                                  onTap: () {
-                                    Get.toNamed(RoutesNotifikasi.root);
-                                  },
-                                  bgcolor: Colors.transparent,
-                                  icon: const Icon(
-                                    Icons.notifications,
-                                    size: 35,
-                                    color: Colors.white,
+                                          ))
+                                    ],
+                                  )),
+                              Row(
+                                children: [
+                                  ButtonIcon(
+                                    onTap: () {
+                                      Get.toNamed(RoutesNotifikasi.root);
+                                    },
+                                    bgcolor: Colors.transparent,
+                                    icon: const Icon(
+                                      Icons.notifications,
+                                      size: 35,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Get.toNamed(RoutesAkun.root);
-                                      },
-                                      borderRadius: BorderRadius.circular(20),
-                                      splashColor:
-                                          Colors.green.withOpacity(0.5),
-                                      child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: gctrl.userLogin['photo'] ==
-                                                      null ||
-                                                  gctrl.userLogin['photo'] == ""
-                                              ? Image.asset(
-                                                  "assets/icons/app_icon.png",
-                                                  height: 35,
-                                                  width: 35,
-                                                )
-                                              : Image.network(
-                                                  gctrl.userLogin['photo'],
-                                                  height: 35,
-                                                  width: 35,
-                                                )
-                                          // Image.network(
-                                          //   "https://picsum.photos/50",
-                                          //   height: 35,
-                                          //   width: 35,
-                                          // ),
-                                          ),
-                                    )),
-                              ],
-                            )
-                          ],
-                        ),
-                        const WaktuSolat(),
-                        getGridMenu(ctrl),
-                        Container(
-                          margin: const EdgeInsets.only(top: 25),
-                          child: getSeparator(
-                              'Kajian Live', 'Lihat Semua', context, ctrl),
-                        ),
-                        getListItem(ctrl),
-                        // Container(
-                        //   margin: const EdgeInsets.only(top: 10),
-                        //   child: getSeparator("Sudah Baca Qur'an Hari Ini?",
-                        //       null, context, ctrl),
-                        // ),
-                        // getButtonCard(ctrl, context),
-                        Container(
-                          margin: const EdgeInsets.only(top: 25),
-                          child: getSeparator('Terbaru', '', context, ctrl),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // getListItemVertical(ctrl, context),
-                        CustomCardItem(
-                                network: true,
-                                isFullWidth: true,
-                                height: 165,
-                                size: "medium",
-                                positionChip: CrossAxisAlignment.start,
-                                chipColor: Theme.of(context).primaryColor,
-                                chipText: ctrl.listArtikel['category']['name'],
-                                chipTextStyle: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.fontSize,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white),
-                                title: ctrl.listArtikel['judul'],
-                                subtitle: Moment.parse(ctrl.listArtikel['tanggal'])
-                                    .format("dd MMMM yyyy",
-                                        localeOverride: 'id'),
-                                imgPath: ctrl.listArtikel['image'],
-                                linkRoute: '/artikel/${ctrl.listArtikel['id']}',
-                              ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        // ctrl.listArtikel.isNotEmpty && ctrl.listArtikel[1] != null ?
-                        // CustomCardItem(
-                        //   network: false,
-                        //   isFullWidth: true,
-                        //   height: 165,
-                        //   size: "medium",
-                        //   positionChip: CrossAxisAlignment.start,
-                        //   chipColor: Theme.of(context).primaryColor,
-                        //   chipText: doa.kategori,
-                        //   chipTextStyle: TextStyle(
-                        //       fontSize: Theme.of(context)
-                        //           .textTheme
-                        //           .labelLarge
-                        //           ?.fontSize,
-                        //       fontWeight: FontWeight.normal,
-                        //       color: Colors.white),
-                        //   title: doa.title,
-                        //   subtitle: '${doa.time} | ${doa.date}',
-                        //   linkRoute: '/doa/1/${doa.id}',
-                        // )
-                        // :
-                        // Container(),
-                        // const SizedBox(
-                        //   height: 20,
-                        // ),
-                        // CustomCardItem(
-                        //   network: true,
-                        //   isFullWidth: true,
-                        //   height: 165,
-                        //   size: "medium",
-                        //   positionChip: CrossAxisAlignment.start,
-                        //   chipColor: Theme.of(context).primaryColor,
-                        //   chipText: campaign.kategori,
-                        //   chipTextStyle: TextStyle(
-                        //       fontSize: Theme.of(context)
-                        //           .textTheme
-                        //           .labelLarge
-                        //           ?.fontSize,
-                        //       fontWeight: FontWeight.normal,
-                        //       color: Colors.white),
-                        //   title: campaign.title,
-                        //   subtitle: '${campaign.time} | ${campaign.date}',
-                        //   imgPath: '${campaign.image}',
-                        //   linkRoute: '/sedekah/${campaign.id}',
-                        // ),
-                        const SizedBox(
-                          height: 100,
-                        )
-                      ],
-                    )))));
+                                  const SizedBox(width: 10),
+                                  Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Get.toNamed(RoutesAkun.root);
+                                        },
+                                        borderRadius: BorderRadius.circular(20),
+                                        splashColor:
+                                            Colors.green.withOpacity(0.5),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            child: gctrl.userLogin['photo'] ==
+                                                        null ||
+                                                    gctrl.userLogin['photo'] ==
+                                                        ""
+                                                ? Image.asset(
+                                                    "assets/icons/app_icon.png",
+                                                    height: 35,
+                                                    width: 35,
+                                                  )
+                                                : Image.network(
+                                                    gctrl.userLogin['photo'],
+                                                    height: 35,
+                                                    width: 35,
+                                                  )
+                                            // Image.network(
+                                            //   "https://picsum.photos/50",
+                                            //   height: 35,
+                                            //   width: 35,
+                                            // ),
+                                            ),
+                                      )),
+                                ],
+                              )
+                            ],
+                          ),
+                          const WaktuSolat(),
+                          getGridMenu(ctrl),
+                          Container(
+                            margin: const EdgeInsets.only(top: 25),
+                            child: getSeparator(
+                                'Kajian Live', 'Lihat Semua', context, ctrl),
+                          ),
+                          Skeletonizer(
+                            ignoreContainers: false,
+                            enabled: ctrl.isLoadingKajianLive.value,
+                            child: getListItem(ctrl),
+                          ),
+                          Container(
+                            child: getSeparator('Terbaru', '', context, ctrl),
+                          ),
+                          Skeletonizer(
+                            ignoreContainers: false,
+                            enabled: ctrl.isLoadingArtikel.value,
+                            child: News(context, ctrl),
+                          ),
+                          SizedBox(
+                            height: Get.height / 30,
+                          )
+                        ],
+                      ))));
+        }));
+  }
+
+  News(BuildContext context, DashboardController ctrl) {
+    return ListView.builder(
+        primary: false,
+        itemCount: ctrl.listArtikel.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          final ArtikelData item = ctrl.listArtikel[index];
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CustomCardItem(
+                network: true,
+                isFullWidth: true,
+                height: Get.height / 5,
+                size: "medium",
+                positionChip: CrossAxisAlignment.start,
+                chipColor: Theme.of(context).primaryColor,
+                chipText: "Umum",
+                chipTextStyle: TextStyle(
+                    fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+                title: item.judul,
+                subtitle: Moment.parse(item.tanggal)
+                    .format("dd MMMM yyyy", localeOverride: 'id'),
+                imgPath: item.image,
+                linkRoute: '/artikel/${item.id}',
+              ),
+              SizedBox(
+                height: Get.height / 40,
+              )
+            ],
+          );
+        });
   }
 
   getGridMenu(DashboardController ctrl) {
@@ -350,7 +326,8 @@ class DashboardPage extends StatelessWidget {
               child: InkWell(
                 highlightColor: Colors.transparent,
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                onTap: () {
+                onTap: () async {
+                  await ctrl.getKajianLive();
                   showSheet(ctrl, context, true);
                 },
                 child: Padding(
@@ -380,14 +357,12 @@ class DashboardPage extends StatelessWidget {
     return SizedBox(
       height: 151,
       child: ListView.separated(
-        // padding: EdgeInsets.only(left: 24, right: 24),
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: ctrl.listKajianSlider.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
-          return FadeInLeft(
-              child: CustomCardItem(
+          return CustomCardItem(
             title: '${ctrl.listKajianSlider[index]["judul"]}',
             subtitle: '${ctrl.listKajianSlider[index]["subjudul"]}',
             kategori: '${ctrl.listKajianSlider[index]["kategori"]}',
@@ -396,7 +371,7 @@ class DashboardPage extends StatelessWidget {
             islink: true,
             link: '${ctrl.listKajianSlider[index]["link"]}',
             network: true,
-          ));
+          );
         },
       ),
     );
@@ -482,42 +457,6 @@ class DashboardPage extends StatelessWidget {
                     )))));
   }
 
-  // getListItemVertical(DashboardController ctrl, BuildContext context) {
-  //   return Obx(() => !ctrl.isLoadingList.value
-  //       ? ListView.separated(
-  //           // padding: EdgeInsets.only(left: 24, right: 24),
-  //           scrollDirection: Axis.vertical,
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           shrinkWrap: true,
-  //           itemCount: ctrl.listArtikel.length,
-  //           separatorBuilder: (context, index) => const SizedBox(height: 10),
-  //           itemBuilder: (context, index) {
-  //             LatestNews item = ctrl.listArtikel[index];
-  //             return FadeInLeft(
-  //               child: CustomCardItem(
-  //                 network: true,
-  //                 isFullWidth: true,
-  //                 height: 165,
-  //                 size: "medium",
-  //                 positionChip: CrossAxisAlignment.start,
-  //                 chipColor: Theme.of(context).primaryColor,
-  //                 chipText: '$item.kategori',
-  //                 chipTextStyle: TextStyle(
-  //                     fontSize:
-  //                         Theme.of(context).textTheme.labelLarge?.fontSize,
-  //                     fontWeight: FontWeight.normal,
-  //                     color: Colors.white),
-  //                 title: '$item.title',
-  //                 subtitle: '$item.time | $item.date',
-  //                 imgPath: '$item.image',
-  //                 linkRoute: 'asdasdsadsads',
-  //               ),
-  //             );
-  //           },
-  //         )
-  //       : const Text('Loading'));
-  // }
-
   void showSheet(DashboardController ctrl, BuildContext context, bool flag) {
     showModalBottomSheet(
         context: context,
@@ -546,25 +485,28 @@ class DashboardPage extends StatelessWidget {
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height -
-                            kBottomNavigationBarHeight -
-                            kToolbarHeight,
-                        child: ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: ctrl.listKajian.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            var item = ctrl.listKajian[index];
-                            // Datum model = filteredEvents[index];
-                            return FadeInUp(
-                              child: ListItemUiWidget(
+                    Obx(() {
+                      if (ctrl.isLoadingKajian.isTrue) {
+                        return Container(
+                            height: Get.height / 1.2,
+                            child: Center(child: CircularProgressIndicator()));
+                      }
+                      return SizedBox(
+                          height: MediaQuery.of(context).size.height -
+                              kBottomNavigationBarHeight -
+                              kToolbarHeight,
+                          child: ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: ctrl.listKajian.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              var item = ctrl.listKajian[index];
+                              return ListItemUiWidget(
                                 onTap: () async {
                                   final Uri url = Uri.parse(item['link']);
                                   if (!await launchUrl(url)) {
                                     print('Tidak dapat membuka link YouTube.');
                                   }
-                                  //   //Get.toNamed(AppRoutes.detailEventScreen);
                                 },
                                 minHeight: 70,
                                 vjustify: false,
@@ -619,9 +561,7 @@ class DashboardPage extends StatelessWidget {
                                                           FontWeight.bold,
                                                       fontStyle:
                                                           FontStyle.italic,
-                                                      fontSize: 5)
-                                                  // ),
-                                                  ),
+                                                      fontSize: 5)),
                                             ],
                                           ),
                                         ))
@@ -644,10 +584,10 @@ class DashboardPage extends StatelessWidget {
                                         letterSpacing: 0,
                                         fontWeight: FontWeight.w100,
                                         color: Colors.black),
-                              ),
-                            );
-                          },
-                        ))
+                              );
+                            },
+                          ));
+                    })
                   ],
                 );
         });
@@ -728,7 +668,7 @@ class DashboardPage extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        Obx(() => ctrl.isLoadingList.value
+        Obx(() => ctrl.isLoadingLokasi.value
             ? ButtonElevated(
                 title: 'Loading',
                 width: Get.width,
@@ -750,7 +690,7 @@ class DashboardPage extends StatelessWidget {
                 onPressed: () async {
                   var statusLokasi = await Permission.location.request();
                   if (statusLokasi.isGranted) {
-                    ctrl.isLoadingList.value = true;
+                    ctrl.isLoadingLokasi.value = true;
                     Position position = await Geolocator.getCurrentPosition(
                         desiredAccuracy: LocationAccuracy.high);
                     List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -759,7 +699,7 @@ class DashboardPage extends StatelessWidget {
                     gctrl.updateLokasi(
                         '${place.locality.toString()}, ${place.country.toString()}');
                     await Scheduling();
-                    ctrl.isLoadingList.value = false;
+                    ctrl.isLoadingLokasi.value = false;
                     Navigator.pop(context);
                   } else if (statusLokasi.isDenied) {
                     print('Izin ditolak');
@@ -903,8 +843,6 @@ class DashboardPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
-        body: Obx(() => ctrl.isLoadingList.value
-            ? const Center(child: CircularProgressIndicator())
-            : layout(ctrl, gctrl, context)));
+        body: layout(ctrl, gctrl, context));
   }
 }

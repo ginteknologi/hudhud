@@ -15,6 +15,7 @@ import 'package:masjid_app/routes/auth/index.dart';
 // import 'package:masjid_app/pages/akun/profile/profile_service.dart';
 
 enum DialogPopupInfaq { subuh, pagi }
+
 class MainController extends GetxController {
   final dataStore = GetStorage();
   var isLogin = false.obs;
@@ -94,7 +95,8 @@ class MainController extends GetxController {
 
   getWaktu() async {
     var timeleft = DateTime.now();
-    todayDate.value = Moment.parse("$timeleft").format("EEEE, dd MMMM", localeOverride: 'id');
+    todayDate.value =
+        Moment.parse("$timeleft").format("EEEE, dd MMMM", localeOverride: 'id');
     int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
     var thistime = getNextLargerNumber(hourminutes, listWaktu);
     print(thistime);
@@ -244,7 +246,8 @@ class MainController extends GetxController {
   loadHistoryQuran() async {
     try {
       if (dataStore.read('perAyatLastRead') == null) {
-        dataStore.write('perAyatLastRead', {'id': 0, 'suratName': '', 'ayatNumber': 0});
+        dataStore.write(
+            'perAyatLastRead', {'id': 0, 'suratName': '', 'ayatNumber': 0});
       }
       if (dataStore.read('indonesiaLastRead') == null) {
         dataStore.write('indonesiaLastRead', {'id': 0, 'surat': '', 'hal': 0});
@@ -277,7 +280,7 @@ class MainController extends GetxController {
       print('gk ada session');
     }
   }
-  
+
   updateLokasi(updateLokasi) async {
     dataStore.write('lokasiSaatIni', updateLokasi);
     lokasiSaatIni = updateLokasi;
@@ -296,6 +299,7 @@ class MainController extends GetxController {
     isLogin.value = false;
     userLogin.value = {};
   }
+
   @override
   void onInit() async {
     await waktusolatData();
@@ -308,6 +312,3 @@ class MainController extends GetxController {
     super.onInit();
   }
 }
-
-
-

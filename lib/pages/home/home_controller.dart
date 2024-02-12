@@ -7,7 +7,8 @@ import 'package:masjid_app/pages/quran/quran_page.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/routes/auth/index.dart';
 
-class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
+class HomeController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final gctrl = Get.find<MainController>();
   final dataStore = GetStorage();
   var isLoadingList = true.obs;

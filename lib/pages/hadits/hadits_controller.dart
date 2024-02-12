@@ -9,16 +9,18 @@ class HaditsController extends GetxController {
 
   getData() async {
     try {
-    isLoadingList.value = true;
-    final result = await HaditsService().getBooks();
-    list.value = result['data'];
-    isLoadingList.value = false;
+      isLoadingList.value = true;
+      final result = await HaditsService().getBooks();
+      list.value = result['data'];
+      isLoadingList.value = false;
     } catch (e) {
+      print('error haidst');
       print(e);
     }
   }
+
   @override
-  void onInit()async{
+  void onInit() async {
     await getData();
     super.onInit();
   }
