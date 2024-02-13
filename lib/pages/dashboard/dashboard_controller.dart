@@ -91,10 +91,25 @@ class DashboardController extends GetxController {
       },
       {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
       {
-        "label": "Lainnya",
-        "icon": "assets/icons/lainnya.svg",
-        "urlNav": "lainnya"
+        "label": "Informasi",
+        "icon": "assets/icons/informasi.svg",
+        "urlNav": "/artikel"
       },
+      {
+        "label": "Hadits",
+        "icon": "assets/icons/hadits.svg",
+        "urlNav": "/hadits"
+      },
+      {
+        "label": "Dzikir Pagi Petang",
+        "icon": "assets/icons/dzikir_pagi_petang.svg",
+        "urlNav": "/dzikir"
+      },
+      // {
+      //   "label": "Lainnya",
+      //   "icon": "assets/icons/lainnya.svg",
+      //   "urlNav": "lainnya"
+      // },
     ];
   }
 

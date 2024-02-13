@@ -1,8 +1,10 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/layout/sliding_widget.dart';
+import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
 import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
@@ -32,183 +34,130 @@ class HomePage extends StatelessWidget {
     }
   }
 
-  // void showSheet(
-  //     HomeController ctrl, MainController gctrl, BuildContext context) {
-  //   showModalBottomSheet(
-  //       context: context,
-  //       shape: const RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.vertical(
-  //           top: Radius.circular(20.0),
-  //         ),
-  //       ),
-  //       builder: (BuildContext bc) {
-  //         return CustomModalBottomSheet(
-  //           typeSheet: TypeBottomSheet.typeCustomSheet,
-  //           content: [
-  //             Align(
-  //               alignment: Alignment.centerLeft,
-  //               child: Text("Tilawah",
-  //                   style: context.textTheme.titleMedium?.copyWith(
-  //                       fontWeight: FontWeight.w900, color: Colors.black)),
-  //             ),
-  //             Card(
-  //               elevation: 0,
-  //               color: Theme.of(context).primaryColor,
-  //               margin: const EdgeInsets.only(top: 10),
-  //               clipBehavior: Clip.antiAlias,
-  //               shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(6),
-  //                 //set border radius more than 50% of height and width to make circle
-  //               ),
-  //               child: Container(
-  //                   width: Get.width,
-  //                   // height: Get.height * 0.10,
-  //                   constraints: BoxConstraints.loose(Size.infinite),
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.all(10),
-  //                     child: Column(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         Align(
-  //                           alignment: Alignment.centerLeft,
-  //                           child: Text("Tilawah Perayat",
-  //                               maxLines: 1,
-  //                               overflow: TextOverflow.ellipsis,
-  //                               style: context.textTheme.labelLarge?.copyWith(
-  //                                   fontWeight: FontWeight.bold,
-  //                                   color: Colors.white)),
-  //                         ),
-  //                         Align(
-  //                           alignment: Alignment.centerLeft,
-  //                           child: Text(
-  //                               gctrl.perAyatLastRead['ayatNumber'] > 0
-  //                                   ? '${gctrl.perAyatLastRead['suratName']} : ${gctrl.perAyatLastRead['ayatNumber']}'
-  //                                   : 'Belum baca Al-quran',
-  //                               maxLines: 1,
-  //                               overflow: TextOverflow.ellipsis,
-  //                               style: context.textTheme.labelMedium?.copyWith(
-  //                                   fontWeight: FontWeight.normal,
-  //                                   color: Colors.white)),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   )), //SizedBox
-  //             ),
-  //             const SizedBox(
-  //               height: 5,
-  //             ),
-  //             Card(
-  //               elevation: 0,
-  //               color: Theme.of(context).primaryColor,
-  //               margin: const EdgeInsets.only(top: 10),
-  //               clipBehavior: Clip.antiAlias,
-  //               shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(6),
-  //                 //set border radius more than 50% of height and width to make circle
-  //               ),
-  //               child: Container(
-  //                   width: Get.width,
-  //                   // height: Get.height * 0.10,
-  //                   constraints: BoxConstraints.loose(Size.infinite),
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.all(10),
-  //                     child: Column(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         Align(
-  //                           alignment: Alignment.centerLeft,
-  //                           child: Text("Tilawah Perhalaman",
-  //                               maxLines: 1,
-  //                               overflow: TextOverflow.ellipsis,
-  //                               style: context.textTheme.labelLarge?.copyWith(
-  //                                   fontWeight: FontWeight.bold,
-  //                                   color: Colors.white)),
-  //                         ),
-  //                         Align(
-  //                           alignment: Alignment.centerLeft,
-  //                           child: Text("Belum baca Al-Quran",
-  //                               maxLines: 1,
-  //                               overflow: TextOverflow.ellipsis,
-  //                               style: context.textTheme.labelMedium?.copyWith(
-  //                                   fontWeight: FontWeight.normal,
-  //                                   color: Colors.white)),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   )), //SizedBox
-  //             ),
-  //             const SizedBox(
-  //               height: 10,
-  //             ),
-  //             Align(
-  //               alignment: Alignment.centerLeft,
-  //               child: Text("Al-Quran",
-  //                   style: context.textTheme.titleMedium?.copyWith(
-  //                       fontWeight: FontWeight.w900, color: Colors.black)),
-  //             ),
-  //             const SizedBox(
-  //               height: 10,
-  //             ),
-  //             Material(
-  //                 color: Colors.transparent,
-  //                 child: Row(
-  //                   children: [
-  //                     InkWell(
-  //                       onTap: () {
-  //                         Navigator.pop(context);
-  //                         ctrl.typeViewQuran.value = TypeViewQuran.perayat;
-  //                         ctrl.type.value = BottomBarEnum.alquran;
-  //                       },
-  //                       child: Column(
-  //                           mainAxisAlignment: MainAxisAlignment.center,
-  //                           crossAxisAlignment: CrossAxisAlignment.center,
-  //                           children: [
-  //                             Image.asset('assets/icons/icon_perayat.png',
-  //                                 height: 30, width: 30),
-  //                             SizedBox(
-  //                               height: 5,
-  //                             ),
-  //                             Text("Perayat",
-  //                                 style: context.textTheme.labelMedium
-  //                                     ?.copyWith(
-  //                                         fontWeight: FontWeight.w900,
-  //                                         color: Colors.black54))
-  //                           ]),
-  //                     ),
-  //                     const SizedBox(
-  //                       width: 20,
-  //                     ),
-  //                     InkWell(
-  //                       onTap: () {
-  //                         Navigator.pop(context);
-  //                         ctrl.typeViewQuran.value = TypeViewQuran.perhalaman;
-  //                         ctrl.type.value = BottomBarEnum.alquran;
-  //                         ctrl.idxLastReadHalaman.value = 3;
-  //                       },
-  //                       child: Column(
-  //                           mainAxisAlignment: MainAxisAlignment.center,
-  //                           crossAxisAlignment: CrossAxisAlignment.center,
-  //                           children: [
-  //                             Image.asset('assets/icons/quran_halaman.png',
-  //                                 height: 30, width: 30),
-  //                             const SizedBox(
-  //                               height: 5,
-  //                             ),
-  //                             Text("Perhalaman",
-  //                                 style: context.textTheme.labelMedium
-  //                                     ?.copyWith(
-  //                                         fontWeight: FontWeight.w900,
-  //                                         color: Colors.black54))
-  //                           ]),
-  //                     )
-  //                   ],
-  //                 ))
-  //           ],
-  //         );
-  //       });
-  // }
+  void showSheet(
+      HomeController ctrl, MainController gctrl, BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20.0),
+          ),
+        ),
+        isScrollControlled: true,
+        useSafeArea: true,
+        showDragHandle: false,
+        builder: (BuildContext bc) {
+          return CustomModalBottomSheet(
+            typeSheet: TypeBottomSheet.typeFullscreenSheet,
+            content: [
+              SizedBox(
+                height: 30,
+                child: Text(
+                  "Sahabat Muadzin".tr,
+                  style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ),
+              Obx(() {
+                if (ctrl.isLoadingList.isFalse) {
+                  return Container(
+                      height: Get.height / 1.2,
+                      child: Center(child: CircularProgressIndicator()));
+                }
+                return SizedBox(
+                    height: MediaQuery.of(context).size.height -
+                        kBottomNavigationBarHeight -
+                        kToolbarHeight,
+                    child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: 8,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return ListItemUiWidget(
+                          onTap: () async {
+                            // final Uri url = Uri.parse();
+                            // if (!await launchUrl(url)) {
+                            //   print('Tidak dapat membuka link YouTube.');
+                            // }
+                            print('Tidak dapat membuka link YouTube.');
+                          },
+                          minHeight: 70,
+                          vjustify: false,
+                          widthContent: MediaQuery.of(context).size.width - 130,
+                          id: 1,
+                          title: 'Muadzin ${index}',
+                          showIcon: IconPosition.left,
+                          iconLeft: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(7),
+                                child: Image.network(
+                                  'https://picsum.photos/65',
+                                  width: 65,
+                                  height: 65,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              // Positioned(
+                              //     top: 2,
+                              //     right: 2,
+                              //     child: Container(
+                              //       padding: const EdgeInsets.all(3),
+                              //       constraints:
+                              //           BoxConstraints.loose(Size.infinite),
+                              //       decoration: const BoxDecoration(
+                              //           color: Colors.red,
+                              //           borderRadius: BorderRadius.all(
+                              //               Radius.circular(20))),
+                              //       child: Row(
+                              //         mainAxisSize: MainAxisSize.min,
+                              //         crossAxisAlignment:
+                              //             CrossAxisAlignment.center,
+                              //         mainAxisAlignment:
+                              //             MainAxisAlignment.center,
+                              //         children: [
+                              //           Container(
+                              //               margin:
+                              //                   const EdgeInsets.only(right: 5),
+                              //               child: SvgPicture.asset(
+                              //                   'assets/icons/live.svg',
+                              //                   height: 6,
+                              //                   width: 6)),
+                              //           const Text('Live',
+                              //               overflow: TextOverflow.ellipsis,
+                              //               textAlign: TextAlign.start,
+                              //               style: TextStyle(
+                              //                   color: Colors.white,
+                              //                   fontWeight: FontWeight.bold,
+                              //                   fontStyle: FontStyle.italic,
+                              //                   fontSize: 5)),
+                              //         ],
+                              //       ),
+                              //     ))
+                            ],
+                          ),
+                          titleStyle: context.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                          subTitle: '',
+                          subtitleStyle: context.textTheme.labelMedium
+                              ?.copyWith(
+                                  fontWeight: FontWeight.w100,
+                                  color: Colors.black),
+                          footerText:
+                              "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH ${index}",
+                          footerTextStyle: context.textTheme.labelSmall
+                              ?.copyWith(
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w100,
+                                  color: Colors.black),
+                        );
+                      },
+                    ));
+              })
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,11 +183,11 @@ class HomePage extends StatelessWidget {
                 child: CustomBottomBar(
                   selectedIdx: ctrl.selectedIdx.value,
                   onChanged: (BottomBarEnum type) {
-                    // if (type == BottomBarEnum.alquran) {
-                    //   showSheet(ctrl, gctrl, context);
-                    // } else {
-                    ctrl.type.value = type;
-                    // }
+                    if (type == BottomBarEnum.muazin) {
+                      showSheet(ctrl, gctrl, context);
+                    } else {
+                      ctrl.type.value = type;
+                    }
                   },
                 ))
             : Container(

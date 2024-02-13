@@ -190,15 +190,23 @@ class DashboardPage extends StatelessWidget {
                           ),
                           const WaktuSolat(),
                           getGridMenu(ctrl),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          Skeletonizer(
+                            ignoreContainers: false,
+                            enabled: ctrl.isLoadingKajianLive.value,
+                            child: getListItem(ctrl, true),
+                          ),
                           Container(
-                            margin: const EdgeInsets.only(top: 25),
+                            margin: const EdgeInsets.only(top: 10),
                             child: getSeparator(
                                 'Kajian Live', 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
                             enabled: ctrl.isLoadingKajianLive.value,
-                            child: getListItem(ctrl),
+                            child: getListItemKajian(ctrl),
                           ),
                           Container(
                             child: getSeparator('Terbaru', '', context, ctrl),
@@ -254,54 +262,52 @@ class DashboardPage extends StatelessWidget {
 
   getGridMenu(DashboardController ctrl) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      padding: const EdgeInsets.only(left: 0, right: 0),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: ctrl.listMenuHome.length,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+        padding: EdgeInsets.only(top: 15),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5, mainAxisSpacing: 10, childAspectRatio: 1 / 1.2),
         itemBuilder: (context, index) {
-          return SizedBox(
-              height: 47,
-              child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                          onTap: () {
-                            if (ctrl.listMenuHome[index]['urlNav'] ==
-                                'lainnya') {
-                              showSheet(ctrl, context, false);
-                            } else {
-                              if (ctrl.listMenuHome[index]['urlNav'] != '' &&
-                                  ctrl.listMenuHome[index]['urlNav'] != null) {
-                                Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
-                              }
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(20),
-                          splashColor: Colors.green.withOpacity(0.5),
-                          child: GestureDetector(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(ctrl.listMenuHome[index]['icon'],
-                                  height: 35, width: 35),
-                              const SizedBox(height: 5),
-                              Text(
-                                '${ctrl.listMenuHome[index]["label"]}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.fontSize,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ))))));
+          return Container(
+              child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                      onTap: () {
+                        if (ctrl.listMenuHome[index]['urlNav'] == 'lainnya') {
+                          showSheet(ctrl, context, false);
+                        } else {
+                          if (ctrl.listMenuHome[index]['urlNav'] != '' &&
+                              ctrl.listMenuHome[index]['urlNav'] != null) {
+                            Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
+                          }
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      splashColor: Colors.green.withOpacity(0.5),
+                      child: GestureDetector(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SvgPicture.asset(ctrl.listMenuHome[index]['icon'],
+                              height: 50, width: 50),
+                          const SizedBox(height: 5),
+                          Text(
+                            '${ctrl.listMenuHome[index]["label"]}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.fontSize,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      )))));
         },
       ),
     );
@@ -354,7 +360,30 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getListItem(DashboardController ctrl) {
+  getListItem(DashboardController ctrl, flag) {
+    return SizedBox(
+      height: 151,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: 5,
+        separatorBuilder: (context, index) => const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          return CustomCardItem(
+            title: '',
+            subtitle: '',
+            kategori: '',
+            imgPath: 'https://picsum.photos/151',
+            islink: true,
+            link: '',
+            network: true,
+          );
+        },
+      ),
+    );
+  }
+
+  getListItemKajian(DashboardController ctrl) {
     return Obx(() {
       return SizedBox(
         height: 151,

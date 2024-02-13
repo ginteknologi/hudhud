@@ -20,11 +20,11 @@ class CustomBottomBar extends StatelessWidget {
         title: "Al-Qur'an".tr,
         navType: BottomBarEnum.alquran),
     BottomMenuModel(
-        icon: 'assets/icons/ruangan_blur.png',
-        activeIcon: 'assets/icons/ruangan_blur.png',
+        icon: 'assets/icons/sahabat_muadzin.png',
+        activeIcon: 'assets/icons/sahabat_muadzin.png',
         title: "Sahabat Muazin".tr,
         // navType: BottomBarEnum.ruangan
-        navType: BottomBarEnum.ruangan),
+        navType: BottomBarEnum.muazin),
     BottomMenuModel(
         icon: 'assets/icons/dkm.png',
         activeIcon: 'assets/icons/dkm_a.png',
@@ -108,7 +108,7 @@ class CustomBottomBar extends StatelessWidget {
   }
 }
 
-enum BottomBarEnum { beranda, alquran, ruangan, dkm }
+enum BottomBarEnum { beranda, alquran, ruangan, dkm, muazin }
 
 class BottomMenuModel {
   BottomMenuModel(

@@ -16,7 +16,7 @@ class AuthPage extends StatelessWidget {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [    
+        children: [
           const Text("Assalamu’alaikum \n Warahmatullahi Wabarakatuh",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -35,15 +35,17 @@ class AuthPage extends StatelessWidget {
           ),
           SizedBox(
             height: 30,
-          ),          
+          ),
           Align(
               alignment: Alignment.center,
-              child: Image.asset('assets/img/new-logo.png',width: 256,
+              child: Image.asset(
+                'assets/img/new-logo.png',
+                width: 256,
               )),
-              // child: SvgPicture.asset(
-                // 'assets/img/new-logo.png',
-                // width: 170,
-              // )),
+          // child: SvgPicture.asset(
+          // 'assets/img/new-logo.png',
+          // width: 170,
+          // )),
           // const Padding(
           //     padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
           //     child: Flexible(
@@ -53,20 +55,19 @@ class AuthPage extends StatelessWidget {
           //     )),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: 
-              ButtonOutline(
-                onPressed: () {
-                  ctrl.loginGuest();
-                },
-                radius: 40,
-                showIcon: "left",
-                title: "Guest Login",
-                width: 250,
-                shadow: false,
-              ),  
+            child: ButtonOutline(
+              onPressed: () {
+                ctrl.loginGuest();
+              },
+              radius: 40,
+              showIcon: "left",
+              title: "Guest Login",
+              width: 250,
+              shadow: false,
+            ),
           ),
           Container(
-              margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+              margin: const EdgeInsets.fromLTRB(0, 8, 0, 0),
               child: ButtonOutline(
                 onPressed: () {
                   ctrl.loginGoogle();
@@ -80,8 +81,7 @@ class AuthPage extends StatelessWidget {
                 title: "Login dengan Google",
                 width: 250,
                 shadow: false,
-              )
-            ),
+              )),
         ],
       ));
     }
