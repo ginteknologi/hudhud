@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
         ),
         isScrollControlled: true,
         useSafeArea: true,
-        showDragHandle: false,
+        showDragHandle: true,
         builder: (BuildContext bc) {
           return CustomModalBottomSheet(
             typeSheet: TypeBottomSheet.typeFullscreenSheet,
@@ -67,7 +67,8 @@ class HomePage extends StatelessWidget {
                 return SizedBox(
                     height: MediaQuery.of(context).size.height -
                         kBottomNavigationBarHeight -
-                        kToolbarHeight,
+                        kToolbarHeight -
+                        23,
                     child: ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       itemCount: 8,

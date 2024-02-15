@@ -5,6 +5,7 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_controller.dart';
@@ -36,20 +37,20 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                         //   ctrlHome.visible.value = !ctrlHome.visible.value;
                         // },
                         child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Flexible(
-                                child: EasyImageViewPager(
-                                    onTap: (int index) {
-                                      showPopup(ctrl, context, ctrlHome);
-                                    },
-                                    // search: ctrl.toSurat > 0 ? true : false,
-                                    idxInitial: ctrl.toSurat > 0
-                                        ? ctrl.toSurat
-                                        : ctrl.lastReadPerhalaman['hal'],
-                                    imageProviders: ctrl.listSurah)),
-                          ],
-                        ))
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            child: EasyImageViewPager(
+                                onTap: (int index) {
+                                  showPopup(ctrl, context, ctrlHome);
+                                },
+                                // search: ctrl.toSurat > 0 ? true : false,
+                                idxInitial: ctrl.toSurat > 0
+                                    ? ctrl.toSurat
+                                    : ctrl.lastReadPerhalaman['hal'],
+                                imageProviders: ctrl.listSurah)),
+                      ],
+                    ))
                   ],
                 ))));
   }
@@ -167,7 +168,8 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                                   iconLeft: Text(item['number'].toString()),
                                   id: item['number'],
                                   title: item['name']['transliteration']['id'],
-                                  subTitle: '${item['name']['translation']['id']} - ${item['numberOfVerses']} ayat',
+                                  subTitle:
+                                      '${item['name']['translation']['id']} - ${item['numberOfVerses']} ayat',
                                   subtitleStyle: TextStyle(fontSize: 2),
                                   onTap: () async {
                                     await ctrl.goToData(item);
@@ -200,13 +202,14 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
   Widget build(BuildContext context) {
     final ctrl = Get.put(HalamanQuranController());
     final hctrl = Get.find<HomeController>();
+    final gctrl = Get.find<MainController>();
     return WillPopScope(
-    onWillPop: () async {
-      // Logika yang dijalankan saat tombol kembali ditekan
-      Get.back(result: 'refresh');
-      return false; // Kembalikan false agar tidak melakukan pop secara otomatis
-    },
-    child: Scaffold(
+        onWillPop: () async {
+          // Logika yang dijalankan saat tombol kembali ditekan
+          Get.back(result: 'refresh');
+          return false; // Kembalikan false agar tidak melakukan pop secara otomatis
+        },
+        child: Scaffold(
             backgroundColor: Color(0xFFF5F5F5),
             extendBodyBehindAppBar: false,
             resizeToAvoidBottomInset: false,
@@ -215,7 +218,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
               iconTheme: IconThemeData(color: Colors.white),
               leading: GestureDetector(
                   onTap: () {
-                     Get.back(result: 'refresh');
+                    Get.back(result: 'refresh');
                   },
                   child: const Icon(Icons.arrow_back_rounded)),
               backgroundColor: Color(0xFF048C7C),
@@ -263,6 +266,24 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                   ),
                 ),
               ),
+              actions: [
+                Material(
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 21),
+                      child: InkWell(
+                        onTap: () {
+                          gctrl.showDialogFilter(true);
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        splashColor: Colors.green.withOpacity(0.5),
+                        child: const Icon(
+                          Icons.tune_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ))
+              ],
             )));
     // appBar: AppBarWSWidget.getAppbarWidget(
     //   title: Obx(() => ctrl.isLoadingList.value ? '' : ctrl.surahSaatIni.value),
