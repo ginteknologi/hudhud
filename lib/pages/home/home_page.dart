@@ -1,4 +1,3 @@
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
@@ -9,9 +8,9 @@ import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
 import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
-import 'package:masjid_app/pages/quran/quran_page.dart';
-import 'package:masjid_app/pages/ruangan/ruangan_page.dart';
 import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/models/kajianData.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -59,7 +58,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Obx(() {
-                if (ctrl.isLoadingList.isFalse) {
+                if (ctrl.isLoadingMuadzin.isTrue) {
                   return Container(
                       height: Get.height / 1.2,
                       child: Center(child: CircularProgressIndicator()));
@@ -70,29 +69,30 @@ class HomePage extends StatelessWidget {
                         kToolbarHeight,
                     child: ListView.builder(
                       physics: const ClampingScrollPhysics(),
-                      itemCount: 8,
+                      itemCount: ctrl.listMuadzin.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
+                      final KajianData item = ctrl.listMuadzin[index];
                         return ListItemUiWidget(
                           onTap: () async {
-                            // final Uri url = Uri.parse();
-                            // if (!await launchUrl(url)) {
-                            //   print('Tidak dapat membuka link YouTube.');
-                            // }
-                            print('Tidak dapat membuka link YouTube.');
+                            final Uri url = Uri.parse(item.link);
+                            if (!await launchUrl(url)) {
+                              print('Tidak dapat membuka link YouTube.');
+                            }
+                            // print('Tidak dapat membuka link YouTube.');
                           },
                           minHeight: 70,
                           vjustify: false,
                           widthContent: MediaQuery.of(context).size.width - 130,
                           id: 1,
-                          title: 'Muadzin ${index}',
+                          title: item.judul,
                           showIcon: IconPosition.left,
                           iconLeft: Stack(
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(7),
                                 child: Image.network(
-                                  'https://picsum.photos/65',
+                                  item.image,
                                   width: 65,
                                   height: 65,
                                   fit: BoxFit.cover,
@@ -144,7 +144,7 @@ class HomePage extends StatelessWidget {
                                   fontWeight: FontWeight.w100,
                                   color: Colors.black),
                           footerText:
-                              "Ust. M. Budi Zulkarnaen Hasibuan, Lc, MH ${index}",
+                              item.subjudul,
                           footerTextStyle: context.textTheme.labelSmall
                               ?.copyWith(
                                   letterSpacing: 0,

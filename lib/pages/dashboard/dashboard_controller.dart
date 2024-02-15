@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/kontenSosmed.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_service.dart';
@@ -14,6 +15,7 @@ class DashboardController extends GetxController {
   var isLoadingKajian = true.obs;
   var isLoadingArtikel = true.obs;
   var isLoadingLokasi = true.obs;
+  var isLoadingKontenSosmed = true.obs;
   // var isLoadingList = true.obs;
   var list = {}.obs;
   var lastRead = {}.obs;
@@ -42,6 +44,7 @@ class DashboardController extends GetxController {
         link: 'link'),
   ].obs;
   var listKajian = [].obs;
+  var listKontenSosmed = [].obs;
   var listArtikel = <ArtikelData>[
     ArtikelData(
         id: 1,
@@ -65,6 +68,7 @@ class DashboardController extends GetxController {
   // }
 
   GetDataArtikel() async {
+    try {
     final artikelbaru = await DashboardService().getListArtikelBaru();
     listArtikel.value = [];
     for (var element in artikelbaru['data']) {
@@ -75,6 +79,9 @@ class DashboardController extends GetxController {
           image: element['image']));
     }
     isLoadingArtikel.value = false;
+    } catch (e) {
+      print(e);      
+    }
   }
 
   getMenuHome() async {
@@ -146,6 +153,7 @@ class DashboardController extends GetxController {
   }
 
   getSliderKajianLive() async {
+    try {
     final result = await DashboardService().getSliderKajian();
     listKajianSlider.value = [];
     for (var element in result['data']) {
@@ -157,12 +165,37 @@ class DashboardController extends GetxController {
           link: element['link']));
     }
     isLoadingKajianLive.value = false;
+    } catch (e) {
+      print(e);      
+    }
+  }
+  getSliderKontenSosmed() async {
+    try {
+    final result = await DashboardService().getSliderKontenSosmed();
+    listKontenSosmed.value = [];
+    for (var element in result['data']) {
+      listKontenSosmed.add(SosmedData(
+          id: element['id'],
+          image: element['image'],
+          link: element['link']));
+    }
+    print('<<<<<<<<<<<<<wew>>>>>>>>>>>>>');
+    isLoadingKontenSosmed.value = false;
+    } catch (e) {
+    print('<<<<<<<<<<<<<wew>>>>>>>>>>>>>');
+      print(e);      
+
+    }
   }
 
   Future getKajianLive() async {
+    try {
     final listresult = await DashboardService().getListKajian();
     listKajian.value = listresult['data'];
     isLoadingKajian.value = false;
+    } catch (e) {
+      print(e);
+    }
   }
 
   getListKota() {
@@ -230,6 +263,7 @@ class DashboardController extends GetxController {
     getMenuHome();
     getAllMenu();
     getListKota();
+    getSliderKontenSosmed();
     setFcm();
     super.onInit();
   }

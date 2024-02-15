@@ -201,7 +201,7 @@ class DashboardPage extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(top: 10),
                             child: getSeparator(
-                                'Kajian Live', 'Lihat Semua', context, ctrl),
+                                'Kajian', 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
@@ -373,7 +373,7 @@ class DashboardPage extends StatelessWidget {
             title: '',
             subtitle: '',
             kategori: '',
-            imgPath: 'https://picsum.photos/151',
+            imgPath: 'https://i3.ytimg.com/vi/hp7buY_Tk9M/maxresdefault.jpg',
             islink: true,
             link: '',
             network: true,
