@@ -13,6 +13,7 @@ class AlquranController extends GetxController {
   final gctrl = Get.find<MainController>();
   var isLoadingList = true.obs;
   var list = {}.obs;
+  late BuildContext context;
 
   var txtController = TextEditingController();
   var indonesiaSaatIni = 'Belum baca Al-quran'.obs;
@@ -52,108 +53,108 @@ class AlquranController extends GetxController {
     isLoadingList.value = false;
   }
 
-  void showPopup(
-      AlquranController ctrl, context, Widget? content, double? height) {
-    showDialog(
-        context: context,
-        builder: (BuildContext bc) {
-          return Dialog(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7.0)),
-            child: Container(
-                child: content ??
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(7),
-                                  topRight: Radius.circular(7))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.arrow_back,
-                                color: Colors.black,
-                              ),
-                              Text(
-                                '${ctrl.list['surat']} : ${ctrl.list['nomor_ayat']} ',
-                                // "Q.S Al-Muthaffifiin :  34",
-                                style: bc.textTheme.titleMedium?.copyWith(
-                                    letterSpacing: 1,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                              SvgPicture.asset("assets/icons/share.svg",
-                                  height: 15, width: 15)
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: AutoSizeText("${ctrl.list['arab']}",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.fontSize,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w900))),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: AutoSizeText("${ctrl.list['indonesia']}",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.fontSize,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w300))),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        ButtonElevated(
-                          iconLeft: Icon(
-                            Icons.refresh_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                          showIcon: 'left',
-                          title: 'Acak Lagi',
-                          width: 129,
-                          bgcolor: Theme.of(bc).primaryColor,
-                          height: 45,
-                          color: Colors.white,
-                          radius: 7,
-                          shadow: false,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                      ],
-                    )),
-          );
-        });
-  }
+  // showPopup(context, Widget? content, double? height) {
+  //   print('tests');
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext bc) {
+  //         return Dialog(
+  //           elevation: 0,
+  //           backgroundColor: Colors.white,
+  //           shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(7.0)),
+  //           child: Container(
+  //               child: content ??
+  //                   Column(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       Container(
+  //                         padding: const EdgeInsets.all(10),
+  //                         decoration: BoxDecoration(
+  //                             color: Color(0xFFF5F5F5),
+  //                             borderRadius: BorderRadius.only(
+  //                                 topLeft: Radius.circular(7),
+  //                                 topRight: Radius.circular(7))),
+  //                         child: Row(
+  //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                           children: [
+  //                             Icon(
+  //                               Icons.arrow_back,
+  //                               color: Colors.black,
+  //                             ),
+  //                             Text(
+  //                               '${list['surat']} : ${list['nomor_ayat']} ',
+  //                               // "Q.S Al-Muthaffifiin :  34",
+  //                               style: bc.textTheme.titleMedium?.copyWith(
+  //                                   letterSpacing: 1,
+  //                                   fontWeight: FontWeight.bold,
+  //                                   color: Colors.black),
+  //                             ),
+  //                             SvgPicture.asset("assets/icons/share.svg",
+  //                                 height: 15, width: 15)
+  //                           ],
+  //                         ),
+  //                       ),
+  //                       const SizedBox(
+  //                         height: 20,
+  //                       ),
+  //                       Padding(
+  //                           padding: EdgeInsets.symmetric(horizontal: 10),
+  //                           child: AutoSizeText("${list['arab']}",
+  //                               overflow: TextOverflow.ellipsis,
+  //                               textAlign: TextAlign.start,
+  //                               maxLines: 2,
+  //                               style: TextStyle(
+  //                                   fontSize: Theme.of(context)
+  //                                       .textTheme
+  //                                       .labelLarge
+  //                                       ?.fontSize,
+  //                                   color: Colors.black,
+  //                                   fontWeight: FontWeight.w900))),
+  //                       SizedBox(
+  //                         height: 15,
+  //                       ),
+  //                       Padding(
+  //                           padding: EdgeInsets.symmetric(horizontal: 10),
+  //                           child: AutoSizeText("${list['indonesia']}",
+  //                               textAlign: TextAlign.start,
+  //                               style: TextStyle(
+  //                                   fontSize: Theme.of(context)
+  //                                       .textTheme
+  //                                       .labelMedium
+  //                                       ?.fontSize,
+  //                                   fontStyle: FontStyle.italic,
+  //                                   color: Colors.black,
+  //                                   fontWeight: FontWeight.w300))),
+  //                       SizedBox(
+  //                         height: 15,
+  //                       ),
+  //                       ButtonElevated(
+  //                         iconLeft: Icon(
+  //                           Icons.refresh_outlined,
+  //                           size: 20,
+  //                           color: Colors.white,
+  //                         ),
+  //                         showIcon: 'left',
+  //                         title: 'Acak Lagi',
+  //                         width: 129,
+  //                         bgcolor: Theme.of(bc).primaryColor,
+  //                         height: 45,
+  //                         color: Colors.white,
+  //                         radius: 7,
+  //                         shadow: false,
+  //                         onPressed: () {
+  //                           Navigator.pop(context);
+  //                         },
+  //                       ),
+  //                       SizedBox(
+  //                         height: 15,
+  //                       ),
+  //                     ],
+  //                   )),
+  //         );
+  //       });
+  // }
 
   @override
   void onInit() async {
@@ -169,7 +170,7 @@ class AlquranController extends GetxController {
             }
           });
         },
-        'image': 'assets/icons/icon_perayat.png'
+        'image': 'assets/icons/perayat.png'
       },
       {
         'title': 'Indonesia',
@@ -180,18 +181,7 @@ class AlquranController extends GetxController {
             }
           });
         },
-        'image': 'assets/icons/quran_halaman.png'
-      },
-      {
-        'title': 'Tajwid Indonesia',
-        'onTap': () {
-          Get.toNamed(RoutesQuran.perpagetajwid)?.then((result) {
-            if (result == 'refresh') {
-              lastRead();
-            }
-          });
-        },
-        'image': 'assets/icons/quran_halaman.png'
+        'image': 'assets/icons/indonesia.png'
       },
       {
         'title': 'Madinah',
@@ -202,9 +192,31 @@ class AlquranController extends GetxController {
             }
           });
         },
-        'image': 'assets/icons/madinah.png'
+        'image': 'assets/icons/madinah_2.png'
       },
-      {'title': 'Kejutan', 'onTap': () {}, 'image': 'assets/icons/gift.png'},
+      {
+        'title': 'Tajwid Indonesia',
+        'onTap': () {
+          Get.toNamed(RoutesQuran.perpagetajwid)?.then((result) {
+            if (result == 'refresh') {
+              lastRead();
+            }
+          });
+        },
+        'image': 'assets/icons/tajwid.png'
+      },
+      {
+        'title': 'Ayat Kejutan',
+        'onTap': null,
+        'image': 'assets/icons/kejutan.png'
+      },
+      {
+        'title': 'Pengaturan',
+        'onTap': () {
+          Get.toNamed(RoutesQuran.pengaturan)?.then((result) {});
+        },
+        'image': 'assets/icons/pengaturan.png'
+      }
     ];
     print("listMenu.length");
     update();

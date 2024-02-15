@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/quran/listAyat/detail/detail_quran_page.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
+import 'package:masjid_app/pages/quran/pengaturan/alquran_pengaturan_page.dart';
 import 'package:masjid_app/pages/quran/quran_page.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
 import 'package:masjid_app/pages/quran/halaman_madinah/halaman_quran_madinah_page.dart';
@@ -22,7 +23,7 @@ class PagesQuran {
     ),
     GetPage(
       name: RoutesQuran.perayat,
-      page: () =>  ListAyatQuranPage(),
+      page: () => ListAyatQuranPage(),
       transition: Transition.cupertino,
     ),
     GetPage(
@@ -40,6 +41,11 @@ class PagesQuran {
       page: () => const HalamanQuranTajwidPage(),
       transition: Transition.cupertino,
     ),
+    GetPage(
+      name: RoutesQuran.pengaturan,
+      page: () => AlquranPengaturanPage(),
+      transition: Transition.cupertino,
+    ),
   ];
 }
 
@@ -50,4 +56,5 @@ class RoutesQuran {
   static const String perpagetajwid = '/quran/perpage/tajwid';
   static const String perayat = '/quran/perayat';
   static const String detail = '/quran/detail/:id';
+  static const String pengaturan = '/quran/pengaturan';
 }

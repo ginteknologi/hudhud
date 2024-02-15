@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
+import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/configs/main_service.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
@@ -41,6 +43,12 @@ class MainController extends GetxController {
   var HijriDate = '';
   // DateTime hijriDate ;
   // ============ end data waktu Solat
+
+  //  ============ data dialog filter
+  var selectedJuz = true.obs;
+  var loadingFilter = false.obs;
+  TextEditingController inputFilter = TextEditingController();
+  //  ============ end data dialog filter
 
   Future waktusolatData() async {
     try {
@@ -222,6 +230,305 @@ class MainController extends GetxController {
                   Get.toNamed('${RoutesSedekah.root}/1');
                 },
               ))
+        ],
+      ),
+    );
+  }
+
+  showDialogFilter(flag) {
+    Get.defaultDialog(
+      backgroundColor: Colors.transparent,
+      barrierDismissible: true,
+      radius: 7,
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      title: '',
+      titleStyle: const TextStyle(height: 0),
+      titlePadding: const EdgeInsets.all(0),
+      content: Column(
+        children: [
+          Container(
+            width: Get.width - 25,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Color(0xFF189A8C),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(7), topRight: Radius.circular(7))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Pergi Ke',
+                  // "Q.S Al-Muthaffifiin :  34",
+                  style: Get.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.normal, color: Colors.white),
+                ),
+                ButtonIcon(
+                  onTap: () {
+                    Get.back();
+                  },
+                  bgcolor: Colors.transparent,
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Obx(() => loadingFilter == true
+              ? Text("data")
+              : Container(
+                  width: Get.width - 25,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(7),
+                          bottomRight: Radius.circular(7))),
+                  child: !flag
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ButtonElevated(
+                              title: 'Ayat',
+                              width: 120,
+                              bgcolor: Get.theme.primaryColor,
+                              height: 30,
+                              color: Colors.white,
+                              radius: 5,
+                              onPressed: () {},
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: Get.width / 2.5,
+                                  child: Text(
+                                    "1. Alfatihah",
+                                    style: TextStyle(
+                                        fontSize:
+                                            Get.textTheme.bodySmall?.fontSize),
+                                  ),
+                                  margin: EdgeInsets.only(right: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Get
+                                              .theme.colorScheme.onBackground
+                                              .withOpacity(.1)),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                ),
+                                Container(
+                                  width: Get.width / 3,
+                                  child: InputText(
+                                    controller: inputFilter,
+                                    labelPosition: "none",
+                                    placeholder: "1-100",
+                                    textAlign: TextAlign.center,
+                                    isFill: true,
+                                    placeholderStyle: Get.textTheme.bodyMedium,
+                                    inputAction: TextInputAction.next,
+                                    onSubmit: (newValue) {},
+                                    onEditingComplete: () {},
+                                    onChanged: (newValue) {},
+                                    validator: (newValue) {
+                                      if (newValue!.isEmpty) {
+                                        return "Mohon untuk diisi.";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: Get.width - 25,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 15),
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFDCDCDC),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(7),
+                                      bottomRight: Radius.circular(7))),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ButtonElevated(
+                                      title: 'Buka Ayat',
+                                      // width: 120,
+                                      shadow: false,
+                                      bgcolor: Colors.transparent,
+                                      height: 30,
+                                      size: Get.textTheme.bodySmall?.fontSize,
+                                      color: Colors.black,
+                                      radius: 0,
+                                      onPressed: () {
+                                        selectedJuz.value = !selectedJuz.value;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    ButtonElevated(
+                                      title: 'Buka Ayat',
+                                      width: 160,
+                                      size: Get.textTheme.bodySmall?.fontSize,
+                                      bgcolor: Color(0xFF2128C2),
+                                      height: 30,
+                                      color: Colors.white,
+                                      radius: 5,
+                                      onPressed: () {},
+                                    ),
+                                  ]),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ButtonElevated(
+                                  title: 'Juz',
+                                  width: 120,
+                                  bgcolor: selectedJuz.value == true
+                                      ? Get.theme.primaryColor
+                                      : Get.theme.secondaryHeaderColor,
+                                  height: 30,
+                                  color: selectedJuz.value == true
+                                      ? Colors.white
+                                      : Colors.black,
+                                  radius: 0,
+                                  onPressed: () {
+                                    selectedJuz.value = !selectedJuz.value;
+                                  },
+                                ),
+                                ButtonElevated(
+                                  title: 'Halaman',
+                                  width: 120,
+                                  bgcolor: selectedJuz.value == false
+                                      ? Get.theme.primaryColor
+                                      : Get.theme.secondaryHeaderColor,
+                                  height: 30,
+                                  color: selectedJuz.value == false
+                                      ? Colors.white
+                                      : Colors.black,
+                                  radius: 0,
+                                  onPressed: () {
+                                    selectedJuz.value = !selectedJuz.value;
+                                  },
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: InputText(
+                                controller: inputFilter,
+                                labelPosition: "none",
+                                placeholder: "1-100",
+                                textAlign: TextAlign.center,
+                                isFill: true,
+                                placeholderStyle: Get.textTheme.bodyMedium,
+                                inputAction: TextInputAction.next,
+                                onSubmit: (newValue) {},
+                                onEditingComplete: () {},
+                                onChanged: (newValue) {},
+                                validator: (newValue) {
+                                  if (newValue!.isEmpty) {
+                                    return "Mohon untuk diisi.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Container(
+                              width: Get.width - 25,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 15),
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFDCDCDC),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(7),
+                                      bottomRight: Radius.circular(7))),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: selectedJuz.value
+                                      ? [
+                                          ButtonElevated(
+                                            title: 'Buka Ayat',
+                                            // width: 120,
+                                            shadow: false,
+                                            bgcolor: Colors.transparent,
+                                            height: 30,
+                                            size: Get
+                                                .textTheme.bodySmall?.fontSize,
+                                            color: selectedJuz.value == false
+                                                ? Colors.white
+                                                : Colors.black,
+                                            radius: 0,
+                                            onPressed: () {
+                                              selectedJuz.value =
+                                                  !selectedJuz.value;
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          ButtonElevated(
+                                            title: 'Buka Juz',
+                                            size: Get
+                                                .textTheme.bodySmall?.fontSize,
+                                            bgcolor: Color(0xFF2128C2),
+                                            height: 30,
+                                            color: Colors.white,
+                                            radius: 5,
+                                            onPressed: () {},
+                                          ),
+                                        ]
+                                      : [
+                                          ButtonElevated(
+                                            title: 'Buka Ayat',
+                                            // width: 120,
+                                            shadow: false,
+                                            bgcolor: Colors.transparent,
+                                            height: 30,
+                                            size: Get
+                                                .textTheme.bodySmall?.fontSize,
+                                            color: selectedJuz.value == false
+                                                ? Colors.white
+                                                : Colors.black,
+                                            radius: 0,
+                                            onPressed: () {
+                                              selectedJuz.value =
+                                                  !selectedJuz.value;
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          ButtonElevated(
+                                            title: 'Buka Halaman',
+                                            width: 160,
+                                            size: Get
+                                                .textTheme.bodySmall?.fontSize,
+                                            bgcolor: Color(0xFF2128C2),
+                                            height: 30,
+                                            color: Colors.white,
+                                            radius: 5,
+                                            onPressed: () {},
+                                          ),
+                                        ]),
+                            ),
+                          ],
+                        ))),
         ],
       ),
     );

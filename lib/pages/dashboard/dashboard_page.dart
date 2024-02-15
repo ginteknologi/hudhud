@@ -398,7 +398,6 @@ class DashboardPage extends StatelessWidget {
               title: '${item.judul}',
               subtitle: '${item.subjudul}',
               kategori: '${item.kategori}',
-              chipText: 'LIVE',
               imgPath: '${item.image}',
               islink: true,
               link: '${item.link}',

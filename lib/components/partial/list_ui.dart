@@ -248,7 +248,7 @@ class ListItemUiWidget extends StatelessWidget {
   }
 }
 
-enum TypeDivider { line, dotted, dashed }
+enum TypeDivider { line, dotted, dashed, none }
 
 enum TypeList { solid, none }
 
