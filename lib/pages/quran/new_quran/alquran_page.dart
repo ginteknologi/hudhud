@@ -655,6 +655,7 @@ class AlquranPage extends StatelessWidget {
                           shadow: false,
                           onPressed: () {
                             Navigator.pop(context);
+                            ctrl.getData();
                           },
                         ),
                         SizedBox(

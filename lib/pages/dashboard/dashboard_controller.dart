@@ -179,10 +179,8 @@ class DashboardController extends GetxController {
           image: element['image'],
           link: element['link']));
     }
-    print('<<<<<<<<<<<<<wew>>>>>>>>>>>>>');
     isLoadingKontenSosmed.value = false;
     } catch (e) {
-    print('<<<<<<<<<<<<<wew>>>>>>>>>>>>>');
       print(e);      
 
     }

@@ -553,7 +553,7 @@ class MainController extends GetxController {
     try {
       if (dataStore.read('perAyatLastRead') == null) {
         dataStore.write(
-            'perAyatLastRead', {'id': 0, 'suratName': '', 'ayatNumber': 0});
+            'perAyatLastRead', {'id': 0, 'suratName': '', 'ayatNumber': 0, 'audio':'ar.alafasy', 'audiosource': 'server'});
       }
       if (dataStore.read('indonesiaLastRead') == null) {
         dataStore.write('indonesiaLastRead', {'id': 0, 'surat': '', 'hal': 0});

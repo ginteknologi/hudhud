@@ -46,7 +46,7 @@ class ListAyatQuranPage extends StatelessWidget {
     List<Tab> tabs = [];
     for (var i = 0; i < data.length; i++) {
       tabs.add(Tab(
-        text: data[i]['name']['transliteration']['id'],
+        text: data[i]['nama'],
       ));
     }
     return tabs;
@@ -59,7 +59,7 @@ class ListAyatQuranPage extends StatelessWidget {
             ? const Center(child: CircularProgressIndicator())
             : TabBar(
                 onTap: (selectedIndex) async {
-                  await ctrl.getDetailData(ctrl.list[selectedIndex]['number']);
+                  await ctrl.getDetailData(ctrl.list[selectedIndex]['id']);
                 },
                 isScrollable: true,
                 labelColor: Colors.white,
@@ -89,11 +89,11 @@ class ListAyatQuranPage extends StatelessWidget {
     AudioPlayer audioPlayer = AudioPlayer();
     // List<List<int>> onplay = List.generate(ctrl.detail['numberOfVerses'], (index) => []);
     RxList<bool> onplay =
-        RxList<bool>.generate(ctrl.detail['numberOfVerses'], (index) => false);
+        RxList<bool>.generate(ctrl.detail['ayat'], (index) => false);
     RxList<bool> surahBookmarked =
-        RxList<bool>.generate(ctrl.detail['numberOfVerses'], (index) => false);
+        RxList<bool>.generate(ctrl.detail['ayat'], (index) => false);
     RxList<Duration?> audioPosition = RxList<Duration?>.generate(
-        ctrl.detail['numberOfVerses'], (index) => null);
+        ctrl.detail['ayat'], (index) => null);
     // var onplay = [].obs;
     // Duration? audioPosition;
 // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -139,7 +139,7 @@ class ListAyatQuranPage extends StatelessWidget {
                           AutoSizeText(
                             ctrl.detail.isEmpty
                                 ? "List Ayat : "
-                                : ctrl.detail['name']['translation']['id'],
+                                : ctrl.detail['nama'],
                             maxLines: 1,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -153,9 +153,9 @@ class ListAyatQuranPage extends StatelessWidget {
                           AutoSizeText(
                             ctrl.detail.isEmpty
                                 ? "List Ayat : "
-                                : ctrl.detail['numberOfVerses'].toString() +
+                                : ctrl.detail['ayat'].toString() +
                                     ' Ayat - ' +
-                                    ctrl.detail['revelation']['id'],
+                                    ctrl.detail['tipe'],
                             maxLines: 1,
                             style: TextStyle(
                                 color: Colors.white,
@@ -169,7 +169,7 @@ class ListAyatQuranPage extends StatelessWidget {
                       AutoSizeText(
                           ctrl.detail.isEmpty
                               ? "List Ayat : "
-                              : ctrl.detail['name']['transliteration']['id'],
+                              : ctrl.detail['nama'] ,
                           maxLines: 1,
                           style: TextStyle(
                               color: Colors.white,
@@ -190,7 +190,7 @@ class ListAyatQuranPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 0),
                     child: ScrollablePositionedList.builder(
                       itemScrollController: ctrl.itemScrollController,
-                      itemCount: ctrl.detail['numberOfVerses'],
+                      itemCount: ctrl.detail['ayat'],
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         // Datum model = filteredEvents[index];
@@ -232,25 +232,12 @@ class ListAyatQuranPage extends StatelessWidget {
                                                             children: <Widget>[
                                                               InkWell(
                                                                   onTap: () {
-                                                                    ;
-                                                                    print(dataStore
-                                                                        .read(
-                                                                            'perAyatLastRead'));
-                                                                    surahBookmarked[
-                                                                        index] = dataStore.read('perAyatLastRead')['ayatNumber'] ==
-                                                                            item['number']['inSurah']
-                                                                        ? true
-                                                                        : false;
-                                                                    ctrl.bookmark(
-                                                                        item,
-                                                                        surahBookmarked[
-                                                                            index],
-                                                                        index);
+                                                                    print(dataStore.read('perAyatLastRead'));
+                                                                    surahBookmarked[index] = dataStore.read('perAyatLastRead')['ayatNumber'] == item['ayat']  ? true : false;
+                                                                    ctrl.bookmark( item, surahBookmarked[ index], index);
                                                                   },
-                                                                  child: dataStore.read('perAyatLastRead')['ayatNumber'] == item['number']['inSurah'] &&
-                                                                          ctrl.detail['number'] ==
-                                                                              dataStore.read('perAyatLastRead')[
-                                                                                  'id']
+                                                                  child: dataStore.read('perAyatLastRead')['ayatNumber'] == item['ayat'] &&
+                                                                          ctrl.detail['id'] == dataStore.read('perAyatLastRead')['id']
                                                                       ? SvgPicture.asset(
                                                                           'assets/icons/active_bookmark.svg',
                                                                           width:
@@ -282,10 +269,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                               Positioned.fill(
                                                                 child: Center(
                                                                   child: Text(
-                                                                    item['number']
-                                                                            [
-                                                                            'inSurah']
-                                                                        .toString(),
+                                                                    item['ayat'].toString(),
                                                                     style: context
                                                                         .textTheme
                                                                         .bodySmall
@@ -312,8 +296,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                       onTap: () {
                                                                         print(
                                                                             audioPosition);
-                                                                        if (audioPlayer.position ==
-                                                                            null) {
+                                                                        if (audioPlayer.position == null) {
                                                                           print(
                                                                               "clicked play position null");
                                                                           audioPlayer.setUrl(item['audio']
@@ -340,7 +323,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                               null) {
                                                                             audioPlayer.seek(audioPosition[index]!);
                                                                           } else {
-                                                                            audioPlayer.setUrl(item['audio']['primary']!);
+                                                                            audioPlayer.setUrl(item['audio'][dataStore.read('perAyatLastRead')['audio']]!);
                                                                           }
                                                                           onplay[index] =
                                                                               true;
@@ -349,8 +332,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                           audioPlayer
                                                                               .playerStateStream
                                                                               .listen((PlayerState state) {
-                                                                            if (state.processingState ==
-                                                                                ProcessingState.completed) {
+                                                                            if (state.processingState == ProcessingState.completed) {
                                                                               // File selesai diputar
                                                                               print("Selesai");
                                                                               audioPosition[index] = null;
@@ -408,8 +390,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                             alignment: Alignment
                                                                 .centerRight,
                                                             child: AutoSizeText(
-                                                              item['text']
-                                                                  ['arab']!,
+                                                              item['madinah']!,
                                                               textAlign:
                                                                   TextAlign.end,
                                                               style: context
@@ -430,9 +411,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                   .centerLeft,
                                                               child:
                                                                   AutoSizeText(
-                                                                item['text'][
-                                                                        'transliteration']
-                                                                    ['en']!,
+                                                                item['latin_karakter']!,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .start,
@@ -454,8 +433,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                   .centerLeft,
                                                               child:
                                                                   AutoSizeText(
-                                                                item['translation']
-                                                                    ['id']!,
+                                                                item['arti']['text']!,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .start,
@@ -504,7 +482,8 @@ class ListAyatQuranPage extends StatelessWidget {
                                 //       ctrl.bookmark(item, index);
                                 //     },
                                 //   ),
-                                ));
+                                )
+                                );
                       },
                       // OnEndReached: () => ctrl.getDetailData(ctrl.detail[])
                     ))
@@ -580,12 +559,12 @@ class ListAyatQuranPage extends StatelessWidget {
                     return FadeInUp(
                       child: ListItemUiWidget(
                         showIcon: IconPosition.left,
-                        iconLeft: Text(item['number'].toString()),
-                        id: item['number'],
-                        title: item['name']['transliteration']['id'],
-                        subTitle: item['name']['translation']['id'] +
+                        iconLeft: Text(item['id'].toString()),
+                        id: item['id'],
+                        title: item['nama'],
+                        subTitle: item['arti'] +
                             ' - ' +
-                            item['numberOfVerses'].toString() +
+                            item['ayat'].toString() +
                             ' Ayat',
                         onTap: () {
                           Navigator.pop(context);
@@ -634,12 +613,12 @@ class ListAyatQuranPage extends StatelessWidget {
                     appBar: AppBarWSWidget.getAppbarWidget(
                         title: ctrl.detail.isEmpty
                             ? "List Ayat : "
-                            : ctrl.detail['name']['transliteration']['id'],
+                            : ctrl.detail['nama'],
                         subtitle: AutoSizeText(
                           ctrl.detail.isEmpty
                               ? "Total Ayat :"
                               : "Jumlah Ayat : " +
-                                  ctrl.detail['numberOfVerses'].toString(),
+                                  ctrl.detail['ayat'].toString(),
                           maxLines: 1,
                           style: context.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.normal,

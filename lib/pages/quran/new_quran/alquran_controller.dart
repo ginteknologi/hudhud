@@ -22,9 +22,14 @@ class AlquranController extends GetxController {
   var ayatSaatIni = 'Belum baca Al-quran'.obs;
   var listMenu = [].obs;
   getData() async {
+    try {
     final result = await AlquranService().getRandom();
     list.value = result['data'];
+      print('<<<<random>>>>');
     isLoadingList.value = false;
+    } catch (e) {
+      print(e);
+    }
   }
 
   lastRead() async {

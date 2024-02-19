@@ -11,6 +11,7 @@ import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/kontenSosmed.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
@@ -193,6 +194,11 @@ class DashboardPage extends StatelessWidget {
                           SizedBox(
                             height: 25,
                           ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: getSeparator(
+                                'Kajian Live', '', context, ctrl),
+                          ),
                           Skeletonizer(
                             ignoreContainers: false,
                             enabled: ctrl.isLoadingKajianLive.value,
@@ -201,7 +207,7 @@ class DashboardPage extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(top: 10),
                             child: getSeparator(
-                                'Kajian', 'Lihat Semua', context, ctrl),
+                                'Kajian Tafsir Al-Quran', 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
@@ -366,16 +372,16 @@ class DashboardPage extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: 5,
+        itemCount: ctrl.listKontenSosmed.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
+          final SosmedData item = ctrl.listKontenSosmed[index];
           return CustomCardItem(
-            title: '',
+            title: item.judul?? '',
             subtitle: '',
-            kategori: '',
-            imgPath: 'https://i3.ytimg.com/vi/hp7buY_Tk9M/maxresdefault.jpg',
+            imgPath: item.image,
             islink: true,
-            link: '',
+            link: item.link,
             network: true,
           );
         },
@@ -558,45 +564,45 @@ class DashboardPage extends StatelessWidget {
                                         fit: BoxFit.cover,
                                       ),
                                     ),
-                                    Positioned(
-                                        top: 2,
-                                        right: 2,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(3),
-                                          constraints: BoxConstraints.loose(
-                                              Size.infinite),
-                                          decoration: const BoxDecoration(
-                                              color: Colors.red,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20))),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 5),
-                                                  child: SvgPicture.asset(
-                                                      'assets/icons/live.svg',
-                                                      height: 6,
-                                                      width: 6)),
-                                              const Text('Live',
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                      fontSize: 5)),
-                                            ],
-                                          ),
-                                        ))
+                                    // Positioned(
+                                    //     top: 2,
+                                    //     right: 2,
+                                    //     child: Container(
+                                    //       padding: const EdgeInsets.all(3),
+                                    //       constraints: BoxConstraints.loose(
+                                    //           Size.infinite),
+                                    //       decoration: const BoxDecoration(
+                                    //           color: Colors.red,
+                                    //           borderRadius: BorderRadius.all(
+                                    //               Radius.circular(20))),
+                                    //       child: Row(
+                                    //         mainAxisSize: MainAxisSize.min,
+                                    //         crossAxisAlignment:
+                                    //             CrossAxisAlignment.center,
+                                    //         mainAxisAlignment:
+                                    //             MainAxisAlignment.center,
+                                    //         children: [
+                                    //           Container(
+                                    //               margin: const EdgeInsets.only(
+                                    //                   right: 5),
+                                    //               child: SvgPicture.asset(
+                                    //                   'assets/icons/live.svg',
+                                    //                   height: 6,
+                                    //                   width: 6)),
+                                    //           const Text('Live',
+                                    //               overflow:
+                                    //                   TextOverflow.ellipsis,
+                                    //               textAlign: TextAlign.start,
+                                    //               style: TextStyle(
+                                    //                   color: Colors.white,
+                                    //                   fontWeight:
+                                    //                       FontWeight.bold,
+                                    //                   fontStyle:
+                                    //                       FontStyle.italic,
+                                    //                   fontSize: 5)),
+                                    //         ],
+                                    //       ),
+                                    //     ))
                                   ],
                                 ),
                                 titleStyle: context.textTheme.labelMedium

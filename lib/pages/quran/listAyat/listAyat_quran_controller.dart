@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/quran/quran_service.dart';
@@ -36,13 +37,17 @@ class ListAyatQuranController extends GetxController
   }
 
   getDetailData(surahId) async {
+    try {
     isLoadingDetail.value = true;
     final result = await QuranService().getDetail(surahId.toString());
     detail.value = result['data'];
-    print(detail);
-    listAyat.value = detail['verses'];
+    listAyat.value = detail['list'];
     offset += limit;
+    // print(listAyat[0]['audio']['${dataStore.read('perAyatLastRead')['audio']}']);
     isLoadingDetail.value = false;
+    } catch (e) {
+      print(e);
+    }
   }
 
   getDataSearch() async {
@@ -61,10 +66,9 @@ class ListAyatQuranController extends GetxController
       gctrl.perAyatLastRead['id'] = 0;
       dataStore.write('perAyatLastRead', gctrl.perAyatLastRead);
     } else {
-      gctrl.perAyatLastRead['ayatNumber'] = selectedData['number']['inSurah'];
-      gctrl.perAyatLastRead['suratName'] =
-          detail['name']['transliteration']['id'];
-      gctrl.perAyatLastRead['id'] = detail['number'];
+      gctrl.perAyatLastRead['ayatNumber'] = selectedData['ayat'];
+      gctrl.perAyatLastRead['suratName'] = detail['nama'];
+      gctrl.perAyatLastRead['id'] = detail['id'];
       dataStore.write('perAyatLastRead', gctrl.perAyatLastRead);
     }
     isLoadingDetail.value = false;
@@ -73,7 +77,7 @@ class ListAyatQuranController extends GetxController
   void scrollToIndex() {
     isLoadingDetail.value = true;
     if (itemScrollController.isAttached) {
-      if (dataStore.read('perAyatLastRead')['id'] == detail['number']) {
+      if (dataStore.read('perAyatLastRead')['id'] == detail['id']) {
         itemScrollController.scrollTo(
           index: dataStore.read('perAyatLastRead')['ayatNumber'] - 1,
           duration: Duration(milliseconds: 500),
@@ -93,6 +97,9 @@ class ListAyatQuranController extends GetxController
   @override
   void onInit() async {
     await getData();
+    if (dataStore.read('perAyatLastRead')['audio'] == null) {
+      dataStore.write('perAyatLastRead', {'audio':'ar.alafasy', 'audiosource': 'server'});
+    }
     list.value = list.reversed.toList();
     int lastIndex = list.length;
     int perAyatLastReadId = dataStore.read('perAyatLastRead')['id'] ?? 0;
@@ -100,6 +107,7 @@ class ListAyatQuranController extends GetxController
         perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
     tabController =
         TabController(vsync: this, length: list.length, initialIndex: result);
+      print(dataStore.read('perAyatLastRead'));
     await getDetailData(dataStore.read('perAyatLastRead')['id'] > 0
         ? dataStore.read('perAyatLastRead')['id']
         : 1); //first open page
