@@ -1,5 +1,4 @@
 // ignore_for_file: unnecessary_null_comparison
-
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
@@ -7,40 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
-import 'package:masjid_app/components/partial/list_ayat.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
-// import 'package:masjid_app/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:masjid_app/components/button/iconbutton.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
 
 class ListAyatQuranPage extends StatelessWidget {
   ListAyatQuranPage({super.key});
   final dataStore = GetStorage();
-  // final ItemScrollController itemScrollController = ItemScrollController();
-  // void scrollToIndex(
-  //     BuildContext context, ListAyatQuranController ctrl, int index) {
-  //   ctrl.isLoadingDetail.value == true;
-  //   ctrl.isLoadingList.value == true;
-  //   if (itemScrollController != null && itemScrollController.isAttached) {
-  //     itemScrollController.scrollTo(
-  //       index: index - 1,
-  //       duration: Duration(milliseconds: 500),
-  //       curve: Curves.easeInOut,
-  //     );
-  //     ctrl.isLoadingDetail.value = false;
-  //   ctrl.isLoadingList.value == false;
-  //   } else {
-  //     print('ScrollController tidak berhasil diperoleh');
-  //     Timer(Duration(seconds: 1), () {
-  //       // Tunggu 1 detik (bisa disesuaikan) dan lakukan scrollToIndex lagi
-  //       scrollToIndex(context, ctrl, index);
-  //     });
-  //   }
-  // }
 
   tabMaker(data) {
     List<Tab> tabs = [];
@@ -92,8 +70,8 @@ class ListAyatQuranPage extends StatelessWidget {
         RxList<bool>.generate(ctrl.detail['ayat'], (index) => false);
     RxList<bool> surahBookmarked =
         RxList<bool>.generate(ctrl.detail['ayat'], (index) => false);
-    RxList<Duration?> audioPosition = RxList<Duration?>.generate(
-        ctrl.detail['ayat'], (index) => null);
+    RxList<Duration?> audioPosition =
+        RxList<Duration?>.generate(ctrl.detail['ayat'], (index) => null);
     // var onplay = [].obs;
     // Duration? audioPosition;
 // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -169,7 +147,7 @@ class ListAyatQuranPage extends StatelessWidget {
                       AutoSizeText(
                           ctrl.detail.isEmpty
                               ? "List Ayat : "
-                              : ctrl.detail['nama'] ,
+                              : ctrl.detail['nama'],
                           maxLines: 1,
                           style: TextStyle(
                               color: Colors.white,
@@ -193,301 +171,333 @@ class ListAyatQuranPage extends StatelessWidget {
                       itemCount: ctrl.detail['ayat'],
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        // Datum model = filteredEvents[index];
                         var item = ctrl.listAyat[index];
                         return FadeInUp(
-                            child: Obx(() => ctrl.isLoadingDetail.value
-                                    ? const Center(
-                                        child: CircularProgressIndicator(),
-                                      )
-                                    : Column(children: [
-                                        Container(
-                                            width: Get.width,
-                                            // height: 210,
-                                            color: Color.fromARGB(
-                                                255, 233, 233, 233),
-                                            constraints: BoxConstraints.loose(
-                                                Size.infinite),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 50,
-                                                  padding: EdgeInsets.only(
-                                                      left: 15, right: 15),
-                                                  constraints:
-                                                      BoxConstraints.loose(
-                                                          Size.infinite),
-                                                  color: Color.fromARGB(
-                                                      255, 233, 233, 233),
-                                                  child: Align(
-                                                    alignment: Alignment
-                                                        .center, // Align the content vertically center
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        // Baris pertama
-                                                        Container(
-                                                          height: 42,
-                                                          width: 42,
-                                                          child: Stack(
-                                                            children: <Widget>[
-                                                              InkWell(
-                                                                  onTap: () {
-                                                                    print(dataStore.read('perAyatLastRead'));
-                                                                    surahBookmarked[index] = dataStore.read('perAyatLastRead')['ayatNumber'] == item['ayat']  ? true : false;
-                                                                    ctrl.bookmark( item, surahBookmarked[ index], index);
-                                                                  },
-                                                                  child: dataStore.read('perAyatLastRead')['ayatNumber'] == item['ayat'] &&
-                                                                          ctrl.detail['id'] == dataStore.read('perAyatLastRead')['id']
-                                                                      ? SvgPicture.asset(
-                                                                          'assets/icons/active_bookmark.svg',
-                                                                          width:
-                                                                              28,
-                                                                          height:
-                                                                              28)
-                                                                      : SvgPicture.asset(
-                                                                          'assets/icons/bookmark.svg',
-                                                                          width:
-                                                                              28,
-                                                                          height:
-                                                                              28)),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          height: 42,
-                                                          width: 42,
-                                                          child: Stack(
-                                                            children: <Widget>[
-                                                              SvgPicture.asset(
-                                                                'assets/icons/list_star.svg',
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                width: 42,
-                                                                height: 42,
-                                                              ),
-                                                              Positioned.fill(
-                                                                child: Center(
-                                                                  child: Text(
-                                                                    item['ayat'].toString(),
-                                                                    style: context
-                                                                        .textTheme
-                                                                        .bodySmall
-                                                                        ?.copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
-                                                                    ),
+                          child: Obx(
+                            () => ctrl.isLoadingDetail.value
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Column(
+                                    children: [
+                                      Container(
+                                        width: Get.width,
+                                        color:
+                                            Color.fromARGB(255, 233, 233, 233),
+                                        constraints:
+                                            BoxConstraints.loose(Size.infinite),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 50,
+                                              padding: EdgeInsets.only(
+                                                  left: 15, right: 15),
+                                              constraints: BoxConstraints.loose(
+                                                  Size.infinite),
+                                              color: Color.fromARGB(
+                                                  255, 233, 233, 233),
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 42,
+                                                      width: 42,
+                                                      child: Stack(
+                                                        children: <Widget>[
+                                                          InkWell(
+                                                            onTap: () {
+                                                              print(
+                                                                dataStore.read(
+                                                                  'perAyatLastRead',
+                                                                ),
+                                                              );
+                                                              surahBookmarked[
+                                                                  index] = dataStore
+                                                                              .read('perAyatLastRead')[
+                                                                          'ayatNumber'] ==
+                                                                      item[
+                                                                          'ayat']
+                                                                  ? true
+                                                                  : false;
+                                                              ctrl.bookmark(
+                                                                item,
+                                                                surahBookmarked[
+                                                                    index],
+                                                                index,
+                                                              );
+                                                            },
+                                                            child: dataStore.read('perAyatLastRead')[
+                                                                            'ayatNumber'] ==
+                                                                        item[
+                                                                            'ayat'] &&
+                                                                    ctrl.detail[
+                                                                            'id'] ==
+                                                                        dataStore
+                                                                            .read(
+                                                                          'perAyatLastRead',
+                                                                        )['id']
+                                                                ? SvgPicture
+                                                                    .asset(
+                                                                    'assets/icons/active_bookmark.svg',
+                                                                    width: 28,
+                                                                    height: 28,
+                                                                  )
+                                                                : SvgPicture
+                                                                    .asset(
+                                                                    'assets/icons/bookmark.svg',
+                                                                    width: 28,
+                                                                    height: 28,
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            ],
                                                           ),
-                                                        ),
-                                                        // Baris kedua
-                                                        Container(
-                                                          height: 42,
-                                                          width: 42,
-                                                          child: Stack(
-                                                            children: [
-                                                              Positioned.fill(
-                                                                child: Center(
-                                                                  child: InkWell(
-                                                                      onTap: () {
-                                                                        print(
-                                                                            audioPosition);
-                                                                        if (audioPlayer.position == null) {
-                                                                          print(
-                                                                              "clicked play position null");
-                                                                          audioPlayer.setUrl(item['audio']
-                                                                              [
-                                                                              'primary']!);
-                                                                          audioPlayer
-                                                                              .play();
-                                                                          onplay[index] =
-                                                                              true;
-                                                                        } else if (onplay[
-                                                                            index]) {
-                                                                          print(
-                                                                              "clicked pause");
-                                                                          audioPosition[index] =
-                                                                              audioPlayer.position;
-                                                                          audioPlayer
-                                                                              .pause();
-                                                                          onplay[index] =
-                                                                              false;
-                                                                        } else {
-                                                                          print(
-                                                                              "clicked play");
-                                                                          if (audioPosition[index] !=
-                                                                              null) {
-                                                                            audioPlayer.seek(audioPosition[index]!);
-                                                                          } else {
-                                                                            audioPlayer.setUrl(item['audio'][dataStore.read('perAyatLastRead')['audio']]!);
-                                                                          }
-                                                                          onplay[index] =
-                                                                              true;
-                                                                          audioPlayer
-                                                                              .play();
-                                                                          audioPlayer
-                                                                              .playerStateStream
-                                                                              .listen((PlayerState state) {
-                                                                            if (state.processingState == ProcessingState.completed) {
-                                                                              // File selesai diputar
-                                                                              print("Selesai");
-                                                                              audioPosition[index] = null;
-                                                                              onplay[index] = false;
-                                                                            }
-                                                                          });
-                                                                        }
-                                                                      },
-                                                                      child: Obx(
-                                                                        () => onplay[index]
-                                                                            ? Icon(
-                                                                                Icons.pause_rounded,
-                                                                                color: Theme.of(context).primaryColor,
-                                                                              )
-                                                                            : Icon(
-                                                                                Icons.play_arrow_rounded,
-                                                                                color: Theme.of(context).primaryColor,
-                                                                              ),
-                                                                      )),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                    child: Container(
-                                                  padding: EdgeInsets.all(15),
-                                                  color: Colors.white,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 20,
+                                                        ],
                                                       ),
-                                                      // Container(
-                                                      //   height: 500,
-                                                      //   decoration:
-                                                      //       BoxDecoration(color: Colors.red),
-                                                      // )
-                                                      Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        children: [
-                                                          Align(
+                                                    ),
+                                                    Container(
+                                                      height: 42,
+                                                      width: 42,
+                                                      child: Stack(
+                                                        children: <Widget>[
+                                                          SvgPicture.asset(
+                                                            'assets/icons/list_star.svg',
                                                             alignment: Alignment
-                                                                .centerRight,
-                                                            child: AutoSizeText(
-                                                              item['madinah']!,
-                                                              textAlign:
-                                                                  TextAlign.end,
-                                                              style: context
-                                                                  .textTheme
-                                                                  .titleMedium
-                                                                  ?.copyWith(
-                                                                      fontFamily: 'Roboto',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                              maxLines: 15,
-                                                            ),
+                                                                .center,
+                                                            width: 42,
+                                                            height: 42,
                                                           ),
-                                                          SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Align(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child:
-                                                                  AutoSizeText(
-                                                                item['latin_karakter']!,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
+                                                          Positioned.fill(
+                                                            child: Center(
+                                                              child: Text(
+                                                                item['ayat']
+                                                                    .toString(),
                                                                 style: context
                                                                     .textTheme
-                                                                    .labelMedium
-                                                                    ?.copyWith(
-                                                                      fontFamily: 'Roboto',
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w300,
-                                                                        fontStyle:
-                                                                            FontStyle.italic),
-                                                              )),
-                                                          SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Align(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child:
-                                                                  AutoSizeText(
-                                                                item['arti']['text']!,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                style: context
-                                                                    .textTheme
-                                                                    .labelMedium
+                                                                    .bodySmall
                                                                     ?.copyWith(
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w300,
+                                                                          .normal,
                                                                 ),
-                                                              ))
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ))
-                                              ],
-                                            )),
-                                        Divider(
-                                          color: Color.fromARGB(
-                                              255, 226, 226, 226),
-                                          thickness: 3,
-                                          height: 2,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 42,
+                                                      width: 42,
+                                                      child: Stack(
+                                                        children: [
+                                                          Positioned.fill(
+                                                            child: Center(
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  print(
+                                                                      audioPosition);
+                                                                  if (audioPlayer
+                                                                          .position ==
+                                                                      null) {
+                                                                    print(
+                                                                        "clicked play position null");
+                                                                    audioPlayer
+                                                                        .setUrl(
+                                                                      item['audio']
+                                                                          [
+                                                                          'primary']!,
+                                                                    );
+                                                                    audioPlayer
+                                                                        .play();
+                                                                    onplay[index] =
+                                                                        true;
+                                                                  } else if (onplay[
+                                                                      index]) {
+                                                                    print(
+                                                                        "clicked pause");
+                                                                    audioPosition[
+                                                                            index] =
+                                                                        audioPlayer
+                                                                            .position;
+                                                                    audioPlayer
+                                                                        .pause();
+                                                                    onplay[index] =
+                                                                        false;
+                                                                  } else {
+                                                                    print(
+                                                                        "clicked play");
+                                                                    if (audioPosition[
+                                                                            index] !=
+                                                                        null) {
+                                                                      audioPlayer
+                                                                          .seek(
+                                                                        audioPosition[
+                                                                            index]!,
+                                                                      );
+                                                                    } else {
+                                                                      audioPlayer
+                                                                          .setUrl(
+                                                                        item['audio']
+                                                                            [
+                                                                            dataStore.read(
+                                                                          'perAyatLastRead',
+                                                                        )['audio']]!,
+                                                                      );
+                                                                    }
+                                                                    onplay[index] =
+                                                                        true;
+                                                                    audioPlayer
+                                                                        .play();
+                                                                    audioPlayer
+                                                                        .playerStateStream
+                                                                        .listen(
+                                                                      (PlayerState
+                                                                          state) {
+                                                                        if (state.processingState ==
+                                                                            ProcessingState.completed) {
+                                                                          // File selesai diputar
+                                                                          print(
+                                                                              "Selesai");
+                                                                          audioPosition[index] =
+                                                                              null;
+                                                                          onplay[index] =
+                                                                              false;
+                                                                        }
+                                                                      },
+                                                                    );
+                                                                  }
+                                                                },
+                                                                child: Obx(
+                                                                  () => onplay[
+                                                                          index]
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .pause_rounded,
+                                                                          color:
+                                                                              Theme.of(context).primaryColor,
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .play_arrow_rounded,
+                                                                          color:
+                                                                              Theme.of(context).primaryColor,
+                                                                        ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                padding: EdgeInsets.all(15),
+                                                color: Colors.white,
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: [
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          child: AutoSizeText(
+                                                            item['madinah']!,
+                                                            textAlign:
+                                                                TextAlign.end,
+                                                            style: context
+                                                                .textTheme
+                                                                .titleMedium
+                                                                ?.copyWith(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            maxLines: 15,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: AutoSizeText(
+                                                            item[
+                                                                'latin_karakter']!,
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                            style: context
+                                                                .textTheme
+                                                                .labelMedium
+                                                                ?.copyWith(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: AutoSizeText(
+                                                            item['arti']
+                                                                ['text']!,
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                            style: context
+                                                                .textTheme
+                                                                .labelMedium
+                                                                ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ])
-                                // ListAyatWidget(
-                                //     id: item['number']['inSurah'],
-                                //     ayat: item['text']['arab'],
-                                //     descEN: item['text']['transliteration']['en'],
-                                //     descIDN: item['translation']['id'],
-                                // bookmarked: ctrl.surahBookmarked.value
-                                //     ? gctrl.perAyatLastRead['ayatNumber'] ==
-                                //             item['number']['inSurah']
-                                //         ? true
-                                //         : false
-                                //     : false,
-                                //     nomor: item['number']['inSurah'].toString(),
-                                //     audioFile: item['audio']['primary'],
-                                //     onTap: () {
-                                //       ctrl.ayatBookmarked.value =
-                                //           gctrl.perAyatLastRead['ayatNumber'] ==
-                                //                   item['number']['inSurah']
-                                //               ? true
-                                //               : false;
-                                //       ctrl.bookmark(item, index);
-                                //     },
-                                //   ),
-                                )
-                                );
+                                      ),
+                                      Divider(
+                                        color:
+                                            Color.fromARGB(255, 226, 226, 226),
+                                        thickness: 3,
+                                        height: 2,
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        );
                       },
-                      // OnEndReached: () => ctrl.getDetailData(ctrl.detail[])
                     ))
               ],
             ),
@@ -583,6 +593,249 @@ class ListAyatQuranPage extends StatelessWidget {
         });
   }
 
+  showDialogFilter(ListAyatQuranController ctrl, BuildContext context, flag) {
+    Get.defaultDialog(
+      backgroundColor: Colors.transparent,
+      barrierDismissible: true,
+      radius: 7,
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      title: '',
+      titleStyle: const TextStyle(height: 0),
+      titlePadding: const EdgeInsets.all(0),
+      content: Column(
+        children: [
+          Container(
+            width: Get.width - 25,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Color(0xFF189A8C),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(7), topRight: Radius.circular(7))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Pergi Ke',
+                  // "Q.S Al-Muthaffifiin :  34",
+                  style: Get.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.normal, color: Colors.white),
+                ),
+                ButtonIcon(
+                  onTap: () {
+                    Get.back();
+                  },
+                  bgcolor: Colors.transparent,
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Obx(() => ctrl.loadingFilter == true
+              ? Text("data")
+              : Container(
+                  width: Get.width - 25,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(7),
+                          bottomRight: Radius.circular(7))),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ButtonElevated(
+                        title: 'Ayat',
+                        width: Get.width / 3.5,
+                        bgcolor: Get.theme.primaryColor,
+                        height: 30,
+                        color: Colors.white,
+                        radius: 5,
+                        onPressed: () {},
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: Get.width / 3,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Autocomplete<Map<String, dynamic>>(
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      final query =
+                                          textEditingValue.text.toLowerCase();
+                                      return ctrl.list
+                                          .where((data) => data['nama']
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(query))
+                                          .map((data) =>
+                                              data as Map<String, dynamic>)
+                                          .toList();
+                                    },
+                                    onSelected:
+                                        (Map<String, dynamic> selectedValue) {
+                                      final selectedItem = ctrl.getSelectedItem(
+                                          selectedValue['nama']);
+                                      if (selectedItem != null) {
+                                        // Lakukan sesuatu dengan objek yang dipilih
+                                        print('Selected: $selectedItem');
+                                        ctrl.inputSurah.value = selectedItem;
+                                      }
+                                    },
+                                    fieldViewBuilder: (BuildContext context,
+                                        TextEditingController
+                                            textEditingController,
+                                        FocusNode focusNode,
+                                        VoidCallback onFieldSubmitted) {
+                                      textEditingController.addListener(() {
+                                        ctrl.search(textEditingController.text);
+                                      });
+                                      return TextField(
+                                        controller: textEditingController,
+                                        focusNode: focusNode,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground
+                                                    .withOpacity(.1)),
+                                          ),
+                                          fillColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hintText: 'Cari surah',
+                                          hintStyle: Get.textTheme.bodySmall!
+                                              .copyWith(
+                                                  color: Get.textTheme
+                                                      .bodySmall!.color!
+                                                      .withOpacity(.5)),
+                                          contentPadding: EdgeInsets.all(10.0),
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      );
+                                    },
+                                    displayStringForOption:
+                                        (Map<String, dynamic> option) =>
+                                            option['nama'].toString(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // child: InputText(
+                            //   controller: ctrl.inputFilterSurah,
+                            //   labelPosition: "none",
+                            //   placeholder: "Cari Surah",
+                            //   textAlign: TextAlign.center,
+                            //   isFill: true,
+                            //   placeholderStyle: Get.textTheme.bodyMedium,
+                            //   inputAction: TextInputAction.next,
+                            //   onSubmit: (newValue) {},
+                            //   onEditingComplete: () {},
+                            //   onChanged: (newValue) {},
+                            //   validator: (newValue) {
+                            //     if (newValue!.isEmpty) {
+                            //       return "Mohon untuk diisi.";
+                            //     }
+                            //     return null;
+                            //   },
+                            // ),
+                          ),
+                          Container(
+                            width: Get.width / 3,
+                            child: InputText(
+                              inputType: TextInputType.number,
+                              controller: ctrl.inputFilterAyat,
+                              labelPosition: "none",
+                              placeholder: "Nomor ayat",
+                              textAlign: TextAlign.center,
+                              isFill: true,
+                              placeholderStyle: Get.textTheme.bodySmall,
+                              inputAction: TextInputAction.next,
+                              onSubmit: (newValue) {},
+                              onEditingComplete: () {},
+                              onChanged: (newValue) {},
+                              validator: (newValue) {
+                                if (newValue!.isEmpty) {
+                                  return "Mohon untuk diisi.";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      ctrl.textError.value.isEmpty
+                          ? Container()
+                          : Container(
+                              width: Get.width - 25,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(ctrl.textError.value,
+                                      style: Get.textTheme.bodySmall
+                                          ?.copyWith(color: Colors.red))
+                                ],
+                              ),
+                            ),
+                      Container(
+                        width: Get.width - 25,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
+                        decoration: BoxDecoration(
+                            color: Color(0xFFDCDCDC),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(7),
+                                bottomRight: Radius.circular(7))),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ButtonElevated(
+                                title: 'Buka Ayat',
+                                width: Get.width / 2.5,
+                                // width: 160,
+                                size: Get.textTheme.bodySmall?.fontSize,
+                                bgcolor: Color(0xFF2128C2),
+                                height: 30,
+                                color: Colors.white,
+                                radius: 5,
+                                onPressed: () {
+                                  if (ctrl.inputSurah.isEmpty) {
+                                    ctrl.textError.value = 'Pilih Surah !';
+                                  } else {
+                                    if (ctrl.inputFilterAyat.text.isNotEmpty) {
+                                      if (int.parse(ctrl.inputFilterAyat.text) > ctrl.inputSurah['ayat']) {
+                                        ctrl.textError.value = 'Maks Ayat ${ctrl.inputSurah['ayat']}';
+                                      }else{
+                                        ctrl.textError.value = '';  
+                                        ctrl.dataGoTo(ctrl.inputSurah, ctrl.inputFilterAyat.text);
+                                        Navigator.pop(context);
+                                      }
+                                    }else{
+                                      ctrl.textError.value = 'Masukan Ayat !';
+                                    }
+                                  }
+                                  // ctrl.dataGoTo(ctrl.inputSurah, ctrl.inputFilterAyat.text);
+                                },
+                              ),
+                            ]),
+                      ),
+                    ],
+                  ))),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(ListAyatQuranController());
@@ -641,7 +894,7 @@ class ListAyatQuranPage extends StatelessWidget {
                               padding: EdgeInsets.only(right: 21),
                               child: InkWell(
                                 onTap: () {
-                                  gctrl.showDialogFilter(false);
+                                  showDialogFilter(ctrl, context, false);
                                 },
                                 borderRadius: BorderRadius.circular(20),
                                 splashColor: Colors.green.withOpacity(0.5),
@@ -650,9 +903,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               ),
-                            ))
-                        // onTap: () => {showPopup(ctrl, context)},
-                        ),
+                            ))),
                     body: Obx(
                       () => ctrl.isLoadingList.value
                           ? const Center(child: CircularProgressIndicator())

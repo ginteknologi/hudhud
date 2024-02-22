@@ -27,29 +27,52 @@ class ListAyatQuranController extends GetxController
   int offset = 0;
   int limit = 10;
   final ItemScrollController itemScrollController = ItemScrollController();
+  TextEditingController inputFilterSurah = TextEditingController();
+  TextEditingController inputFilterAyat = TextEditingController();
+  final TextEditingController inputSearch = TextEditingController();
+  var inputSurah = {}.obs;
+  var selectedJuz = true.obs;
+  var loadingFilter = false.obs;
+  var isMax = false.obs;
+  var isInput = true.obs;
+  var maxAyat = 0.obs;
+  var textError = ''.obs;
 
   Future getData() async {
     try {
-    isLoadingList.value = true;
-    final result = await QuranService().getList('');
-    list.value = result['data'];
-    listReverse.value = result['data'];
-    isLoadingList.value = false;
+      isLoadingList.value = true;
+      final result = await QuranService().getList('');
+      list.value = result['data'];
+      listReverse.value = result['data'];
+      isLoadingList.value = false;
     } catch (e) {
       print("<<<<<<<erorr get data ayat quran>>>>>>>");
       print(e);
     }
   }
 
+  List<dynamic> search(String query) {
+    return list
+        .where((data) =>
+            data['nama'].toString().toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+
+  dynamic getSelectedItem(String selectedValue) {
+    return list.firstWhere((data) => data['nama'] == selectedValue,
+        orElse: () => null);
+  }
+
   getDetailData(surahId) async {
     try {
-    isLoadingDetail.value = true;
-    final result = await QuranService().getDetail(surahId.toString());
-    detail.value = result['data'];
-    listAyat.value = detail['list'];
-    offset += limit;
-    // print(listAyat[0]['audio']['${dataStore.read('perAyatLastRead')['audio']}']);
-    isLoadingDetail.value = false;
+      isLoadingDetail.value = true;
+      final result = await QuranService().getDetail(surahId.toString());
+      detail.value = result['data'];
+      listAyat.value = detail['list'];
+      offset += limit;
+      inputFilterSurah.text = detail['nama'];
+      // print(listAyat[0]['audio']['${dataStore.read('perAyatLastRead')['audio']}']);
+      isLoadingDetail.value = false;
     } catch (e) {
       print(e);
     }
@@ -99,17 +122,54 @@ class ListAyatQuranController extends GetxController
     isLoadingDetail.value = false;
   }
 
+  void dataGoTo(surah, ayat) async {
+    try {
+      isLoadingDetail.value = true;
+      await getDetailData(surah['id']);
+      int lastIndex = list.length;
+      num reverseIndex = lastIndex - surah['id'];
+      tabController.animateTo(reverseIndex.toInt());
+      goToIndex(surah, ayat);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void goToIndex(surah, ayat) async {
+    try {
+      if (itemScrollController.isAttached) {
+        if (surah['id'] == detail['id']) {
+          itemScrollController.scrollTo(
+            index: int.parse(ayat) - 1,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+      } else {
+        Timer(Duration(seconds: 1), () {
+          goToIndex(surah, ayat);
+        });
+      }
+      isLoadingDetail.value = false;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void onInit() async {
     await getData();
     if (dataStore.read('perAyatLastRead')['audio'] == null) {
-      dataStore.write('perAyatLastRead', {'audio':'ar.alafasy', 'audiosource': 'server'});
+      dataStore.write(
+          'perAyatLastRead', {'audio': 'ar.alafasy', 'audiosource': 'server'});
     }
     list.value = list.reversed.toList();
     int lastIndex = list.length;
     int perAyatLastReadId = dataStore.read('perAyatLastRead')['id'] ?? 0;
-    int result =  perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
-    tabController = TabController(vsync: this, length: list.length, initialIndex: result);
+    int result =
+        perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
+    tabController =
+        TabController(vsync: this, length: list.length, initialIndex: result);
     await getDetailData(dataStore.read('perAyatLastRead')['id'] > 0
         ? dataStore.read('perAyatLastRead')['id']
         : 1); //first open page
