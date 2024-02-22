@@ -397,6 +397,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                   .textTheme
                                                                   .titleMedium
                                                                   ?.copyWith(
+                                                                      fontFamily: 'Roboto',
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
@@ -419,6 +420,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                     .textTheme
                                                                     .labelMedium
                                                                     ?.copyWith(
+                                                                      fontFamily: 'Roboto',
                                                                         fontWeight:
                                                                             FontWeight
                                                                                 .w300,

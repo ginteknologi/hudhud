@@ -1,9 +1,9 @@
 class ArtikelData {
   int id;
-  String judul, tanggal, image;
+  String judul, updatedAt, image;
   ArtikelData(
       {required this.id,
       required this.judul,
-      required this.tanggal,
+      required this.updatedAt,
       required this.image});
 }

@@ -54,7 +54,7 @@ class DetailArtikelPage extends StatelessWidget {
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                         ),
                         child: Text(
-                          'Sejarah',
+                          ctrl.detail['category']['name'],
                           style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.white),
                         ),
@@ -70,7 +70,7 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.detail['tanggal'])),
+                      Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.detail['updatedAt']).add(Duration(hours: 7))),
                           // '17:40' +
                           //     "  |  " +
                           //     '17 Agustus 2023',
@@ -214,7 +214,7 @@ class DetailArtikelPage extends StatelessWidget {
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.listArtikels[index]['tanggal'])),
+              Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.listArtikels[index]['updatedAt'])),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,

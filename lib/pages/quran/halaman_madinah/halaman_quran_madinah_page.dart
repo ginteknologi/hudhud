@@ -8,12 +8,14 @@ import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman_madinah/component/image_viewer_widget.dart';
 import 'package:masjid_app/pages/quran/halaman_madinah/halaman_quran_madinah_controller.dart';
+import 'package:masjid_app/components/button/iconbutton.dart';
 
 class HalamanQuranMadinahPage extends StatefulWidget {
   const HalamanQuranMadinahPage({super.key});
 
   @override
-  State<HalamanQuranMadinahPage> createState() => _HalamanQuranMadinahPageState();
+  State<HalamanQuranMadinahPage> createState() =>
+      _HalamanQuranMadinahPageState();
 }
 
 class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
@@ -36,26 +38,24 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                         //   ctrlHome.visible.value = !ctrlHome.visible.value;
                         // },
                         child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Flexible(
-                                child: EasyImageViewPager(
-                                    onTap: (int index) {
-                                      showPopup(ctrl, context, ctrlHome);
-                                    },
-                                    // search: ctrl.toSurat > 0 ? true : false,
-                                    idxInitial: ctrl.toSurat > 0
-                                        ? ctrl.toSurat
-                                        : ctrl.lastReadPerhalaman['hal'],
-                                    imageProviders: ctrl.listSurah)),
-                          ],
-                        ))
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            child: EasyImageViewPager(
+                                onTap: (int index) {
+                                  showPopup(ctrl, context, ctrlHome);
+                                },
+                                // search: ctrl.toSurat > 0 ? true : false,
+                                idxInitial: ctrl.toSurat > 0
+                                    ? ctrl.toSurat
+                                    : ctrl.lastReadPerhalaman['hal'],
+                                imageProviders: ctrl.listSurah)),
+                      ],
+                    ))
                   ],
                 ))));
   }
 
-  bool _visible = true;
-  bool _show = true;
   late final AnimationController _controller;
 
   void showPopup(
@@ -167,7 +167,8 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                                   iconLeft: Text(item['number'].toString()),
                                   id: item['number'],
                                   title: item['name']['transliteration']['id'],
-                                  subTitle: '${item['name']['translation']['id']} - ${item['numberOfVerses']} ayat',
+                                  subTitle:
+                                      '${item['name']['translation']['id']} - ${item['numberOfVerses']} ayat',
                                   subtitleStyle: TextStyle(fontSize: 2),
                                   onTap: () async {
                                     await ctrl.goToData(item);
@@ -187,6 +188,210 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
         });
   }
 
+  showDialogFilter(HalamanQuranMadinahController ctrl, flag) {
+    Get.defaultDialog(
+      backgroundColor: Colors.transparent,
+      barrierDismissible: true,
+      radius: 7,
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      title: '',
+      titleStyle: const TextStyle(height: 0),
+      titlePadding: const EdgeInsets.all(0),
+      content: Column(
+        children: [
+          Container(
+            width: Get.width - 25,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Color(0xFF189A8C),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(7), topRight: Radius.circular(7))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Pergi Ke',
+                  // "Q.S Al-Muthaffifiin :  34",
+                  style: Get.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.normal, color: Colors.white),
+                ),
+                ButtonIcon(
+                  onTap: () {
+                    Get.back();
+                  },
+                  bgcolor: Colors.transparent,
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Obx(() => ctrl.loadingFilter == true
+              ? Text("data")
+              : Container(
+                  width: Get.width - 25,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(7),
+                          bottomRight: Radius.circular(7))),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ButtonElevated(
+                            title: 'Juz',
+                            width: 120,
+                            bgcolor: ctrl.selectedJuz.value == true
+                                ? Get.theme.primaryColor
+                                : Get.theme.secondaryHeaderColor,
+                            height: 30,
+                            color: ctrl.selectedJuz.value == true
+                                ? Colors.white
+                                : Colors.black,
+                            radius: 0,
+                            onPressed: () {
+                              ctrl.selectedJuz.value = !ctrl.selectedJuz.value;
+                            },
+                          ),
+                          ButtonElevated(
+                            title: 'Halaman',
+                            width: 120,
+                            bgcolor: ctrl.selectedJuz.value == false
+                                ? Get.theme.primaryColor
+                                : Get.theme.secondaryHeaderColor,
+                            height: 30,
+                            color: ctrl.selectedJuz.value == false
+                                ? Colors.white
+                                : Colors.black,
+                            radius: 0,
+                            onPressed: () {
+                              ctrl.selectedJuz.value = !ctrl.selectedJuz.value;
+                            },
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: InputText(
+                          inputType: TextInputType.number,
+                          controller: ctrl.inputFilter,
+                          labelPosition: "none",
+                          placeholder:
+                              ctrl.selectedJuz.value == true ? "1-30" : "1-604",
+                          textAlign: TextAlign.center,
+                          isFill: true,
+                          placeholderStyle: Get.textTheme.bodyMedium,
+                          inputAction: TextInputAction.next,
+                          onSubmit: (newValue) {},
+                          onEditingComplete: () {},
+                          onChanged: (newValue) {},
+                          validator: (newValue) {
+                            if (newValue!.isEmpty) {
+                              return "Mohon untuk diisi.";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      ctrl.isMax.value != true
+                          ? Container()
+                          : Container(
+                              width: Get.width - 25,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ctrl.selectedJuz.value == true
+                                      ? Text('Maks Juz 30',
+                                          style: Get.textTheme.bodySmall
+                                              ?.copyWith(color: Colors.red))
+                                      : Text('Maks Halaman 604',
+                                          style: Get.textTheme.bodySmall
+                                              ?.copyWith(color: Colors.red))
+                                ],
+                              ),
+                            ),
+                      Container(
+                        width: Get.width - 25,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
+                        decoration: BoxDecoration(
+                            color: Color(0xFFDCDCDC),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(7),
+                                bottomRight: Radius.circular(7))),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: ctrl.selectedJuz.value
+                                ? [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    ButtonElevated(
+                                      title: 'Buka Juz',
+                                      width: Get.width / 2.5,
+                                      size: Get.textTheme.bodySmall?.fontSize,
+                                      bgcolor: Color(0xFF2128C2),
+                                      height: 30,
+                                      color: Colors.white,
+                                      radius: 5,
+                                      onPressed: () {
+                                        if (ctrl.selectedJuz.value == true) {
+                                          if (int.parse(ctrl.inputFilter.text) >
+                                              30) {
+                                            ctrl.isMax.value = true;
+                                          } else {
+                                            ctrl.isMax.value = false;
+                                            ctrl.goToNumber(
+                                                ctrl.inputFilter.text);
+                                            Navigator.pop(context);
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ]
+                                : [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    ButtonElevated(
+                                      title: 'Buka Halaman',
+                                      width: Get.width / 2.5,
+                                      size: Get.textTheme.bodySmall?.fontSize,
+                                      bgcolor: Color(0xFF2128C2),
+                                      height: 30,
+                                      color: Colors.white,
+                                      radius: 5,
+                                      onPressed: () {
+                                        if (ctrl.selectedJuz.value != true) {
+                                          if (int.parse(ctrl.inputFilter.text) >
+                                              604) {
+                                            ctrl.isMax.value = true;
+                                          } else {
+                                            ctrl.isMax.value = false;
+                                            ctrl.goToHal(ctrl.inputFilter.text);
+                                            Navigator.pop(context);
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ]),
+                      ),
+                    ],
+                  ))),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -201,12 +406,12 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
     final ctrl = Get.put(HalamanQuranMadinahController());
     final hctrl = Get.find<HomeController>();
     return WillPopScope(
-    onWillPop: () async {
-      // Logika yang dijalankan saat tombol kembali ditekan
-      Get.back(result: 'refresh');
-      return false; // Kembalikan false agar tidak melakukan pop secara otomatis
-    },
-    child: Scaffold(
+        onWillPop: () async {
+          // Logika yang dijalankan saat tombol kembali ditekan
+          Get.back(result: 'refresh');
+          return false; // Kembalikan false agar tidak melakukan pop secara otomatis
+        },
+        child: Scaffold(
             backgroundColor: Color(0xFFF5F5F5),
             extendBodyBehindAppBar: false,
             resizeToAvoidBottomInset: false,
@@ -215,7 +420,7 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
               iconTheme: IconThemeData(color: Colors.white),
               leading: GestureDetector(
                   onTap: () {
-                     Get.back(result: 'refresh');
+                    Get.back(result: 'refresh');
                   },
                   child: const Icon(Icons.arrow_back_rounded)),
               backgroundColor: Color(0xFF048C7C),
@@ -263,21 +468,24 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                   ),
                 ),
               ),
+              actions: [
+                Material(
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 21),
+                      child: InkWell(
+                        onTap: () {
+                          showDialogFilter(ctrl, true);
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        splashColor: Colors.green.withOpacity(0.5),
+                        child: const Icon(
+                          Icons.tune_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ))
+              ],
             )));
-    // appBar: AppBarWSWidget.getAppbarWidget(
-    //   title: Obx(() => ctrl.isLoadingList.value ? '' : ctrl.surahSaatIni.value),
-    //   subtitle: AutoSizeText('Juz 3 - Hal.50',
-    //       maxLines: 1,
-    //       style: context.textTheme.bodySmall?.copyWith(
-    //           fontWeight: FontWeight.normal, color: Colors.white)),
-    //   haveSubtitle: true,
-    //   context: context,
-    //   iconTheme: IconThemeData(color: Colors.white),
-    //   elevation: 0,
-    //   color: Colors.white,
-    //   titleAlign: Alignment.centerLeft,
-    //   onTap: () => {showModal(ctrl, context)},
-    //   backgroundColor: Color(0xFF048C7C),
-    // ));
   }
 }

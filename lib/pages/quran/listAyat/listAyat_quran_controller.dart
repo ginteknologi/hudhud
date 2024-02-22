@@ -28,12 +28,17 @@ class ListAyatQuranController extends GetxController
   int limit = 10;
   final ItemScrollController itemScrollController = ItemScrollController();
 
-  getData() async {
+  Future getData() async {
+    try {
     isLoadingList.value = true;
-    final result = await QuranService().getList('all');
+    final result = await QuranService().getList('');
     list.value = result['data'];
     listReverse.value = result['data'];
     isLoadingList.value = false;
+    } catch (e) {
+      print("<<<<<<<erorr get data ayat quran>>>>>>>");
+      print(e);
+    }
   }
 
   getDetailData(surahId) async {
@@ -103,11 +108,8 @@ class ListAyatQuranController extends GetxController
     list.value = list.reversed.toList();
     int lastIndex = list.length;
     int perAyatLastReadId = dataStore.read('perAyatLastRead')['id'] ?? 0;
-    int result =
-        perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
-    tabController =
-        TabController(vsync: this, length: list.length, initialIndex: result);
-      print(dataStore.read('perAyatLastRead'));
+    int result =  perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
+    tabController = TabController(vsync: this, length: list.length, initialIndex: result);
     await getDetailData(dataStore.read('perAyatLastRead')['id'] > 0
         ? dataStore.read('perAyatLastRead')['id']
         : 1); //first open page

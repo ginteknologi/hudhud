@@ -25,6 +25,10 @@ class HalamanQuranMadinahController extends GetxController
   var txtController = TextEditingController();
   late AnimationController animateController;
   var searchController = TextEditingController();
+  TextEditingController inputFilter = TextEditingController();
+  var selectedJuz = true.obs;
+  var loadingFilter = false.obs;
+  var isMax = false.obs;
 
   final hctrl = Get.find<HomeController>();
   // final qctrl = Get.find<QuranController>();
@@ -71,6 +75,33 @@ class HalamanQuranMadinahController extends GetxController
       print(e);      
     }
   }
+  goToNumber(numbertogo) async {
+    try {
+      isLoadingList.value = true;
+      final result = await QuranService().getNumber(numbertogo);
+      Map filteredData = listSurah.firstWhereOrNull((item) => item['hal'] == result['data']['hal']);
+      surahSaatIni.value = filteredData['surat'];
+      halSaatIni.value = filteredData['hal'].toString();
+      toSurat = filteredData['id'];
+      isLoadingList.value = false;
+    } catch (e) {
+      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      print(e);      
+    }
+  }
+  goToHal(numbertogo) async {
+    try {
+      isLoadingList.value = true;
+      Map filteredData = listSurah.firstWhereOrNull((item) => item['hal'].toString() == numbertogo);
+      surahSaatIni.value = filteredData['surat'];
+      halSaatIni.value = filteredData['hal'].toString();
+      toSurat = filteredData['id'];
+      isLoadingList.value = false;
+    } catch (e) {
+      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      print(e);      
+    }
+  }  
   bookmark() async {
       isLoadingList.value = true;
       print('<<<<<<<<<<<wei>>>>>>>>>>>');

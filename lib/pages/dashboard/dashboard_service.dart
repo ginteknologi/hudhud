@@ -68,9 +68,29 @@ class DashboardService extends GetConnect {
       return json;
     }
   }
-    Future getSliderKontenSosmed() async {
+  Future getListKajiLive() async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/konten-sosmed/slider"),
+        Uri.parse("${RemoteData.api}/kajian/kaji-live/list"),
+        headers: <String, String>{
+          'Authorization': "Bearer ${authStore.read('jwt')}",
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      json['code'] = response.statusCode;
+      return json;
+    } else if (response.statusCode == 401) {
+      // RemoteData.authError();
+    } else {
+      final json = jsonDecode(response.body);
+      json['code'] = response.statusCode;
+      
+      return json;
+    }
+  }
+    Future getSliderKajiLive() async {
+    final response = await http.get(
+        Uri.parse("${RemoteData.api}/kajian/kaji-live/slider"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

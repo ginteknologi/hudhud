@@ -196,8 +196,8 @@ class DashboardPage extends StatelessWidget {
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator(
-                                'Kajian Live', '', context, ctrl),
+                            child:
+                                getSeparator('Kajian Live', 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
@@ -206,8 +206,8 @@ class DashboardPage extends StatelessWidget {
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator(
-                                'Kajian Tafsir Al-Quran', 'Lihat Semua', context, ctrl),
+                            child: getSeparator('Kajian Tafsir Al-Quran',
+                                'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
@@ -253,7 +253,7 @@ class DashboardPage extends StatelessWidget {
                     fontWeight: FontWeight.normal,
                     color: Colors.white),
                 title: item.judul,
-                subtitle: Moment.parse(item.tanggal)
+                subtitle: Moment.parse(item.updatedAt)
                     .format("dd MMMM yyyy", localeOverride: 'id'),
                 imgPath: item.image,
                 linkRoute: '/artikel/${item.id}',
@@ -282,14 +282,14 @@ class DashboardPage extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                       onTap: () {
-                        if (ctrl.listMenuHome[index]['urlNav'] == 'lainnya') {
-                          showSheet(ctrl, context, false);
-                        } else {
+                        // if (ctrl.listMenuHome[index]['urlNav'] == 'lainnya') {
+                        //   showSheet(ctrl, context, false);
+                        // } else {
                           if (ctrl.listMenuHome[index]['urlNav'] != '' &&
                               ctrl.listMenuHome[index]['urlNav'] != null) {
                             Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
                           }
-                        }
+                        // }
                       },
                       borderRadius: BorderRadius.circular(20),
                       splashColor: Colors.green.withOpacity(0.5),
@@ -301,7 +301,7 @@ class DashboardPage extends StatelessWidget {
                           SvgPicture.asset(ctrl.listMenuHome[index]['icon'],
                               height: 50, width: 50),
                           const SizedBox(height: 5),
-                          Text(
+                          AutoSizeText(
                             '${ctrl.listMenuHome[index]["label"]}',
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -340,8 +340,12 @@ class DashboardPage extends StatelessWidget {
                 highlightColor: Colors.transparent,
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 onTap: () async {
-                  await ctrl.getKajianLive();
-                  showSheet(ctrl, context, true);
+                  if (nama == 'Kajian Live') {
+                    await ctrl.getKajianLive();
+                  }else{
+                    await ctrl.getKajianTafsir();
+                  }
+                  showSheet(ctrl, nama,  context, true);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8),
@@ -377,7 +381,7 @@ class DashboardPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final SosmedData item = ctrl.listKontenSosmed[index];
           return CustomCardItem(
-            title: item.judul?? '',
+            title: item.judul ?? '',
             subtitle: '',
             imgPath: item.image,
             islink: true,
@@ -495,7 +499,7 @@ class DashboardPage extends StatelessWidget {
                     )))));
   }
 
-  void showSheet(DashboardController ctrl, BuildContext context, bool flag) {
+  void showSheet(DashboardController ctrl, nama, BuildContext context, bool flag) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: flag,
@@ -518,7 +522,7 @@ class DashboardPage extends StatelessWidget {
                     SizedBox(
                       height: 30,
                       child: Text(
-                        "Kajian Live".tr,
+                        nama,
                         style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
@@ -614,7 +618,7 @@ class DashboardPage extends StatelessWidget {
                                     ?.copyWith(
                                         fontWeight: FontWeight.w100,
                                         color: Colors.black),
-                                footerText: Moment.parse(item['tanggal'])
+                                footerText: Moment.parse(item['updatedAt'])
                                     .format("dd MMMM yyyy",
                                         localeOverride: 'id'),
                                 footerTextStyle: context.textTheme.labelSmall

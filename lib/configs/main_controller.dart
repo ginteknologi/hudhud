@@ -304,23 +304,25 @@ class MainController extends GetxController {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
-                                  width: Get.width / 2.5,
-                                  child: Text(
-                                    "1. Alfatihah",
-                                    style: TextStyle(
-                                        fontSize:
-                                            Get.textTheme.bodySmall?.fontSize),
+                                  width: Get.width / 3,
+                                  child: InputText(
+                                    controller: inputFilter,
+                                    labelPosition: "none",
+                                    placeholder: "1-100",
+                                    textAlign: TextAlign.center,
+                                    isFill: true,
+                                    placeholderStyle: Get.textTheme.bodyMedium,
+                                    inputAction: TextInputAction.next,
+                                    onSubmit: (newValue) {},
+                                    onEditingComplete: () {},
+                                    onChanged: (newValue) {},
+                                    validator: (newValue) {
+                                      if (newValue!.isEmpty) {
+                                        return "Mohon untuk diisi.";
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  margin: EdgeInsets.only(right: 10),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 12),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Get
-                                              .theme.colorScheme.onBackground
-                                              .withOpacity(.1)),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
                                 ),
                                 Container(
                                   width: Get.width / 3,
@@ -359,7 +361,8 @@ class MainController extends GetxController {
                                   children: [
                                     ButtonElevated(
                                       title: 'Buka Ayat',
-                                      // width: 120,
+                                      // width: 11,
+                                      width: Get.width / 3.5,
                                       shadow: false,
                                       bgcolor: Colors.transparent,
                                       height: 30,
@@ -375,7 +378,8 @@ class MainController extends GetxController {
                                     ),
                                     ButtonElevated(
                                       title: 'Buka Ayat',
-                                      width: 160,
+                                      width: Get.width / 2.5,
+                                      // width: 160,
                                       size: Get.textTheme.bodySmall?.fontSize,
                                       bgcolor: Color(0xFF2128C2),
                                       height: 30,

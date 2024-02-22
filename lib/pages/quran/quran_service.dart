@@ -52,4 +52,24 @@ class QuranService extends GetConnect {
       return json;
     }
   }
+  Future getNumber(id) async {
+    final response = await http.get(
+        Uri.parse("${RemoteData.api}/quran/juz/$id"),
+        headers: <String, String>{
+          // 'Authorization': "Bearer ${authStore.read('jwt')}",
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      json['code'] = response.statusCode;
+      return json;
+    } else if (response.statusCode == 401) {
+      // RemoteData.authError();
+    } else {
+      final json = jsonDecode(response.body);
+      json['code'] = response.statusCode;
+      
+      return json;
+    }
+  }
 }

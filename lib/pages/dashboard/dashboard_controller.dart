@@ -49,7 +49,7 @@ class DashboardController extends GetxController {
     ArtikelData(
         id: 1,
         judul: "dummy",
-        tanggal: "1992-10-10",
+        updatedAt: "1992-10-10",
         image: "https://dummyimage.com/600x400/000/fff"),
   ].obs;
   var listAllMenu = [].obs;
@@ -75,7 +75,7 @@ class DashboardController extends GetxController {
       listArtikel.add(ArtikelData(
           id: element['id'],
           judul: element['judul'],
-          tanggal: element['tanggal'],
+          updatedAt: element['updatedAt'],
           image: element['image']));
     }
     isLoadingArtikel.value = false;
@@ -171,9 +171,10 @@ class DashboardController extends GetxController {
   }
   getSliderKontenSosmed() async {
     try {
-    final result = await DashboardService().getSliderKontenSosmed();
+    final result = await DashboardService().getSliderKajiLive();
     listKontenSosmed.value = [];
-    for (var element in result['data']) {
+    for (var i = 0; i < result['data'].length; i++) {
+      var element = result['data'][i];
       listKontenSosmed.add(SosmedData(
           id: element['id'],
           image: element['image'],
@@ -187,6 +188,15 @@ class DashboardController extends GetxController {
   }
 
   Future getKajianLive() async {
+    try {
+    final listresult = await DashboardService().getListKajiLive();
+    listKajian.value = listresult['data'];
+    isLoadingKajian.value = false;
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future getKajianTafsir() async {
     try {
     final listresult = await DashboardService().getListKajian();
     listKajian.value = listresult['data'];

@@ -182,7 +182,7 @@ class CustomCardItem extends StatelessWidget {
                                         Flexible(
                                           child: Text(
                                             '$title',
-                                            maxLines: size == 'small' ? 1 : 2,
+                                            maxLines: size == 'small' ? 1 : 1,
                                             softWrap: true,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.start,

@@ -132,6 +132,9 @@ flutter:
     - family: DMSerifDisplay
       fonts:
         - asset: assets/fonts/DMSerifDisplay-Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
