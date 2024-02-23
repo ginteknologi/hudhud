@@ -16,9 +16,6 @@ class HomeController extends GetxController
   var isLoadingList = true.obs;
   RxInt idxLastReadHalaman = 0.obs;
   var list = {}.obs;
-  // Rx<BottomBarEnum> type = BottomBarEnum.alquran.obs;
-  // Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perhalaman.obs;
-
   Rx<BottomBarEnum> type = BottomBarEnum.beranda.obs;
   Rx<TypeViewQuran> typeViewQuran = TypeViewQuran.perayat.obs;
 
@@ -28,23 +25,22 @@ class HomeController extends GetxController
   var listMuadzin = [].obs;
   var isLoadingMuadzin = true.obs;
 
-
   getMuadzin() async {
     try {
-    final result = await HomeService().getMuadzin();
-    listMuadzin.value = [];
-    for (var element in result['data']) {
-      listMuadzin.add(KajianData(
-          id: element['id'],
-          judul: element['judul'],
-          subjudul: element['subjudul'],
-          image: element['image'],
-          link: element['link']));
-    }
-    isLoadingMuadzin.value = false;
-    print(isLoadingMuadzin.isFalse);
+      final result = await HomeService().getMuadzin();
+      listMuadzin.value = [];
+      for (var element in result['data']) {
+        listMuadzin.add(KajianData(
+            id: element['id'],
+            judul: element['judul'],
+            subjudul: element['subjudul'],
+            image: element['image'],
+            link: element['link']));
+      }
+      isLoadingMuadzin.value = false;
+      print(isLoadingMuadzin.isFalse);
     } catch (e) {
-      print(e);      
+      print(e);
     }
   }
 

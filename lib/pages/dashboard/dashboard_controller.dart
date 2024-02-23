@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
@@ -9,12 +11,16 @@ import 'package:masjid_app/pages/dashboard/dashboard_service.dart';
 
 class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
-
+  // countDown
+  Rx<DateTime> _targetDate = DateTime(2024, 3, 10).obs;
+  RxList<Map<String, dynamic>> countdownData = <Map<String, dynamic>>[].obs;
+  late Timer _timer;
+  //end countDown
   final dataStore = GetStorage();
   var isLoadingKajianLive = true.obs;
   var isLoadingKajian = true.obs;
   var isLoadingArtikel = true.obs;
-  var isLoadingLokasi = true.obs;
+  var isLoadingLokasi = false.obs;
   var isLoadingKontenSosmed = true.obs;
   // var isLoadingList = true.obs;
   var list = {}.obs;
@@ -60,27 +66,20 @@ class DashboardController extends GetxController {
   var duration = 0.obs;
   var txttime = "".obs;
 
-  // GetDataKajian() async {
-  // final result = await DashboardService().getList();
-  // dataTerbaru.value = result['data'];
-  // lastRead.value = dataStore.read('perAyatLastRead');
-  // await Future.delayed(const Duration(seconds: 100), () {});
-  // }
-
   GetDataArtikel() async {
     try {
-    final artikelbaru = await DashboardService().getListArtikelBaru();
-    listArtikel.value = [];
-    for (var element in artikelbaru['data']) {
-      listArtikel.add(ArtikelData(
-          id: element['id'],
-          judul: element['judul'],
-          updatedAt: element['updatedAt'],
-          image: element['image']));
-    }
-    isLoadingArtikel.value = false;
+      final artikelbaru = await DashboardService().getListArtikelBaru();
+      listArtikel.value = [];
+      for (var element in artikelbaru['data']) {
+        listArtikel.add(ArtikelData(
+            id: element['id'],
+            judul: element['judul'],
+            updatedAt: element['updatedAt'],
+            image: element['image']));
+      }
+      isLoadingArtikel.value = false;
     } catch (e) {
-      print(e);      
+      print(e);
     }
   }
 
@@ -154,53 +153,52 @@ class DashboardController extends GetxController {
 
   getSliderKajianLive() async {
     try {
-    final result = await DashboardService().getSliderKajian();
-    listKajianSlider.value = [];
-    for (var element in result['data']) {
-      listKajianSlider.add(KajianData(
-          id: element['id'],
-          judul: element['judul'],
-          subjudul: element['subjudul'],
-          image: element['image'],
-          link: element['link']));
-    }
-    isLoadingKajianLive.value = false;
+      final result = await DashboardService().getSliderKajian();
+      listKajianSlider.value = [];
+      for (var element in result['data']) {
+        listKajianSlider.add(KajianData(
+            id: element['id'],
+            judul: element['judul'],
+            subjudul: element['subjudul'],
+            image: element['image'],
+            link: element['link']));
+      }
+      isLoadingKajianLive.value = false;
     } catch (e) {
-      print(e);      
+      print(e);
     }
   }
+
   getSliderKontenSosmed() async {
     try {
-    final result = await DashboardService().getSliderKajiLive();
-    listKontenSosmed.value = [];
-    for (var i = 0; i < result['data'].length; i++) {
-      var element = result['data'][i];
-      listKontenSosmed.add(SosmedData(
-          id: element['id'],
-          image: element['image'],
-          link: element['link']));
-    }
-    isLoadingKontenSosmed.value = false;
+      final result = await DashboardService().getSliderKajiLive();
+      listKontenSosmed.value = [];
+      for (var i = 0; i < result['data'].length; i++) {
+        var element = result['data'][i];
+        listKontenSosmed.add(SosmedData(
+            id: element['id'], image: element['image'], link: element['link']));
+      }
+      isLoadingKontenSosmed.value = false;
     } catch (e) {
-      print(e);      
-
+      print(e);
     }
   }
 
   Future getKajianLive() async {
     try {
-    final listresult = await DashboardService().getListKajiLive();
-    listKajian.value = listresult['data'];
-    isLoadingKajian.value = false;
+      final listresult = await DashboardService().getListKajiLive();
+      listKajian.value = listresult['data'];
+      isLoadingKajian.value = false;
     } catch (e) {
       print(e);
     }
   }
+
   Future getKajianTafsir() async {
     try {
-    final listresult = await DashboardService().getListKajian();
-    listKajian.value = listresult['data'];
-    isLoadingKajian.value = false;
+      final listresult = await DashboardService().getListKajian();
+      listKajian.value = listresult['data'];
+      isLoadingKajian.value = false;
     } catch (e) {
       print(e);
     }
@@ -264,8 +262,22 @@ class DashboardController extends GetxController {
     }
   }
 
+  void _updateTimer(Timer timer) {
+    DateTime currentDate = DateTime.now();
+    Duration remainingTime = _targetDate.value.difference(currentDate);
+    countdownData.assignAll([
+      {'value': remainingTime.inDays, 'label': 'Hari'},
+      {'value': remainingTime.inHours % 24, 'label': 'Jam'},
+      {'value': remainingTime.inMinutes % 60, 'label': 'Menit'},
+      {'value': remainingTime.inSeconds % 60, 'label': 'Detik'},
+    ]);
+  }
+
   @override
   void onInit() async {
+    super.onInit();
+    _timer = Timer.periodic(Duration(seconds: 1), _updateTimer);
+
     getSliderKajianLive();
     GetDataArtikel();
     getMenuHome();
@@ -273,7 +285,12 @@ class DashboardController extends GetxController {
     getListKota();
     getSliderKontenSosmed();
     setFcm();
-    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _timer.cancel();
+    super.onClose();
   }
 }
 

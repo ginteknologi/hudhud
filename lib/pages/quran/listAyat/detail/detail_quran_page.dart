@@ -9,7 +9,8 @@ import 'package:masjid_app/pages/quran/listAyat/detail/detail_quran_controller.d
 class DetailAyatQuranPage extends StatelessWidget {
   const DetailAyatQuranPage({super.key});
 
-  layout(DetailAyatQuranController ctrl, MainController gctrl, BuildContext context) {
+  layout(DetailAyatQuranController ctrl, MainController gctrl,
+      BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -376,23 +377,40 @@ class DetailAyatQuranPage extends StatelessWidget {
               // Datum model = filteredEvents[index];
               var item = ctrl.listAyat[index];
               return FadeInUp(
-                child: Obx(() => ctrl.isLoadingDetail.value ? const Center(child: CircularProgressIndicator(),) : 
-                  ListCardAyatWidget(
-                    id: item['number']['inSurah'],
-                    ayat: item['text']['arab'],
-                    descEN: item['text']['transliteration']['en'],
-                    descIDN: item['translation']['id'],
-                    nomor: item['number']['inSurah'].toString(),
-                    bookmarked: ctrl.surahBookmarked.value ? gctrl.perAyatLastRead['ayatNumber'] == item['number']['inSurah'] ? true : false : false,
-                    audioFile: item['audio']['primary'],
-                    activeColor: ctrl.surahBookmarked.value ? gctrl.perAyatLastRead['ayatNumber'] == item['number']['inSurah'] ? Colors.green[50] : Colors.white : Colors.white,
-                    onTap: () {
-                      ctrl.ayatBookmarked.value = gctrl.perAyatLastRead['ayatNumber'] == item['number']['inSurah'] ? true : false;
-                      ctrl.bookmark(item, index);
-                    },
-                  ),
-                ) 
-              );
+                  child: Obx(
+                () => ctrl.isLoadingDetail.value
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListCardAyatWidget(
+                        id: item['number']['inSurah'],
+                        ayat: item['text']['arab'],
+                        descEN: item['text']['transliteration']['en'],
+                        descIDN: item['translation']['id'],
+                        nomor: item['number']['inSurah'].toString(),
+                        bookmarked: ctrl.surahBookmarked.value
+                            ? gctrl.perAyatLastRead['ayatNumber'] ==
+                                    item['number']['inSurah']
+                                ? true
+                                : false
+                            : false,
+                        audioFile: item['audio']['primary'],
+                        activeColor: ctrl.surahBookmarked.value
+                            ? gctrl.perAyatLastRead['ayatNumber'] ==
+                                    item['number']['inSurah']
+                                ? Colors.green[50]
+                                : Colors.white
+                            : Colors.white,
+                        onTap: () {
+                          ctrl.ayatBookmarked.value =
+                              gctrl.perAyatLastRead['ayatNumber'] ==
+                                      item['number']['inSurah']
+                                  ? true
+                                  : false;
+                          ctrl.bookmark(item, index);
+                        },
+                      ),
+              ));
             },
           )
         : const Center(

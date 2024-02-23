@@ -20,26 +20,11 @@ Future<void> main() async {
 
   if (!kIsWeb) {
     await [
-      // Permission.location,
-      // Permission.storage,
-      // Permission.camera,a
       Permission.notification,
-      // Permission.appTrackingTransparency,
     ].request();
     await SetupFirebase.initFirebase();
   }
-  // InAppUpdate.checkForUpdate().then((updateInfo) {
-  //   if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-  //     InAppUpdate.performImmediateUpdate()
-  //         .then((value) => {
-  //               Fluttertoast.showToast(
-  //                   msg: "Silahkah buka ulang aplikasi ...",
-  //                   toastLength: Toast.LENGTH_LONG,
-  //                   gravity: ToastGravity.CENTER)
-  //             })
-  //         .catchError((e) {});
-  //   }
-  // });
+
   runApp(
     EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('id', 'ID')],

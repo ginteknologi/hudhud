@@ -12,6 +12,7 @@ import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/kontenSosmed.dart';
+import 'package:masjid_app/pages/dashboard/component/countDown.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
@@ -101,9 +102,6 @@ class DashboardPage extends StatelessWidget {
                                                   dialogTerkini(
                                                       ctrl, gctrl, context),
                                                   200);
-
-                                              // showPopup(
-                                              //     ctrl, gctrl, context, null, null);
                                             },
                                             borderRadius:
                                                 BorderRadius.circular(20),
@@ -194,10 +192,11 @@ class DashboardPage extends StatelessWidget {
                           SizedBox(
                             height: 25,
                           ),
+                          CountDown_Widget(),
                           Container(
                             margin: const EdgeInsets.only(top: 10),
-                            child:
-                                getSeparator('Kajian Live', 'Lihat Semua', context, ctrl),
+                            child: getSeparator(
+                                'Kajian Live', 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
@@ -282,14 +281,10 @@ class DashboardPage extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                       onTap: () {
-                        // if (ctrl.listMenuHome[index]['urlNav'] == 'lainnya') {
-                        //   showSheet(ctrl, context, false);
-                        // } else {
-                          if (ctrl.listMenuHome[index]['urlNav'] != '' &&
-                              ctrl.listMenuHome[index]['urlNav'] != null) {
-                            Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
-                          }
-                        // }
+                        if (ctrl.listMenuHome[index]['urlNav'] != '' &&
+                            ctrl.listMenuHome[index]['urlNav'] != null) {
+                          Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
+                        }
                       },
                       borderRadius: BorderRadius.circular(20),
                       splashColor: Colors.green.withOpacity(0.5),
@@ -304,6 +299,7 @@ class DashboardPage extends StatelessWidget {
                           AutoSizeText(
                             '${ctrl.listMenuHome[index]["label"]}',
                             textAlign: TextAlign.center,
+                            maxLines: 1,
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                     .textTheme
@@ -342,10 +338,10 @@ class DashboardPage extends StatelessWidget {
                 onTap: () async {
                   if (nama == 'Kajian Live') {
                     await ctrl.getKajianLive();
-                  }else{
+                  } else {
                     await ctrl.getKajianTafsir();
                   }
-                  showSheet(ctrl, nama,  context, true);
+                  showSheet(ctrl, nama, context, true);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8),
@@ -499,7 +495,8 @@ class DashboardPage extends StatelessWidget {
                     )))));
   }
 
-  void showSheet(DashboardController ctrl, nama, BuildContext context, bool flag) {
+  void showSheet(
+      DashboardController ctrl, nama, BuildContext context, bool flag) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: flag,
@@ -674,22 +671,6 @@ class DashboardPage extends StatelessWidget {
                                 dialogTerkini(ctrl, gctrl, context), 200);
                           },
                         ),
-                        // const SizedBox(
-                        //   height: 5,
-                        // ),
-                        // ButtonElevated(
-                        //   title: 'Aktifkan Pengingat Adzan',
-                        //   width: Get.width,
-                        //   bgcolor: Colors.white,
-                        //   height: 45,
-                        //   color: Colors.black,
-                        //   radius: 7,
-                        //   onPressed: () {
-                        //     Navigator.pop(context);
-                        //     showPopup(ctrl, gctrl, dialogCari(ctrl, gctrl, context, bc), 200);
-                        //   },
-                        //   shadow: false,
-                        // )
                       ],
                     )),
           );
