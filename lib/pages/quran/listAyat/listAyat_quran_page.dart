@@ -1,14 +1,191 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/components/button/iconbutton.dart';
+import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
 
 class ListAyatQuranPage extends StatelessWidget {
   final ListAyatQuranController ctrl = Get.put(ListAyatQuranController());
   ListAyatQuranPage({super.key});
+
+  Future<List<String>> _fetchSuggestions(String searchValue) async {
+    await Future.delayed(Duration(milliseconds: 750));
+    List<String> _suggestions = [
+      'Afeganistan',
+      'Albania',
+      'Algeria',
+      'Australia',
+      'Brazil',
+      'German',
+      'Madagascar',
+      'Mozambique',
+      'Portugal',
+      'Zambia'
+    ];
+    List<String> _filteredSuggestions = _suggestions.where((element) {
+      return element.toLowerCase().contains(searchValue.toLowerCase());
+    }).toList();
+    return _filteredSuggestions;
+  }
+
+  showDialogFilter() {
+    Get.defaultDialog(
+      backgroundColor: Colors.transparent,
+      barrierDismissible: true,
+      radius: 0,
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      title: '',
+      titleStyle: const TextStyle(height: 0),
+      titlePadding: const EdgeInsets.all(0),
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Color(0xFF189A8C),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(7), topRight: Radius.circular(7))),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Color(0xFF189A8C),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Pergi Ke Ayat',
+                    style: Get.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.normal, color: Colors.white),
+                  ),
+                  ButtonIcon(
+                    onTap: () {
+                      Get.back();
+                    },
+                    bgcolor: Colors.transparent,
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+              padding: EdgeInsets.all(Get.width / 40),
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Autocomplete<Map<String, dynamic>>(
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      final query = textEditingValue.text.toLowerCase();
+                      return ctrl.list
+                          .where((data) => data['nama']
+                              .toString()
+                              .toLowerCase()
+                              .contains(query))
+                          .map((data) => data as Map<String, dynamic>)
+                          .toList();
+                    },
+                    onSelected: (Map<String, dynamic> selectedValue) {
+                      // final selectedItem = ctrl.getSelectedItem(selectedValue['nama']);
+                      // if (selectedItem != null) {
+                      //   // Lakukan sesuatu dengan objek yang dipilih
+                      //   print('Selected: $selectedItem');
+                      //   ctrl.inputSurah.value = selectedItem;
+                      // }
+                    },
+                    fieldViewBuilder: (BuildContext context,
+                        TextEditingController textEditingController,
+                        FocusNode focusNode,
+                        VoidCallback onFieldSubmitted) {
+                      textEditingController.addListener(() {
+                        // ctrl.search(textEditingController.text);
+                      });
+                      return TextField(
+                        controller: textEditingController,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(.1)),
+                          ),
+                          fillColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hintText: 'Cari surah',
+                          hintStyle: Get.textTheme.bodySmall!.copyWith(
+                              color: Get.textTheme.bodySmall!.color!
+                                  .withOpacity(.5)),
+                          contentPadding: EdgeInsets.all(10.0),
+                          border: OutlineInputBorder(),
+                        ),
+                      );
+                    },
+                    displayStringForOption: (Map<String, dynamic> option) =>
+                        option['nama'].toString(),
+                  ),
+                  InputText(
+                    inputType: TextInputType.number,
+                    controller: ctrl.inputAyat,
+                    labelPosition: "none",
+                    placeholder: "Nomor ayat",
+                    textAlign: TextAlign.center,
+                    isFill: true,
+                    placeholderStyle: Get.textTheme.bodySmall,
+                    inputAction: TextInputAction.next,
+                    onSubmit: (newValue) {},
+                    onEditingComplete: () {},
+                    onChanged: (newValue) {},
+                    validator: (newValue) {
+                      if (newValue!.isEmpty) {
+                        return "Mohon untuk diisi.";
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              )),
+          Container(
+              padding: EdgeInsets.all(Get.width / 40),
+              decoration: BoxDecoration(
+                color: Color(0xFFDCDCDC),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(7),
+                    bottomRight: Radius.circular(7)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ButtonElevated(
+                    title: 'Buka Ayat',
+                    width: Get.width / 2.5,
+                    size: Get.textTheme.bodySmall?.fontSize,
+                    bgcolor: Color(0xFF2128C2),
+                    height: 30,
+                    color: Colors.white,
+                    radius: 5,
+                    onPressed: () {},
+                  )
+                ],
+              )),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +216,13 @@ class ListAyatQuranPage extends StatelessWidget {
             ],
           );
         }),
-        actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
+        actions: [
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showDialogFilter();
+              })
+        ],
         elevation: 0,
       ),
       body: Obx(() {

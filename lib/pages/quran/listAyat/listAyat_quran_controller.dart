@@ -16,6 +16,8 @@ class ListAyatQuranController extends GetxController
   var isLoadingDetail = false.obs;
   // var lastRead = {}.obs;
   var txtController = TextEditingController();
+  var inputAyat = TextEditingController();
+  var inputSurah = TextEditingController();
   var myTabs = <Tab>[].obs;
   var tabIndex = 0.obs;
   var contentTab = [].obs;
