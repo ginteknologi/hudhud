@@ -23,10 +23,10 @@ class AlquranController extends GetxController {
   var listMenu = [].obs;
   getData() async {
     try {
-    final result = await AlquranService().getRandom();
-    list.value = result['data'];
+      final result = await AlquranService().getRandom();
+      list.value = result['data'];
       print('<<<<random>>>>');
-    isLoadingList.value = false;
+      isLoadingList.value = false;
     } catch (e) {
       print(e);
     }
@@ -164,14 +164,14 @@ class AlquranController extends GetxController {
   @override
   void onInit() async {
     await getData();
-    await lastRead();
+    // await lastRead();
     listMenu.value = [
       {
         'title': 'Per Ayat',
         'onTap': () {
           Get.toNamed(RoutesQuran.perayat)?.then((result) {
             if (result == 'refresh') {
-              lastRead();
+              // lastRead();
             }
           });
         },
@@ -182,7 +182,7 @@ class AlquranController extends GetxController {
         'onTap': () {
           Get.toNamed(RoutesQuran.perpage)?.then((result) {
             if (result == 'refresh') {
-              lastRead();
+              // lastRead();
             }
           });
         },
@@ -193,7 +193,7 @@ class AlquranController extends GetxController {
         'onTap': () {
           Get.toNamed(RoutesQuran.perpagemadinah)?.then((result) {
             if (result == 'refresh') {
-              lastRead();
+              // lastRead();
             }
           });
         },
@@ -204,7 +204,7 @@ class AlquranController extends GetxController {
         'onTap': () {
           Get.toNamed(RoutesQuran.perpagetajwid)?.then((result) {
             if (result == 'refresh') {
-              lastRead();
+              // lastRead();
             }
           });
         },

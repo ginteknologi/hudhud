@@ -14,16 +14,23 @@ class ListAyatQuranPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // backgroundColor: Color(0xFF048C7C),
         title: Obx(() {
           return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AutoSizeText(
-                  ctrl.detail.isEmpty ? "List Ayat : " : ctrl.detail['nama']),
+                ctrl.detail.isEmpty ? "List Ayat : " : ctrl.detail['nama'],
+                textAlign: TextAlign.left,
+              ),
               AutoSizeText(
                 ctrl.detail.isEmpty
                     ? "Total Ayat :"
                     : "Jumlah Ayat : " + ctrl.detail['ayat'].toString(),
                 maxLines: 1,
+                textAlign: TextAlign.left,
                 style: context.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.normal,
                   color: const Color.fromARGB(255, 173, 41, 41),
@@ -96,38 +103,45 @@ class ListAyatQuranPage extends StatelessWidget {
                                 color: Color.fromARGB(255, 233, 233, 233),
                                 child: Row(
                                   children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Stack(
-                                          children: <Widget>[
-                                            SvgPicture.asset(
-                                              'assets/icons/list_star.svg',
-                                              alignment: Alignment.center,
-                                              height: 35,
-                                              width: 35,
-                                            ),
-                                            Positioned.fill(
-                                              child: Center(
-                                                child: AutoSizeText(
-                                                  item['ayat'].toString(),
-                                                  maxLines: 1,
-                                                  presetFontSizes: [11, 10, 9],
+                                    Padding(
+                                      padding: EdgeInsets.all(Get.width / 40),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Stack(
+                                            children: <Widget>[
+                                              SvgPicture.asset(
+                                                'assets/icons/list_star.svg',
+                                                alignment: Alignment.center,
+                                                height: 35,
+                                                width: 35,
+                                              ),
+                                              Positioned.fill(
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    item['ayat'].toString(),
+                                                    maxLines: 1,
+                                                    presetFontSizes: [
+                                                      11,
+                                                      10,
+                                                      9
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        // Baris kedua
-                                        Container(
-                                          height: 42,
-                                          width: 42,
-                                          child: Stack(
-                                            children: [],
+                                            ],
                                           ),
-                                        ),
-                                      ],
+                                          // Baris kedua
+                                          Container(
+                                            height: 42,
+                                            width: 42,
+                                            child: Stack(
+                                              children: [],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     Expanded(
                                         child: Container(
@@ -141,7 +155,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            height: Get.height / 100,
+                                            height: Get.height / 50,
                                           ),
                                           Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -164,7 +178,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                 ),
                                               ),
                                               SizedBox(
-                                                height: Get.height / 100,
+                                                height: Get.height / 50,
                                               ),
                                               Align(
                                                   alignment:
@@ -183,7 +197,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                                                 .italic),
                                                   )),
                                               SizedBox(
-                                                height: Get.height / 100,
+                                                height: Get.height / 50,
                                               ),
                                               Align(
                                                   alignment:

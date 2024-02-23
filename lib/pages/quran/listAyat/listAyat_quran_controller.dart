@@ -130,19 +130,21 @@ class ListAyatQuranController extends GetxController
     }
     list.value = list.reversed.toList();
 
-    int lastIndex = list.length;
-    int perAyatLastReadId = dataStore.read('perAyatLastRead')['id'] ?? 0;
-    int result =
-        perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
-    detail.value = list[result];
-    tabController =
-        TabController(vsync: this, length: myTabs.length, initialIndex: result);
+    // int lastIndex = list.length;
+    // int perAyatLastReadId = dataStore.read('perAyatLastRead')['id'] ?? 0;
+    // int result =
+    //     perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
+    detail.value = list[myTabs.length - 1];
+    print(detail);
+    tabController = TabController(
+        vsync: this, length: myTabs.length, initialIndex: myTabs.length - 1);
     await getDetailData(1, 0);
   }
 
   @override
   void onClose() {
     tabController.dispose();
+    pageController.dispose();
     super.onClose();
   }
 }

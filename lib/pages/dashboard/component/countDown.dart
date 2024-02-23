@@ -108,23 +108,6 @@ class CountDown_Widget extends StatelessWidget {
                       ],
                     )
                 ],
-                // children: [1, 2, 3, 4].map((e) {
-                //   return Row(
-                //     children: [
-                //       Container(
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(5),
-                //           color: Colors.red,
-                //         ),
-                //         width: Get.width / 6.5,
-                //         height: Get.width / 6.5,
-                //         child:
-                //             Center(child: Text('${ctrl.remainingTime.inDays}')),
-                //       ),
-                //       const SizedBox(width: 5),
-                //     ],
-                //   );
-                // }).toList(),
               )
             ],
           ));
