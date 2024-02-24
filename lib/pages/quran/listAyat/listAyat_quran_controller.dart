@@ -15,9 +15,13 @@ class ListAyatQuranController extends GetxController
   var isLoadingList = true.obs;
   var isLoadingDetail = false.obs;
   // var lastRead = {}.obs;
+
   var txtController = TextEditingController();
   var inputAyat = TextEditingController();
   var inputSurah = TextEditingController();
+
+  List<ItemScrollController> itemScrollController = [];
+
   var myTabs = <Tab>[].obs;
   var tabIndex = 0.obs;
   var contentTab = [].obs;
@@ -31,7 +35,6 @@ class ListAyatQuranController extends GetxController
   var pageController = PageController(initialPage: 0);
   int offset = 0;
   int limit = 10;
-  final ItemScrollController itemScrollController = ItemScrollController();
 
   Future getData() async {
     try {
@@ -46,6 +49,7 @@ class ListAyatQuranController extends GetxController
           'idContent': result['data'][i]['id'],
           'list': [],
         });
+        itemScrollController.add(ItemScrollController());
       }
       listReverse.value = result['data'];
       isLoadingList.value = false;
@@ -55,7 +59,23 @@ class ListAyatQuranController extends GetxController
     }
   }
 
-  getDetailData(surahId, index) async {
+  prosesPencarian() async {
+    print(inputAyat.text);
+    print(inputSurah.text);
+    var ddd = list.indexWhere((element) => element['nama'] == inputSurah.text);
+    var getSurah = list.where((p0) => p0['nama'] == inputSurah.text).first;
+    var newindex = myTabs.length - ddd - 1;
+    print("ctrl : " + newindex.toString());
+    await getDetailData(getSurah['id'], newindex);
+    pageController.jumpToPage(newindex);
+    await Future.delayed(Duration(milliseconds: 100));
+    itemScrollController[newindex].jumpTo(
+      index: int.parse(inputAyat.text) - 1,
+    );
+    Get.back();
+  }
+
+  Future getDetailData(surahId, index) async {
     try {
       int targetDataIndex =
           contentTab.indexWhere((data) => data["idContent"] == surahId);

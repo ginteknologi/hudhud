@@ -76,7 +76,7 @@ dependencies:
   html: ^0.15.4
   scrollable_positioned_list: ^0.3.8
   skeletonizer: ^1.0.1
-  easy_autocomplete: ^1.6.0
+  autocomplete_textfield: 2.0.1
 
 dependency_overrides:
   intl: any
@@ -84,7 +84,7 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-    
+
 flutter_launcher_icons:
   android: true
   ios: true
