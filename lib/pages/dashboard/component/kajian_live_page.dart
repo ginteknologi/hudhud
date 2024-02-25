@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/dashboard/dashboard_controller.dart';
+import 'package:masjid_app/controllers/dashboard_controller.dart';
 
 class KajianLivePage extends StatelessWidget {
   const KajianLivePage({super.key});

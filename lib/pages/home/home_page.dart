@@ -16,13 +16,12 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Widget getCurrentWidget(BottomBarEnum type, HomeController ctrl) {
-    print(type);
     switch (type) {
       case BottomBarEnum.beranda:
-        return const DashboardPage();
+        return DashboardPage();
       case BottomBarEnum.alquran:
         // return QuranPage(typeView: ctrl.typeViewQuran.value);
-        return const AlquranPage();
+        return AlquranPage();
       case BottomBarEnum.ruangan:
         // return const RuanganPage();
         return getDefaultWidget();
@@ -73,7 +72,7 @@ class HomePage extends StatelessWidget {
                       itemCount: ctrl.listMuadzin.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                      final KajianData item = ctrl.listMuadzin[index];
+                        final KajianData item = ctrl.listMuadzin[index];
                         return ListItemUiWidget(
                           onTap: () async {
                             final Uri url = Uri.parse(item.link);
@@ -144,8 +143,7 @@ class HomePage extends StatelessWidget {
                               ?.copyWith(
                                   fontWeight: FontWeight.w100,
                                   color: Colors.black),
-                          footerText:
-                              item.subjudul,
+                          footerText: item.subjudul,
                           footerTextStyle: context.textTheme.labelSmall
                               ?.copyWith(
                                   letterSpacing: 0,
@@ -166,33 +164,32 @@ class HomePage extends StatelessWidget {
     final gctrl = Get.find<MainController>();
     print(ctrl.type.value);
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        extendBodyBehindAppBar: true,
-        resizeToAvoidBottomInset: false,
-        // appBar: layoutAppbar(),
-        // body: layout(ctrl, context),
-        body: Obx(() => AnimatedContainer(
-              duration: const Duration(seconds: 4),
-              child: getCurrentWidget(ctrl.type.value, ctrl),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
+      body: Obx(() => AnimatedContainer(
+            duration: const Duration(seconds: 4),
+            child: getCurrentWidget(ctrl.type.value, ctrl),
+          )),
+      bottomNavigationBar: Obx(() => ctrl.visible.value
+          ? SlidingWidget(
+              from: Offset.zero,
+              to: const Offset(0, 1),
+              visible: ctrl.visible.value,
+              controller: ctrl.animateController,
+              child: CustomBottomBar(
+                selectedIdx: ctrl.selectedIdx.value,
+                onChanged: (BottomBarEnum type) {
+                  if (type == BottomBarEnum.muazin) {
+                    showSheet(ctrl, gctrl, context);
+                  } else {
+                    ctrl.type.value = type;
+                  }
+                },
+              ))
+          : Container(
+              height: 0,
             )),
-        bottomNavigationBar: Obx(() => ctrl.visible.value
-            ? SlidingWidget(
-                from: Offset.zero,
-                to: const Offset(0, 1),
-                visible: ctrl.visible.value,
-                controller: ctrl.animateController,
-                child: CustomBottomBar(
-                  selectedIdx: ctrl.selectedIdx.value,
-                  onChanged: (BottomBarEnum type) {
-                    if (type == BottomBarEnum.muazin) {
-                      showSheet(ctrl, gctrl, context);
-                    } else {
-                      ctrl.type.value = type;
-                    }
-                  },
-                ))
-            : Container(
-                height: 0,
-              )));
+    );
   }
 }

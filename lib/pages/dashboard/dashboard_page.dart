@@ -13,8 +13,9 @@ import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/kontenSosmed.dart';
 import 'package:masjid_app/pages/dashboard/component/countDown.dart';
+import 'package:masjid_app/pages/dashboard/component/ramadhanMenu.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
-import 'package:masjid_app/pages/dashboard/dashboard_controller.dart';
+import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/routes/quran/index.dart';
@@ -28,9 +29,11 @@ import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({Key? key}) : super(key: key);
+  final DashboardController ctrl = Get.find();
+  final MainController gctrl = Get.find<MainController>();
+  DashboardPage({Key? key}) : super(key: key);
 
-  layout(DashboardController ctrl, MainController gctrl, BuildContext context) {
+  layout(BuildContext context) {
     return SafeArea(
         top: false,
         child: Obx(() {
@@ -190,9 +193,16 @@ class DashboardPage extends StatelessWidget {
                           const WaktuSolat(),
                           getGridMenu(ctrl),
                           SizedBox(
-                            height: 25,
+                            height: Get.width / 30,
                           ),
                           CountDown_Widget(),
+                          SizedBox(
+                            height: Get.width / 30,
+                          ),
+                          RamadhanMenuWidget(),
+                          SizedBox(
+                            height: Get.width / 30,
+                          ),
                           Container(
                             margin: const EdgeInsets.only(top: 10),
                             child: getSeparator(
@@ -274,42 +284,48 @@ class DashboardPage extends StatelessWidget {
         itemCount: ctrl.listMenuHome.length,
         padding: EdgeInsets.only(top: 15),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5, mainAxisSpacing: 10, childAspectRatio: 1 / 1.2),
+            crossAxisCount: 5, childAspectRatio: 0.82),
         itemBuilder: (context, index) {
-          return Container(
-              child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                      onTap: () {
-                        if (ctrl.listMenuHome[index]['urlNav'] != '' &&
-                            ctrl.listMenuHome[index]['urlNav'] != null) {
-                          Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
-                        }
-                      },
-                      borderRadius: BorderRadius.circular(20),
-                      splashColor: Colors.green.withOpacity(0.5),
-                      child: GestureDetector(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SvgPicture.asset(ctrl.listMenuHome[index]['icon'],
-                              height: 50, width: 50),
-                          const SizedBox(height: 5),
-                          AutoSizeText(
+          return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                  onTap: () {
+                    if (ctrl.listMenuHome[index]['urlNav'] != '' &&
+                        ctrl.listMenuHome[index]['urlNav'] != null) {
+                      Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  splashColor: Colors.green.withOpacity(0.5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SvgPicture.asset(ctrl.listMenuHome[index]['icon'],
+                          height: Get.width / 7.2, width: Get.width / 7.2),
+                      SizedBox(height: 5),
+                      Expanded(
+                        child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: Get.width / 50),
+                          child: AutoSizeText(
                             '${ctrl.listMenuHome[index]["label"]}',
                             textAlign: TextAlign.center,
-                            maxLines: 1,
+                            maxLines: 2,
+                            presetFontSizes: [Get.width / 38],
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                     .textTheme
                                     .labelMedium
                                     ?.fontSize,
+                                height: 1.1,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w500),
                           ),
-                        ],
-                      )))));
+                        ),
+                      ),
+                    ],
+                  )));
         },
       ),
     );
@@ -855,8 +871,6 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DashboardController());
-    final gctrl = Get.find<MainController>();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
@@ -866,6 +880,6 @@ class DashboardPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.background,
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
-        body: layout(ctrl, gctrl, context));
+        body: layout(context));
   }
 }

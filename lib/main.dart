@@ -36,7 +36,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  // final gctrl = Get.put(SocketController());
   final mainCtrl = Get.put(MainController());
   @override
   Widget build(BuildContext context) {

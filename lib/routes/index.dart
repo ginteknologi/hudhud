@@ -6,6 +6,7 @@ import 'package:masjid_app/routes/dzikir/index.dart';
 import 'package:masjid_app/routes/hadits/index.dart';
 // import 'package:masjid_app/routes/dkm/index.dart';
 import 'package:masjid_app/routes/home/index.dart';
+import 'package:masjid_app/routes/kalenderdzulhijjah/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/routes/onboard/index.dart';
 import 'package:masjid_app/routes/quran/index.dart';
@@ -20,7 +21,6 @@ class AppPages {
     ...PagesAkun.pages,
     ...PagesArtikel.pages,
     ...PagesDoa.pages,
-    // ...PagesDkm.pages,
     ...PagesHome.pages,
     ...PagesQuran.pages,
     ...PagesRuangan.pages,
@@ -30,7 +30,8 @@ class AppPages {
     ...PagesKiblat.pages,
     ...PagesTest.pages,
     ...PagesHadits.pages,
-    ...PagesDzikir.pages
+    ...PagesDzikir.pages,
+    ...PagesKalenderdzulhijjah.pages
   ];
   static var root = RoutesHome.splashscreen;
 }

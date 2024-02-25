@@ -23,7 +23,7 @@ class DashboardService extends GetConnect {
     } else {
       final json = jsonDecode(response.body);
       json['code'] = response.statusCode;
-      
+
       return json;
     }
   }
@@ -44,13 +44,13 @@ class DashboardService extends GetConnect {
     } else {
       final json = jsonDecode(response.body);
       json['code'] = response.statusCode;
-      
+
       return json;
     }
   }
+
   Future getListKajian() async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/kajian/list"),
+    final response = await http.get(Uri.parse("${RemoteData.api}/kajian/list"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -64,10 +64,11 @@ class DashboardService extends GetConnect {
     } else {
       final json = jsonDecode(response.body);
       json['code'] = response.statusCode;
-      
+
       return json;
     }
   }
+
   Future getListKajiLive() async {
     final response = await http.get(
         Uri.parse("${RemoteData.api}/kajian/kaji-live/list"),
@@ -84,11 +85,12 @@ class DashboardService extends GetConnect {
     } else {
       final json = jsonDecode(response.body);
       json['code'] = response.statusCode;
-      
+
       return json;
     }
   }
-    Future getSliderKajiLive() async {
+
+  Future getSliderKajiLive() async {
     final response = await http.get(
         Uri.parse("${RemoteData.api}/kajian/kaji-live/slider"),
         headers: <String, String>{
@@ -104,7 +106,7 @@ class DashboardService extends GetConnect {
     } else {
       final json = jsonDecode(response.body);
       json['code'] = response.statusCode;
-      
+
       return json;
     }
   }

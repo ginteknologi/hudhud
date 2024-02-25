@@ -55,7 +55,7 @@ class CustomBottomBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Image.asset(bottomMenuList[index].icon,
-                      height: 30, width: 30),
+                      height: Get.width * 0.069, width: Get.width * 0.069),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Text(
@@ -74,7 +74,7 @@ class CustomBottomBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.asset(bottomMenuList[index].activeIcon,
-                      height: 30, width: 30),
+                      height: Get.width * 0.069, width: Get.width * 0.069),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Text(bottomMenuList[index].title ?? "",

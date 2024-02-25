@@ -1,20 +1,19 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
+import 'package:masjid_app/models/eventCountDown.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/kontenSosmed.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/pages/dashboard/dashboard_service.dart';
+import 'package:masjid_app/service/dashboard_service.dart';
 
 class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
   // countDown
-  Rx<DateTime> _targetDate = DateTime(2024, 3, 10).obs;
-  RxList<Map<String, dynamic>> countdownData = <Map<String, dynamic>>[].obs;
-  late Timer _timer;
   //end countDown
   final dataStore = GetStorage();
   var isLoadingKajianLive = true.obs;
@@ -23,6 +22,8 @@ class DashboardController extends GetxController {
   var isLoadingLokasi = false.obs;
   var isLoadingKontenSosmed = true.obs;
   // var isLoadingList = true.obs;
+
+  var hijriDate = {}.obs;
   var list = {}.obs;
   var lastRead = {}.obs;
   var todayDate = "".obs;
@@ -110,6 +111,11 @@ class DashboardController extends GetxController {
         "label": "Dzikir Pagi Petang",
         "icon": "assets/icons/dzikir_pagi_petang.svg",
         "urlNav": "/dzikir"
+      },
+      {
+        "label": "Jadwal Imsakiyah",
+        "icon": "assets/icons/dzikir_pagi_petang.svg",
+        "urlNav": "/kalenderdzulhijjah"
       },
       // {
       //   "label": "Lainnya",
@@ -262,22 +268,15 @@ class DashboardController extends GetxController {
     }
   }
 
-  void _updateTimer(Timer timer) {
-    DateTime currentDate = DateTime.now();
-    Duration remainingTime = _targetDate.value.difference(currentDate);
-    countdownData.assignAll([
-      {'value': remainingTime.inDays, 'label': 'Hari'},
-      {'value': remainingTime.inHours % 24, 'label': 'Jam'},
-      {'value': remainingTime.inMinutes % 60, 'label': 'Menit'},
-      {'value': remainingTime.inSeconds % 60, 'label': 'Detik'},
-    ]);
-  }
-
   @override
   void onInit() async {
     super.onInit();
-    _timer = Timer.periodic(Duration(seconds: 1), _updateTimer);
-
+    var hijriDateNow = HijriCalendar.now();
+    hijriDate.value = {
+      "bulan": hijriDateNow.toFormat('MMMM'),
+      "tahun": hijriDateNow.toFormat('yyyy'),
+      "hari": hijriDateNow.toFormat('dd'),
+    };
     getSliderKajianLive();
     GetDataArtikel();
     getMenuHome();
@@ -289,7 +288,6 @@ class DashboardController extends GetxController {
 
   @override
   void onClose() {
-    _timer.cancel();
     super.onClose();
   }
 }

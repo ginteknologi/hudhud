@@ -5,12 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/configs/main_service.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
-import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:masjid_app/routes/auth/index.dart';
@@ -27,7 +27,8 @@ class MainController extends GetxController {
   var tajwidLastRead = {}.obs;
   var madinahLastRead = {}.obs;
   var lokasiSaatIni = "";
-
+  var imsak = "".obs;
+  var berbuka = "".obs;
   //  ============ data dialog infaq
   var showPopupInfaq = true.obs;
   DialogPopupInfaq dialogPopupInfaq = DialogPopupInfaq.subuh;
@@ -56,6 +57,7 @@ class MainController extends GetxController {
       HijriDate = hijriDateNow.toFormat('MMMM dd yyyy');
       lokasiSaatIni = dataStore.read('lokasiSaatIni') ?? "Pilih Lokasi";
       final getdata = await MainService().waktuSolat();
+
       listWaktu.value = [
         {
           "label": "Subuh",
@@ -93,6 +95,16 @@ class MainController extends GetxController {
           "cardImage": "assets/img/card/card_isya.png"
         }
       ];
+      DateTime parsedTimeImsak =
+          DateFormat('HH:mm').parse(getdata['data']['imsak']);
+      String formattedTimeImsak = DateFormat('h:mm a').format(parsedTimeImsak);
+      DateTime parsedTimeBerbuka =
+          DateFormat('HH:mm').parse(getdata['data']['sunset']);
+      String formattedTimeBerbuka =
+          DateFormat('h:mm a').format(parsedTimeBerbuka);
+
+      imsak.value = formattedTimeImsak.toString();
+      berbuka.value = formattedTimeBerbuka.toString();
       dataStore.write('waktusolat', listWaktu);
     } catch (e) {
       // dataStore.write('isLogin', false);
