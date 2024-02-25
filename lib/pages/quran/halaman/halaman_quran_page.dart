@@ -5,7 +5,6 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_controller.dart';
@@ -358,7 +357,6 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                                                 if(int.parse(ctrl.inputFilter.text) > 604 ) {
                                                   ctrl.isMax.value = true;
                                                 }else{
-                                                  
                                                   ctrl.isMax.value = false;
                                                   ctrl.goToHal(ctrl.inputFilter.text);
                                                   Navigator.pop(context);

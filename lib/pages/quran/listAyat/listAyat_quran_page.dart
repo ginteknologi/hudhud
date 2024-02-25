@@ -11,6 +11,8 @@ import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:masjid_app/components/button/iconbutton.dart';
+import 'package:masjid_app/components/button/elevatedbutton.dart';
 
 class ListAyatQuranPage extends StatelessWidget {
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
@@ -151,6 +153,252 @@ class ListAyatQuranPage extends StatelessWidget {
                   )
                 ],
               )),
+        ],
+      ),
+    );
+  }
+
+  showDialogFilter(ListAyatQuranController ctrl, BuildContext context, flag) {
+    Get.defaultDialog(
+      backgroundColor: Colors.transparent,
+      barrierDismissible: true,
+      radius: 7,
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+      title: '',
+      titleStyle: const TextStyle(height: 0),
+      titlePadding: const EdgeInsets.all(0),
+      content: Column(
+        children: [
+          Container(
+            width: Get.width - 25,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Color(0xFF189A8C),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(7), topRight: Radius.circular(7))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Pergi Ke',
+                  // "Q.S Al-Muthaffifiin :  34",
+                  style: Get.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.normal, color: Colors.white),
+                ),
+                ButtonIcon(
+                  onTap: () {
+                    Get.back();
+                  },
+                  bgcolor: Colors.transparent,
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Obx(() => ctrl.loadingFilter == true
+              ? Text("data")
+              : Container(
+                  width: Get.width - 25,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(7),
+                          bottomRight: Radius.circular(7))),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ButtonElevated(
+                        title: 'Ayat',
+                        width: Get.width / 3.5,
+                        bgcolor: Get.theme.primaryColor,
+                        height: 30,
+                        color: Colors.white,
+                        radius: 5,
+                        onPressed: () {},
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: Get.width / 3,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Autocomplete<Map<String, dynamic>>(
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      final query =
+                                          textEditingValue.text.toLowerCase();
+                                      return ctrl.list
+                                          .where((data) => data['nama']
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(query))
+                                          .map((data) =>
+                                              data as Map<String, dynamic>)
+                                          .toList();
+                                    },
+                                    onSelected:
+                                        (Map<String, dynamic> selectedValue) {
+                                      final selectedItem = ctrl.getSelectedItem(
+                                          selectedValue['nama']);
+                                      if (selectedItem != null) {
+                                        // Lakukan sesuatu dengan objek yang dipilih
+                                        print('Selected: $selectedItem');
+                                        ctrl.inputSurah.value = selectedItem;
+                                      }
+                                    },
+                                    fieldViewBuilder: (BuildContext context,
+                                        TextEditingController
+                                            textEditingController,
+                                        FocusNode focusNode,
+                                        VoidCallback onFieldSubmitted) {
+                                      textEditingController.addListener(() {
+                                        ctrl.search(textEditingController.text);
+                                      });
+                                      return TextField(
+                                        controller: textEditingController,
+                                        focusNode: focusNode,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground
+                                                    .withOpacity(.1)),
+                                          ),
+                                          fillColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hintText: 'Cari surah',
+                                          hintStyle: Get.textTheme.bodySmall!
+                                              .copyWith(
+                                                  color: Get.textTheme
+                                                      .bodySmall!.color!
+                                                      .withOpacity(.5)),
+                                          contentPadding: EdgeInsets.all(10.0),
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      );
+                                    },
+                                    displayStringForOption:
+                                        (Map<String, dynamic> option) =>
+                                            option['nama'].toString(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // child: InputText(
+                            //   controller: ctrl.inputFilterSurah,
+                            //   labelPosition: "none",
+                            //   placeholder: "Cari Surah",
+                            //   textAlign: TextAlign.center,
+                            //   isFill: true,
+                            //   placeholderStyle: Get.textTheme.bodyMedium,
+                            //   inputAction: TextInputAction.next,
+                            //   onSubmit: (newValue) {},
+                            //   onEditingComplete: () {},
+                            //   onChanged: (newValue) {},
+                            //   validator: (newValue) {
+                            //     if (newValue!.isEmpty) {
+                            //       return "Mohon untuk diisi.";
+                            //     }
+                            //     return null;
+                            //   },
+                            // ),
+                          ),
+                          Container(
+                            width: Get.width / 3,
+                            child: InputText(
+                              inputType: TextInputType.number,
+                              controller: ctrl.inputFilterAyat,
+                              labelPosition: "none",
+                              placeholder: "Nomor ayat",
+                              textAlign: TextAlign.center,
+                              isFill: true,
+                              placeholderStyle: Get.textTheme.bodySmall,
+                              inputAction: TextInputAction.next,
+                              onSubmit: (newValue) {},
+                              onEditingComplete: () {},
+                              onChanged: (newValue) {},
+                              validator: (newValue) {
+                                if (newValue!.isEmpty) {
+                                  return "Mohon untuk diisi.";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      ctrl.textError.value.isEmpty
+                          ? Container()
+                          : Container(
+                              width: Get.width - 25,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(ctrl.textError.value,
+                                      style: Get.textTheme.bodySmall
+                                          ?.copyWith(color: Colors.red))
+                                ],
+                              ),
+                            ),
+                      Container(
+                        width: Get.width - 25,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
+                        decoration: BoxDecoration(
+                            color: Color(0xFFDCDCDC),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(7),
+                                bottomRight: Radius.circular(7))),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ButtonElevated(
+                                title: 'Buka Ayat',
+                                width: Get.width / 2.5,
+                                // width: 160,
+                                size: Get.textTheme.bodySmall?.fontSize,
+                                bgcolor: Color(0xFF2128C2),
+                                height: 30,
+                                color: Colors.white,
+                                radius: 5,
+                                onPressed: () {
+                                  if (ctrl.inputSurah.isEmpty) {
+                                    ctrl.textError.value = 'Pilih Surah !';
+                                  } else {
+                                    if (ctrl.inputFilterAyat.text.isNotEmpty) {
+                                      if (int.parse(ctrl.inputFilterAyat.text) >
+                                          ctrl.inputSurah['ayat']) {
+                                        ctrl.textError.value =
+                                            'Maks Ayat ${ctrl.inputSurah['ayat']}';
+                                      } else {
+                                        ctrl.textError.value = '';
+                                        ctrl.dataGoTo(ctrl.inputSurah,
+                                            ctrl.inputFilterAyat.text);
+                                        Navigator.pop(context);
+                                      }
+                                    } else {
+                                      ctrl.textError.value = 'Masukan Ayat !';
+                                    }
+                                  }
+                                  // ctrl.dataGoTo(ctrl.inputSurah, ctrl.inputFilterAyat.text);
+                                },
+                              ),
+                            ]),
+                      ),
+                    ],
+                  ))),
         ],
       ),
     );

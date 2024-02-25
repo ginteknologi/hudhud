@@ -11,7 +11,7 @@ import 'package:masjid_app/routes/quran/index.dart';
 class AlquranPengaturanController extends GetxController {
   final dataStore = GetStorage();
   final gctrl = Get.find<MainController>();
-  var isLoadingList = true.obs;
+  var isLoadingList = false.obs;
 
   @override
   void onInit() async {
