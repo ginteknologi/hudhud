@@ -56,7 +56,6 @@ class AlquranController extends GetxController {
 
   @override
   void onInit() async {
-    await getData();
     listMenu.value = [
       {
         'title': 'Per Ayat',
@@ -116,7 +115,6 @@ class AlquranController extends GetxController {
       }
     ];
     print("listMenu.length");
-    update();
     super.onInit();
   }
 }

@@ -139,7 +139,8 @@ class AlquranPage extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                   onTap: ctrl.listMenu[index]['onTap'] == null
-                      ? () {
+                      ? () async {
+                          await ctrl.getData();
                           showPopup(ctrl, context, null, null);
                         }
                       : ctrl.listMenu[index]['onTap'] as Function(),
@@ -367,9 +368,7 @@ class AlquranPage extends StatelessWidget {
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: Obx(() => ctrl.isLoadingList.value
-          ? const Center(child: CircularProgressIndicator())
-          : layout(context)),
+      body: layout(context),
     );
   }
 }
