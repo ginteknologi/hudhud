@@ -138,7 +138,11 @@ class AlquranPage extends StatelessWidget {
           return Material(
               color: Colors.transparent,
               child: InkWell(
-                  onTap: ctrl.listMenu[index]['onTap'],
+                  onTap: ctrl.listMenu[index]['onTap'] == null
+                      ? () {
+                          showPopup(ctrl, context, null, null);
+                        }
+                      : ctrl.listMenu[index]['onTap'] as Function(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
@@ -254,96 +258,105 @@ class AlquranPage extends StatelessWidget {
             backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(7.0)),
-            child: Container(
-                child: content ??
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(7),
-                                  topRight: Radius.circular(7))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.arrow_back,
-                                color: Colors.black,
-                              ),
-                              Text(
-                                '${ctrl.list['surat']} : ${ctrl.list['nomor_ayat']} ',
-                                // "Q.S Al-Muthaffifiin :  34",
-                                style: bc.textTheme.titleMedium?.copyWith(
-                                    letterSpacing: 1,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                              SvgPicture.asset("assets/icons/share.svg",
-                                  height: 15, width: 15)
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: AutoSizeText("${ctrl.list['arab']}",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.fontSize,
+            child: Obx(() {
+              if (ctrl.isLoadingRandom.isTrue) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return Container(
+                  child: content ??
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Color(0xFFF5F5F5),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(7),
+                                    topRight: Radius.circular(7))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Get.back();
+                                  },
+                                  child: Icon(
+                                    Icons.close,
                                     color: Colors.black,
-                                    fontWeight: FontWeight.w900))),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: AutoSizeText("${ctrl.list['indonesia']}",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.fontSize,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w300))),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        ButtonElevated(
-                          iconLeft: Icon(
-                            Icons.refresh_outlined,
-                            size: 20,
-                            color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  '${ctrl.list['surat']} : ${ctrl.list['nomor_ayat']} ',
+                                  style: bc.textTheme.titleMedium?.copyWith(
+                                      letterSpacing: 1,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                                SvgPicture.asset("assets/icons/share.svg",
+                                    height: 15, width: 15)
+                              ],
+                            ),
                           ),
-                          showIcon: 'left',
-                          title: 'Acak Lagi',
-                          width: 129,
-                          bgcolor: Theme.of(bc).primaryColor,
-                          height: 45,
-                          color: Colors.white,
-                          radius: 7,
-                          shadow: false,
-                          onPressed: () {
-                            Navigator.pop(context);
-                            ctrl.getData();
-                          },
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                      ],
-                    )),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: AutoSizeText("${ctrl.list['arab']}",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      fontFamily:
+                                          GoogleFonts.amiriQuran().fontFamily,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w900))),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: AutoSizeText("${ctrl.list['indonesia']}",
+                                  textAlign: TextAlign.justify,
+                                  style: TextStyle(
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium
+                                          ?.fontSize,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w300))),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ButtonElevated(
+                              iconLeft: Icon(
+                                Icons.refresh_outlined,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                              showIcon: 'left',
+                              title: 'Acak Lagi',
+                              bgcolor: Theme.of(bc).primaryColor,
+                              height: 45,
+                              color: Colors.white,
+                              radius: 7,
+                              shadow: false,
+                              onPressed: () {
+                                ctrl.getData();
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                        ],
+                      ));
+            }),
           );
         });
   }

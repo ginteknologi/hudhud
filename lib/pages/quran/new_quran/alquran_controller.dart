@@ -8,6 +8,7 @@ import 'package:masjid_app/routes/quran/index.dart';
 class AlquranController extends GetxController {
   final dataStore = GetStorage();
   final gctrl = Get.find<MainController>();
+  var isLoadingRandom = true.obs;
   var isLoadingList = true.obs;
   var list = {}.obs;
   late BuildContext context;
@@ -22,7 +23,7 @@ class AlquranController extends GetxController {
     try {
       final result = await AlquranService().getRandom();
       list.value = result['data'];
-      isLoadingList.value = false;
+      isLoadingRandom.value = false;
     } catch (e) {
       print(e);
     }

@@ -141,39 +141,39 @@ class ListAyatQuranController extends GetxController
     update();
   }
 
-  void dataGoTo(surah, ayat) async {
-    try {
-      isLoadingDetail.value = true;
-      await getDetailData(surah['id']);
-      int lastIndex = list.length;
-      num reverseIndex = lastIndex - surah['id'];
-      tabController.animateTo(reverseIndex.toInt());
-      goToIndex(surah, ayat);
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void dataGoTo(surah, ayat) async {
+  //   try {
+  //     isLoadingDetail.value = true;
+  //     await getDetailData(surah['id']);
+  //     int lastIndex = list.length;
+  //     num reverseIndex = lastIndex - surah['id'];
+  //     tabController.animateTo(reverseIndex.toInt());
+  //     goToIndex(surah, ayat);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
-  void goToIndex(surah, ayat) async {
-    try {
-      if (itemScrollController.isAttached) {
-        if (surah['id'] == detail['id']) {
-          itemScrollController.scrollTo(
-            index: int.parse(ayat) - 1,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-      } else {
-        Timer(Duration(seconds: 1), () {
-          goToIndex(surah, ayat);
-        });
-      }
-      isLoadingDetail.value = false;
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void goToIndex(surah, ayat) async {
+  //   try {
+  //     if (itemScrollController.isAttached) {
+  //       if (surah['id'] == detail['id']) {
+  //         itemScrollController.scrollTo(
+  //           index: int.parse(ayat) - 1,
+  //           duration: Duration(milliseconds: 500),
+  //           curve: Curves.easeInOut,
+  //         );
+  //       }
+  //     } else {
+  //       Timer(Duration(seconds: 1), () {
+  //         goToIndex(surah, ayat);
+  //       });
+  //     }
+  //     isLoadingDetail.value = false;
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   @override
   void onInit() async {
