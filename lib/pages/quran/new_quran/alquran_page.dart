@@ -8,6 +8,7 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_controller.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/routes/quran/index.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AlquranPage extends StatelessWidget {
   final ctrl = Get.put(AlquranController());
@@ -40,7 +41,7 @@ class AlquranPage extends StatelessWidget {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Riwayat Tilawah Anda",
+                      child: Text("Bookmark Tilawah Anda",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -289,14 +290,23 @@ class AlquranPage extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${ctrl.list['surat']} : ${ctrl.list['nomor_ayat']} ',
+                                  '${ctrl.list['surat']} : ${ctrl.list['nomor_ayat']}',
                                   style: bc.textTheme.titleMedium?.copyWith(
                                       letterSpacing: 1,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
-                                SvgPicture.asset("assets/icons/share.svg",
-                                    height: 15, width: 15)
+                                InkWell(
+                                    onTap: () {
+                                      Share.share(
+                                          '${ctrl.list['arab']}\n\n${ctrl.list['indonesia']}',
+                                          subject:
+                                              "${ctrl.list['surat']} : ${ctrl.list['nomor_ayat']}");
+                                    },
+                                    child: SvgPicture.asset(
+                                        "assets/icons/share.svg",
+                                        height: 15,
+                                        width: 15))
                               ],
                             ),
                           ),
@@ -308,7 +318,7 @@ class AlquranPage extends StatelessWidget {
                               child: AutoSizeText("${ctrl.list['arab']}",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.end,
-                                  maxLines: 2,
+                                  maxLines: 4,
                                   style: TextStyle(
                                       fontFamily:
                                           GoogleFonts.amiriQuran().fontFamily,
