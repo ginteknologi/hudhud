@@ -1,14 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/outlinebutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/quran/pengaturan/alquran_pengaturan_controller.dart';
-import 'package:masjid_app/routes/quran/index.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 
 class AlquranPengaturanPage extends StatelessWidget {
@@ -40,7 +37,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize:
-                              Theme.of(context).textTheme.titleMedium?.fontSize,
+                              Theme.of(context).textTheme.titleSmall?.fontSize,
                         ),
                       ),
                       AutoSizeText(
@@ -72,7 +69,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                                 color: Colors.black,
                                 fontSize: Theme.of(context)
                                     .textTheme
-                                    .titleMedium
+                                    .titleSmall
                                     ?.fontSize,
                               ),
                             ),
@@ -91,12 +88,11 @@ class AlquranPengaturanPage extends StatelessWidget {
                           ],
                         ),
                         ButtonOutline(
-                          onPressed: () {},
-                          radius: 5,
-                          title: "Mishari Alafasy",
-                          shadow: false,
-                          width: Get.width / 3,
-                        )
+                            onPressed: () {},
+                            radius: 5,
+                            title: "Mishari",
+                            shadow: false,
+                            width: Get.width / 3.5)
                       ],
                     )),
                 Padding(
@@ -111,7 +107,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize:
-                              Theme.of(context).textTheme.titleMedium?.fontSize,
+                              Theme.of(context).textTheme.titleSmall?.fontSize,
                         ),
                       ),
                       AutoSizeText(
@@ -139,7 +135,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize:
-                              Theme.of(context).textTheme.titleMedium?.fontSize,
+                              Theme.of(context).textTheme.titleSmall?.fontSize,
                         ),
                       ),
                       ListItemUiWidget(
@@ -192,7 +188,10 @@ class AlquranPengaturanPage extends StatelessWidget {
                             Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    showPopup(ctrl, gctrl, context);
+                                    ctrl.downloadFile("halaman");
+                                  },
                                   borderRadius: BorderRadius.circular(20),
                                   splashColor: Colors.green.withOpacity(0.5),
                                   child: Icon(
@@ -228,7 +227,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                                     Icons.download_rounded,
                                     color: Colors.black,
                                   )),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -247,15 +246,15 @@ class AlquranPengaturanPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize:
-                              Theme.of(context).textTheme.titleMedium?.fontSize,
+                              Theme.of(context).textTheme.titleSmall?.fontSize,
                         ),
                       ),
                       ListItemUiWidget(
                         showIcon: IconPosition.both,
                         iconLeft: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              "https://picsum.photos/80",
+                            child: Image.asset(
+                              "assets/img/murotal/mishari.jpg",
                               height: 80,
                               width: 80,
                               fit: BoxFit.cover,
@@ -264,7 +263,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                         typeDivider: TypeDivider.none,
                         title: "Mishari Alafasy",
                         subTitle: "Mishari bin Rashed Alafasy",
-                        titleStyle: context.textTheme.titleMedium?.copyWith(
+                        titleStyle: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ],
@@ -276,11 +275,12 @@ class AlquranPengaturanPage extends StatelessWidget {
     );
   }
 
-  void showPopup(ctrl, gctrl, context) {
+  void showPopup(
+      AlquranPengaturanController ctrl, gctrl, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext bc) {
-          return Dialog(
+          return Obx(() => Dialog(
             elevation: 0,
             backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
@@ -294,7 +294,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Mendownload Mushaf Indonesia",
+                      "Mendownload",
                       style: bc.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold, color: Colors.black),
                     ),
@@ -305,13 +305,13 @@ class AlquranPengaturanPage extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.zero),
                       color: Theme.of(bc).primaryColor,
                       backgroundColor: Color(0xFFD9D9D9),
-                      value: 0.45,
+                      value: ctrl.progresDownload.value,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AutoSizeText(
-                          "545/1300",
+                          "${ctrl.totalTerDownload}/604",
                           maxLines: 1,
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
@@ -323,7 +323,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                           ),
                         ),
                         AutoSizeText(
-                          "45%",
+                          "${ctrl.persenDownload}%",
                           maxLines: 1,
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
@@ -341,23 +341,43 @@ class AlquranPengaturanPage extends StatelessWidget {
                     ),
                     Align(
                         alignment: Alignment.centerRight,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              borderRadius: BorderRadius.circular(20),
-                              splashColor: Colors.green.withOpacity(0.5),
-                              child: Text("Lanjutkan Nanti",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.black,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.fontSize,
-                                  ))),
+                        child: Obx(() => ctrl.paused.value ? Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                  onTap: () {
+                                    ctrl.resumeDownload();
+                                    // Navigator.pop(context);
+                                  },
+                                  borderRadius: BorderRadius.circular(20),
+                                  splashColor: Colors.green.withOpacity(0.5),
+                                  child: Text("Lanjutkan",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black,
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.fontSize,
+                                      ))),
+                            ) : Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                  onTap: () {
+                                    ctrl.cancelDownload();
+                                    // Navigator.pop(context);
+                                  },
+                                  borderRadius: BorderRadius.circular(20),
+                                  splashColor: Colors.green.withOpacity(0.5),
+                                  child: Text("Pause",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black,
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall
+                                            ?.fontSize,
+                                      ))),
+                            )
                         )
 
                         // ButtonElevated(
@@ -375,7 +395,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                         )
                   ],
                 )),
-          );
+          ));
         });
   }
 

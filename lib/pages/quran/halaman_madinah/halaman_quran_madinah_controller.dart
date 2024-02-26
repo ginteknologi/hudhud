@@ -54,7 +54,6 @@ class HalamanQuranMadinahController extends GetxController
     isLoadingList.value = true;
     final result = await QuranService().getList(searchController.text);
     list = result['data'];
-    print(list);
     isLoadingList.value = false;
     } catch (e) {
       print('<<<<<<<<error controller getDataSearch>>>>>>>>');
@@ -64,7 +63,7 @@ class HalamanQuranMadinahController extends GetxController
   goToData(itemData) async {
     try {
       isLoadingList.value = true;
-      Map filteredData = listSurah.firstWhereOrNull((item) => item['surat'].toString().toLowerCase() == itemData['name']['transliteration']['id'].toString().toLowerCase());
+      Map filteredData = listSurah.firstWhereOrNull((item) => item['surat'].toString().toLowerCase() == itemData['nama'].toString().toLowerCase());
       surahSaatIni.value = filteredData['surat'];
       halSaatIni.value = filteredData['hal'].toString();
       toSurat = filteredData['id'];

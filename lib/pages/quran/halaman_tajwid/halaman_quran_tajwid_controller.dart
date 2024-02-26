@@ -63,7 +63,7 @@ class HalamanQuranTajwidController extends GetxController
   goToData(itemData) async {
     try {
       isLoadingList.value = true;
-      Map filteredData = listSurah.firstWhereOrNull((item) => item['surat'].toString().toLowerCase() == itemData['name']['transliteration']['id'].toString().toLowerCase());
+      Map filteredData = listSurah.firstWhereOrNull((item) => item['surat'].toString().toLowerCase() == itemData['nama'].toString().toLowerCase());
       surahSaatIni.value = filteredData['surat'];
       halSaatIni.value = filteredData['hal'].toString();
       toSurat = filteredData['id'];

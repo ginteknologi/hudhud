@@ -164,11 +164,11 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                               return FadeInUp(
                                 child: ListItemUiWidget(
                                   showIcon: IconPosition.left,
-                                  iconLeft: Text(item['number'].toString()),
-                                  id: item['number'],
-                                  title: item['name']['transliteration']['id'],
+                                  iconLeft: Text(item['id'].toString()),
+                                  id: item['id'],
+                                  title: item['nama'],
                                   subTitle:
-                                      '${item['name']['translation']['id']} - ${item['numberOfVerses']} ayat',
+                                      '${item['arti']} - ${item['ayat']} ayat',
                                   subtitleStyle: TextStyle(fontSize: 2),
                                   onTap: () async {
                                     await ctrl.goToData(item);

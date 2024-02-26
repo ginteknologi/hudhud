@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +12,6 @@ import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:masjid_app/routes/auth/index.dart';
-// import 'package:masjid_app/pages/akun/profile/profile_service.dart';
 
 enum DialogPopupInfaq { subuh, pagi }
 
