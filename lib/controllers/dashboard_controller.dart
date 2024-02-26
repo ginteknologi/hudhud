@@ -114,7 +114,7 @@ class DashboardController extends GetxController {
       },
       {
         "label": "Jadwal Imsakiyah",
-        "icon": "assets/icons/dzikir_pagi_petang.svg",
+        "icon": "assets/icons/kalender.svg",
         "urlNav": "/kalenderdzulhijjah"
       },
       // {

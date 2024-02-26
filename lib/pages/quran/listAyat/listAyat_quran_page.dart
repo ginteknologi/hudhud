@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/models/listayatData.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:share_plus/share_plus.dart';
@@ -19,9 +20,8 @@ class ListAyatQuranPage extends StatelessWidget {
 
   ListAyatQuranPage({super.key});
 
-  void _showBottomSheet(item) {
-    var data = ctrl.list.where((p0) => p0['id'] == item['surat']).toList();
-    print(item);
+  void _showBottomSheet(listayatData item) {
+    var data = ctrl.list.where((p0) => p0['id'] == item.surat).toList()[0];
     Get.bottomSheet(
       Container(
         color: Colors.white,
@@ -30,7 +30,7 @@ class ListAyatQuranPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                "${data[0]['nama']} ${data[0]['ayat']}:${item['ayat']}",
+                "${data['nama']} ${item.ayat}:${data['ayat']}",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -48,8 +48,8 @@ class ListAyatQuranPage extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.bookmark),
               title: Text('Bookmark'),
-              onTap: () {
-                // Lakukan sesuatu saat menu bookmark dipilih
+              onTap: () async {
+                await ctrl.bookmark(item);
                 Get.back();
               },
             ),
@@ -59,9 +59,8 @@ class ListAyatQuranPage extends StatelessWidget {
               onTap: () {
                 // Lakukan sesuatu saat menu bagikan ayat dipilih
                 // Get.back();
-                Share.share('${item['arab']}\n\n${item['arti']['text']!}',
-                    subject:
-                        "${data[0]['nama']} ${data[0]['ayat']}:${item['ayat']}");
+                Share.share('${item.arab}\n\n${item.arti}',
+                    subject: "${data['nama']} ${data['ayat']}:${item.ayat}");
               },
             ),
           ],
@@ -339,7 +338,6 @@ class ListAyatQuranPage extends StatelessWidget {
                   ),
                   Text("${ctrl.detail['arab']}",
                       style: TextStyle(
-                        // fontFamily: GoogleFonts.amiriQuran().fontFamily,
                         color: Colors.white,
                       )),
                 ],
@@ -360,13 +358,8 @@ class ListAyatQuranPage extends StatelessWidget {
                 itemCount: ctrl.myTabs.length,
                 itemBuilder: (context, index) {
                   return Obx(() {
-                    // if (ctrl.itemScrollController.length <= index) {
-                    //   ctrl.itemScrollController.add(ItemScrollController());
-                    // }
                     final banyakAyat = ctrl.contentTab[index]['list'].length;
                     final indexPage = index;
-                    // final newindex = ctrl.myTabs.length - index - 1;
-                    // print("pageview : " + newindex.toString());
                     if (ctrl.isLoadingDetail.isTrue) {
                       return Center(child: CircularProgressIndicator());
                     }
@@ -374,18 +367,6 @@ class ListAyatQuranPage extends StatelessWidget {
                         ctrl.itemScrollController[index]);
                   });
                 },
-                // children: ctrl.myTabs.map((tab) {
-                //   return Obx(() {
-                //     final banyakAyat = ctrl
-                //         .contentTab[ctrl.myTabs.indexOf(tab)]['list'].length;
-                //     final indexPage = ctrl.myTabs.indexOf(tab);
-                //     if (ctrl.isLoadingDetail.isTrue) {
-                //       return Center(child: CircularProgressIndicator());
-                //     }
-
-                //     return listAyat(banyakAyat, indexPage);
-                //   });
-                // }).toList(),
                 controller: ctrl.pageController,
               ),
             )
@@ -404,120 +385,136 @@ class ListAyatQuranPage extends StatelessWidget {
         // primary: true,
         itemCount: banyakAyat,
         itemBuilder: (context, index) {
-          final item = ctrl.contentTab[indexPage]['list'][index];
+          final listayatData item = ctrl.contentTab[indexPage]['list'][index];
           return InkWell(
             onTap: () {
               _showBottomSheet(item);
             },
-            child: Column(children: [
-              // Text("data"),
-              Container(
-                  color: Color.fromARGB(255, 233, 233, 233),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(Get.width / 40),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: <Widget>[
-                                SvgPicture.asset(
-                                  'assets/icons/list_star.svg',
-                                  alignment: Alignment.center,
-                                  height: 35,
-                                  width: 35,
-                                ),
-                                Positioned.fill(
-                                  child: Center(
-                                    child: AutoSizeText(
-                                      item['ayat'].toString(),
-                                      maxLines: 1,
-                                      presetFontSizes: [11, 10, 9],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // Baris kedua
-                            Container(
-                              height: 42,
-                              width: 42,
-                              child: Stack(
-                                children: [],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          child: Container(
-                        padding: EdgeInsets.all(15),
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: Get.height / 50,
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
+            child: Stack(
+              fit: StackFit.passthrough,
+              children: [
+                Column(children: [
+                  Container(
+                      color: Color.fromARGB(255, 233, 233, 233),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(Get.width / 40),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: AutoSizeText(
-                                    item['madinah']!,
-                                    textAlign: TextAlign.end,
-                                    style: context.textTheme.titleMedium
-                                        ?.copyWith(
-                                            fontFamily: GoogleFonts.amiriQuran()
-                                                .fontFamily,
-                                            fontWeight: FontWeight.bold),
-                                    maxLines: 15,
+                                Stack(
+                                  children: <Widget>[
+                                    SvgPicture.asset(
+                                      'assets/icons/list_star.svg',
+                                      alignment: Alignment.center,
+                                      height: 35,
+                                      width: 35,
+                                    ),
+                                    Positioned.fill(
+                                      child: Center(
+                                        child: AutoSizeText(
+                                          item.ayat.toString(),
+                                          maxLines: 1,
+                                          presetFontSizes: [11, 10, 9],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Baris kedua
+                                Container(
+                                  height: 42,
+                                  width: 42,
+                                  child: Stack(
+                                    children: [],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: Get.height / 50,
-                                ),
-                                Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: AutoSizeText(
-                                      item['latin_karakter']!,
-                                      textAlign: TextAlign.start,
-                                      style: context.textTheme.labelMedium
-                                          ?.copyWith(
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.w300,
-                                              fontStyle: FontStyle.italic),
-                                    )),
-                                SizedBox(
-                                  height: Get.height / 50,
-                                ),
-                                Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: AutoSizeText(
-                                      item['arti']['text']!,
-                                      textAlign: TextAlign.start,
-                                      style: context.textTheme.labelMedium
-                                          ?.copyWith(
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ))
                               ],
-                            )
-                          ],
-                        ),
-                      ))
-                    ],
-                  )),
-              Divider(
-                color: Color.fromARGB(255, 226, 226, 226),
-                thickness: 3,
-                height: 2,
-              ),
-            ]),
+                            ),
+                          ),
+                          Expanded(
+                              child: Container(
+                            padding: EdgeInsets.all(15),
+                            color: Colors.white,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: Get.height / 50,
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: AutoSizeText(
+                                        item.madinah,
+                                        textAlign: TextAlign.end,
+                                        style: context.textTheme.titleMedium
+                                            ?.copyWith(
+                                                fontFamily:
+                                                    GoogleFonts.amiriQuran()
+                                                        .fontFamily,
+                                                fontWeight: FontWeight.bold),
+                                        maxLines: 15,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: Get.height / 50,
+                                    ),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: AutoSizeText(
+                                          item.latin_karakter,
+                                          textAlign: TextAlign.start,
+                                          style: context.textTheme.labelMedium
+                                              ?.copyWith(
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w300,
+                                                  fontStyle: FontStyle.italic),
+                                        )),
+                                    SizedBox(
+                                      height: Get.height / 50,
+                                    ),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: AutoSizeText(
+                                          item.arti,
+                                          textAlign: TextAlign.start,
+                                          style: context.textTheme.labelMedium
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ))
+                                  ],
+                                )
+                              ],
+                            ),
+                          ))
+                        ],
+                      )),
+                  Divider(
+                    color: Color.fromARGB(255, 226, 226, 226),
+                    thickness: 3,
+                    height: 2,
+                  ),
+                ]),
+                if (item.book.isTrue) ...[
+                  Positioned(
+                    top: -4,
+                    left: Get.width * 0.12,
+                    child: Icon(
+                      Icons.bookmark,
+                      color: Colors.red,
+                      size: Get.width * 0.09,
+                    ),
+                  ),
+                ]
+              ],
+            ),
           );
         });
   }

@@ -8,6 +8,7 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/configs/main_service.dart';
+import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:hijri/hijri_calendar.dart';
@@ -19,6 +20,19 @@ class MainController extends GetxController {
   final dataStore = GetStorage();
   var isLogin = false.obs;
   var userLogin = {}.obs;
+  Rx<bookmarkData> ayatBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+  Rx<bookmarkData> indonesiaBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+  Rx<bookmarkData> madinahBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+  Rx<bookmarkData> tajwidBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+
   var perAyatLastRead = {}.obs;
   var indonesiaLastRead = {}.obs;
   var tajwidLastRead = {}.obs;
@@ -582,7 +596,7 @@ class MainController extends GetxController {
       if (dataStore.read('madinahLastRead') == null) {
         dataStore.write('madinahLastRead', {'id': 0, 'surat': '', 'hal': 0});
       }
-      perAyatLastRead.value = dataStore.read('perAyatLastRead');
+      // perAyatLastRead.value = dataStore.read('perAyatLastRead');
       indonesiaLastRead.value = dataStore.read('indonesiaLastRead');
       tajwidLastRead.value = dataStore.read('tajwidLastRead');
       madinahLastRead.value = dataStore.read('madinahLastRead');

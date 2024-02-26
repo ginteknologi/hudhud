@@ -14,11 +14,12 @@ class AlquranController extends GetxController {
   late BuildContext context;
 
   var txtController = TextEditingController();
-  var indonesiaSaatIni = 'Belum baca Al-quran'.obs;
-  var tajwidSaatIni = 'Belum baca Al-quran'.obs;
-  var madinahSaatIni = 'Belum baca Al-quran'.obs;
-  var ayatSaatIni = 'Belum baca Al-quran'.obs;
+  var indonesiaSaatIni = 'Belum dibookmark'.obs;
+  var tajwidSaatIni = 'Belum dibookmark'.obs;
+  var madinahSaatIni = 'Belum dibookmark'.obs;
+  var ayatSaatIni = 'Belum dibookmark'.obs;
   var listMenu = [].obs;
+
   getData() async {
     try {
       final result = await AlquranService().getRandom();
@@ -27,31 +28,6 @@ class AlquranController extends GetxController {
     } catch (e) {
       print(e);
     }
-  }
-
-  lastRead() async {
-    isLoadingList.value = true;
-    ayatSaatIni.value = dataStore.read('perAyatLastRead')['id'] > 0
-        ? dataStore.read('perAyatLastRead')['suratName'] +
-            ' Ayat: ' +
-            dataStore.read('perAyatLastRead')['ayatNumber'].toString()
-        : 'Belum baca Al-quran';
-    indonesiaSaatIni.value = dataStore.read('indonesiaLastRead')['id'] > 0
-        ? dataStore.read('indonesiaLastRead')['surat'] +
-            ' Hal: ' +
-            dataStore.read('indonesiaLastRead')['hal'].toString()
-        : 'Belum baca Al-quran';
-    tajwidSaatIni.value = dataStore.read('tajwidLastRead')['id'] > 0
-        ? dataStore.read('tajwidLastRead')['surat'] +
-            ' Hal: ' +
-            dataStore.read('tajwidLastRead')['hal'].toString()
-        : 'Belum baca Al-quran';
-    madinahSaatIni.value = dataStore.read('madinahLastRead')['id'] > 0
-        ? dataStore.read('madinahLastRead')['surat'] +
-            ' Hal: ' +
-            dataStore.read('madinahLastRead')['hal'].toString()
-        : 'Belum baca Al-quran';
-    isLoadingList.value = false;
   }
 
   @override

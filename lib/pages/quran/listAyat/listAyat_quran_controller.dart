@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:masjid_app/models/bookmarkData.dart';
+import 'package:masjid_app/models/listayatData.dart';
 import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/configs/main_controller.dart';
@@ -9,8 +12,6 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ListAyatQuranController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  // final playerAudio = AudioPlayer();
-  // int defaultAudioIndex = 0;
   final player = AudioPlayer();
   RxList<AudioSource> listAudio = <AudioSource>[].obs;
   var isPlaySound = false.obs;
@@ -20,7 +21,6 @@ class ListAyatQuranController extends GetxController
   final surahName = Get.parameters['nama_surah'];
   var isLoadingList = true.obs;
   var isLoadingDetail = false.obs;
-  // var lastRead = {}.obs;
 
   var txtController = TextEditingController();
   var inputAyat = TextEditingController();
@@ -38,7 +38,7 @@ class ListAyatQuranController extends GetxController
   RxMap detail = {}.obs;
   var searchController = TextEditingController();
   late TabController tabController;
-  var pageController = PageController(initialPage: 0);
+  late PageController pageController;
   int offset = 0;
   int limit = 10;
 
@@ -53,7 +53,7 @@ class ListAyatQuranController extends GetxController
         ));
         contentTab.add({
           'idContent': result['data'][i]['id'],
-          'list': [],
+          'list': <listayatData>[],
         });
         itemScrollController.add(ItemScrollController());
       }
@@ -69,8 +69,7 @@ class ListAyatQuranController extends GetxController
     var ddd = list.indexWhere((element) => element['nama'] == inputSurah.text);
     var getSurah = list.where((p0) => p0['nama'] == inputSurah.text).first;
     var newindex = myTabs.length - ddd - 1;
-    // print("ctrl : " + newindex.toString());
-    await getDetailData(getSurah['id'], newindex);
+    await getDetailData(surahId: getSurah['id']);
     pageController.jumpToPage(newindex);
     await Future.delayed(Duration(milliseconds: 100));
     itemScrollController[newindex].jumpTo(
@@ -79,73 +78,80 @@ class ListAyatQuranController extends GetxController
     Get.back();
   }
 
-  Future getDetailData(surahId, index) async {
+  Future<void> getDetailData({
+    required surahId,
+    jumpto = 0,
+  }) async {
     try {
       int targetDataIndex =
           contentTab.indexWhere((data) => data["idContent"] == surahId);
       int cek = contentTab[targetDataIndex]['list'].length;
+      bookmarkData resultBookmark = gctrl.ayatBookmark.value;
       if (cek == 0) {
+        print('fetch detail');
+        print(cek);
+        print(surahId);
         isLoadingDetail.value = true;
         final result = await QuranService().getDetail(surahId.toString());
-        contentTab[targetDataIndex]['list'] = result['data']['list'];
+        for (var i = 0; i < result['data']['list'].length; i++) {
+          var dataitem = result['data']['list'][i];
+
+          contentTab[targetDataIndex]['list'].add(listayatData(
+              initialBook: resultBookmark.surat == surahId &&
+                  resultBookmark.ayat == dataitem['ayat'],
+              surat: dataitem['surat'],
+              ayat: dataitem['ayat'],
+              arab: dataitem['arab'],
+              madinah: dataitem['madinah'],
+              latin_karakter: dataitem['latin_karakter'],
+              alafasy: dataitem['audio']['ar.alafasy'],
+              arti: dataitem['arti']['text']));
+        }
         isLoadingDetail.value = false;
+        if (jumpto > 0) {
+          // delay
+          await Future.delayed(Duration(milliseconds: 100));
+          if (itemScrollController[targetDataIndex].isAttached) {
+            itemScrollController[targetDataIndex].jumpTo(
+              index: jumpto,
+            );
+          }
+          // print(itemScrollController[targetDataIndex].isAttached);
+        }
+      } else {
+        if (resultBookmark.surat == surahId) {
+          for (var i = 0; i < contentTab[targetDataIndex]['list'].length; i++) {
+            if (resultBookmark.ayat ==
+                contentTab[targetDataIndex]['list'][i].ayat) {
+              contentTab[targetDataIndex]['list'][i].book.value = true;
+            } else {
+              contentTab[targetDataIndex]['list'][i].book.value = false;
+            }
+          }
+        } else {
+          for (var i = 0; i < contentTab[targetDataIndex]['list'].length; i++) {
+            contentTab[targetDataIndex]['list'][i].book.value = false;
+          }
+        }
       }
     } catch (e) {
       print(e);
     }
   }
 
-  // bookmark(selectedData, ayatBookmarked, index) async {
-  //   isLoadingDetail.value = true;
-  //   if (ayatBookmarked) {
-  //     gctrl.perAyatLastRead['ayatNumber'] = 0;
-  //     gctrl.perAyatLastRead['suratName'] = '';
-  //     gctrl.perAyatLastRead['id'] = 0;
-  //     dataStore.write('perAyatLastRead', gctrl.perAyatLastRead);
-  //   } else {
-  //     gctrl.perAyatLastRead['ayatNumber'] = selectedData['ayat'];
-  //     gctrl.perAyatLastRead['suratName'] = detail['nama'];
-  //     gctrl.perAyatLastRead['id'] = detail['id'];
-  //     dataStore.write('perAyatLastRead', gctrl.perAyatLastRead);
-  //   }
-  //   isLoadingDetail.value = false;
-  // }
-
-  // void scrollToIndex() {
-  //   isLoadingDetail.value = true;
-  //   if (itemScrollController.isAttached) {
-  //     if (dataStore.read('perAyatLastRead')['id'] == detail['id']) {
-  //       itemScrollController.scrollTo(
-  //         index: dataStore.read('perAyatLastRead')['ayatNumber'] - 1,
-  //         duration: Duration(milliseconds: 500),
-  //         curve: Curves.easeInOut,
-  //       );
-  //     }
-  //   } else {
-  //     print('ScrollController tidak berhasil diperoleh');
-  //     Timer(Duration(seconds: 1), () {
-  //       // Tunggu 1 detik (bisa disesuaikan) dan lakukan scrollToIndex lagi
-  //       scrollToIndex();
-  //     });
-  //   }
-  //   isLoadingDetail.value = false;
-  // }
-  playMurotal(item) async {
+  playMurotal(listayatData item) async {
     try {
       int targetDataIndex =
-          contentTab.indexWhere((data) => data["idContent"] == item['surat']);
-      // var newindex = myTabs.length - ddd - 1;
-      // print(itemScrollController[targetDataIndex].isAttached);
+          contentTab.indexWhere((data) => data["idContent"] == item.surat);
 
-      final listAyat = contentTab[targetDataIndex]['list'];
+      List<listayatData> listAyat = contentTab[targetDataIndex]['list'];
       listAudio.value = [];
       int defaultInit = 0;
       for (var i = 0; i < listAyat.length; i++) {
-        if ((listAyat[i]['ayat']) == (item['ayat'])) {
+        if ((listAyat[i].ayat) == (item.ayat)) {
           defaultInit = i;
         }
-        listAudio.add(
-            AudioSource.uri(Uri.parse(listAyat[i]['audio']['ar.alafasy'])));
+        listAudio.add(AudioSource.uri(Uri.parse(listAyat[i].alafasy)));
       }
       final playlist = ConcatenatingAudioSource(
         useLazyPreparation: true,
@@ -153,7 +159,6 @@ class ListAyatQuranController extends GetxController
       );
       await player.setAudioSource(playlist,
           initialIndex: defaultInit, initialPosition: Duration.zero);
-      // print(result);
       player.play();
       player.currentIndexStream.listen((event) {
         if (event != null) {
@@ -164,20 +169,12 @@ class ListAyatQuranController extends GetxController
       });
 
       player.playerStateStream.listen((state) {
-        // if (state.playing) {
         if (state.processingState == ProcessingState.completed) {
           isPlaySound.value = false;
           listAudio.value = [];
         }
-        // isPlaySound.value = true;
       });
-      // switch (state.processingState) {
-      //   case ProcessingState.idle: ...
-      //   case ProcessingState.loading: ...
-      //   case ProcessingState.buffering: ...
-      //   case ProcessingState.ready: ...
-      //   case ProcessingState.completed: ...
-      // }
+
       isPlaySound.value = true;
     } catch (e) {
       print("error murotal");
@@ -188,63 +185,77 @@ class ListAyatQuranController extends GetxController
   changeTabIndex(index) async {
     tabIndex.value = index;
     detail.value = list[index];
-    await getDetailData(detail['id'], index);
+    await getDetailData(surahId: detail['id']);
     update();
   }
 
-  // void dataGoTo(surah, ayat) async {
-  //   try {
-  //     isLoadingDetail.value = true;
-  //     await getDetailData(surah['id']);
-  //     int lastIndex = list.length;
-  //     num reverseIndex = lastIndex - surah['id'];
-  //     tabController.animateTo(reverseIndex.toInt());
-  //     goToIndex(surah, ayat);
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  Future<void> bookmark(listayatData data) async {
+    try {
+      isLoadingDetail.value = true;
 
-  // void goToIndex(surah, ayat) async {
-  //   try {
-  //     if (itemScrollController.isAttached) {
-  //       if (surah['id'] == detail['id']) {
-  //         itemScrollController.scrollTo(
-  //           index: int.parse(ayat) - 1,
-  //           duration: Duration(milliseconds: 500),
-  //           curve: Curves.easeInOut,
-  //         );
-  //       }
-  //     } else {
-  //       Timer(Duration(seconds: 1), () {
-  //         goToIndex(surah, ayat);
-  //       });
-  //     }
-  //     isLoadingDetail.value = false;
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+      int targetDataIndex = list.indexWhere((z) => z["id"] == data.surat);
+      int targetSuratIndex =
+          contentTab.indexWhere((z) => z["idContent"] == data.surat);
+
+      int getIndexListAyat = contentTab[targetSuratIndex]['list']
+          .indexWhere((element) => element.ayat == data.ayat);
+
+      for (var i = 0; i < contentTab[targetSuratIndex]['list'].length; i++) {
+        contentTab[targetSuratIndex]['list'][i].book.value = false;
+      }
+      contentTab[targetSuratIndex]['list'][getIndexListAyat].book.value = true;
+      var detail = list[targetDataIndex];
+
+      gctrl.ayatBookmark.value = bookmarkData(
+          namaSurat: detail['nama'],
+          surat: data.surat,
+          ayat: data.ayat,
+          totalAyat: detail['ayat']);
+
+      Fluttertoast.showToast(
+          msg: "Ayat Berhasil Ditandai",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: Get.width / 30);
+
+      isLoadingDetail.value = false;
+      update();
+    } catch (e) {
+      print("error bookmark");
+      print(e);
+    }
+  }
 
   @override
   void onInit() async {
-    // scrollToIndex();
     super.onInit();
     await getData();
-    if (dataStore.read('perAyatLastRead')['audio'] == null) {
-      dataStore.write(
-          'perAyatLastRead', {'audio': 'ar.alafasy', 'audiosource': 'server'});
-    }
+    // if (dataStore.read('perAyatLastRead')['audio'] == null) {
+    //   dataStore.write(
+    //       'perAyatLastRead', {'audio': 'ar.alafasy', 'audiosource': 'server'});
+    // }
     list.value = list.reversed.toList();
 
-    // int lastIndex = list.length;
-    // int perAyatLastReadId = dataStore.read('perAyatLastRead')['id'] ?? 0;
-    // int result =
-    //     perAyatLastReadId > 0 ? lastIndex - perAyatLastReadId : lastIndex - 1;
-    detail.value = list[myTabs.length - 1];
-    tabController = TabController(
-        vsync: this, length: myTabs.length, initialIndex: myTabs.length - 1);
-    await getDetailData(1, 0);
+    if (Get.parameters['bookmarks'] == "true") {
+      final bookmarkData book = gctrl.ayatBookmark.value;
+      int getindexbysurah =
+          list.indexWhere((element) => element['id'] == book.surat);
+      int newindex = myTabs.length - 1 - getindexbysurah;
+      pageController = PageController(initialPage: newindex);
+      detail.value = list[getindexbysurah];
+      tabController = TabController(
+          vsync: this, length: myTabs.length, initialIndex: getindexbysurah);
+      await getDetailData(surahId: book.surat, jumpto: book.ayat - 1);
+    } else {
+      detail.value = list[myTabs.length - 1];
+      pageController = PageController(initialPage: 0);
+      tabController = TabController(
+          vsync: this, length: myTabs.length, initialIndex: myTabs.length - 1);
+      await getDetailData(surahId: 1);
+    }
   }
 
   @override

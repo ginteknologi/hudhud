@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_controller.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/routes/quran/index.dart';
@@ -20,74 +21,81 @@ class AlquranPage extends StatelessWidget {
       top: false,
       child: SingleChildScrollView(
         // physics: const ClampingScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(child: header(context)),
-            SizedBox(
-              height: Get.height * 0.01,
-            ),
-            Flexible(
-              child: getGridMenu(ctrl),
-            ),
-            SizedBox(
-              height: Get.height * 0.01,
-            ),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Bookmark Tilawah Anda",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: Get.width * 0.04,
-                          )),
-                    ),
-                    SizedBox(
-                      height: Get.height * 0.01,
-                    ),
-                    tilawahMenu(
-                        title: "Tilawah Perayat",
-                        route: RoutesQuran.perayat,
-                        context),
-                    SizedBox(
-                      height: Get.height * 0.01,
-                    ),
-                    tilawahMenu(
-                        title: "Tilawah Indonesia",
-                        route: RoutesQuran.perpage,
-                        context),
-                    SizedBox(
-                      height: Get.height * 0.01,
-                    ),
-                    tilawahMenu(
-                        title: "Tilawah Tajwid Indonesia",
-                        route: RoutesQuran.perpagetajwid,
-                        context),
-                    SizedBox(
-                      height: Get.height * 0.01,
-                    ),
-                    tilawahMenu(
-                        title: "Tilawah Madinah",
-                        route: RoutesQuran.perpagemadinah,
-                        context),
-                    SizedBox(
-                      height: Get.height * 0.05,
-                    ),
-                  ],
-                ))
-          ],
-        ),
+        child: Obx(() {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(child: header(context)),
+              SizedBox(
+                height: Get.height * 0.01,
+              ),
+              Flexible(
+                child: getGridMenu(ctrl),
+              ),
+              SizedBox(
+                height: Get.height * 0.01,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Bookmark Tilawah Anda",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: Get.width * 0.04,
+                            )),
+                      ),
+                      SizedBox(
+                        height: Get.height * 0.01,
+                      ),
+                      tilawahMenu(
+                          title: "Tilawah Perayat",
+                          route: RoutesQuran.perayat,
+                          history: gctrl.ayatBookmark.value,
+                          context),
+                      SizedBox(
+                        height: Get.height * 0.01,
+                      ),
+                      tilawahMenu(
+                          title: "Tilawah Indonesia",
+                          route: RoutesQuran.perpage,
+                          history: gctrl.indonesiaBookmark.value,
+                          context),
+                      SizedBox(
+                        height: Get.height * 0.01,
+                      ),
+                      tilawahMenu(
+                          title: "Tilawah Tajwid Indonesia",
+                          route: RoutesQuran.perpagetajwid,
+                          history: gctrl.tajwidBookmark.value,
+                          context),
+                      SizedBox(
+                        height: Get.height * 0.01,
+                      ),
+                      tilawahMenu(
+                          title: "Tilawah Madinah",
+                          route: RoutesQuran.perpagemadinah,
+                          history: gctrl.madinahBookmark.value,
+                          context),
+                      SizedBox(
+                        height: Get.height * 0.05,
+                      ),
+                    ],
+                  ))
+            ],
+          );
+        }),
       ),
     );
   }
 
-  tilawahMenu(BuildContext context, {title, route}) {
+  tilawahMenu(BuildContext context,
+      {title, route, required bookmarkData history}) {
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFF048C7C),
@@ -98,7 +106,9 @@ class AlquranPage extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(
             horizontal: Get.width * 0.05,
           ),
-          onTap: () {},
+          onTap: () {
+            Get.toNamed(route + '?bookmarks=true');
+          },
           trailing: Icon(
             Icons.chevron_right,
             color: Colors.white,
@@ -113,7 +123,9 @@ class AlquranPage extends StatelessWidget {
             ),
           ),
           subtitle: Text(
-            ctrl.ayatSaatIni.value,
+            history.totalAyat == 0
+                ? "${history.namaSurat}"
+                : "${history.namaSurat} (${history.ayat}:${history.totalAyat})",
             style: TextStyle(
               fontSize: Get.width * 0.03,
               color: Colors.white,
