@@ -38,7 +38,6 @@ class HomeController extends GetxController
             link: element['link']));
       }
       isLoadingMuadzin.value = false;
-      print(isLoadingMuadzin.isFalse);
     } catch (e) {
       print(e);
     }

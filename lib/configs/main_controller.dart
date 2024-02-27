@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +11,9 @@ import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/configs/main_service.dart';
 import 'package:masjid_app/models/bookmarkData.dart';
+import 'package:masjid_app/models/lokasiSayaData.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:masjid_app/routes/auth/index.dart';
@@ -20,6 +24,11 @@ class MainController extends GetxController {
   final dataStore = GetStorage();
   var isLogin = false.obs;
   var userLogin = {}.obs;
+
+  Rx<LokasiSayaData> mylokasi =
+      LokasiSayaData(keteranganLokasi: "Belum ada lokasi", lat: 0.0, lang: 0.0)
+          .obs;
+
   Rx<bookmarkData> ayatBookmark = bookmarkData(
           namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
       .obs;
@@ -37,7 +46,6 @@ class MainController extends GetxController {
   var indonesiaLastRead = {}.obs;
   var tajwidLastRead = {}.obs;
   var madinahLastRead = {}.obs;
-  var lokasiSaatIni = "";
   var imsak = "".obs;
   var berbuka = "".obs;
   //  ============ data dialog infaq
@@ -66,7 +74,6 @@ class MainController extends GetxController {
     try {
       var hijriDateNow = HijriCalendar.now();
       HijriDate = hijriDateNow.toFormat('MMMM dd yyyy');
-      lokasiSaatIni = dataStore.read('lokasiSaatIni') ?? "Pilih Lokasi";
       final getdata = await MainService().waktuSolat();
 
       listWaktu.value = [
@@ -258,308 +265,308 @@ class MainController extends GetxController {
     );
   }
 
-  showDialogFilter(flag) {
-    Get.defaultDialog(
-      backgroundColor: Colors.transparent,
-      barrierDismissible: true,
-      radius: 7,
-      contentPadding:
-          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
-      title: '',
-      titleStyle: const TextStyle(height: 0),
-      titlePadding: const EdgeInsets.all(0),
-      content: Column(
-        children: [
-          Container(
-            width: Get.width - 25,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Color(0xFF189A8C),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(7), topRight: Radius.circular(7))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Pergi Ke',
-                  // "Q.S Al-Muthaffifiin :  34",
-                  style: Get.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.normal, color: Colors.white),
-                ),
-                ButtonIcon(
-                  onTap: () {
-                    Get.back();
-                  },
-                  bgcolor: Colors.transparent,
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Obx(() => loadingFilter == true
-              ? Text("data")
-              : Container(
-                  width: Get.width - 25,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(7),
-                          bottomRight: Radius.circular(7))),
-                  child: !flag
-                      ? Column(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            ButtonElevated(
-                              title: 'Ayat',
-                              width: 120,
-                              bgcolor: Get.theme.primaryColor,
-                              height: 30,
-                              color: Colors.white,
-                              radius: 5,
-                              onPressed: () {},
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: Get.width / 3,
-                                  child: InputText(
-                                    controller: inputFilter,
-                                    labelPosition: "none",
-                                    placeholder: "1-100",
-                                    textAlign: TextAlign.center,
-                                    isFill: true,
-                                    placeholderStyle: Get.textTheme.bodyMedium,
-                                    inputAction: TextInputAction.next,
-                                    onSubmit: (newValue) {},
-                                    onEditingComplete: () {},
-                                    onChanged: (newValue) {},
-                                    validator: (newValue) {
-                                      if (newValue!.isEmpty) {
-                                        return "Mohon untuk diisi.";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  width: Get.width / 3,
-                                  child: InputText(
-                                    controller: inputFilter,
-                                    labelPosition: "none",
-                                    placeholder: "1-100",
-                                    textAlign: TextAlign.center,
-                                    isFill: true,
-                                    placeholderStyle: Get.textTheme.bodyMedium,
-                                    inputAction: TextInputAction.next,
-                                    onSubmit: (newValue) {},
-                                    onEditingComplete: () {},
-                                    onChanged: (newValue) {},
-                                    validator: (newValue) {
-                                      if (newValue!.isEmpty) {
-                                        return "Mohon untuk diisi.";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              width: Get.width - 25,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 15),
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFDCDCDC),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(7),
-                                      bottomRight: Radius.circular(7))),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ButtonElevated(
-                                      title: 'Buka Ayat',
-                                      // width: 11,
-                                      width: Get.width / 3.5,
-                                      shadow: false,
-                                      bgcolor: Colors.transparent,
-                                      height: 30,
-                                      size: Get.textTheme.bodySmall?.fontSize,
-                                      color: Colors.black,
-                                      radius: 0,
-                                      onPressed: () {
-                                        selectedJuz.value = !selectedJuz.value;
-                                      },
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    ButtonElevated(
-                                      title: 'Buka Ayat',
-                                      width: Get.width / 2.5,
-                                      // width: 160,
-                                      size: Get.textTheme.bodySmall?.fontSize,
-                                      bgcolor: Color(0xFF2128C2),
-                                      height: 30,
-                                      color: Colors.white,
-                                      radius: 5,
-                                      onPressed: () {},
-                                    ),
-                                  ]),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ButtonElevated(
-                                  title: 'Juz',
-                                  width: 120,
-                                  bgcolor: selectedJuz.value == true
-                                      ? Get.theme.primaryColor
-                                      : Get.theme.secondaryHeaderColor,
-                                  height: 30,
-                                  color: selectedJuz.value == true
-                                      ? Colors.white
-                                      : Colors.black,
-                                  radius: 0,
-                                  onPressed: () {
-                                    selectedJuz.value = !selectedJuz.value;
-                                  },
-                                ),
-                                ButtonElevated(
-                                  title: 'Halaman',
-                                  width: 120,
-                                  bgcolor: selectedJuz.value == false
-                                      ? Get.theme.primaryColor
-                                      : Get.theme.secondaryHeaderColor,
-                                  height: 30,
-                                  color: selectedJuz.value == false
-                                      ? Colors.white
-                                      : Colors.black,
-                                  radius: 0,
-                                  onPressed: () {
-                                    selectedJuz.value = !selectedJuz.value;
-                                  },
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: InputText(
-                                controller: inputFilter,
-                                labelPosition: "none",
-                                placeholder: "1-100",
-                                textAlign: TextAlign.center,
-                                isFill: true,
-                                placeholderStyle: Get.textTheme.bodyMedium,
-                                inputAction: TextInputAction.next,
-                                onSubmit: (newValue) {},
-                                onEditingComplete: () {},
-                                onChanged: (newValue) {},
-                                validator: (newValue) {
-                                  if (newValue!.isEmpty) {
-                                    return "Mohon untuk diisi.";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: Get.width - 25,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 15),
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFDCDCDC),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(7),
-                                      bottomRight: Radius.circular(7))),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: selectedJuz.value
-                                      ? [
-                                          ButtonElevated(
-                                            title: 'Buka Ayat',
-                                            // width: 120,
-                                            shadow: false,
-                                            bgcolor: Colors.transparent,
-                                            height: 30,
-                                            size: Get
-                                                .textTheme.bodySmall?.fontSize,
-                                            color: selectedJuz.value == false
-                                                ? Colors.white
-                                                : Colors.black,
-                                            radius: 0,
-                                            onPressed: () {
-                                              selectedJuz.value =
-                                                  !selectedJuz.value;
-                                            },
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          ButtonElevated(
-                                            title: 'Buka Juz',
-                                            size: Get
-                                                .textTheme.bodySmall?.fontSize,
-                                            bgcolor: Color(0xFF2128C2),
-                                            height: 30,
-                                            color: Colors.white,
-                                            radius: 5,
-                                            onPressed: () {},
-                                          ),
-                                        ]
-                                      : [
-                                          ButtonElevated(
-                                            title: 'Buka Ayat',
-                                            // width: 120,
-                                            shadow: false,
-                                            bgcolor: Colors.transparent,
-                                            height: 30,
-                                            size: Get
-                                                .textTheme.bodySmall?.fontSize,
-                                            color: selectedJuz.value == false
-                                                ? Colors.white
-                                                : Colors.black,
-                                            radius: 0,
-                                            onPressed: () {
-                                              selectedJuz.value =
-                                                  !selectedJuz.value;
-                                            },
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          ButtonElevated(
-                                            title: 'Buka Halaman',
-                                            width: 160,
-                                            size: Get
-                                                .textTheme.bodySmall?.fontSize,
-                                            bgcolor: Color(0xFF2128C2),
-                                            height: 30,
-                                            color: Colors.white,
-                                            radius: 5,
-                                            onPressed: () {},
-                                          ),
-                                        ]),
-                            ),
-                          ],
-                        ))),
-        ],
-      ),
-    );
-  }
+  // showDialogFilter(flag) {
+  //   Get.defaultDialog(
+  //     backgroundColor: Colors.transparent,
+  //     barrierDismissible: true,
+  //     radius: 7,
+  //     contentPadding:
+  //         const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
+  //     title: '',
+  //     titleStyle: const TextStyle(height: 0),
+  //     titlePadding: const EdgeInsets.all(0),
+  //     content: Column(
+  //       children: [
+  //         Container(
+  //           width: Get.width - 25,
+  //           padding: const EdgeInsets.all(10),
+  //           decoration: BoxDecoration(
+  //               color: Color(0xFF189A8C),
+  //               borderRadius: BorderRadius.only(
+  //                   topLeft: Radius.circular(7), topRight: Radius.circular(7))),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               Text(
+  //                 'Pergi Ke',
+  //                 // "Q.S Al-Muthaffifiin :  34",
+  //                 style: Get.textTheme.titleMedium?.copyWith(
+  //                     fontWeight: FontWeight.normal, color: Colors.white),
+  //               ),
+  //               ButtonIcon(
+  //                 onTap: () {
+  //                   Get.back();
+  //                 },
+  //                 bgcolor: Colors.transparent,
+  //                 icon: const Icon(
+  //                   Icons.close,
+  //                   color: Colors.white,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         Obx(() => loadingFilter == true
+  //             ? Text("data")
+  //             : Container(
+  //                 width: Get.width - 25,
+  //                 decoration: BoxDecoration(
+  //                     color: Colors.white,
+  //                     borderRadius: BorderRadius.only(
+  //                         bottomLeft: Radius.circular(7),
+  //                         bottomRight: Radius.circular(7))),
+  //                 child: !flag
+  //                     ? Column(
+  //                         children: [
+  //                           SizedBox(
+  //                             height: 20,
+  //                           ),
+  //                           ButtonElevated(
+  //                             title: 'Ayat',
+  //                             width: 120,
+  //                             bgcolor: Get.theme.primaryColor,
+  //                             height: 30,
+  //                             color: Colors.white,
+  //                             radius: 5,
+  //                             onPressed: () {},
+  //                           ),
+  //                           Row(
+  //                             mainAxisSize: MainAxisSize.min,
+  //                             children: [
+  //                               Container(
+  //                                 width: Get.width / 3,
+  //                                 child: InputText(
+  //                                   controller: inputFilter,
+  //                                   labelPosition: "none",
+  //                                   placeholder: "1-100",
+  //                                   textAlign: TextAlign.center,
+  //                                   isFill: true,
+  //                                   placeholderStyle: Get.textTheme.bodyMedium,
+  //                                   inputAction: TextInputAction.next,
+  //                                   onSubmit: (newValue) {},
+  //                                   onEditingComplete: () {},
+  //                                   onChanged: (newValue) {},
+  //                                   validator: (newValue) {
+  //                                     if (newValue!.isEmpty) {
+  //                                       return "Mohon untuk diisi.";
+  //                                     }
+  //                                     return null;
+  //                                   },
+  //                                 ),
+  //                               ),
+  //                               Container(
+  //                                 width: Get.width / 3,
+  //                                 child: InputText(
+  //                                   controller: inputFilter,
+  //                                   labelPosition: "none",
+  //                                   placeholder: "1-100",
+  //                                   textAlign: TextAlign.center,
+  //                                   isFill: true,
+  //                                   placeholderStyle: Get.textTheme.bodyMedium,
+  //                                   inputAction: TextInputAction.next,
+  //                                   onSubmit: (newValue) {},
+  //                                   onEditingComplete: () {},
+  //                                   onChanged: (newValue) {},
+  //                                   validator: (newValue) {
+  //                                     if (newValue!.isEmpty) {
+  //                                       return "Mohon untuk diisi.";
+  //                                     }
+  //                                     return null;
+  //                                   },
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           Container(
+  //                             width: Get.width - 25,
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 horizontal: 10, vertical: 15),
+  //                             decoration: BoxDecoration(
+  //                                 color: Color(0xFFDCDCDC),
+  //                                 borderRadius: BorderRadius.only(
+  //                                     bottomLeft: Radius.circular(7),
+  //                                     bottomRight: Radius.circular(7))),
+  //                             child: Row(
+  //                                 mainAxisAlignment: MainAxisAlignment.end,
+  //                                 children: [
+  //                                   ButtonElevated(
+  //                                     title: 'Buka Ayat',
+  //                                     // width: 11,
+  //                                     width: Get.width / 3.5,
+  //                                     shadow: false,
+  //                                     bgcolor: Colors.transparent,
+  //                                     height: 30,
+  //                                     size: Get.textTheme.bodySmall?.fontSize,
+  //                                     color: Colors.black,
+  //                                     radius: 0,
+  //                                     onPressed: () {
+  //                                       selectedJuz.value = !selectedJuz.value;
+  //                                     },
+  //                                   ),
+  //                                   SizedBox(
+  //                                     width: 5,
+  //                                   ),
+  //                                   ButtonElevated(
+  //                                     title: 'Buka Ayat',
+  //                                     width: Get.width / 2.5,
+  //                                     // width: 160,
+  //                                     size: Get.textTheme.bodySmall?.fontSize,
+  //                                     bgcolor: Color(0xFF2128C2),
+  //                                     height: 30,
+  //                                     color: Colors.white,
+  //                                     radius: 5,
+  //                                     onPressed: () {},
+  //                                   ),
+  //                                 ]),
+  //                           ),
+  //                         ],
+  //                       )
+  //                     : Column(
+  //                         children: [
+  //                           SizedBox(
+  //                             height: 20,
+  //                           ),
+  //                           Row(
+  //                             mainAxisAlignment: MainAxisAlignment.center,
+  //                             children: [
+  //                               ButtonElevated(
+  //                                 title: 'Juz',
+  //                                 width: 120,
+  //                                 bgcolor: selectedJuz.value == true
+  //                                     ? Get.theme.primaryColor
+  //                                     : Get.theme.secondaryHeaderColor,
+  //                                 height: 30,
+  //                                 color: selectedJuz.value == true
+  //                                     ? Colors.white
+  //                                     : Colors.black,
+  //                                 radius: 0,
+  //                                 onPressed: () {
+  //                                   selectedJuz.value = !selectedJuz.value;
+  //                                 },
+  //                               ),
+  //                               ButtonElevated(
+  //                                 title: 'Halaman',
+  //                                 width: 120,
+  //                                 bgcolor: selectedJuz.value == false
+  //                                     ? Get.theme.primaryColor
+  //                                     : Get.theme.secondaryHeaderColor,
+  //                                 height: 30,
+  //                                 color: selectedJuz.value == false
+  //                                     ? Colors.white
+  //                                     : Colors.black,
+  //                                 radius: 0,
+  //                                 onPressed: () {
+  //                                   selectedJuz.value = !selectedJuz.value;
+  //                                 },
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           Padding(
+  //                             padding: EdgeInsets.symmetric(
+  //                                 horizontal: 10, vertical: 10),
+  //                             child: InputText(
+  //                               controller: inputFilter,
+  //                               labelPosition: "none",
+  //                               placeholder: "1-100",
+  //                               textAlign: TextAlign.center,
+  //                               isFill: true,
+  //                               placeholderStyle: Get.textTheme.bodyMedium,
+  //                               inputAction: TextInputAction.next,
+  //                               onSubmit: (newValue) {},
+  //                               onEditingComplete: () {},
+  //                               onChanged: (newValue) {},
+  //                               validator: (newValue) {
+  //                                 if (newValue!.isEmpty) {
+  //                                   return "Mohon untuk diisi.";
+  //                                 }
+  //                                 return null;
+  //                               },
+  //                             ),
+  //                           ),
+  //                           Container(
+  //                             width: Get.width - 25,
+  //                             padding: const EdgeInsets.symmetric(
+  //                                 horizontal: 10, vertical: 15),
+  //                             decoration: BoxDecoration(
+  //                                 color: Color(0xFFDCDCDC),
+  //                                 borderRadius: BorderRadius.only(
+  //                                     bottomLeft: Radius.circular(7),
+  //                                     bottomRight: Radius.circular(7))),
+  //                             child: Row(
+  //                                 mainAxisAlignment: MainAxisAlignment.end,
+  //                                 children: selectedJuz.value
+  //                                     ? [
+  //                                         ButtonElevated(
+  //                                           title: 'Buka Ayat',
+  //                                           // width: 120,
+  //                                           shadow: false,
+  //                                           bgcolor: Colors.transparent,
+  //                                           height: 30,
+  //                                           size: Get
+  //                                               .textTheme.bodySmall?.fontSize,
+  //                                           color: selectedJuz.value == false
+  //                                               ? Colors.white
+  //                                               : Colors.black,
+  //                                           radius: 0,
+  //                                           onPressed: () {
+  //                                             selectedJuz.value =
+  //                                                 !selectedJuz.value;
+  //                                           },
+  //                                         ),
+  //                                         SizedBox(
+  //                                           width: 5,
+  //                                         ),
+  //                                         ButtonElevated(
+  //                                           title: 'Buka Juz',
+  //                                           size: Get
+  //                                               .textTheme.bodySmall?.fontSize,
+  //                                           bgcolor: Color(0xFF2128C2),
+  //                                           height: 30,
+  //                                           color: Colors.white,
+  //                                           radius: 5,
+  //                                           onPressed: () {},
+  //                                         ),
+  //                                       ]
+  //                                     : [
+  //                                         ButtonElevated(
+  //                                           title: 'Buka Ayat',
+  //                                           // width: 120,
+  //                                           shadow: false,
+  //                                           bgcolor: Colors.transparent,
+  //                                           height: 30,
+  //                                           size: Get
+  //                                               .textTheme.bodySmall?.fontSize,
+  //                                           color: selectedJuz.value == false
+  //                                               ? Colors.white
+  //                                               : Colors.black,
+  //                                           radius: 0,
+  //                                           onPressed: () {
+  //                                             selectedJuz.value =
+  //                                                 !selectedJuz.value;
+  //                                           },
+  //                                         ),
+  //                                         SizedBox(
+  //                                           width: 5,
+  //                                         ),
+  //                                         ButtonElevated(
+  //                                           title: 'Buka Halaman',
+  //                                           width: 160,
+  //                                           size: Get
+  //                                               .textTheme.bodySmall?.fontSize,
+  //                                           bgcolor: Color(0xFF2128C2),
+  //                                           height: 30,
+  //                                           color: Colors.white,
+  //                                           radius: 5,
+  //                                           onPressed: () {},
+  //                                         ),
+  //                                       ]),
+  //                           ),
+  //                         ],
+  //                       ))),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   loadStorage() async {
     try {
@@ -609,9 +616,8 @@ class MainController extends GetxController {
     try {
       dataStore.remove('userLogin');
       dataStore.remove('isLogin');
-      // dataStore.remove('token');
+
       isLogin.value = false;
-      // dataStore.write('token', "");
       Get.offAllNamed(RoutesAuth.root);
     } catch (e) {
       print(e);
@@ -619,9 +625,16 @@ class MainController extends GetxController {
     }
   }
 
-  updateLokasi(updateLokasi) async {
-    dataStore.write('lokasiSaatIni', updateLokasi);
-    lokasiSaatIni = updateLokasi;
+  updateLokasi({required ketLokasi, required lat, required lang}) async {
+    dataStore.write('lokasiSaatIni', ketLokasi);
+    dataStore.write('lat', lat);
+    dataStore.write('lang', lang);
+    mylokasi.value = LokasiSayaData(
+      keteranganLokasi: ketLokasi,
+      lat: lat,
+      lang: lang,
+    );
+    // lokasiSaatIni = ketLokasi;
   }
 
   saveStorage(json) async {
@@ -638,15 +651,50 @@ class MainController extends GetxController {
     userLogin.value = {};
   }
 
+  getCache() async {
+    var lokasiSaatIni = dataStore.read('lokasiSaatIni');
+    var lat = dataStore.read('lat');
+    var lang = dataStore.read('lang');
+    if (lokasiSaatIni == null) {
+      var statusLokasi = await Permission.location.request();
+      if (statusLokasi.isGranted) {
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
+        Placemark place = placemarks[0];
+        mylokasi.value = LokasiSayaData(
+          keteranganLokasi:
+              "${place.locality.toString()}, ${place.country.toString()}",
+          lat: position.latitude,
+          lang: position.longitude,
+        );
+      } else if (statusLokasi.isDenied) {
+        mylokasi.value = LokasiSayaData(
+            keteranganLokasi:
+                "Izin Tidak Diizinkan, Silahkan Mengaktifkan Ijin",
+            lat: 0,
+            lang: 0,
+            gpsizin: false);
+      }
+    } else {
+      mylokasi.value = LokasiSayaData(
+        keteranganLokasi: lokasiSaatIni,
+        lat: lat,
+        lang: lang,
+      );
+    }
+  }
+
   @override
   void onInit() async {
+    super.onInit();
+    await getCache();
     await waktusolatData();
     await getWaktu();
     await startWaktu();
     await loadStorage();
     await loadHistoryQuran();
-    // await Scheduling();
     loadingwaktusolat.value = false;
-    super.onInit();
   }
 }

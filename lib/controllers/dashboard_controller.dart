@@ -1,15 +1,18 @@
 import 'dart:async';
 
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
-import 'package:masjid_app/models/eventCountDown.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/kontenSosmed.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/service/dashboard_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
@@ -66,6 +69,32 @@ class DashboardController extends GetxController {
   var latestCampaign = {}.obs;
   var duration = 0.obs;
   var txttime = "".obs;
+
+  getLokasi() async {
+    var statusLokasi = await Permission.location.request();
+    if (statusLokasi.isGranted) {
+      isLoadingLokasi.value = true;
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      ctrlmain.updateLokasi(
+        ketLokasi: "${place.locality.toString()}, ${place.country.toString()}",
+        lat: position.latitude,
+        lang: position.longitude,
+      );
+      await Scheduling();
+      isLoadingLokasi.value = false;
+      Get.back();
+    } else if (statusLokasi.isDenied) {
+      print('Izin ditolak');
+      Get.back();
+    } else if (statusLokasi.isPermanentlyDenied) {
+      // Pengguna menolak izin secara permanen, buka pengaturan aplikasi
+      openAppSettings();
+    }
+  }
 
   GetDataArtikel() async {
     try {

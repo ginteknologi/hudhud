@@ -21,11 +21,7 @@ import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/routes/quran/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:masjid_app/configs/main_controller.dart';
-import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -54,142 +50,7 @@ class DashboardPage extends StatelessWidget {
                       physics: const ClampingScrollPhysics(),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Flexible(
-                                  flex: 1,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 0),
-                                          child: Text("Assalamualaikum".tr,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.white)),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 0),
-                                          child: AutoSizeText(
-                                              gctrl.userLogin['name']
-                                                  .toString(),
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              maxLines: 1,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w900)),
-                                        ),
-                                      ),
-                                      Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () async {
-                                              showPopup(
-                                                  ctrl,
-                                                  gctrl,
-                                                  context,
-                                                  dialogTerkini(
-                                                      ctrl, gctrl, context),
-                                                  200);
-                                            },
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            splashColor:
-                                                Colors.green.withOpacity(0.5),
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.location_pin,
-                                                      size: 12,
-                                                      color: Color(0xFFFFECB7),
-                                                    ),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 5),
-                                                        child: Text(
-                                                            gctrl.lokasiSaatIni,
-                                                            style: TextStyle(
-                                                                color: Color(
-                                                                    0xFFFFECB7),
-                                                                fontSize: 12)))
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                    ],
-                                  )),
-                              Row(
-                                children: [
-                                  ButtonIcon(
-                                    onTap: () {
-                                      Get.toNamed(RoutesNotifikasi.root);
-                                    },
-                                    bgcolor: Colors.transparent,
-                                    icon: const Icon(
-                                      Icons.notifications,
-                                      size: 35,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.toNamed(RoutesAkun.root);
-                                        },
-                                        borderRadius: BorderRadius.circular(20),
-                                        splashColor:
-                                            Colors.green.withOpacity(0.5),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: gctrl.userLogin['photo'] ==
-                                                        null ||
-                                                    gctrl.userLogin['photo'] ==
-                                                        ""
-                                                ? Image.asset(
-                                                    "assets/icons/app_icon.png",
-                                                    height: 35,
-                                                    width: 35,
-                                                  )
-                                                : Image.network(
-                                                    gctrl.userLogin['photo'],
-                                                    height: 35,
-                                                    width: 35,
-                                                  )
-                                            // Image.network(
-                                            //   "https://picsum.photos/50",
-                                            //   height: 35,
-                                            //   width: 35,
-                                            // ),
-                                            ),
-                                      )),
-                                ],
-                              )
-                            ],
-                          ),
+                          header(context),
                           const WaktuSolat(),
                           getGridMenu(ctrl),
                           SizedBox(
@@ -237,6 +98,124 @@ class DashboardPage extends StatelessWidget {
                         ],
                       ))));
         }));
+  }
+
+  Row header(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Flexible(
+            flex: 1,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Text("Assalamualaikum".tr,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.white)),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: AutoSizeText(gctrl.userLogin['name'].toString(),
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900)),
+                  ),
+                ),
+                Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () async {
+                        showPopup(context, dialogTerkini(context), 200);
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      splashColor: Colors.green.withOpacity(0.5),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_pin,
+                                size: 12,
+                                color: Color(0xFFFFECB7),
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text(
+                                      gctrl.mylokasi.value.keteranganLokasi,
+                                      style: TextStyle(
+                                          color: Color(0xFFFFECB7),
+                                          fontSize: 12)))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ))
+              ],
+            )),
+        Row(
+          children: [
+            ButtonIcon(
+              onTap: () {
+                Get.toNamed(RoutesNotifikasi.root);
+              },
+              bgcolor: Colors.transparent,
+              icon: const Icon(
+                Icons.notifications,
+                size: 35,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Get.toNamed(RoutesAkun.root);
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  splashColor: Colors.green.withOpacity(0.5),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: gctrl.userLogin['photo'] == null ||
+                              gctrl.userLogin['photo'] == ""
+                          ? Image.asset(
+                              "assets/icons/app_icon.png",
+                              height: 35,
+                              width: 35,
+                            )
+                          : Image.network(
+                              gctrl.userLogin['photo'],
+                              height: 35,
+                              width: 35,
+                            )
+                      // Image.network(
+                      //   "https://picsum.photos/50",
+                      //   height: 35,
+                      //   width: 35,
+                      // ),
+                      ),
+                )),
+          ],
+        )
+      ],
+    );
   }
 
   News(BuildContext context, DashboardController ctrl) {
@@ -648,7 +627,7 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  void showPopup(ctrl, gctrl, context, Widget? content, double? height) {
+  void showPopup(context, Widget? content, double? height) {
     showDialog(
         context: context,
         builder: (BuildContext bc) {
@@ -683,8 +662,7 @@ class DashboardPage extends StatelessWidget {
                           shadow: false,
                           onPressed: () {
                             Navigator.pop(context);
-                            showPopup(ctrl, gctrl, bc,
-                                dialogTerkini(ctrl, gctrl, context), 200);
+                            showPopup(bc, dialogTerkini(context), 200);
                           },
                         ),
                       ],
@@ -693,8 +671,7 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  dialogTerkini(
-      DashboardController ctrl, MainController gctrl, BuildContext context) {
+  dialogTerkini(BuildContext context) {
     return Column(
       children: [
         Text(
@@ -707,48 +684,23 @@ class DashboardPage extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        Obx(() => ctrl.isLoadingLokasi.value
-            ? ButtonElevated(
-                title: 'Loading',
-                width: Get.width,
-                bgcolor: Theme.of(context).primaryColor,
-                height: 45,
-                color: Colors.white,
-                radius: 7,
-                shadow: false,
-                onPressed: () {},
-              )
-            : ButtonElevated(
-                title: 'Lanjutkan',
-                width: Get.width,
-                bgcolor: Theme.of(context).primaryColor,
-                height: 45,
-                color: Colors.white,
-                radius: 7,
-                shadow: false,
-                onPressed: () async {
-                  var statusLokasi = await Permission.location.request();
-                  if (statusLokasi.isGranted) {
-                    ctrl.isLoadingLokasi.value = true;
-                    Position position = await Geolocator.getCurrentPosition(
-                        desiredAccuracy: LocationAccuracy.high);
-                    List<Placemark> placemarks = await placemarkFromCoordinates(
-                        position.latitude, position.longitude);
-                    Placemark place = placemarks[0];
-                    gctrl.updateLokasi(
-                        '${place.locality.toString()}, ${place.country.toString()}');
-                    await Scheduling();
-                    ctrl.isLoadingLokasi.value = false;
-                    Navigator.pop(context);
-                  } else if (statusLokasi.isDenied) {
-                    print('Izin ditolak');
-                    Navigator.pop(context);
-                  } else if (statusLokasi.isPermanentlyDenied) {
-                    // Pengguna menolak izin secara permanen, buka pengaturan aplikasi
-                    openAppSettings();
-                  }
-                },
-              )),
+        Obx(() {
+          if (ctrl.isLoadingLokasi.isTrue) {
+            return CircularProgressIndicator();
+          }
+          return ButtonElevated(
+            title: 'Lanjutkan',
+            width: Get.width,
+            bgcolor: Theme.of(context).primaryColor,
+            height: 45,
+            color: Colors.white,
+            radius: 7,
+            shadow: false,
+            onPressed: () async {
+              ctrl.getLokasi();
+            },
+          );
+        }),
       ],
     );
   }
@@ -779,8 +731,6 @@ class DashboardPage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
             showPopup(
-                ctrl,
-                gctrl,
                 context,
                 dialogKota(context, ctrl),
                 MediaQuery.of(context).size.height -

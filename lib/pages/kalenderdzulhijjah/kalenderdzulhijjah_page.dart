@@ -1,16 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/controllers/Kalenderdzulhijjah_controller.dart';
 
 class KalenderdzulhijjahPage extends StatelessWidget {
   final KalenderdzulhijjahController ctrl = Get.find();
+  final MainController gctrl = Get.find<MainController>();
   KalenderdzulhijjahPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kalender dzulhijjah'),
+        backgroundColor: Color(0xFF27B8A8),
+        title: Text('Jadwal Imsakiyah'),
         // systemOverlayStyle: SystemUiOverlayStyle(
         //   statusBarColor: Colors.red,
         //   statusBarIconBrightness: Brightness.dark,
@@ -20,37 +24,64 @@ class KalenderdzulhijjahPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                color: Color(0xFFF9E9D8),
-                child: Obx(() {
-                  if (ctrl.isLoading.isTrue) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  return Table(
-                    children: [
-                      _buildTableHR(
-                          ['No', 'Tanggal', 'Hari', 'Imsak', 'Berbuka']),
-                      for (var data in ctrl.listData) ...[
-                        _buildTableRow(
-                            [data[0], data[1], data[2], data[3], data[4]]),
-                      ]
-                      // _buildTableRow(
-                      //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
-                      // _buildTableRow(
-                      //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
-                      // _buildTableRow(
-                      //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
-                      // _buildTableRow(
-                      //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
-                      // _buildTableRow(
-                      //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
-                      // Tambahkan baris lain sesuai kebutuhan
-                    ],
-                  );
-                }),
-              ),
+            Obx(() {
+              return Container(
+                  height: Get.height / 7,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                          "https://nos.wjv-1.neo.id/marbot/assets/kalender-1.png"), // Ganti dengan URL gambar Anda
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          gctrl.mylokasi.value.keteranganLokasi,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: Get.width / 28,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${ctrl.tahunBulan.value}",
+                          style: TextStyle(
+                              color: Colors.white, fontSize: Get.width / 28),
+                        ),
+                      ],
+                    ),
+                  ));
+            }),
+            Container(
+              color: Color(0xFFF9E9D8),
+              child: Obx(() {
+                if (ctrl.isLoading.isTrue) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return Table(
+                  children: [
+                    _buildTableHR(
+                        ['No', 'Tanggal', 'Hari', 'Imsak', 'Berbuka']),
+                    for (var data in ctrl.listData) ...[
+                      _buildTableRow(
+                          [data[0], data[1], data[2], data[3], data[4]]),
+                    ]
+                    // _buildTableRow(
+                    //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
+                    // _buildTableRow(
+                    //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
+                    // _buildTableRow(
+                    //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
+                    // _buildTableRow(
+                    //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
+                    // _buildTableRow(
+                    //     ['1', '24 Feb 2024', 'Senin', '04:45', '18:30']),
+                    // Tambahkan baris lain sesuai kebutuhan
+                  ],
+                );
+              }),
             ),
           ],
         ),
@@ -76,7 +107,7 @@ class KalenderdzulhijjahPage extends StatelessWidget {
                   child: Text(
                     value,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: Get.width / 45),
+                    style: TextStyle(fontSize: Get.width / 38),
                   ),
                 ),
               ),
@@ -89,7 +120,7 @@ class KalenderdzulhijjahPage extends StatelessWidget {
   _buildTableHR(List<String> values) {
     return TableRow(
       decoration: BoxDecoration(
-          color: Color(0xFFB57841),
+          color: Color(0xFF814D03),
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(Get.width / 40),
             bottomRight: Radius.circular(Get.width / 40),
