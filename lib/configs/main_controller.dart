@@ -677,8 +677,7 @@ class MainController extends GetxController {
           );
         } else if (statusLokasi.isDenied) {
           mylokasi.value = LokasiSayaData(
-              keteranganLokasi:
-                  "Silahkan mengaktifkan izin lokasi",
+              keteranganLokasi: "Silahkan mengaktifkan izin lokasi",
               lat: 0,
               lang: 0,
               gpsizin: false);
@@ -691,7 +690,11 @@ class MainController extends GetxController {
         );
       }
     } catch (e) {
-      print('error cache');
+      mylokasi.value = LokasiSayaData(
+          keteranganLokasi: "Silahkan mengaktifkan izin lokasi",
+          lat: 0,
+          lang: 0,
+          gpsizin: false);
       print(e);
     }
   }

@@ -192,7 +192,6 @@ class ListAyatQuranController extends GetxController
   Future<void> bookmark(listayatData data) async {
     try {
       isLoadingDetail.value = true;
-
       int targetDataIndex = list.indexWhere((z) => z["id"] == data.surat);
       int targetSuratIndex =
           contentTab.indexWhere((z) => z["idContent"] == data.surat);

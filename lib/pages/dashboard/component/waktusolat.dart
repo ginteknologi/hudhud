@@ -31,9 +31,7 @@ class WaktuSolat extends StatelessWidget {
         margin: const EdgeInsets.only(top: 20),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          //set border radius more than 50% of height and width to make circle
-        ),
+            borderRadius: BorderRadius.circular(Get.width / 20)),
         child: activeCard == null
             ? SizedBox(
                 width: Get.width,
