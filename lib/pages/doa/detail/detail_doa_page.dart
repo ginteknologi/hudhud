@@ -43,7 +43,9 @@ class DetailDoaPage extends StatelessWidget {
                               controller: ctrl.txtController,
                               onSubmit: (newValue) {},
                               onEditingComplete: () {},
-                              onChanged: (newValue) {},
+                              onChanged: (newValue) {
+                                ctrl.getSearchData();
+                              },
                               validator: (newValue) {
                                 if (newValue!.isEmpty) {
                                   return "Mohon untuk diisi.";
@@ -52,94 +54,100 @@ class DetailDoaPage extends StatelessWidget {
                               },
                             )
                           ])),
-                      Container(
-                        decoration: BoxDecoration(color: Colors.white),
-                        child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 21, right: 21, top: 21),
-                            child: Column(
-                              children: [
-                                ListView.builder(
-                                  physics: const ClampingScrollPhysics(),
-                                  itemCount: ctrl.list.length,
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    // Datum model = filteredEvents[index];
-                                    return FadeInUp(
-                                      child: ListCardUiWidget(
-                                        type: 'wp',
-                                        id: ctrl.list[index]['id'],
-                                        title: ctrl.list[index]['judul'],
-                                        titleStyle: context.textTheme.titleSmall
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                        subtitle: ctrl.list[index]['isi'],
-                                        subtitleStyle: context
-                                            .textTheme.labelMedium
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black45),
-                                        onTap: () {
-                                          Get.toNamed('${RoutesDoa.root}/${Get.parameters['id']}/${ctrl.list[index]['id']}');
-                                        },
-                                        hasFooter: true,
-                                        footerContent: [
-                                          // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list[index]['date'])),
-                                          // style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
-                                          // ),
+                      Obx(() => ctrl.isLoadingList.value
+                          ? const Center(child: CircularProgressIndicator())
+                          : Container(
+                              decoration: BoxDecoration(color: Colors.white),
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 21, right: 21, top: 21),
+                                  child: Column(
+                                    children: [
+                                      ListView.builder(
+                                        physics: const ClampingScrollPhysics(),
+                                        itemCount: ctrl.list.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          // Datum model = filteredEvents[index];
+                                          return FadeInUp(
+                                            child: ListCardUiWidget(
+                                              type: 'wp',
+                                              id: ctrl.list[index].id,
+                                              title: ctrl.list[index].judul,
+                                              titleStyle: context
+                                                  .textTheme.titleSmall
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Theme.of(context)
+                                                          .primaryColor),
+                                              subtitle: ctrl.list[index].isi,
+                                              subtitleStyle: context
+                                                  .textTheme.labelMedium
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black45),
+                                              onTap: () {
+                                                Get.toNamed(
+                                                    '${RoutesDoa.root}/${Get.parameters['id']}/${ctrl.list[index].id}');
+                                              },
+                                              hasFooter: true,
+                                              footerContent: [
+                                                // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list[index]['date'])),
+                                                // style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
+                                                // ),
 
-                                          // AutoSizeText(
-                                          //   ctrl.list[index]['isi'],
-                                          //   textAlign: TextAlign.end,
-                                          //   style: context.textTheme.labelSmall
-                                          //       ?.copyWith(
-                                          //           fontWeight: FontWeight.bold,
-                                          //           letterSpacing: 0,
-                                          //           color: Colors.black54),
-                                          //   maxLines: 2,
-                                          // ),
-                                          // Text(ctrl.list[index]['isi'],
-                                          //     textAlign: TextAlign.start,
-                                          //     style: context
-                                          //         .textTheme.labelSmall
-                                          //         ?.copyWith(
-                                          //             fontWeight:
-                                          //                 FontWeight.bold,
-                                          //             letterSpacing: 0,
-                                          //             color: Colors.black54)),
-                                          Row(
-                                            children: [
-                                              // Icon(
-                                              //   Icons.remove_red_eye_rounded,
-                                              //   color: Colors.black54,
-                                              //   size: context.textTheme
-                                              //       .labelLarge?.fontSize,
-                                              // ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              // Text(
-                                              //     ctrl.listDoa[index]['viewer'],
-                                              //     textAlign: TextAlign.end,
-                                              //     style: context
-                                              //         .textTheme.labelMedium
-                                              //         ?.copyWith(
-                                              //             fontWeight:
-                                              //                 FontWeight.w300,
-                                              //             color:
-                                              //                 Colors.black54)),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                )
-                              ],
-                            )),
-                      )
+                                                // AutoSizeText(
+                                                //   ctrl.list[index]['isi'],
+                                                //   textAlign: TextAlign.end,
+                                                //   style: context.textTheme.labelSmall
+                                                //       ?.copyWith(
+                                                //           fontWeight: FontWeight.bold,
+                                                //           letterSpacing: 0,
+                                                //           color: Colors.black54),
+                                                //   maxLines: 2,
+                                                // ),
+                                                // Text(ctrl.list[index]['isi'],
+                                                //     textAlign: TextAlign.start,
+                                                //     style: context
+                                                //         .textTheme.labelSmall
+                                                //         ?.copyWith(
+                                                //             fontWeight:
+                                                //                 FontWeight.bold,
+                                                //             letterSpacing: 0,
+                                                //             color: Colors.black54)),
+                                                Row(
+                                                  children: [
+                                                    // Icon(
+                                                    //   Icons.remove_red_eye_rounded,
+                                                    //   color: Colors.black54,
+                                                    //   size: context.textTheme
+                                                    //       .labelLarge?.fontSize,
+                                                    // ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    // Text(
+                                                    //     ctrl.listDoa[index]['viewer'],
+                                                    //     textAlign: TextAlign.end,
+                                                    //     style: context
+                                                    //         .textTheme.labelMedium
+                                                    //         ?.copyWith(
+                                                    //             fontWeight:
+                                                    //                 FontWeight.w300,
+                                                    //             color:
+                                                    //                 Colors.black54)),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  )),
+                            ))
                     ]))));
   }
 
@@ -148,12 +156,9 @@ class DetailDoaPage extends StatelessWidget {
     final ctrl = Get.put(DetailDoaController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBarWSWidget.getAppbarWidget(
-          title: "Do'a > Do'a Harian", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value
-          ? CircularProgressIndicator()
-          : layout(ctrl, context)),
-    );
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBarWSWidget.getAppbarWidget(
+            title: "Do'a > Do'a Harian", context: context, elevation: 0),
+        body: layout(ctrl, context));
   }
 }

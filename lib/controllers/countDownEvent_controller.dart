@@ -26,6 +26,7 @@ class CountDownEventController extends GetxController {
           title: data['judul'],
           imageUrl: data['image']);
       isLoadingEvent.value = false;
+      print(eventData);
     } catch (e) {
       print("error controller EventCountDownService");
       print(e);

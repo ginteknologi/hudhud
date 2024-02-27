@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/pages/artikel/artikel_controller.dart';
+import 'package:masjid_app/routes/artikel/index.dart';
 class ArtikelPage extends StatelessWidget {
   const ArtikelPage({super.key});
 
@@ -26,50 +27,50 @@ class ArtikelPage extends StatelessWidget {
                 ]))));
   }
 
-  getListCategory(ArtikelController ctrl) {
-    return Container(
-      height: 40,
-      constraints: BoxConstraints.loose(Size.infinite),
-      child: ListView.separated(
-        // padding: EdgeInsets.only(left: 24, right: 24),
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: ctrl.listCategoryFilter.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 10),
-        itemBuilder: (context, index) {
-          return Obx(() => ChoiceChip(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(width: 1, color: Colors.black12)),
-                selected: ctrl.listCategoryFilterSelected[index].value,
-                label: Text(
-                  ctrl.listCategoryFilter[index]['n e'],
-                  style: TextStyle(
-                      fontSize:
-                          Theme.of(context).textTheme.labelMedium?.fontSize,
-                      color: ctrl.listCategoryFilterSelected[index].value
-                          ? Colors.white
-                          : Colors.black),
-                ),
-                labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                labelStyle: TextStyle(
-                    color: Colors.grey[300], fontWeight: FontWeight.w500),
-                backgroundColor: Colors.transparent,
-                pressElevation: 1,
-                selectedColor: Theme.of(context).primaryColor,
-                padding: EdgeInsets.all(8),
-                onSelected: (selected) {
-                  for (RxBool b in ctrl.listCategoryFilterSelected) {
-                    if (b.isTrue) b.value = false;
-                  }
-                  ctrl.listCategoryFilterSelected[index].value =
-                      !ctrl.listCategoryFilterSelected[index].value;
-                },
-              ));
-        },
-      ),
-    );
-  }
+  // getListCategory(ArtikelController ctrl) {
+  //   return Container(
+  //     height: 40,
+  //     constraints: BoxConstraints.loose(Size.infinite),
+  //     child: ListView.separated(
+  //       // padding: EdgeInsets.only(left: 24, right: 24),
+  //       scrollDirection: Axis.horizontal,
+  //       physics: const BouncingScrollPhysics(),
+  //       itemCount: ctrl.listCategoryFilter.length,
+  //       separatorBuilder: (context, index) => const SizedBox(width: 10),
+  //       itemBuilder: (context, index) {
+  //         return Obx(() => ChoiceChip(
+  //               shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(10),
+  //                   side: const BorderSide(width: 1, color: Colors.black12)),
+  //               selected: ctrl.listCategoryFilterSelected[index].value,
+  //               label: Text(
+  //                 ctrl.listCategoryFilter[index]['n e'],
+  //                 style: TextStyle(
+  //                     fontSize:
+  //                         Theme.of(context).textTheme.labelMedium?.fontSize,
+  //                     color: ctrl.listCategoryFilterSelected[index].value
+  //                         ? Colors.white
+  //                         : Colors.black),
+  //               ),
+  //               labelPadding: EdgeInsets.symmetric(horizontal: 10),
+  //               labelStyle: TextStyle(
+  //                   color: Colors.grey[300], fontWeight: FontWeight.w500),
+  //               backgroundColor: Colors.transparent,
+  //               pressElevation: 1,
+  //               selectedColor: Theme.of(context).primaryColor,
+  //               padding: EdgeInsets.all(8),
+  //               onSelected: (selected) {
+  //                 for (RxBool b in ctrl.listCategoryFilterSelected) {
+  //                   if (b.isTrue) b.value = false;
+  //                 }
+  //                 ctrl.listCategoryFilterSelected[index].value =
+  //                     !ctrl.listCategoryFilterSelected[index].value;
+  //               },
+  //             ));
+  //       },
+  //     ),
+  //   );
+  // }
 
   getListArtikel(ArtikelController ctrl, BuildContext context) {
     return ListView.builder(
@@ -80,14 +81,14 @@ class ArtikelPage extends StatelessWidget {
         // Datum model = filteredEvents[index];
         return FadeInUp(
           child: ListCardUiWidget(
-            id: ctrl.listArtikels[index]['id'],
-            title: ctrl.listArtikels[index]['judul'],
+            id: ctrl.listArtikels[index].id,
+            title: ctrl.listArtikels[index].judul,
             position: MainAxisAlignment.end,
             usingDivider: false,
             height: 170,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(ctrl.listArtikels[index]['image']),
+                    image: NetworkImage(ctrl.listArtikels[index].image),
                     fit: BoxFit.cover)),
             titleStyle: context.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
@@ -95,11 +96,11 @@ class ArtikelPage extends StatelessWidget {
             subtitleStyle: context.textTheme.labelMedium
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
             onTap: () {
-              ctrl.goToDetail(ctrl.listArtikels[index]);
+              Get.toNamed('${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(ctrl.listArtikels[index]['updatedAt']).add(Duration(hours: 7))),
+              Text(DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(ctrl.listArtikels[index].updatedAt).add(Duration(hours: 7))),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,

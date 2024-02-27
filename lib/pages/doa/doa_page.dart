@@ -26,10 +26,10 @@ class DoaPage extends StatelessWidget {
                     // Datum model = filteredEvents[index];
                     return FadeInUp(
                       child: ListItemUiWidget(
-                        id: ctrl.list[index]['id'],
-                        title: ctrl.list[index]['name'],
+                        id: ctrl.list[index].id,
+                        title: ctrl.list[index].name,
                         onTap: () {
-                          Get.toNamed('${RoutesDoa.root}/${ctrl.list[index]['id']}', arguments: {"category": ctrl.list[index]});
+                          Get.toNamed('${RoutesDoa.root}/${ctrl.list[index].id}');
                         },
                         titleStyle: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
@@ -59,7 +59,7 @@ class DoaPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(context, ctrl)),
+      body: Obx(() => ctrl.isLoadingList.value ? const Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
     );
   }
 }

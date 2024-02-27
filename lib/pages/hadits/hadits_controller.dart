@@ -11,6 +11,7 @@ class HaditsController extends GetxController {
     try {
       isLoadingList.value = true;
       final result = await HaditsService().getBooks();
+      print(result['data']);
       list.value = result['data'];
       isLoadingList.value = false;
     } catch (e) {

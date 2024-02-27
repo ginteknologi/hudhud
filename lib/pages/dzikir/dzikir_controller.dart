@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/dzikir/dzikir_service.dart';
 import 'package:html/parser.dart';
+import 'package:masjid_app/models/doaData.dart';
 
 class DzikirController extends GetxController {
   var isLoadingList = true.obs;
-  var list = [].obs;
+  var list = <DoaData>[].obs;
 
   RxBool flagDzikir = false.obs;
 
@@ -20,8 +21,19 @@ class DzikirController extends GetxController {
   }
   
   getData() async {
+    try {
     final results = await DzikirService().getList();
-    list.value = results['data'];
+    // for (var element in results['data']) {
+    //   list.add(DoaData(
+    //       id: element['id'],
+    //       judul: element['judul'],
+    //       opening:element['opening'],
+    //       arabic:element['arabic'],
+    //       transliteration:element['transliteration'],
+    //       translations:element['translations'],
+    //       isi:element['isi'],
+    //       updatedAt: element['updatedAt']));
+    // }    
     for (Map<String, dynamic> result in results['data']) {
         result['judul'] = result['judul'] != null ? _convertHtmlToText(result['judul']) : '';
         result['arabic'] = result['arabic'] != null ? _convertHtmlToText(result['arabic']) : '';
@@ -36,6 +48,9 @@ class DzikirController extends GetxController {
       }
     }
     isLoadingList.value = false;
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

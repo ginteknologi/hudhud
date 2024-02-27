@@ -79,7 +79,8 @@ class ContentDoaPage extends StatelessWidget {
                                                           alignment: Alignment
                                                               .centerLeft,
                                                           child: AutoSizeText(
-                                                            ctrl.list['judul']!,
+                                                            ctrl.list.value
+                                                                .judul,
                                                             textAlign:
                                                                 TextAlign.start,
                                                             style: context
@@ -98,29 +99,33 @@ class ContentDoaPage extends StatelessWidget {
                                                         SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list['arabic'] !=
+                                                        ctrl.list.value
+                                                                    .arabic !=
                                                                 null
                                                             ? Align(
                                                                 alignment: Alignment
-                                                                    .bottomRight,
-                                                                child: Html(
-                                                                    data: ctrl
-                                                                            .list[
-                                                                        'arabic']!,
-                                                                    style: {
-                                                                      "p": Style(
-                                                                          fontSize:
-                                                                              FontSize(13.0))
-                                                                    }))
+                                                                    .centerRight,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  ctrl.list.value.arabic!,
+                                                                  textAlign:
+                                                                      TextAlign.start,
+                                                                  style: context.textTheme.titleSmall
+                                                                      ?.copyWith(
+                                                                          fontWeight: FontWeight
+                                                                              .bold),
+                                                                  maxLines: 2,
+                                                                ))
                                                             : Container(),
                                                         SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list['transliteration'] !=
+                                                        ctrl.list.value
+                                                                    .transliteration !=
                                                                 null
                                                             ? Text(
-                                                                ctrl.list[
-                                                                    'transliteration'],
+                                                                ctrl.list.value
+                                                                    .transliteration!,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .start,
@@ -137,15 +142,18 @@ class ContentDoaPage extends StatelessWidget {
                                                         SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list['translations'] !=
+                                                        ctrl.list.value
+                                                                    .translations !=
                                                                 null
                                                             ? Align(
-                                                                alignment: Alignment
-                                                                    .bottomRight,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .bottomRight,
                                                                 child: Html(
                                                                     data: ctrl
-                                                                            .list[
-                                                                        'translations']!,
+                                                                        .list
+                                                                        .value
+                                                                        .translations!,
                                                                     style: {
                                                                       "p": Style(
                                                                           fontSize:
@@ -155,14 +163,16 @@ class ContentDoaPage extends StatelessWidget {
                                                         SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list['isi'] != null
+                                                        ctrl.list.value.isi !=
+                                                                null
                                                             ? Align(
                                                                 alignment: Alignment
                                                                     .bottomRight,
                                                                 child: Html(
                                                                     data: ctrl
-                                                                            .list[
-                                                                        'isi']!,
+                                                                        .list
+                                                                        .value
+                                                                        .isi!,
                                                                     style: {
                                                                       "p": Style(
                                                                           fontSize:
@@ -286,7 +296,8 @@ class ContentDoaPage extends StatelessWidget {
                                             onPressed: () {
                                               // Gunakan plugin share_plus untuk berbagi teks artikel
                                               Share.share(ctrl.share.value,
-                                                  subject: ctrl.list['judul']);
+                                                  subject:
+                                                      ctrl.list.value.judul);
                                             },
                                           ),
                                         ),

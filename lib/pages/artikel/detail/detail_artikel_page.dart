@@ -9,6 +9,7 @@ import 'package:masjid_app/pages/artikel/detail/detail_artikel_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:masjid_app/routes/artikel/index.dart';
 
 class DetailArtikelPage extends StatelessWidget {
   const DetailArtikelPage({super.key});
@@ -37,7 +38,7 @@ class DetailArtikelPage extends StatelessWidget {
                             constraints: BoxConstraints.loose(Size.infinite),
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage(ctrl.detail['image']),
+                                    image: NetworkImage(ctrl.detail.value.image),
                                     fit: BoxFit.fill)),
                           )),
                      const SizedBox(
@@ -54,7 +55,7 @@ class DetailArtikelPage extends StatelessWidget {
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                         ),
                         child: Text(
-                          ctrl.detail['category']['name'],
+                          ctrl.detail.value.category?['name'],
                           style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.white),
                         ),
@@ -62,7 +63,7 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      AutoSizeText(ctrl.detail['judul'],
+                      AutoSizeText(ctrl.detail.value.judul,
                         style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
                         maxLines: 4,
@@ -70,7 +71,7 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.detail['updatedAt']).add(Duration(hours: 7))),
+                      Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.detail.value.updatedAt).add(Duration(hours: 7))),
                           // '17:40' +
                           //     "  |  " +
                           //     '17 Agustus 2023',
@@ -81,7 +82,7 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                Html(data: ctrl.detail['isi'],
+                Html(data: ctrl.detail.value.isi,
                   style: {
                     'h2': Style(
                       fontSize: FontSize(18.0),
@@ -195,14 +196,14 @@ class DetailArtikelPage extends StatelessWidget {
         // Datum model = filteredEvents[index];
         return FadeInUp(
           child: ListCardUiWidget(
-            id: ctrl.listArtikels[index]['id'],
-            title: ctrl.listArtikels[index]['judul'],
+            id: ctrl.listArtikels[index].id,
+            title: ctrl.listArtikels[index].judul,
             position: MainAxisAlignment.end,
             usingDivider: false,
             height: 170,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(ctrl.listArtikels[index]['image']),
+                    image: NetworkImage(ctrl.listArtikels[index].image),
                     fit: BoxFit.cover)),
             titleStyle: context.textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
@@ -210,11 +211,11 @@ class DetailArtikelPage extends StatelessWidget {
             subtitleStyle: context.textTheme.labelMedium
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
             onTap: () {
-              ctrl.goToDetail(ctrl.listArtikels[index]);
+              Get.offAllNamed('${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.listArtikels[index]['updatedAt'])),
+              Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.listArtikels[index].updatedAt)),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,

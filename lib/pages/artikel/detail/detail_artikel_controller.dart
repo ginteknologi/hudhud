@@ -1,14 +1,19 @@
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/artikel/artikel_service.dart';
-import 'package:masjid_app/routes/artikel/index.dart';
 import 'package:html/parser.dart';
+import 'package:masjid_app/models/artikelData.dart';
 
 class DetailArtikelController extends GetxController {
   var isLoadingList = true.obs;
-  var detail = {}.obs;
   var share = "".obs;
 
-  List listArtikels = [].obs;
+  var listArtikels = <ArtikelData>[].obs;
+  Rx<ArtikelData> detail = Rx(ArtikelData(
+    id: 1,
+    judul: '',
+    updatedAt: '',
+    image: '',
+  ));
   List listCategoryFilter = [].obs;
   late List<RxBool> listCategoryFilterSelected;
   String _convertHtmlToText(String htmlString) {
@@ -17,25 +22,35 @@ class DetailArtikelController extends GetxController {
   }
 
   getData() async {
-    isLoadingList.value = true;
-    final result = await ArtikelService().getDetailArtikel();
-    detail.value = result['data'];
-    String judul = result['data']['judul'];
-    String content = _convertHtmlToText(result['data']['isi']);
-    String link = 'Dibagikan dari aplikasi\n\n Marbot App';
+    try {
+      isLoadingList.value = true;
+      final result = await ArtikelService().getDetailArtikel();
+      detail.value = ArtikelData(
+          id: result['data']['id'],
+          judul: result['data']['judul'],
+          isi: result['data']['isi'],
+          image: result['data']['image'],
+          category: result['data']['category'],
+          updatedAt: result['data']['updatedAt']);
+      String judul = result['data']['judul'];
+      String content = _convertHtmlToText(result['data']['isi']);
+      String link = 'Dibagikan dari aplikasi\n\n Marbot App';
 
-    share.value = '$judul\n\n$content\n\n$link';
+      share.value = '$judul\n\n$content\n\n$link';
 
-    final listartikel = await ArtikelService().getListArtikellain();
-    listArtikels = listartikel['data'];
-    isLoadingList.value = false;
+      final listartikel = await ArtikelService().getListArtikellain();
+      for (var element in listartikel['data']) {
+        listArtikels.add(ArtikelData(
+            id: element['id'],
+            judul: element['judul'],
+            image: element['image'],
+            updatedAt: element['updatedAt']));
+      }
+      isLoadingList.value = false;
+    } catch (e) {
+      print(e);
+    }
   }
-
-  goToDetail(param) {
-    Get.offAllNamed('${RoutesArtikel.root}/${param['id']}');
-  }
-
-  
 
   @override
   void onInit() {
