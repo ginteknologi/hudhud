@@ -134,8 +134,8 @@ class DetailHaditsPage extends StatelessWidget {
                       // Datum model = filteredEvents[index];
                       return FadeInUp(
                         child: ListItemUiWidget(
-                          id: ctrl.list[index]['ID_Kitab'],
-                          title: ctrl.list[index]['Kitab_Indonesia'],
+                          id: ctrl.list[index].ID_Kitab,
+                          title: ctrl.list[index].Kitab_Indonesia,
                           onTap: () {
                             if (ctrl.arguments['detail']['namaTabel'] == 'arbain') {
                               Get.toNamed(RoutesHadits.content, arguments: {'content': ctrl.list[index], 'detail' : ctrl.arguments['detail'], 'bab': ctrl.list[index]});
@@ -166,7 +166,7 @@ class DetailHaditsPage extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          ctrl.list[index]['ID_Kitab'].toString(),
+                                          ctrl.list[index].ID_Kitab.toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)

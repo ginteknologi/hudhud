@@ -678,7 +678,7 @@ class MainController extends GetxController {
         } else if (statusLokasi.isDenied) {
           mylokasi.value = LokasiSayaData(
               keteranganLokasi:
-                  "Izin Tidak Diizinkan, Silahkan Mengaktifkan Ijin",
+                  "Silahkan mengaktifkan izin lokasi",
               lat: 0,
               lang: 0,
               gpsizin: false);

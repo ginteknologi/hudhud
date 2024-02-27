@@ -81,7 +81,7 @@ class BabHaditsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ctrl.arguments['content']['Kitab_Indonesia'],
+                                  ctrl.arguments['content'].Kitab_Indonesia,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -97,7 +97,7 @@ class BabHaditsPage extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  'Bab ' + ctrl.arguments['content']['ID_Kitab'].toString(),
+                                  'Bab ' + ctrl.arguments['content'].ID_Kitab.toString(),
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -130,8 +130,8 @@ class BabHaditsPage extends StatelessWidget {
                       // Datum model = filteredEvents[index];
                       return FadeInUp(
                         child: ListItemUiWidget(
-                          id: ctrl.list[index]['ID_Bab'],
-                          title: ctrl.list[index]['Bab_Indonesia'],
+                          id: ctrl.list[index].ID_Bab,
+                          title: ctrl.list[index].Bab_Indonesia,
                           onTap: () {
                             Get.toNamed(RoutesHadits.content, arguments: {'content': ctrl.arguments['content'], 'detail': ctrl.arguments['detail'], 'bab': ctrl.list[index]});
                           },
@@ -158,7 +158,7 @@ class BabHaditsPage extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          ctrl.list[index]['ID_Bab'].toString(),
+                                          ctrl.list[index].ID_Bab.toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)

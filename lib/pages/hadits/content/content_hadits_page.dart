@@ -50,7 +50,7 @@ class ContentHaditsPage extends StatelessWidget {
                                 width: 10,
                               ),
                               AutoSizeText(
-                                ctrl.arguments['content']['Kitab_Indonesia'],
+                                ctrl.arguments['content'].Kitab_Indonesia,
                                 style: context.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black,
@@ -62,7 +62,7 @@ class ContentHaditsPage extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          Share.share("${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content']['Kitab_Indonesia']}\n\n${ctrl.list[0]['Isi_Arab']}\n\n${ctrl.list[0]['Isi_Indonesia']} \n\n Dibagikan dari aplikasi\n\n Marbot App",
+                          Share.share("${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content'].Kitab_Indonesia}\n\n${ctrl.list[0].Isi_Arab}\n\n${ctrl.list[0].Isi_Indonesia} \n\n Dibagikan dari aplikasi\n\n Marbot App",
                               subject: ctrl.arguments['detail']['longNama']);
                         },
                         child: Icon(
@@ -90,12 +90,12 @@ class ContentHaditsPage extends StatelessWidget {
                         Container(
                           height: 300,
                           child: Text(
-                            ctrl.list[0]['Isi_Arab'],
+                            ctrl.list[0].Isi_Arab,
                             textAlign: TextAlign.center,
                           ),
                         ),
                         AutoSizeText(
-                          ctrl.list[0]['Isi_Indonesia'],
+                          ctrl.list[0].Isi_Indonesia,
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w300,
                             fontSize: 10,
