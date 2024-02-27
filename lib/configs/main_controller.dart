@@ -617,6 +617,10 @@ class MainController extends GetxController {
       dataStore.remove('userLogin');
       dataStore.remove('isLogin');
 
+      dataStore.remove('lokasiSaatIni');
+      dataStore.remove('lat');
+      dataStore.remove('lang');
+
       isLogin.value = false;
       Get.offAllNamed(RoutesAuth.root);
     } catch (e) {
@@ -652,37 +656,43 @@ class MainController extends GetxController {
   }
 
   getCache() async {
-    var lokasiSaatIni = dataStore.read('lokasiSaatIni');
-    var lat = dataStore.read('lat');
-    var lang = dataStore.read('lang');
-    if (lokasiSaatIni == null) {
-      var statusLokasi = await Permission.location.request();
-      if (statusLokasi.isGranted) {
-        Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-            position.latitude, position.longitude);
-        Placemark place = placemarks[0];
-        mylokasi.value = LokasiSayaData(
-          keteranganLokasi:
-              "${place.locality.toString()}, ${place.country.toString()}",
-          lat: position.latitude,
-          lang: position.longitude,
-        );
-      } else if (statusLokasi.isDenied) {
-        mylokasi.value = LokasiSayaData(
+    try {
+      var lokasiSaatIni = dataStore.read('lokasiSaatIni');
+      var lat = dataStore.read('lat');
+      var lang = dataStore.read('lang');
+      if (lokasiSaatIni == null) {
+        print('ambil lokasi');
+        var statusLokasi = await Permission.location.request();
+        if (statusLokasi.isGranted) {
+          Position position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+          List<Placemark> placemarks = await placemarkFromCoordinates(
+              position.latitude, position.longitude);
+          Placemark place = placemarks[0];
+          mylokasi.value = LokasiSayaData(
             keteranganLokasi:
-                "Izin Tidak Diizinkan, Silahkan Mengaktifkan Ijin",
-            lat: 0,
-            lang: 0,
-            gpsizin: false);
+                "${place.locality.toString()}, ${place.country.toString()}",
+            lat: position.latitude,
+            lang: position.longitude,
+          );
+        } else if (statusLokasi.isDenied) {
+          mylokasi.value = LokasiSayaData(
+              keteranganLokasi:
+                  "Izin Tidak Diizinkan, Silahkan Mengaktifkan Ijin",
+              lat: 0,
+              lang: 0,
+              gpsizin: false);
+        }
+      } else {
+        mylokasi.value = LokasiSayaData(
+          keteranganLokasi: lokasiSaatIni,
+          lat: lat,
+          lang: lang,
+        );
       }
-    } else {
-      mylokasi.value = LokasiSayaData(
-        keteranganLokasi: lokasiSaatIni,
-        lat: lat,
-        lang: lang,
-      );
+    } catch (e) {
+      print('error cache');
+      print(e);
     }
   }
 

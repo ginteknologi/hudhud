@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
+import 'package:in_app_update/in_app_update.dart';
 // import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:masjid_app/configs/firebase_message_setup.dart';
@@ -24,7 +28,20 @@ Future<void> main() async {
     ].request();
     await SetupFirebase.initFirebase();
   }
-
+  if (Platform.isAndroid) {
+    InAppUpdate.checkForUpdate().then((updateInfo) {
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        InAppUpdate.performImmediateUpdate()
+            .then((value) => {
+                  Fluttertoast.showToast(
+                      msg: "Silahkah buka ulang aplikasi ...",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.CENTER)
+                })
+            .catchError((e) => print(e));
+      }
+    });
+  }
   runApp(
     EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('id', 'ID')],
