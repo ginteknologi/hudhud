@@ -238,9 +238,8 @@ class ListAyatQuranController extends GetxController
     //       'perAyatLastRead', {'audio': 'ar.alafasy', 'audiosource': 'server'});
     // }
     list.value = list.reversed.toList();
-
-    if (Get.parameters['bookmarks'] == "true") {
-      final bookmarkData book = gctrl.ayatBookmark.value;
+    final bookmarkData book = gctrl.ayatBookmark.value;
+    if (Get.parameters['bookmarks'] == "true" && book.surat != 0) {
       int getindexbysurah =
           list.indexWhere((element) => element['id'] == book.surat);
       int newindex = myTabs.length - 1 - getindexbysurah;
