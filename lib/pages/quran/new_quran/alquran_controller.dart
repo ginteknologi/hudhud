@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_service.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/configs/main_controller.dart';
 import 'package:masjid_app/routes/quran/index.dart';
+import 'package:masjid_app/storage/bookmarkStorage.dart';
 
 class AlquranController extends GetxController {
-  final dataStore = GetStorage();
-  final gctrl = Get.find<MainController>();
+  BookmarkStorage ayatStorage = BookmarkStorage("ayat");
+  Rx<bookmarkData> ayatBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+  Rx<bookmarkData> indonesiaBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+  Rx<bookmarkData> madinahBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+  Rx<bookmarkData> tajwidBookmark = bookmarkData(
+          namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
+      .obs;
+
   var isLoadingRandom = true.obs;
   var isLoadingList = true.obs;
   var list = {}.obs;
@@ -32,6 +44,8 @@ class AlquranController extends GetxController {
 
   @override
   void onInit() async {
+    super.onInit();
+    ayatBookmark.value = ayatStorage.getBookmark();
     listMenu.value = [
       {
         'title': 'Per Ayat',
@@ -90,7 +104,5 @@ class AlquranController extends GetxController {
         'icon': 'assets/icons/pengaturan.png'
       }
     ];
-    print("listMenu.length");
-    super.onInit();
   }
 }

@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/models/listayatData.dart';
+import 'package:masjid_app/pages/quran/new_quran/alquran_controller.dart';
 import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/configs/main_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ListAyatQuranController extends GetxController
@@ -16,7 +16,7 @@ class ListAyatQuranController extends GetxController
   RxList<AudioSource> listAudio = <AudioSource>[].obs;
   var isPlaySound = false.obs;
   final dataStore = GetStorage();
-  final gctrl = Get.find<MainController>();
+  final quranctrl = Get.find<AlquranController>();
   final surahId = Get.parameters['id'];
   final surahName = Get.parameters['nama_surah'];
   var isLoadingList = true.obs;
@@ -86,7 +86,7 @@ class ListAyatQuranController extends GetxController
       int targetDataIndex =
           contentTab.indexWhere((data) => data["idContent"] == surahId);
       int cek = contentTab[targetDataIndex]['list'].length;
-      bookmarkData resultBookmark = gctrl.ayatBookmark.value;
+      bookmarkData resultBookmark = quranctrl.ayatBookmark.value;
       if (cek == 0) {
         print('fetch detail');
         print(cek);
@@ -204,12 +204,13 @@ class ListAyatQuranController extends GetxController
       }
       contentTab[targetSuratIndex]['list'][getIndexListAyat].book.value = true;
       var detail = list[targetDataIndex];
-
-      gctrl.ayatBookmark.value = bookmarkData(
+      var databook = bookmarkData(
           namaSurat: detail['nama'],
           surat: data.surat,
           ayat: data.ayat,
           totalAyat: detail['ayat']);
+      quranctrl.ayatBookmark.value = databook;
+      quranctrl.ayatStorage.saveBookmark(databook);
 
       Fluttertoast.showToast(
           msg: "Ayat Berhasil Ditandai",
@@ -237,7 +238,7 @@ class ListAyatQuranController extends GetxController
     //       'perAyatLastRead', {'audio': 'ar.alafasy', 'audiosource': 'server'});
     // }
     list.value = list.reversed.toList();
-    final bookmarkData book = gctrl.ayatBookmark.value;
+    final bookmarkData book = quranctrl.ayatBookmark.value;
     if (Get.parameters['bookmarks'] == "true" && book.surat != 0) {
       int getindexbysurah =
           list.indexWhere((element) => element['id'] == book.surat);

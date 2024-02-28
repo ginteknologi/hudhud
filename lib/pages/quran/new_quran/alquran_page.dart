@@ -56,7 +56,7 @@ class AlquranPage extends StatelessWidget {
                       tilawahMenu(
                           title: "Tilawah Perayat",
                           route: RoutesQuran.perayat,
-                          history: gctrl.ayatBookmark.value,
+                          history: ctrl.ayatBookmark.value,
                           context),
                       SizedBox(
                         height: Get.height * 0.01,
@@ -64,7 +64,7 @@ class AlquranPage extends StatelessWidget {
                       tilawahMenu(
                           title: "Tilawah Indonesia",
                           route: RoutesQuran.perpage,
-                          history: gctrl.indonesiaBookmark.value,
+                          history: ctrl.indonesiaBookmark.value,
                           context),
                       SizedBox(
                         height: Get.height * 0.01,
@@ -72,7 +72,7 @@ class AlquranPage extends StatelessWidget {
                       tilawahMenu(
                           title: "Tilawah Tajwid Indonesia",
                           route: RoutesQuran.perpagetajwid,
-                          history: gctrl.tajwidBookmark.value,
+                          history: ctrl.tajwidBookmark.value,
                           context),
                       SizedBox(
                         height: Get.height * 0.01,
@@ -80,7 +80,7 @@ class AlquranPage extends StatelessWidget {
                       tilawahMenu(
                           title: "Tilawah Madinah",
                           route: RoutesQuran.perpagemadinah,
-                          history: gctrl.madinahBookmark.value,
+                          history: ctrl.madinahBookmark.value,
                           context),
                       SizedBox(
                         height: Get.height * 0.05,
