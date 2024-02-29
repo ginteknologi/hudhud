@@ -146,7 +146,7 @@ class AkunPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Profile", context: context, elevation: 0),
-      body: layout(context, hctrl, gctrl),
+      body: Obx(() => layout(context, hctrl, gctrl)),
     );
   }
 }

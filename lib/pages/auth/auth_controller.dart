@@ -54,6 +54,7 @@ class AuthController extends GetxController {
         "nama": result['data']['nama'],
         "email": result['data']['email'],
         "photo": result['data']['photo'],
+        "phone": result['data']['phone'],
         "total_sedekah": result['data']['total_sedekah'],
       };
       // final detail = UserData(

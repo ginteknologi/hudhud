@@ -348,7 +348,6 @@ class MainController extends GetxController {
       dataStore.write('isLogin', true);
       dataStore.write('userLogin', json);
       isLogin.value = true;
-      print(json);
       userLogin.value = UserData(
         id: json['id'],
         nama: json['nama'],

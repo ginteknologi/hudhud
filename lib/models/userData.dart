@@ -7,7 +7,7 @@ class UserData {
       {required this.id,
       required this.nama,
       required this.email,
-      required this.photo,
+      this.photo = "https://nos.wjv-1.neo.id/marbot/assets/app_icon.png",
       this.total_sedekah,
       this.phone,
       });
