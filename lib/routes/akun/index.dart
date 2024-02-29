@@ -10,19 +10,19 @@ class PagesAkun {
       name: RoutesAkun.root,
       page: () => const AkunPage(),
       transition: Transition.cupertino,
-      // middlewares: [IsLoginMiddleware()],
+      middlewares: [IsLoginMiddleware()],
     ),
     GetPage(
       name: RoutesAkun.edit,
       page: () => const EditAkunPage(),
       transition: Transition.cupertino,
-      // middlewares: [IsLoginMiddleware()],
+      middlewares: [IsLoginMiddleware()],
     ),
     GetPage(
       name: RoutesAkun.riwayat,
       page: () => const RiwayatPage(),
       transition: Transition.cupertino,
-      // middlewares: [IsLoginMiddleware()],
+      middlewares: [IsLoginMiddleware()],
     ),
   ];
 }

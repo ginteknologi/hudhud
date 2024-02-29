@@ -33,5 +33,6 @@ class AppPages {
     ...PagesDzikir.pages,
     ...PagesKalenderdzulhijjah.pages
   ];
+  // static var root = RoutesHome.root;
   static var root = RoutesHome.splashscreen;
 }

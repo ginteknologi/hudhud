@@ -126,7 +126,7 @@ class DashboardPage extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 0),
-                    child: AutoSizeText(gctrl.userLogin['name'].toString(),
+                    child: AutoSizeText(gctrl.userLogin.value.nama.toString(),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -193,15 +193,8 @@ class DashboardPage extends StatelessWidget {
                   splashColor: Colors.green.withOpacity(0.5),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: gctrl.userLogin['photo'] == null ||
-                              gctrl.userLogin['photo'] == ""
-                          ? Image.asset(
-                              "assets/icons/app_icon.png",
-                              height: 35,
-                              width: 35,
-                            )
-                          : Image.network(
-                              gctrl.userLogin['photo'],
+                      child: Image.network(
+                              gctrl.userLogin.value.photo,
                               height: 35,
                               width: 35,
                             )

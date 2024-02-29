@@ -28,27 +28,7 @@ class HomeService extends GetConnect {
   //     return json;
   //   }
   // }
-  Future getMuadzin() async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/kajian/muadzin/list"),
-        headers: <String, String>{
-          'Authorization': "Bearer ${authStore.read('jwt')}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-        print(response);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      return json;
-    } else if (response.statusCode == 401) {
-      // RemoteData.authError();
-    } else {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      
-      return json;
-    }
-  }
+
 
   Future cekToken(token) async {
     final dataUser = authStore.read('userLogin') as Map<String, dynamic>;

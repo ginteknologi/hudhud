@@ -44,8 +44,8 @@ class EditAkunController extends GetxController {
 
   @override
   void onInit() {
-    txtController.text = gctrl.userLogin['name'] ?? '';
-    phoneController.text = gctrl.userLogin['phone'] ?? '';
+    txtController.text = gctrl.userLogin.value.nama;
+    phoneController.text = gctrl.userLogin.value.phone ?? '';
     super.onInit();
   }
 }

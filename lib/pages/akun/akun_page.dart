@@ -32,7 +32,7 @@ class AkunPage extends StatelessWidget {
                                   alignment: Alignment.topCenter,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(90),
-                                    child: gctrl.userLogin['photo'] == null || gctrl.userLogin['photo'] == "" ? Image.asset(
+                                    child: gctrl.userLogin.value.id == 0 ? Image.asset(
                                       "assets/icons/app_icon.png",
                                       height: 110,
                                       width: 110,
@@ -40,7 +40,7 @@ class AkunPage extends StatelessWidget {
                                     ) 
                                     :
                                     Image.network(
-                                      gctrl.userLogin['photo'],
+                                      gctrl.userLogin.value.photo,
                                       height: 110,
                                       width: 110,
                                       fit: BoxFit.cover,
@@ -51,14 +51,14 @@ class AkunPage extends StatelessWidget {
                                   height: 20,
                                 ),
                                 Text(
-                                  gctrl.userLogin['name'],
+                                  gctrl.userLogin.value.nama,
                                   textAlign: TextAlign.center,
                                   style: context.textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  gctrl.userLogin['email'],
+                                  gctrl.userLogin.value.email,
                                   textAlign: TextAlign.center,
                                   style: context.textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.normal,
@@ -139,10 +139,9 @@ class AkunPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(AkunController());
+    // final ctrl = Get.put(AkunController());
     final gctrl = Get.find<MainController>();
     final hctrl = Get.find<HomeController>();
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
