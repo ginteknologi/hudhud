@@ -17,10 +17,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:masjid_app/routes/auth/index.dart';
+import 'package:just_audio/just_audio.dart';
 
 enum DialogPopupInfaq { subuh, pagi }
 
 class MainController extends GetxController {
+  final player = AudioPlayer();
   final dataStore = GetStorage();
   var isLogin = false.obs;
   var userLogin = {}.obs;
@@ -568,16 +570,14 @@ class MainController extends GetxController {
   //   );
   // }
 
-  loadStorage() async {
+  Future loadStorage() async {
     try {
       isLogin.value = dataStore.read('isLogin');
       if (isLogin.isTrue) {
         userLogin.value = dataStore.read('userLogin');
-        if (!kIsWeb) {
-          // await ProfileService().setToken(dataStore.read('fcmtoken'));
-        }
       }
     } catch (e) {
+      print(e);
       dataStore.write('isLogin', false);
       isLogin.value = false;
     }
@@ -677,8 +677,7 @@ class MainController extends GetxController {
           );
         } else if (statusLokasi.isDenied) {
           mylokasi.value = LokasiSayaData(
-              keteranganLokasi:
-                  "Silahkan mengaktifkan izin lokasi",
+              keteranganLokasi: "Silahkan mengaktifkan izin lokasi",
               lat: 0,
               lang: 0,
               gpsizin: false);
@@ -699,11 +698,15 @@ class MainController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    await loadStorage();
+    await player.setUrl(// Load a URL
+        'https://cdn.islamic.network/quran/audio/64/ar.alafasy/1.mp3'); // Schemes: (https: | file: | asset: )
+    player.play();
+
     await getCache();
     await waktusolatData();
     await getWaktu();
     await startWaktu();
-    await loadStorage();
     await loadHistoryQuran();
     loadingwaktusolat.value = false;
   }

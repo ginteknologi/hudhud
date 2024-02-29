@@ -8,15 +8,20 @@ import 'package:masjid_app/configs/main_controller.dart';
 
 class SplashscreenController extends GetxController {
   final gctrl = Get.find<MainController>();
+
+  @override
+  void onReady() async {
+    super.onReady();
+    await Future.delayed(const Duration(seconds: 1));
+    if (gctrl.isLogin == true) {
+      Get.offAllNamed(RoutesHome.root);
+    } else {
+      Get.offAllNamed(RoutesAuth.root);
+    }
+  }
+
   @override
   void onInit() {
-    Timer(const Duration(seconds: 1), () {
-      if (gctrl.isLogin == true) {
-        Get.offAllNamed(RoutesHome.root);
-      }else{
-        Get.offAllNamed(RoutesAuth.root);
-      }
-    });
     super.onInit();
   }
 }
