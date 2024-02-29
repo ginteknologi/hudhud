@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_controller.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/routes/quran/index.dart';
 import 'package:share_plus/share_plus.dart';
 

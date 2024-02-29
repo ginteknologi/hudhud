@@ -11,7 +11,7 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:masjid_app/routes/index.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:masjid_app/theme.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
   final mainCtrl = Get.put(MainController());
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    // SystemChrome.setSystemUIOverlayStyle(
+    //     const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
     return GetMaterialApp(
       supportedLocales: context.supportedLocales,

@@ -6,7 +6,7 @@ import 'package:masjid_app/components/button/outlinebutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/quran/pengaturan/alquran_pengaturan_controller.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 
 class AlquranPengaturanPage extends StatelessWidget {
   const AlquranPengaturanPage({Key? key}) : super(key: key);
@@ -281,121 +281,124 @@ class AlquranPengaturanPage extends StatelessWidget {
         context: context,
         builder: (BuildContext bc) {
           return Obx(() => Dialog(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7.0)),
-            child: Container(
-                padding: const EdgeInsets.all(10),
-                width: Get.width,
-                height: 170,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Mendownload",
-                      style: bc.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    LinearProgressIndicator(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      color: Theme.of(bc).primaryColor,
-                      backgroundColor: Color(0xFFD9D9D9),
-                      value: ctrl.progresDownload.value,
-                    ),
-                    Row(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7.0)),
+                child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: Get.width,
+                    height: 170,
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AutoSizeText(
-                          "${ctrl.totalTerDownload}/604",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.black,
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .titleSmall
-                                ?.fontSize,
-                          ),
+                        Text(
+                          "Mendownload",
+                          style: bc.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         ),
-                        AutoSizeText(
-                          "${ctrl.persenDownload}%",
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.black,
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .titleSmall
-                                ?.fontSize,
-                          ),
+                        const SizedBox(
+                          height: 40,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: Obx(() => ctrl.paused.value ? Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {
-                                    ctrl.resumeDownload();
-                                    // Navigator.pop(context);
-                                  },
-                                  borderRadius: BorderRadius.circular(20),
-                                  splashColor: Colors.green.withOpacity(0.5),
-                                  child: Text("Lanjutkan",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.black,
-                                        fontSize: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall
-                                            ?.fontSize,
-                                      ))),
-                            ) : Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {
-                                    ctrl.cancelDownload();
-                                    // Navigator.pop(context);
-                                  },
-                                  borderRadius: BorderRadius.circular(20),
-                                  splashColor: Colors.green.withOpacity(0.5),
-                                  child: Text("Pause",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.black,
-                                        fontSize: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall
-                                            ?.fontSize,
-                                      ))),
-                            )
-                        )
+                        LinearProgressIndicator(
+                          borderRadius: BorderRadius.all(Radius.zero),
+                          color: Theme.of(bc).primaryColor,
+                          backgroundColor: Color(0xFFD9D9D9),
+                          value: ctrl.progresDownload.value,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AutoSizeText(
+                              "${ctrl.totalTerDownload}/604",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.fontSize,
+                              ),
+                            ),
+                            AutoSizeText(
+                              "${ctrl.persenDownload}%",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.fontSize,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: Obx(() => ctrl.paused.value
+                                ? Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                        onTap: () {
+                                          ctrl.resumeDownload();
+                                          // Navigator.pop(context);
+                                        },
+                                        borderRadius: BorderRadius.circular(20),
+                                        splashColor:
+                                            Colors.green.withOpacity(0.5),
+                                        child: Text("Lanjutkan",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.black,
+                                              fontSize: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall
+                                                  ?.fontSize,
+                                            ))),
+                                  )
+                                : Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                        onTap: () {
+                                          ctrl.cancelDownload();
+                                          // Navigator.pop(context);
+                                        },
+                                        borderRadius: BorderRadius.circular(20),
+                                        splashColor:
+                                            Colors.green.withOpacity(0.5),
+                                        child: Text("Pause",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.black,
+                                              fontSize: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall
+                                                  ?.fontSize,
+                                            ))),
+                                  ))
 
-                        // ButtonElevated(
-                        //   title: 'Lanjutkan Nanti',
-                        //   width: Get.width / 3,
-                        //   bgcolor: Colors.transparent,
-                        //   height: 45,
-                        //   color: Colors.black,
-                        //   radius: 7,
-                        //   shadow: false,
-                        //   onPressed: () {
-                        //     Navigator.pop(context);
-                        //   },
-                        // ),
-                        )
-                  ],
-                )),
-          ));
+                            // ButtonElevated(
+                            //   title: 'Lanjutkan Nanti',
+                            //   width: Get.width / 3,
+                            //   bgcolor: Colors.transparent,
+                            //   height: 45,
+                            //   color: Colors.black,
+                            //   radius: 7,
+                            //   shadow: false,
+                            //   onPressed: () {
+                            //     Navigator.pop(context);
+                            //   },
+                            // ),
+                            )
+                      ],
+                    )),
+              ));
         });
   }
 

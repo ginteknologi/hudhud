@@ -35,23 +35,20 @@ void onDidReceiveNotificationResponse(
 
 Future<void> Scheduling() async {
   try {
-  final service = FlutterBackgroundService();
-  await service.configure(
-    iosConfiguration: IosConfiguration(), 
-    androidConfiguration: AndroidConfiguration(
-      onStart: onStartPlay, 
-      isForegroundMode: false
-    )
-  );
-  await service.startService();
-    
+    final service = FlutterBackgroundService();
+    await service.configure(
+        iosConfiguration: IosConfiguration(),
+        androidConfiguration:
+            AndroidConfiguration(onStart: onStartPlay, isForegroundMode: true));
+    await service.startService();
   } catch (e) {
     print(e);
   }
 }
 
 @pragma('vm:entry-point')
-final FlutterLocalNotificationsPlugin notiFPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin notiFPlugin =
+    FlutterLocalNotificationsPlugin();
 void onStartPlay(ServiceInstance service) async {
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
@@ -66,61 +63,47 @@ void onStartPlay(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  Timer.periodic(const Duration(seconds: 60), (timer) async{ 
-    print('checking adzan');
-    if(service is AndroidServiceInstance){
-        var timeleft = DateTime.now();
-        int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
-        var sholatSaatIni;
-        if (authStore.read('waktusolat') != null) {
-          for (var element in authStore.read('waktusolat')) {
-            if (element['active']) {
-              sholatSaatIni = element;
-            }
-          }
-          String resultString = sholatSaatIni['waktu'].replaceAll(':', '');
-          print(sholatSaatIni);
-          if (hourminutes == int.parse(resultString)) {
-              notiFPlugin.show(
-                  DateTime.now().microsecond + DateTime.now().minute,
-                  'Adzan',
-                  'Waktunya Sholat ${sholatSaatIni['label']}',
-                  NotificationDetails(
-                    android: AndroidNotificationDetails(
-                      'adzan_notification',
-                      'Adzan Notif',
-                      channelDescription: 'channel adzan notif',
-                      importance: Importance.max,
-                      priority: Priority.high,
-                      playSound: true,
-                      sound: RawResourceAndroidNotificationSound('adzan'),
-                      enableVibration: false,
-                      audioAttributesUsage: AudioAttributesUsage.alarm,
-                      actions: <AndroidNotificationAction>[
-                        AndroidNotificationAction(
-                          'adzan_notification',
-                          'Tutup Adzan',
-                          // icon: DrawableResourceAndroidBitmap('@mipmap/ic_largeIcon'),
-                          showsUserInterface: false,
-                          // By default, Android plugin will dismiss the notification when the
-                          // user tapped on a action (this mimics the behavior on iOS).
-                          cancelNotification: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-          }
-        }
+  // Timer.periodic(const Duration(seconds: 1200), (timer) async {
+  //   print('checking adzan');
+  //   if (service is AndroidServiceInstance) {
+  //     print('checking adzan 2');
+  //     notiFPlugin.show(
+  //       DateTime.now().microsecond + DateTime.now().minute,
+  //       'Adzan',
+  //       'Waktunya Sholat',
+  //       NotificationDetails(
+  //         android: AndroidNotificationDetails(
+  //           'adzan_notification',
+  //           'Adzan Notif',
+  //           channelDescription: 'channel adzan notif',
+  //           importance: Importance.max,
+  //           priority: Priority.high,
+  //           autoCancel: false,
+  //           playSound: true,
+  //           sound: RawResourceAndroidNotificationSound('adzan'),
+  //           enableVibration: false,
+  //           audioAttributesUsage: AudioAttributesUsage.media,
+  //           actions: <AndroidNotificationAction>[
+  //             AndroidNotificationAction(
+  //               'adzan_notification',
+  //               'Tutup Adzan',
+  //               // icon: DrawableResourceAndroidBitmap('@mipmap/ic_largeIcon'),
+  //               showsUserInterface: false,
+  //               // By default, Android plugin will dismiss the notification when the
+  //               // user tapped on a action (this mimics the behavior on iOS).
+  //               cancelNotification: true,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     );
 
-      if(await service.isForegroundService()){
-        service.setForegroundNotificationInfo(
-          title: 'PushNotif', 
-          content: 'updates at ${DateTime.now()}'
-        );
-      }
-    }
-  });    
+  //     if (await service.isForegroundService()) {
+  //       service.setForegroundNotificationInfo(
+  //           title: 'PushNotif', content: 'updates at ${DateTime.now()}');
+  //     }
+  //   }
+  // });
 }
 
 class SetupFirebase {
@@ -175,8 +158,7 @@ class SetupFirebase {
               requestSoundPermission: false,
               requestBadgePermission: false,
               requestAlertPermission: false,
-              onDidReceiveLocalNotification: onDidReceiveLocalNotification
-              );
+              onDidReceiveLocalNotification: onDidReceiveLocalNotification);
       const DarwinInitializationSettings initializationSettingsMacOS =
           DarwinInitializationSettings();
 
@@ -184,8 +166,7 @@ class SetupFirebase {
           InitializationSettings(
               android: initializationSettingsAndroid,
               iOS: initializationSettingsIOS,
-              macOS: initializationSettingsMacOS
-              );
+              macOS: initializationSettingsMacOS);
 
       await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);

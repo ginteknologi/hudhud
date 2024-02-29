@@ -4,7 +4,7 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/pages/akun/akun_controller.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
@@ -31,21 +31,21 @@ class AkunPage extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.topCenter,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(90),
-                                    child: gctrl.userLogin['photo'] == null || gctrl.userLogin['photo'] == "" ? Image.asset(
-                                      "assets/icons/app_icon.png",
-                                      height: 110,
-                                      width: 110,
-                                      fit: BoxFit.cover,
-                                    ) 
-                                    :
-                                    Image.network(
-                                      gctrl.userLogin['photo'],
-                                      height: 110,
-                                      width: 110,
-                                      fit: BoxFit.cover,
-                                    ) 
-                                  ),
+                                      borderRadius: BorderRadius.circular(90),
+                                      child: gctrl.userLogin['photo'] == null ||
+                                              gctrl.userLogin['photo'] == ""
+                                          ? Image.asset(
+                                              "assets/icons/app_icon.png",
+                                              height: 110,
+                                              width: 110,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.network(
+                                              gctrl.userLogin['photo'],
+                                              height: 110,
+                                              width: 110,
+                                              fit: BoxFit.cover,
+                                            )),
                                 ),
                                 SizedBox(
                                   height: 20,

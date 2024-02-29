@@ -7,7 +7,7 @@ import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/models/listayatData.dart';
 import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ListAyatQuranController extends GetxController

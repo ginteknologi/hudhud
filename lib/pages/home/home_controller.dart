@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:masjid_app/pages/quran/quran_page.dart';
 // import 'package:masjid_app/pages/home/home_service.dart';

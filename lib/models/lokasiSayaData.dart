@@ -1,11 +1,11 @@
 class LokasiSayaData {
   String keteranganLokasi;
   double lat;
-  double lang;
+  double long;
   bool gpsizin;
   LokasiSayaData(
       {required this.keteranganLokasi,
       required this.lat,
-      required this.lang,
+      required this.long,
       this.gpsizin = true});
 }

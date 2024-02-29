@@ -1,3 +1,4 @@
+import 'package:masjid_app/routes/alarm/index.dart';
 import 'package:masjid_app/routes/auth/index.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/artikel/index.dart';
@@ -31,7 +32,8 @@ class AppPages {
     ...PagesTest.pages,
     ...PagesHadits.pages,
     ...PagesDzikir.pages,
-    ...PagesKalenderdzulhijjah.pages
+    ...PagesKalenderdzulhijjah.pages,
+    ...PagesAlarm.pages
   ];
   static var root = RoutesHome.splashscreen;
 }

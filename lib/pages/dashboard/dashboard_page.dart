@@ -21,7 +21,7 @@ import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/routes/quran/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -51,7 +51,7 @@ class DashboardPage extends StatelessWidget {
                       child: Column(
                         children: [
                           header(context),
-                          const WaktuSolat(),
+                          WaktuSolat(),
                           getGridMenu(ctrl),
                           SizedBox(
                             height: Get.width / 30,
@@ -410,86 +410,6 @@ class DashboardPage extends StatelessWidget {
     });
   }
 
-  getButtonCard(DashboardController ctrl, BuildContext context) {
-    return Card(
-        elevation: 0,
-        color: const Color(0xFFD9BA62),
-        margin: const EdgeInsets.only(top: 10),
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7),
-          //set border radius more than 50% of height and width to make circle
-        ),
-        child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-                borderRadius: BorderRadius.circular(7),
-                onTap: () {
-                  if (ctrl.lastRead['ayatNumber'] > 0) {
-                    Get.toNamed(
-                        '${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
-                    // Get.toNamed(AppRoutes.detailEventScreen);
-                  }
-                },
-                child: SizedBox(
-                    width: Get.width,
-                    height: 65,
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Flexible(
-                                flex: 1,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                        'assets/icons/quran_yellow.svg',
-                                        height: 35,
-                                        width: 35),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text("Terakhir Baca",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall
-                                                    ?.fontSize,
-                                                color: Colors.black)),
-                                        Text(
-                                          ctrl.lastRead['ayatNumber'] > 0
-                                              ? '${ctrl.lastRead['suratName']} : ${ctrl.lastRead['ayatNumber']}'
-                                              : 'Belum baca',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.fontSize,
-                                              color: Colors.black),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )),
-                            const Icon(
-                              Icons.chevron_right_rounded,
-                              color: Colors.black,
-                            )
-                          ]),
-                    )))));
-  }
-
   void showSheet(
       DashboardController ctrl, nama, BuildContext context, bool flag) {
     showModalBottomSheet(
@@ -560,45 +480,6 @@ class DashboardPage extends StatelessWidget {
                                         fit: BoxFit.cover,
                                       ),
                                     ),
-                                    // Positioned(
-                                    //     top: 2,
-                                    //     right: 2,
-                                    //     child: Container(
-                                    //       padding: const EdgeInsets.all(3),
-                                    //       constraints: BoxConstraints.loose(
-                                    //           Size.infinite),
-                                    //       decoration: const BoxDecoration(
-                                    //           color: Colors.red,
-                                    //           borderRadius: BorderRadius.all(
-                                    //               Radius.circular(20))),
-                                    //       child: Row(
-                                    //         mainAxisSize: MainAxisSize.min,
-                                    //         crossAxisAlignment:
-                                    //             CrossAxisAlignment.center,
-                                    //         mainAxisAlignment:
-                                    //             MainAxisAlignment.center,
-                                    //         children: [
-                                    //           Container(
-                                    //               margin: const EdgeInsets.only(
-                                    //                   right: 5),
-                                    //               child: SvgPicture.asset(
-                                    //                   'assets/icons/live.svg',
-                                    //                   height: 6,
-                                    //                   width: 6)),
-                                    //           const Text('Live',
-                                    //               overflow:
-                                    //                   TextOverflow.ellipsis,
-                                    //               textAlign: TextAlign.start,
-                                    //               style: TextStyle(
-                                    //                   color: Colors.white,
-                                    //                   fontWeight:
-                                    //                       FontWeight.bold,
-                                    //                   fontStyle:
-                                    //                       FontStyle.italic,
-                                    //                   fontSize: 5)),
-                                    //         ],
-                                    //       ),
-                                    //     ))
                                   ],
                                 ),
                                 titleStyle: context.textTheme.labelMedium

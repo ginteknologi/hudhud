@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_service.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/routes/quran/index.dart';
 
 class AlquranController extends GetxController {

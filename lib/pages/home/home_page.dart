@@ -8,7 +8,7 @@ import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
 import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:masjid_app/controllers/dashboard_controller.dart';
+import 'package:masjid_app/controllers/waktuSolat_controller.dart';
 
 class RamadhanMenuWidget extends StatelessWidget {
-  final DashboardController ctrl = Get.find(); // ctrl
+  final WaktuSolatController ctrl = Get.find(); // ctrl
   RamadhanMenuWidget({super.key});
 
   @override
@@ -46,7 +46,7 @@ class RamadhanMenuWidget extends StatelessWidget {
                   ),
                 ),
                 AutoSizeText(
-                  ctrl.ctrlmain.imsak.value,
+                  ctrl.imsak.value,
                   maxLines: 1,
                   presetFontSizes: [Get.width / 30],
                   style: TextStyle(
@@ -89,7 +89,7 @@ class RamadhanMenuWidget extends StatelessWidget {
                   ),
                 ),
                 AutoSizeText(
-                  ctrl.ctrlmain.berbuka.value,
+                  ctrl.berbuka.value,
                   maxLines: 1,
                   presetFontSizes: [Get.width / 30],
                   style: TextStyle(

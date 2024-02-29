@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:masjid_app/configs/firebase_message_setup.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/kontenSosmed.dart';
@@ -16,22 +16,14 @@ import 'package:permission_handler/permission_handler.dart';
 
 class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
-  // countDown
-  //end countDown
+
   final dataStore = GetStorage();
   var isLoadingKajianLive = true.obs;
   var isLoadingKajian = true.obs;
   var isLoadingArtikel = true.obs;
   var isLoadingLokasi = false.obs;
   var isLoadingKontenSosmed = true.obs;
-  // var isLoadingList = true.obs;
 
-  var hijriDate = {}.obs;
-  var list = {}.obs;
-  var lastRead = {}.obs;
-  var todayDate = "".obs;
-  var dataTerbaru = {}.obs;
-  var listWaktu = [].obs;
   var listMenuHome = [].obs;
   var listKajianSlider = <KajianData>[
     KajianData(
@@ -65,10 +57,6 @@ class DashboardController extends GetxController {
   var listAllMenu = [].obs;
   var listKota = [].obs;
   var latestArtikel = {}.obs;
-  var latestDoa = {}.obs;
-  var latestCampaign = {}.obs;
-  var duration = 0.obs;
-  var txttime = "".obs;
 
   getLokasi() async {
     var statusLokasi = await Permission.location.request();
@@ -82,7 +70,7 @@ class DashboardController extends GetxController {
       ctrlmain.updateLokasi(
         ketLokasi: "${place.locality.toString()}, ${place.country.toString()}",
         lat: position.latitude,
-        lang: position.longitude,
+        long: position.longitude,
       );
       await Scheduling();
       isLoadingLokasi.value = false;
@@ -91,7 +79,6 @@ class DashboardController extends GetxController {
       print('Izin ditolak');
       Get.back();
     } else if (statusLokasi.isPermanentlyDenied) {
-      // Pengguna menolak izin secara permanen, buka pengaturan aplikasi
       openAppSettings();
     }
   }
@@ -146,43 +133,6 @@ class DashboardController extends GetxController {
         "icon": "assets/icons/jadwal_imsak.svg",
         "urlNav": "/kalenderdzulhijjah"
       },
-      // {
-      //   "label": "Lainnya",
-      //   "icon": "assets/icons/lainnya.svg",
-      //   "urlNav": "lainnya"
-      // },
-    ];
-  }
-
-  getAllMenu() async {
-    return listAllMenu.value = [
-      {
-        "label": "Sedekah",
-        "icon": "assets/icons/sedekah_blur.svg",
-        "urlNav": ""
-      },
-      {
-        "label": "Kiblat",
-        "icon": "assets/icons/kiblat.svg",
-        "urlNav": "/kiblat"
-      },
-      {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
-      {
-        "label": "Artikel/Informasi",
-        "icon": "assets/icons/artikel.svg",
-        "urlNav": "/artikel"
-      },
-      {
-        "label": "Dzikir Pagi Petang",
-        "icon": "assets/icons/dzikir_pagi_petang.svg",
-        "urlNav": "/dzikir"
-      },
-      {
-        "label": "Hadits",
-        "icon": "assets/icons/hadits.svg",
-        "urlNav": "/hadits"
-      },
-      // {"label": "DKM", "icon": "assets/icons/dkm.svg", "urlNav": "dkm"},
     ];
   }
 
@@ -239,56 +189,12 @@ class DashboardController extends GetxController {
     }
   }
 
-  getListKota() {
-    return listKota.value = [
-      {
-        "id": 1,
-        "label": "Jakarta",
-      },
-      {
-        "id": 1,
-        "label": "Bandung",
-      },
-      {
-        "id": 1,
-        "label": "Aceh",
-      },
-      {
-        "id": 1,
-        "label": "Bogor",
-      },
-      {
-        "id": 1,
-        "label": "Medan",
-      },
-      {
-        "id": 1,
-        "label": "Palembang",
-      },
-      {
-        "id": 1,
-        "label": "Samarinda",
-      },
-      {
-        "id": 1,
-        "label": "Depok",
-      },
-    ];
-  }
-
-  constructLatestData(data) {
-    var item = data['data'];
-    latestArtikel = item['artikel'];
-    latestCampaign = item['campaign'];
-    latestDoa = item['doa'];
-  }
-
   setFcm() async {
     try {
       final isLogin = dataStore.read('isLogin');
       if (isLogin.toString() == 'true') {
         final fcm = dataStore.read('fcmtoken');
-        var res = await HomeService().setToken(fcm);
+        await HomeService().setToken(fcm);
         print('done fcm saving');
       }
     } catch (e) {
@@ -300,17 +206,10 @@ class DashboardController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    var hijriDateNow = HijriCalendar.now();
-    hijriDate.value = {
-      "bulan": hijriDateNow.toFormat('MMMM'),
-      "tahun": hijriDateNow.toFormat('yyyy'),
-      "hari": hijriDateNow.toFormat('dd'),
-    };
+
     getSliderKajianLive();
     GetDataArtikel();
     getMenuHome();
-    getAllMenu();
-    getListKota();
     getSliderKontenSosmed();
     setFcm();
   }
@@ -320,5 +219,3 @@ class DashboardController extends GetxController {
     super.onClose();
   }
 }
-
-enum DialogPopupInfaq { subuh, pagi }

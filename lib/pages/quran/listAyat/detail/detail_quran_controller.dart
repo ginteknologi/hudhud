@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/pages/quran/quran_service.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 
 class DetailAyatQuranController extends GetxController {
   final dataStore = GetStorage();
@@ -28,7 +28,8 @@ class DetailAyatQuranController extends GetxController {
     final result = await QuranService().getDetail(surahId.toString());
     detail.value = result['data'];
     listAyat = detail['verses'];
-    if (gctrl.perAyatLastRead['suratName'] == detail['name']['transliteration']['id']) {
+    if (gctrl.perAyatLastRead['suratName'] ==
+        detail['name']['transliteration']['id']) {
       surahBookmarked.value = true;
     }
     isLoadingDetail.value = false;
@@ -42,8 +43,7 @@ class DetailAyatQuranController extends GetxController {
       gctrl.perAyatLastRead['id'] = 0;
       ayatBookmarked.value = false;
       dataStore.write('perAyatLastRead', gctrl.perAyatLastRead);
-
-    } else{
+    } else {
       gctrl.perAyatLastRead['ayatNumber'] = selectedData['number']['inSurah'];
       gctrl.perAyatLastRead['suratName'] = surahName.toString();
       gctrl.perAyatLastRead['id'] = selectedData['number']['inSurah'];

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:flutter/services.dart';
 
 class AlquranPengaturanController extends GetxController {
@@ -27,11 +27,14 @@ class AlquranPengaturanController extends GetxController {
       String jsonString = '';
       download.value = true;
       if (type == 'halaman') {
-        jsonString = await rootBundle.loadString('assets/img/quran/quran-page.json');
+        jsonString =
+            await rootBundle.loadString('assets/img/quran/quran-page.json');
       } else if (type == 'madinah') {
-        jsonString = await rootBundle.loadString('assets/img/quran/quran-page-madinah.json');
+        jsonString = await rootBundle
+            .loadString('assets/img/quran/quran-page-madinah.json');
       } else {
-        jsonString = await rootBundle.loadString('assets/img/quran/quran-page-tajwid.json');
+        jsonString = await rootBundle
+            .loadString('assets/img/quran/quran-page-tajwid.json');
       }
       final listSurah = json.decode(jsonString);
       String dir = (await getApplicationDocumentsDirectory()).path;
@@ -88,6 +91,7 @@ class AlquranPengaturanController extends GetxController {
   void cancelDownload() {
     cancelled.value = true;
   }
+
   @override
   void onInit() async {
     super.onInit();

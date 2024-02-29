@@ -7,7 +7,7 @@ import 'package:masjid_app/pages/quran/quran_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 
 class HalamanQuranController extends GetxController
     with GetSingleTickerProviderStateMixin {

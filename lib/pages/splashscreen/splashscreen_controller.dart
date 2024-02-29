@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:masjid_app/routes/auth/index.dart';
 import 'package:masjid_app/routes/home/index.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 // import 'package:masjid_app/routes/onboard/index.dart';
 
 class SplashscreenController extends GetxController {
