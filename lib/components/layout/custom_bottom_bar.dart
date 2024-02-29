@@ -21,7 +21,7 @@ class CustomBottomBar extends StatelessWidget {
         navType: BottomBarEnum.alquran),
     BottomMenuModel(
         icon: 'assets/icons/sahabat_muadzin.png',
-        activeIcon: 'assets/icons/sahabat_muadzin.png',
+        activeIcon: 'assets/icons/sahabat_muadzin_a.png',
         title: "Sahabat Muazin".tr,
         // navType: BottomBarEnum.ruangan
         navType: BottomBarEnum.muazin),

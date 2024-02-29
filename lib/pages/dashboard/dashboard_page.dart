@@ -18,7 +18,6 @@ import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
-import 'package:masjid_app/routes/quran/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
@@ -126,7 +125,7 @@ class DashboardPage extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 0),
-                    child: AutoSizeText(gctrl.userLogin['name'].toString(),
+                    child: AutoSizeText(gctrl.userLogin.value.nama.toString(),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -193,18 +192,11 @@ class DashboardPage extends StatelessWidget {
                   splashColor: Colors.green.withOpacity(0.5),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: gctrl.userLogin['photo'] == null ||
-                              gctrl.userLogin['photo'] == ""
-                          ? Image.asset(
-                              "assets/icons/app_icon.png",
-                              height: 35,
-                              width: 35,
-                            )
-                          : Image.network(
-                              gctrl.userLogin['photo'],
-                              height: 35,
-                              width: 35,
-                            )
+                      child: Image.network(
+                        gctrl.userLogin.value.photo,
+                        height: 35,
+                        width: 35,
+                      )
                       // Image.network(
                       //   "https://picsum.photos/50",
                       //   height: 35,

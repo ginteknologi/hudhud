@@ -38,21 +38,23 @@ class DetailArtikelPage extends StatelessWidget {
                             constraints: BoxConstraints.loose(Size.infinite),
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage(ctrl.detail.value.image),
-                                    fit: BoxFit.fill)),
+                                    image:
+                                        NetworkImage(ctrl.detail.value.image),
+                                    fit: BoxFit.cover)),
                           )),
-                     const SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Container(
                         // width: Get.width,
                         // height: 170,
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
                         constraints: BoxConstraints.loose(Size.infinite),
                         decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
                         ),
                         child: Text(
                           ctrl.detail.value.category?['name'],
@@ -63,7 +65,8 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      AutoSizeText(ctrl.detail.value.judul,
+                      AutoSizeText(
+                        ctrl.detail.value.judul,
                         style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
                         maxLines: 4,
@@ -71,7 +74,10 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.detail.value.updatedAt).add(Duration(hours: 7))),
+                      Text(
+                          DateFormat('HH:mm | dd MMMM yyyy').format(
+                              DateTime.parse(ctrl.detail.value.updatedAt)
+                                  .add(Duration(hours: 7))),
                           // '17:40' +
                           //     "  |  " +
                           //     '17 Agustus 2023',
@@ -82,31 +88,31 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                Html(data: ctrl.detail.value.isi,
-                  style: {
-                    'h2': Style(
-                      fontSize: FontSize(18.0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    'h3': Style(
-                      fontSize: FontSize(18.0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    'p': Style(
-                      fontWeight: FontWeight.bold,
-                      fontSize: FontSize.small
-                    ),
-                    'b': Style(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    'i': Style(
-                      fontStyle: FontStyle.italic,
-                    ),
-                    'a': Style(
-                      color: Colors.blue,
-                    ),
-                  },
-                ),
+                      Html(
+                        data: ctrl.detail.value.isi,
+                        style: {
+                          'h2': Style(
+                            fontSize: FontSize(18.0),
+                            fontWeight: FontWeight.bold,
+                          ),
+                          'h3': Style(
+                            fontSize: FontSize(18.0),
+                            fontWeight: FontWeight.bold,
+                          ),
+                          'p': Style(
+                              fontWeight: FontWeight.bold,
+                              fontSize: FontSize.small),
+                          'b': Style(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          'i': Style(
+                            fontStyle: FontStyle.italic,
+                          ),
+                          'a': Style(
+                            color: Colors.blue,
+                          ),
+                        },
+                      ),
                       // Text(
                       //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer fringilla libero a turpis viverra vehicula. Sed ac pellentesque ligula, ac pharetra justo. Donec ut erat vitae tortor accumsan convallis. Aenean ornare commodo purus sed semper. Sed fermentum et mi ac condimentum. Etiam sed sagittis ex, in imperdiet urna. Cras iaculis ante et purus molestie lacinia. Mauris id dolor et velit tempus imperdiet sit amet vel arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus interdum venenatis quam. Fusce ullamcorper at arcu ut placerat. Nulla",
                       //     style: context.textTheme.bodySmall?.copyWith(
@@ -163,8 +169,8 @@ class DetailArtikelPage extends StatelessWidget {
                                         ?.fontSize,
                                   ),
                                   onPressed: () {
-                                    // Share.share(ctrl.share.value,
-                                    //               subject: ctrl.detail['judul']);
+                                    Share.share(ctrl.share.value,
+                                        subject: ctrl.detail.value.judul);
                                   },
                                 ),
                               ),
@@ -183,7 +189,10 @@ class DetailArtikelPage extends StatelessWidget {
                         style: context.textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
-                      getListArtikel(ctrl, context)
+                      getListArtikel(ctrl, context),
+                      SizedBox(
+                        height: 20,
+                      )
                     ]))));
   }
 
@@ -211,11 +220,16 @@ class DetailArtikelPage extends StatelessWidget {
             subtitleStyle: context.textTheme.labelMedium
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
             onTap: () {
-              Get.offAllNamed('${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
+              Get.toNamed(
+                  '${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
+              // Get.offAllNamed(
+              //     '${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('HH:mm | dd MMMM yyyy').format(DateTime.parse(ctrl.listArtikels[index].updatedAt)),
+              Text(
+                  DateFormat('HH:mm | dd MMMM yyyy').format(
+                      DateTime.parse(ctrl.listArtikels[index].updatedAt)),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,
@@ -252,7 +266,9 @@ class DetailArtikelPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value
+          ? CircularProgressIndicator()
+          : layout(ctrl, context)),
     );
   }
 }

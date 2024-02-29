@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/models/lokasiSayaData.dart';
+import 'package:masjid_app/models/userData.dart';
 import 'package:masjid_app/storage/lokasiSaya_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:masjid_app/routes/auth/index.dart';
@@ -20,7 +21,13 @@ class MainController extends GetxController {
 
   var isLogin = false.obs;
   var isloadingCache = true.obs;
-  var userLogin = {}.obs;
+  Rx<UserData> userLogin = Rx(UserData(
+    id: 0,
+    nama: "Guest",
+    email: "guest",
+    photo: "https://nos.wjv-1.neo.id/marbot/assets/app_icon.png",
+    total_sedekah: 0,
+  ));
 
   Rx<LokasiSayaData> mylokasi =
       LokasiSayaData(keteranganLokasi: "Belum ada lokasi", lat: 0.0, long: 0.0)
@@ -113,17 +120,36 @@ class MainController extends GetxController {
   }
 
   saveStorage(json) async {
-    dataStore.write('isLogin', true);
-    dataStore.write('userLogin', json);
-    isLogin.value = true;
-    userLogin.value = json;
+    try {
+      dataStore.write('isLogin', true);
+      dataStore.write('userLogin', json);
+      isLogin.value = true;
+      userLogin.value = UserData(
+        id: json['id'],
+        nama: json['nama'],
+        email: json['email'],
+        photo: json['photo'] ??
+            'https://nos.wjv-1.neo.id/marbot/assets/app_icon.png',
+        total_sedekah: json['total_sedekah'],
+        phone: json['phone'],
+      );
+    } catch (e) {
+      print('<<<error saveStorage main_controller>>>');
+      print(e);
+    }
   }
 
   removeStorage() async {
     dataStore.remove('userLogin');
-    dataStore.remove('isLogin');
+    dataStore.write('isLogin', false);
     isLogin.value = false;
-    userLogin.value = {};
+    userLogin.value = UserData(
+      id: 0,
+      nama: "Guest",
+      email: "guest",
+      photo: "https://nos.wjv-1.neo.id/marbot/assets/app_icon.png",
+      total_sedekah: 0,
+    );
   }
 
   getCacheLokasi() async {

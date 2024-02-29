@@ -6,6 +6,7 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/pages/artikel/artikel_controller.dart';
 import 'package:masjid_app/routes/artikel/index.dart';
+
 class ArtikelPage extends StatelessWidget {
   const ArtikelPage({super.key});
 
@@ -16,14 +17,15 @@ class ArtikelPage extends StatelessWidget {
             child: Padding(
                 padding: const EdgeInsets.only(left: 21, right: 21),
                 child: Column(children: [
-                  SizedBox(
-                    height: 20,
-                  ),
+                  
                   // getListCategory(ctrl),
                   // SizedBox(
                   //   height: 10,
                   // ),
-                  getListArtikel(ctrl, context)
+                  getListArtikel(ctrl, context),
+                  SizedBox(
+                height: 20,
+              )
                 ]))));
   }
 
@@ -96,11 +98,15 @@ class ArtikelPage extends StatelessWidget {
             subtitleStyle: context.textTheme.labelMedium
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
             onTap: () {
-              Get.toNamed('${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
+              Get.toNamed(
+                  '${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(ctrl.listArtikels[index].updatedAt).add(Duration(hours: 7))),
+              Text(
+                  DateFormat('dd MMMM yyyy HH:mm').format(
+                      DateTime.parse(ctrl.listArtikels[index].updatedAt)
+                          .add(Duration(hours: 7))),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,
@@ -121,7 +127,7 @@ class ArtikelPage extends StatelessWidget {
                   //     style: context.textTheme.labelMedium?.copyWith(
                   //         fontWeight: FontWeight.w300, color: Colors.white)),
                 ],
-              )
+              ),
             ],
           ),
         );
@@ -137,7 +143,9 @@ class ArtikelPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel / Informasi", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value
+          ? CircularProgressIndicator()
+          : layout(ctrl, context)),
     );
   }
 }

@@ -27,36 +27,46 @@ class EditAkunPage extends StatelessWidget {
                                 Stack(
                                   children: [
                                     Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.white, width: 4),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              offset: Offset(0, 4),
-                                              color: Colors.black.withOpacity(
-                                                0.3,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.white, width: 4),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                offset: Offset(0, 4),
+                                                color: Colors.black.withOpacity(
+                                                  0.3,
+                                                ),
+                                                blurRadius: 3,
                                               ),
-                                              blurRadius: 3,
-                                            ),
-                                          ],
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(70))),
-                                      child: Obx(() => ctrl.inputFoto.value.length < 1 && !ctrl.isNewfile.value ?
-                                      CircleAvatar(
-                                        radius: 70,
-                                        backgroundImage: AssetImage("assets/icons/app_icon.png")
-                                      ) 
-                                      : !ctrl.isNewfile.value ? CircleAvatar(
-                                        radius: 70,
-                                        backgroundImage: NetworkImage(ctrl.inputFoto.value),
-                                      ) 
-                                      :
-                                      CircleAvatar(
-                                        radius: 70,
-                                        backgroundImage: FileImage(ctrl.newfile!),
-                                      )
-                                      ),
-                                    ),
+                                            ],
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(70))),
+                                        child: InkWell(
+                                          onTap: () {
+                                            ctrl.pilihFile();
+                                          },
+                                          child: Obx(() => ctrl.inputFoto.value
+                                                          .length <
+                                                      1 &&
+                                                  !ctrl.isNewfile.value
+                                              ? CircleAvatar(
+                                                  radius: 70,
+                                                  backgroundImage: AssetImage(
+                                                      "assets/icons/app_icon.png"))
+                                              : !ctrl.isNewfile.value
+                                                  ? CircleAvatar(
+                                                      radius: 70,
+                                                      backgroundImage:
+                                                          NetworkImage(ctrl
+                                                              .inputFoto.value),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: 70,
+                                                      backgroundImage:
+                                                          FileImage(
+                                                              ctrl.newfile!),
+                                                    )),
+                                        )),
                                     Positioned(
                                       bottom: 1,
                                       right: 1,
@@ -96,7 +106,7 @@ class EditAkunPage extends StatelessWidget {
                           label: "Nama",
                           labelStyle: Theme.of(context).textTheme.bodySmall,
                           margin: EdgeInsets.symmetric(vertical: 5),
-                          placeholder: "Do'a Anda",
+                          placeholder: "Nama Anda",
                           placeholderStyle:
                               Theme.of(context).textTheme.bodySmall,
                           inputPadding: const EdgeInsets.all(15),
@@ -166,7 +176,7 @@ class EditAkunPage extends StatelessWidget {
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  Get.toNamed(RoutesHome.root);
+                  ctrl.simpan();
                 },
               ),
             ),

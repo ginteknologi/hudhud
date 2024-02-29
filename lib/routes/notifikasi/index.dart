@@ -2,14 +2,14 @@ import 'package:get/get.dart';
 import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_page.dart';
 import 'package:masjid_app/pages/notifikasi/invoice/invoice_page.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_page.dart';
-
+import 'package:masjid_app/routes/isLogin_middleware.dart';
 class PagesNotifikasi {
   static var pages = [
     GetPage(
       name: RoutesNotifikasi.root,
       page: () => const NotifikasiPage(),
       transition: Transition.cupertino,
-      // middlewares: [IsLoginMiddleware()],
+      middlewares: [IsLoginMiddleware()],
     ),
     GetPage(
       name: RoutesNotifikasi.detail,

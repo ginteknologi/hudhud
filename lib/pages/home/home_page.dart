@@ -4,18 +4,21 @@ import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/layout/sliding_widget.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
 import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/pages/home/home_controller.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
-import 'package:masjid_app/controllers/main_controller.dart';
+import 'package:masjid_app/pages/muazin/muazin_page.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:masjid_app/routes/muazin/index.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Widget getCurrentWidget(BottomBarEnum type, HomeController ctrl) {
+    print(type);
     switch (type) {
       case BottomBarEnum.beranda:
         return DashboardPage();
@@ -25,6 +28,8 @@ class HomePage extends StatelessWidget {
       case BottomBarEnum.ruangan:
         // return const RuanganPage();
         return getDefaultWidget();
+      case BottomBarEnum.muazin:
+        return MuazinPage();
       case BottomBarEnum.dkm:
         return const DkmPage();
       default:
@@ -162,7 +167,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(HomeController());
     final gctrl = Get.find<MainController>();
-    print(ctrl.type.value);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       extendBodyBehindAppBar: true,
@@ -180,11 +184,12 @@ class HomePage extends StatelessWidget {
               child: CustomBottomBar(
                 selectedIdx: ctrl.selectedIdx.value,
                 onChanged: (BottomBarEnum type) {
-                  if (type == BottomBarEnum.muazin) {
-                    showSheet(ctrl, gctrl, context);
-                  } else {
-                    ctrl.type.value = type;
-                  }
+                  // if (type == BottomBarEnum.muazin) {
+                  // showSheet(ctrl, gctrl, context);
+                  // Get.toNamed(RoutesMuadzin.root);
+                  // } else {
+                  ctrl.type.value = type;
+                  // }
                 },
               ))
           : Container(

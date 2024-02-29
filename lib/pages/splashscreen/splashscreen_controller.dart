@@ -13,11 +13,12 @@ class SplashscreenController extends GetxController {
   void onReady() async {
     super.onReady();
     await Future.delayed(const Duration(seconds: 1));
-    if (gctrl.isLogin == true) {
-      Get.offAllNamed(RoutesHome.root);
-    } else {
-      Get.offAllNamed(RoutesAuth.root);
-    }
+    Get.offAllNamed(RoutesHome.root);
+    // if (gctrl.isLogin == true) {
+    //   Get.offAllNamed(RoutesHome.root);
+    // } else {
+    //   Get.offAllNamed(RoutesAuth.root);
+    // }
   }
 
   @override

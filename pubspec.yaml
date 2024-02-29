@@ -43,7 +43,7 @@ dependencies:
   flutter_local_notifications: ^16.1.0
   permission_handler: ^11.0.0
   open_filex: ^4.3.2
-  google_fonts: ^6.0.0
+  google_fonts: 4.0.4
   fluttertoast: ^8.2.4
   language_builder: ^0.1.2
   easy_localization: ^3.0.3
@@ -76,6 +76,7 @@ dependencies:
   scrollable_positioned_list: ^0.3.8
   skeletonizer: ^1.0.1
   autocomplete_textfield: 2.0.1
+  minio_new: ^1.0.2
   path_provider: ^2.1.2
   adhan: ^2.0.0+1
 

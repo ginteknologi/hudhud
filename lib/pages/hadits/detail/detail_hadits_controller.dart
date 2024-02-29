@@ -12,8 +12,8 @@ class DetailHaditsController extends GetxController {
   getList() async {
     try {
       isLoadingList.value = true;
-      final result =
-          await HaditsService().getList(arguments['detail']['namaTabel']);
+      final result = await HaditsService().getList(arguments['detail']['namaTabel']);
+      print(result['data']);
       for (var element in result['data']) {
         list.add(ListKitabData(
             ID_Kitab: element['ID_Kitab'],
@@ -24,6 +24,7 @@ class DetailHaditsController extends GetxController {
       }
       isLoadingList.value = false;
     } catch (e) {
+      print('<<<Error Getlist>>>');
       print(e);
     }
   }

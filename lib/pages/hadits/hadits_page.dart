@@ -130,8 +130,7 @@ class HaditsPage extends StatelessWidget {
           padding: const EdgeInsets.all(8), // Sesuaikan dengan kebutuhan Anda
           child: InkWell(
             onTap: () {
-              Get.toNamed(RoutesHadits.detail,
-                  arguments: {'detail': ctrl.list[index]});
+              Get.toNamed(RoutesHadits.detail, arguments: {'detail': ctrl.list[index]});
             },
             borderRadius: BorderRadius.circular(20),
             splashColor: Colors.green.withOpacity(0.5),
@@ -139,7 +138,7 @@ class HaditsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  "assets/icons/thumb_quran2x.png",
+                  "assets/icons/${ctrl.list[index]['longNama']}.png",
                   width: 103,
                   fit: BoxFit.cover,
                 ),
