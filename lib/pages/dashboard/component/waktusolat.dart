@@ -1,13 +1,12 @@
-import 'dart:ffi';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/controllers/waktuSolat_controller.dart';
 import 'package:masjid_app/routes/alarm/index.dart';
+// import 'package:masjid_app/routes/alarm/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:hijri/hijri_calendar.dart';
+// import 'package:hijri/hijri_calendar.dart';
 
 class WaktuSolat extends StatelessWidget {
   final WaktuSolatController ctrl = Get.find();
@@ -46,6 +45,7 @@ class WaktuSolat extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
@@ -73,30 +73,36 @@ class WaktuSolat extends StatelessWidget {
                                                         FontWeight.normal,
                                                     color: Colors.white)),
                                       ]),
-                                  SizedBox(height: Get.height * 0.01),
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        AutoSizeText(
-                                            ctrl.waktuSolat.value.label,
-                                            maxLines: 1,
-                                            style: context
-                                                .textTheme.headlineSmall
-                                                ?.copyWith(
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    color: Colors.white)),
-                                        AutoSizeText(ctrl.waktuSolat.value.time,
-                                            maxLines: 1,
-                                            style: context
-                                                .textTheme.displayMedium
-                                                ?.copyWith(
-                                                    fontWeight: FontWeight.w900,
-                                                    color: Colors.white,
-                                                    height: 1))
-                                      ]),
-                                  SizedBox(height: Get.height * 0.015),
+                                  
+                                            SizedBox(height: Get.height / 150),
+                                  Expanded(
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          AutoSizeText(
+                                              ctrl.waktuSolat.value.label,
+                                              maxLines: 1,
+                                              style: context
+                                                  .textTheme.headlineSmall
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.white)),
+                                                    SizedBox(height: 1),
+                                          AutoSizeText(
+                                              ctrl.waktuSolat.value.time24!,
+                                              maxLines: 1,
+                                              style: context
+                                                  .textTheme.displayMedium
+                                                  ?.copyWith(
+                                                      fontWeight: FontWeight.w900,
+                                                      color: Colors.white,
+                                                      height: 1))
+                                        ]),
+                                  ),
+                                            SizedBox(height: Get.height / 150),
                                   Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       crossAxisAlignment:

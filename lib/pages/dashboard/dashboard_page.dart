@@ -17,11 +17,13 @@ import 'package:masjid_app/pages/dashboard/component/ramadhanMenu.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
+import 'package:masjid_app/routes/muazin/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
+import 'package:masjid_app/routes/kajian/index.dart';
 
 class DashboardPage extends StatelessWidget {
   final DashboardController ctrl = Get.find();
@@ -66,7 +68,7 @@ class DashboardPage extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(top: 10),
                             child: getSeparator(
-                                'Kajian Live', 'Lihat Semua', context, ctrl),
+                                'Doa-Doa', 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
@@ -323,12 +325,14 @@ class DashboardPage extends StatelessWidget {
                 highlightColor: Colors.transparent,
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 onTap: () async {
-                  if (nama == 'Kajian Live') {
-                    await ctrl.getKajianLive();
+                  if (nama == 'Doa-Doa') {
+                    Get.toNamed(RoutesKajian.root, arguments: {'judul': 'Doa-Doa', 'type': 'doa'});
+                    // await ctrl.getKajianLive();
                   } else {
-                    await ctrl.getKajianTafsir();
+                    // await ctrl.getKajianTafsir();
+                    Get.toNamed(RoutesKajian.root, arguments: {'judul': 'Kajian Tafsir Al-Quran', 'type': 'tafsir'});
                   }
-                  showSheet(ctrl, nama, context, true);
+                  // showSheet(ctrl, nama, context, true);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8),

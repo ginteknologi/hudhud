@@ -30,7 +30,7 @@ class MainController extends GetxController {
   ));
 
   Rx<LokasiSayaData> mylokasi =
-      LokasiSayaData(keteranganLokasi: "Belum ada lokasi", lat: 0.0, long: 0.0)
+      LokasiSayaData(keteranganLokasi: "Belum ada lokasi", lat: -6.195438799475241, long: 106.82264795337655)
           .obs;
 
   Rx<bookmarkData> ayatBookmark = bookmarkData(
@@ -192,8 +192,8 @@ class MainController extends GetxController {
         } else if (statusLokasi.isDenied) {
           mylokasi.value = LokasiSayaData(
               keteranganLokasi: "Silahkan mengaktifkan izin lokasi",
-              lat: 0,
-              long: 0,
+              lat: -6.195438799475241,
+              long: 106.82264795337655,
               gpsizin: false);
 
           lokasiStorage.saveLokasi(mylokasi.value);
@@ -213,8 +213,8 @@ class MainController extends GetxController {
       print("error cache lokasi");
       mylokasi.value = LokasiSayaData(
           keteranganLokasi: "aktifkan izin lokasi",
-          lat: 0,
-          long: 0,
+          lat: -6.195438799475241,
+          long: 106.82264795337655,
           gpsizin: false);
       isloadingCache.value = false;
     }

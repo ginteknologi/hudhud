@@ -32,27 +32,31 @@ class WaktuSolatController extends GetxController {
       label: "label",
       time: "time",
       status: true,
+      time24: "time",
     ),
     WaktuSolatData(
       label: "label",
       time: "time",
+      time24: "time",
       status: true,
     ),
     WaktuSolatData(
       label: "label",
       time: "time",
+      time24: "time",
       status: true,
     ),
     WaktuSolatData(
       label: "label",
       time: "time",
+      time24: "time",
       status: true,
     ),
   ].obs;
   Future getWaktuSolat() async {
     try {
       final myCoordinates = Coordinates(
-          lokasiStorage.getLokasi().lat, lokasiStorage.getLokasi().long);
+          gctrl.mylokasi.value.lat, gctrl.mylokasi.value.long);
       final waktu = CalculationMethod.singapore.getParameters();
       final prayerTimes = PrayerTimes.today(myCoordinates, waktu);
       list.value = [
@@ -88,7 +92,6 @@ class WaktuSolatController extends GetxController {
           DateFormat.jm().format(fajrTime.subtract(Duration(minutes: 10)));
       berbuka.value = DateFormat.jm().format(prayerTimes.maghrib);
       _updateNextSalat();
-      isLoading.value = false;
     } catch (e) {
       print("error getwaktusolat");
       print(e);
@@ -100,12 +103,17 @@ class WaktuSolatController extends GetxController {
       DateTime now = DateTime.now();
       int index = 0;
       for (int i = 0; i < list.length; i++) {
+        var cekwaktu = list[i].time24!.contains(".");
+        var default_split = ":";
+        if (cekwaktu) {
+          default_split = ".";
+        }
         DateTime salatTime = DateTime(
           now.year,
           now.month,
           now.day,
-          int.parse(list[i].time24!.split(":")[0]),
-          int.parse(list[i].time24!.split(":")[1]),
+          int.parse(list[i].time24!.split(default_split)[0]),
+          int.parse(list[i].time24!.split(default_split)[1]),
         );
         if (salatTime.isAfter(now)) {
           index = i;
@@ -117,6 +125,7 @@ class WaktuSolatController extends GetxController {
       timer = Timer.periodic(Duration(seconds: 1), (_) {
         _calculateTimeToNextSalat(waktuSolat.value.time24!);
       });
+      isLoading.value = false;
     } catch (e) {
       print("error _updateNextSalat");
       print(e);
@@ -125,13 +134,18 @@ class WaktuSolatController extends GetxController {
 
   void _calculateTimeToNextSalat(String nextSalatTime) {
     try {
+        var cekwaktu = nextSalatTime.contains(".");
+        var default_split = ":";
+        if (cekwaktu) {
+          default_split = ".";
+        }      
       DateTime now = DateTime.now();
       DateTime nextSalatDateTime = DateTime(
         now.year,
         now.month,
         now.day,
-        int.parse(nextSalatTime.split(":")[0]),
-        int.parse(nextSalatTime.split(":")[1]),
+        int.parse(nextSalatTime.split(default_split)[0]),
+        int.parse(nextSalatTime.split(default_split)[1]),
       );
 
       if (nextSalatDateTime.isBefore(now)) {

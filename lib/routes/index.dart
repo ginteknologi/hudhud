@@ -15,6 +15,8 @@ import 'package:masjid_app/routes/ruangan/index.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:masjid_app/routes/kiblat/index.dart';
 import 'package:masjid_app/routes/test/index.dart';
+import 'package:masjid_app/routes/muazin/index.dart';
+import 'package:masjid_app/routes/kajian/index.dart';
 
 class AppPages {
   static var list = [
@@ -33,6 +35,8 @@ class AppPages {
     ...PagesHadits.pages,
     ...PagesDzikir.pages,
     ...PagesKalenderdzulhijjah.pages,
+    ...PagesMuazin.pages,
+    ...PagesKajian.pages,
     ...PagesAlarm.pages
   ];
   // static var root = RoutesHome.root;
