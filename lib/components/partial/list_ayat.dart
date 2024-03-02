@@ -103,35 +103,30 @@ class ListAyatWidget extends StatelessWidget {
                               child: Center(
                                 child: InkWell(
                                     onTap: () async { 
-                                      if (audioPlayer.position == null) {
-                                        print("clicked play position null");
-                                        await audioPlayer.setUrl(audioFile!);
-                                        await audioPlayer.play();
-                                        onplay.value = true;
-                                      } else if (onplay.value) {
-                                        print("clicked pause");
-                                        audioPosition = audioPlayer.position;
-                                        await audioPlayer.pause();
-                                        onplay.value = false;
+                                      if (onplay.value) {
+                                      print("clicked pause");
+                                      audioPosition = audioPlayer.position;
+                                      await audioPlayer.pause();
+                                      onplay.value = false;
+                                    } else {
+                                      print("clicked play");
+                                      if (audioPosition != null) {
+                                        await audioPlayer.seek(audioPosition!);
                                       } else {
-                                        print("clicked play");
-                                        if (audioPosition != null) {
-                                          await audioPlayer.seek(audioPosition!);
-                                        } else {
-                                          await audioPlayer.setUrl(audioFile!);
-                                        }
-                                        await audioPlayer.play();
-                                        onplay.value = true;
-
-                                        audioPlayer.playerStateStream.listen((PlayerState state) {
-                                          if (state.processingState == ProcessingState.completed) {
-                                            // File selesai diputar
-                                            print("Selesai");
-                                            audioPosition = null;
-                                            onplay.value = false;
-                                          }
-                                        });
+                                        await audioPlayer.setUrl(audioFile!);
                                       }
+                                      await audioPlayer.play();
+                                      onplay.value = true;
+
+                                      audioPlayer.playerStateStream.listen((PlayerState state) {
+                                        if (state.processingState == ProcessingState.completed) {
+                                          // File selesai diputar
+                                          print("Selesai");
+                                          audioPosition = null;
+                                          onplay.value = false;
+                                        }
+                                      });
+                                    }
                                     },
                                     child: Obx(() => onplay.value
                                         ? Icon(

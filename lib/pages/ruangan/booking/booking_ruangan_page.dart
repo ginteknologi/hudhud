@@ -10,8 +10,6 @@ import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/ruangan/booking/booking_ruangan_controller.dart';
-import 'package:masjid_app/routes/home/index.dart';
-import 'package:simple_moment/simple_moment.dart';
 class BookingRuanganPage extends StatelessWidget {
   const BookingRuanganPage({super.key});
 
@@ -52,7 +50,9 @@ class BookingRuanganPage extends StatelessWidget {
                           onChanged: (newValue) {
                             data['onChanged'];
                           },
-                          validator: (String? newValue) {},
+                          validator: (String? newValue) {
+                            return null;
+                          },
                         );
                       }
                       if (data['type'] == 'datepicker') {

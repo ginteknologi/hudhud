@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/button/outlinebutton.dart';
 import 'package:masjid_app/pages/auth/auth_controller.dart';
 import 'package:masjid_app/routes/auth/index.dart';
 

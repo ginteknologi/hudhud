@@ -55,12 +55,11 @@ class ButtonVariant extends StatelessWidget {
     var _bgcolor = isDisabled ? bgcolor.withOpacity(.5) : bgcolor;
     var _color = isDisabled ? color.withOpacity(.5) : color;
     var _textStyle =
-        textStyle == "" ? Theme.of(context).textTheme.button : textStyle;
+        textStyle == "" ? Theme.of(context).textTheme.labelLarge : textStyle;
     _textStyle = _textStyle!.copyWith(color: isInverted ? _bgcolor : _color);
     var _textTooltip = textTooltip.isEmpty ? label : textTooltip;
     final ButtonStyle buttonStyle = OutlinedButton.styleFrom(
-      padding: EdgeInsets.zero,
-      primary: isInverted ? _bgcolor : _color,
+      foregroundColor: isInverted ? _bgcolor : _color, padding: EdgeInsets.zero,
       backgroundColor: isInverted ? _color : _bgcolor,
       side: BorderSide(
           color: border > 0

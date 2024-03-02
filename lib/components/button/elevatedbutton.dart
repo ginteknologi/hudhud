@@ -68,10 +68,8 @@ class ButtonElevated extends StatelessWidget {
       child: ElevatedButton(
         onPressed: disabled ? () {} : onPressed,
         style: ElevatedButton.styleFrom(
-          onPrimary: _color,
-          elevation: 0,
+          foregroundColor: _color, backgroundColor: _bgcolor, elevation: 0,
           shadowColor: Colors.transparent,
-          primary: _bgcolor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
           ),
@@ -103,7 +101,7 @@ class ButtonElevated extends StatelessWidget {
                             nearLeft ? Alignment.centerLeft : Alignment.center,
                         child: Text(
                           title,
-                          style: Theme.of(context).textTheme.button!.copyWith(
+                          style: Theme.of(context).textTheme.labelLarge!.copyWith(
                                 color: color,
                                 fontSize: size,
                               ),

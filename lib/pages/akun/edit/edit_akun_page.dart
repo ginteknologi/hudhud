@@ -4,7 +4,6 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/pages/akun/edit/edit_akun_controller.dart';
-import 'package:masjid_app/routes/home/index.dart';
 
 class EditAkunPage extends StatelessWidget {
   const EditAkunPage({super.key});

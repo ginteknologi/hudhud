@@ -66,8 +66,7 @@ class ButtonOutline extends StatelessWidget {
     var _bgcolor = disabled ? bgcolor.withOpacity(.5) : bgcolor;
     var _color = disabled ? color.withOpacity(.5) : color;
     final ButtonStyle buttonStyle = OutlinedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      primary: inverted ? _bgcolor : _color,
+      foregroundColor: inverted ? _bgcolor : _color, padding: EdgeInsets.symmetric(horizontal: 10),
       backgroundColor: inverted ? _color : _bgcolor,
       side: BorderSide(
           color: border > 0
@@ -107,7 +106,7 @@ class ButtonOutline extends StatelessWidget {
                       Text(
                         title,
                         textAlign: textAlign,
-                        style: Theme.of(context).textTheme.button!.copyWith(
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: inverted ? _bgcolor : _color,
                               fontSize: size,
                               letterSpacing: letterSpacing,
@@ -142,7 +141,7 @@ class ButtonOutline extends StatelessWidget {
                         Container(width: textGap),
                       Text(
                         title,
-                        style: Theme.of(context).textTheme.button!.copyWith(
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: inverted ? _bgcolor : _color,
                               fontSize: size,
                               letterSpacing: letterSpacing,

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:hijri/hijri_calendar.dart';
 import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';

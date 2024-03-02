@@ -6,7 +6,6 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_controller.dart';
 import 'package:masjid_app/routes/home/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
-import 'package:masjid_app/theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class DetailNotifikasiPage extends StatelessWidget {

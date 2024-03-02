@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:adhan/adhan.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/waktuSolatData.dart';
-import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
-import 'package:masjid_app/service/waktuSolat_service.dart';
 import 'package:masjid_app/storage/lokasiSaya_storage.dart';
 import 'package:simple_moment/simple_moment.dart';
 

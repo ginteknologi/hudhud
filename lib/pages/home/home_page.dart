@@ -12,7 +12,6 @@ import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
 import 'package:masjid_app/pages/muazin/muazin_page.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:masjid_app/routes/muazin/index.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

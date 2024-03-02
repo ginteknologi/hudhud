@@ -38,8 +38,7 @@ class ButtonText extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          primary: color,
-          shape: RoundedRectangleBorder(
+          foregroundColor: color, shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
           ),
         ),

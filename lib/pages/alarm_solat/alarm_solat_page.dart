@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:masjid_app/controllers/alarm_solat_controller.dart';
-import 'package:masjid_app/controllers/waktuSolat_controller.dart';
 import 'package:masjid_app/models/waktuSolatData.dart';
 
 class AlarmSolatPage extends StatelessWidget {

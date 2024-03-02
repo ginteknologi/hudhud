@@ -5,7 +5,6 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_controller.dart';
-import 'package:masjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
 
 class TransaksiSedekahPage extends StatelessWidget {
   const TransaksiSedekahPage({super.key});

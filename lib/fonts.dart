@@ -47,9 +47,9 @@ class FontListV2 {
       _size = size.toDouble();
     } else {
       if (type == 'title') {
-        _size = Theme.of(context).textTheme.subtitle1!.fontSize!;
+        _size = Theme.of(context).textTheme.titleMedium!.fontSize!;
       } else {
-        _size = Theme.of(context).textTheme.caption!.fontSize!;
+        _size = Theme.of(context).textTheme.bodySmall!.fontSize!;
       }
     }
     final fontConfig = GoogleFonts.poppins(
@@ -60,9 +60,9 @@ class FontListV2 {
     );
     late TextStyle fontFinal;
     if (type == 'title') {
-      fontFinal = Theme.of(context).textTheme.subtitle1!.merge(fontConfig);
+      fontFinal = Theme.of(context).textTheme.titleMedium!.merge(fontConfig);
     } else {
-      fontFinal = Theme.of(context).textTheme.caption!.merge(fontConfig);
+      fontFinal = Theme.of(context).textTheme.bodySmall!.merge(fontConfig);
     }
     return fontFinal;
   }

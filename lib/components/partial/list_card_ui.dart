@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/routes/sedekah/index.dart';
-import 'package:masjid_app/theme.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class ListCardUiWidget extends StatelessWidget {

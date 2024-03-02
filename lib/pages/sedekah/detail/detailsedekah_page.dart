@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';

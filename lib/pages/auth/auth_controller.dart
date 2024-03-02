@@ -3,7 +3,6 @@ import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/pages/auth/auth_service.dart';
 import 'package:masjid_app/routes/home/index.dart';
 import 'package:masjid_app/configs/main_service.dart';
-import 'package:masjid_app/models/userData.dart';
 
 class AuthController extends GetxController {
   final gctrl = Get.find<MainController>();

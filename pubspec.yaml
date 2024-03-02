@@ -80,6 +80,8 @@ dependencies:
   path_provider: ^2.1.2
   adhan: ^2.0.0+1
 
+  flutter_background_service_android: any
+  http: any
 dependency_overrides:
   intl: any
 

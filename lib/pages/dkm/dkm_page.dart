@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/dkm/dkm_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'full_screen_image_dialog.dart'; // Pastikan impor ini sudah disertakan
+// Pastikan impor ini sudah disertakan
 
 class DkmPage extends StatelessWidget {
   const DkmPage({super.key});

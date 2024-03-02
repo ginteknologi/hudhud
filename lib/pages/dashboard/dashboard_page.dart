@@ -17,7 +17,6 @@ import 'package:masjid_app/pages/dashboard/component/ramadhanMenu.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
-import 'package:masjid_app/routes/muazin/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';

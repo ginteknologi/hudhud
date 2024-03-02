@@ -8,7 +8,6 @@ import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
 import 'package:masjid_app/pages/quran/quran_controller.dart';
-import 'package:masjid_app/theme.dart';
 
 class QuranPage extends StatelessWidget {
   final TypeViewQuran typeView;

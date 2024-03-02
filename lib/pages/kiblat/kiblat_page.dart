@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_compass.dart';
-import 'package:masjid_app/components/layout/app_bar_ws.dart';
 
 class KiblatPage extends StatelessWidget {
   const KiblatPage({Key? key}) : super(key: key);

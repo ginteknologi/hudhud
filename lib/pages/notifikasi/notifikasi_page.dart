@@ -5,7 +5,6 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_controller.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
-import 'package:masjid_app/theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 class NotifikasiPage extends StatelessWidget {
   const NotifikasiPage({super.key});
