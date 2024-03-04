@@ -4,10 +4,12 @@ import 'package:masjid_app/configs/remote_data.dart';
 import 'package:masjid_app/models/kajianData.dart';
 
 class KajianService {
-  static Future<List<KajianData>> getListKajian() async {
+  static Future<List<KajianData>> getListKajian(
+      {pageKey = 0, pageSize = 20}) async {
     try {
       final response = await http.get(
-          Uri.parse("${RemoteData.api}/kajian/list"),
+          Uri.parse(
+              "${RemoteData.api}/kajian/list?page=$pageKey&limit=$pageSize"),
           headers: <String, String>{
             'Authorization': "Bearer ${authStore.read('jwt')}",
             'Content-Type': 'application/json; charset=UTF-8',
@@ -29,10 +31,12 @@ class KajianService {
     }
   }
 
-  static Future<List<KajianData>> getListKajiLive() async {
+  static Future<List<KajianData>> getListKajiLive(
+      {pageKey = 0, pageSize = 20}) async {
     try {
       final response = await http.get(
-          Uri.parse("${RemoteData.api}/kajian/kaji-live/list"),
+          Uri.parse(
+              "${RemoteData.api}/kajian/kaji-live/list?page=$pageKey&limit=$pageSize"),
           headers: <String, String>{
             'Authorization': "Bearer ${authStore.read('jwt')}",
             'Content-Type': 'application/json; charset=UTF-8',
@@ -53,5 +57,4 @@ class KajianService {
       throw error;
     }
   }
-
 }

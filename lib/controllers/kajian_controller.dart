@@ -1,9 +1,15 @@
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:masjid_app/service/kajian_service.dart';
 import 'package:masjid_app/models/kajianData.dart';
 
 class KajianController extends GetxController {
+  static const _pageSize = 20;
+
+  final PagingController<int, KajianData> pagingController =
+      PagingController(firstPageKey: 1);
+
   DateTime sekarang = DateTime.now();
   DateFormat formatter = DateFormat.yMMMM();
 
@@ -11,15 +17,27 @@ class KajianController extends GetxController {
   var listData = [].obs;
   var listKajian = <KajianData>[].obs;
 
-  Future<void> getData() async {
+  Future<void> _fetchPage(int pageKey) async {
     try {
-      isLoading = true.obs;
+      var newItems;
       if (Get.arguments['type'] == 'tafsir') {
-        listKajian.value = await KajianService.getListKajian();
-      }else{
-        listKajian.value = await KajianService.getListKajiLive();
+        newItems = await KajianService.getListKajian(
+            pageKey: pageKey, pageSize: _pageSize);
+      } else {
+        newItems = await KajianService.getListKajiLive(
+            pageKey: pageKey, pageSize: _pageSize);
       }
-      isLoading.value = false;
+
+      if (newItems.isNotEmpty) {
+        if (newItems.length < _pageSize) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          final nextPageKey = pageKey + 1;
+          pagingController.appendPage(newItems, nextPageKey);
+        }
+      } else {
+        pagingController.appendLastPage(newItems);
+      }
     } catch (e) {
       print("error");
       print(e);
@@ -28,7 +46,15 @@ class KajianController extends GetxController {
 
   @override
   void onInit() async {
-    await getData();
     super.onInit();
+    pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    pagingController.dispose();
   }
 }

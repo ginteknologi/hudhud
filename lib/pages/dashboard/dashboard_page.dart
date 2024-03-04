@@ -325,11 +325,15 @@ class DashboardPage extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 onTap: () async {
                   if (nama == 'Doa-Doa') {
-                    Get.toNamed(RoutesKajian.root, arguments: {'judul': 'Doa-Doa', 'type': 'doa'});
+                    Get.toNamed(RoutesKajian.root,
+                        arguments: {'judul': 'Doa-Doa', 'type': 'doa'});
                     // await ctrl.getKajianLive();
                   } else {
                     // await ctrl.getKajianTafsir();
-                    Get.toNamed(RoutesKajian.root, arguments: {'judul': 'Kajian Tafsir Al-Quran', 'type': 'tafsir'});
+                    Get.toNamed(RoutesKajian.root, arguments: {
+                      'judul': 'Kajian Tafsir Al-Quran',
+                      'type': 'tafsir'
+                    });
                   }
                   // showSheet(ctrl, nama, context, true);
                 },
@@ -677,23 +681,6 @@ class DashboardPage extends StatelessWidget {
       ],
     );
   }
-
-  // void showPopupInfaq(ctrl, context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext bc) {
-  //         return Dialog(
-  //           elevation: 0,
-  //           backgroundColor: const Color(0xFFDADADA),
-  //           shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(7.0)),
-  //           child: Container(
-  //               padding: const EdgeInsets.all(10),
-  //               height: 400,
-  //               child: Text("testss")),
-  //         );
-  //       });
-  // }
 
   @override
   Widget build(BuildContext context) {
