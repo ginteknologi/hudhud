@@ -1,20 +1,23 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/custom_card_item.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/sosmedData.dart';
-import 'package:masjid_app/pages/dkm/dkm_controller.dart';
+import 'package:masjid_app/controllers/dkm_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 // Pastikan impor ini sudah disertakan
 
 class DkmPage extends StatelessWidget {
-  const DkmPage({super.key});
+  final DkmController ctrl = Get.find();
 
-  layout(DkmController ctrl, BuildContext context) {
+  DkmPage({super.key});
+
+  layout(BuildContext context) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -67,7 +70,9 @@ class DkmPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Obx(() => ctrl.isLoadingSlider.value ? SizedBox() : getListCategory(ctrl)),
+                Obx(() => ctrl.isLoadingSlider.value
+                    ? SizedBox()
+                    : getListCategory(ctrl)),
                 SizedBox(
                   height: 20,
                 ),
@@ -95,73 +100,34 @@ class DkmPage extends StatelessWidget {
                                   itemCount: ctrl.listKontak.length,
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
-                                    // Datum model = filteredEvents[index];
                                     final SosmedData item =
                                         ctrl.listKontak[index];
-                                    return FadeInUp(
-                                      child: ListItemUiWidget(
-                                        id: item.id,
-                                        title: item.nama,
-                                        widthContent:
-                                            MediaQuery.of(context).size.width *
-                                                0.7,
-                                        showIcon: IconPosition.left,
-                                        iconLeft: SvgPicture.asset(item.icon,
-                                            height: 30, width: 30),
-                                        titleStyle: context.textTheme.bodySmall
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                        category: item.type,
-                                        onTap: () async {
-                                          final Uri url = Uri.parse(item.link);
-                                          if (!await launchUrl(url)) {
-                                            print('Tidak dapat membuka link');
-                                          }
-                                        },
-                                        // subtitleStyle: context.textTheme.bodySmall
-                                        //     ?.copyWith(
-                                        //         fontWeight: FontWeight.normal,
-                                        //         color: Colors.black),
-                                      ),
+                                    return ListItemUiWidget(
+                                      id: item.id,
+                                      title: item.nama,
+                                      widthContent:
+                                          MediaQuery.of(context).size.width *
+                                              0.7,
+                                      showIcon: IconPosition.left,
+                                      iconLeft: SvgPicture.asset(item.icon,
+                                          height: 30, width: 30),
+                                      titleStyle: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                      category: item.type,
+                                      onTap: () async {
+                                        final Uri url = Uri.parse(item.link);
+                                        if (!await launchUrl(url)) {
+                                          // print('Tidak dapat membuka link');
+                                          Fluttertoast.showToast(
+                                            msg: "Tidak dapat membuka link",
+                                          );
+                                        }
+                                      },
                                     );
                                   },
                                 ),
-                        ),
-                        ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: ctrl.listKontak.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            // Datum model = filteredEvents[index];
-                            final SosmedData item = ctrl.listKontak[index];
-                            return FadeInUp(
-                              child: ListItemUiWidget(
-                                id: item.id,
-                                title: item.nama,
-                                widthContent:
-                                    MediaQuery.of(context).size.width * 0.7,
-                                showIcon: IconPosition.left,
-                                iconLeft: SvgPicture.asset(item.icon,
-                                    height: 30, width: 30),
-                                titleStyle: context.textTheme.bodySmall
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                category: item.type,
-                                onTap: () async {
-                                  final Uri url = Uri.parse(item.link);
-                                  if (!await launchUrl(url)) {
-                                    print('Tidak dapat membuka link');
-                                  }
-                                },
-                                // subtitleStyle: context.textTheme.bodySmall
-                                //     ?.copyWith(
-                                //         fontWeight: FontWeight.normal,
-                                //         color: Colors.black),
-                              ),
-                            );
-                          },
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -221,7 +187,6 @@ class DkmPage extends StatelessWidget {
                         //     );
                         //   },
                         // )
-
                       ],
                     ))
               ],
@@ -255,11 +220,9 @@ class DkmPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DkmController());
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: layout(ctrl, context),
+      body: layout(context),
     );
   }
 }

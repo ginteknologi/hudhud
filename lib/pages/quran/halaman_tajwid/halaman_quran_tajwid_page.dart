@@ -5,7 +5,7 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/controllers/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman_tajwid/component/image_viewer_widget.dart';
 import 'package:masjid_app/pages/quran/halaman_tajwid/halaman_quran_tajwid_controller.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
@@ -485,8 +485,6 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                       ),
                     ))
               ],
-            )
-            ));
-    
+            )));
   }
 }

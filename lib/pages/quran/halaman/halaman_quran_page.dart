@@ -5,7 +5,7 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/InputText.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/controllers/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_controller.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
@@ -29,7 +29,6 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                 child: Stack(
                   children: [
                     GestureDetector(
-                       
                         child: Column(
                       children: [
                         Flexible(
@@ -230,148 +229,159 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                           bottomLeft: Radius.circular(7),
                           bottomRight: Radius.circular(7))),
                   child: Column(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ButtonElevated(
-                                  title: 'Juz',
-                                  width: 120,
-                                  bgcolor: ctrl.selectedJuz.value == true
-                                      ? Get.theme.primaryColor
-                                      : Get.theme.secondaryHeaderColor,
-                                  height: 30,
-                                  color: ctrl.selectedJuz.value == true
-                                      ? Colors.white
-                                      : Colors.black,
-                                  radius: 0,
-                                  onPressed: () {
-                                    ctrl.selectedJuz.value = !ctrl.selectedJuz.value;
-                                  },
-                                ),
-                                ButtonElevated(
-                                  title: 'Halaman',
-                                  width: 120,
-                                  bgcolor: ctrl.selectedJuz.value == false
-                                      ? Get.theme.primaryColor
-                                      : Get.theme.secondaryHeaderColor,
-                                  height: 30,
-                                  color: ctrl.selectedJuz.value == false
-                                      ? Colors.white
-                                      : Colors.black,
-                                  radius: 0,
-                                  onPressed: () {
-                                    ctrl.selectedJuz.value = !ctrl.selectedJuz.value;
-                                  },
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              child: InputText(
-                                inputType:TextInputType.number,
-                                controller: ctrl.inputFilter,
-                                labelPosition: "none",
-                                placeholder: ctrl.selectedJuz.value == true ? "1-30" : "1-604",
-                                textAlign: TextAlign.center,
-                                isFill: true,
-                                placeholderStyle: Get.textTheme.bodyMedium,
-                                inputAction: TextInputAction.next,
-                                onSubmit: (newValue) {},
-                                onEditingComplete: () {},
-                                onChanged: (newValue) {},
-                                validator: (newValue) {
-                                  if (newValue!.isEmpty) {
-                                    return "Mohon untuk diisi.";
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            ctrl.isMax.value != true ? Container() : Container(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ButtonElevated(
+                            title: 'Juz',
+                            width: 120,
+                            bgcolor: ctrl.selectedJuz.value == true
+                                ? Get.theme.primaryColor
+                                : Get.theme.secondaryHeaderColor,
+                            height: 30,
+                            color: ctrl.selectedJuz.value == true
+                                ? Colors.white
+                                : Colors.black,
+                            radius: 0,
+                            onPressed: () {
+                              ctrl.selectedJuz.value = !ctrl.selectedJuz.value;
+                            },
+                          ),
+                          ButtonElevated(
+                            title: 'Halaman',
+                            width: 120,
+                            bgcolor: ctrl.selectedJuz.value == false
+                                ? Get.theme.primaryColor
+                                : Get.theme.secondaryHeaderColor,
+                            height: 30,
+                            color: ctrl.selectedJuz.value == false
+                                ? Colors.white
+                                : Colors.black,
+                            radius: 0,
+                            onPressed: () {
+                              ctrl.selectedJuz.value = !ctrl.selectedJuz.value;
+                            },
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: InputText(
+                          inputType: TextInputType.number,
+                          controller: ctrl.inputFilter,
+                          labelPosition: "none",
+                          placeholder:
+                              ctrl.selectedJuz.value == true ? "1-30" : "1-604",
+                          textAlign: TextAlign.center,
+                          isFill: true,
+                          placeholderStyle: Get.textTheme.bodyMedium,
+                          inputAction: TextInputAction.next,
+                          onSubmit: (newValue) {},
+                          onEditingComplete: () {},
+                          onChanged: (newValue) {},
+                          validator: (newValue) {
+                            if (newValue!.isEmpty) {
+                              return "Mohon untuk diisi.";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      ctrl.isMax.value != true
+                          ? Container()
+                          : Container(
                               width: Get.width - 25,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  ctrl.selectedJuz.value == true ? Text('Maks Juz 30', style: Get.textTheme.bodySmall ?.copyWith(color: Colors.red)) : Text('Maks Halaman 604', style: Get.textTheme.bodySmall ?.copyWith(color: Colors.red))
+                                  ctrl.selectedJuz.value == true
+                                      ? Text('Maks Juz 30',
+                                          style: Get.textTheme.bodySmall
+                                              ?.copyWith(color: Colors.red))
+                                      : Text('Maks Halaman 604',
+                                          style: Get.textTheme.bodySmall
+                                              ?.copyWith(color: Colors.red))
                                 ],
                               ),
                             ),
-                            Container(
-                              width: Get.width - 25,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 15),
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFDCDCDC),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(7),
-                                      bottomRight: Radius.circular(7))),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: ctrl.selectedJuz.value
-                                      ? [
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          ButtonElevated(
-                                            title: 'Buka Juz',
-                                            width: Get.width / 2.5,
-                                            size: Get
-                                                .textTheme.bodySmall?.fontSize,
-                                            bgcolor: Color(0xFF2128C2),
-                                            height: 30,
-                                            color: Colors.white,
-                                            radius: 5,
-                                            onPressed: () {
-                                              if(ctrl.selectedJuz.value == true){
-                                                if(int.parse(ctrl.inputFilter.text) > 30 ) {
-                                                  ctrl.isMax.value = true;
-                                                }else{
-                                                  ctrl.isMax.value = false;
-                                                  ctrl.goToNumber(ctrl.inputFilter.text);
-                                                  Navigator.pop(context);
-                                                }
-                                              }
-                                            },
-                                          ),
-                                        ]
-                                      : [
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          ButtonElevated(
-                                            title: 'Buka Halaman',
-                                            width: Get.width / 2.5,
-                                            size: Get
-                                                .textTheme.bodySmall?.fontSize,
-                                            bgcolor: Color(0xFF2128C2),
-                                            height: 30,
-                                            color: Colors.white,
-                                            radius: 5,
-                                            onPressed: () {
-                                              if(ctrl.selectedJuz.value != true){
-                                                if(int.parse(ctrl.inputFilter.text) > 604 ) {
-                                                  ctrl.isMax.value = true;
-                                                }else{
-                                                  ctrl.isMax.value = false;
-                                                  ctrl.goToHal(ctrl.inputFilter.text);
-                                                  Navigator.pop(context);
-                                                }
-                                              }
-                                            },
-                                          ),
-                                        ]),
-                            ),
-                          ],
-                        ))),
+                      Container(
+                        width: Get.width - 25,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
+                        decoration: BoxDecoration(
+                            color: Color(0xFFDCDCDC),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(7),
+                                bottomRight: Radius.circular(7))),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: ctrl.selectedJuz.value
+                                ? [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    ButtonElevated(
+                                      title: 'Buka Juz',
+                                      width: Get.width / 2.5,
+                                      size: Get.textTheme.bodySmall?.fontSize,
+                                      bgcolor: Color(0xFF2128C2),
+                                      height: 30,
+                                      color: Colors.white,
+                                      radius: 5,
+                                      onPressed: () {
+                                        if (ctrl.selectedJuz.value == true) {
+                                          if (int.parse(ctrl.inputFilter.text) >
+                                              30) {
+                                            ctrl.isMax.value = true;
+                                          } else {
+                                            ctrl.isMax.value = false;
+                                            ctrl.goToNumber(
+                                                ctrl.inputFilter.text);
+                                            Navigator.pop(context);
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ]
+                                : [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    ButtonElevated(
+                                      title: 'Buka Halaman',
+                                      width: Get.width / 2.5,
+                                      size: Get.textTheme.bodySmall?.fontSize,
+                                      bgcolor: Color(0xFF2128C2),
+                                      height: 30,
+                                      color: Colors.white,
+                                      radius: 5,
+                                      onPressed: () {
+                                        if (ctrl.selectedJuz.value != true) {
+                                          if (int.parse(ctrl.inputFilter.text) >
+                                              604) {
+                                            ctrl.isMax.value = true;
+                                          } else {
+                                            ctrl.isMax.value = false;
+                                            ctrl.goToHal(ctrl.inputFilter.text);
+                                            Navigator.pop(context);
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ]),
+                      ),
+                    ],
+                  ))),
         ],
       ),
     );
   }
+
   @override
   void initState() {
     super.initState();

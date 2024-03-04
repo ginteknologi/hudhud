@@ -2,10 +2,10 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
-import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/models/menuBottomData.dart';
+import 'package:masjid_app/controllers/home_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/home/index.dart';
 

@@ -273,22 +273,7 @@ class DashboardPage extends StatelessWidget {
           return Material(
               color: Colors.transparent,
               child: InkWell(
-                  onTap: () async {
-                    if (ctrl.listMenuHome[index]['urlNav'] != '' &&
-                        ctrl.listMenuHome[index]['urlNav'] != null) {
-                      if (ctrl.listMenuHome[index]['typeLink'] == "external") {
-                        final Uri url = Uri.parse(ctrl.listMenuHome[index]['urlNav']);
-                        if (!await launchUrl(url)) {
-                          print('Tidak dapat membuka link');
-                        }
-                      }else if(ctrl.listMenuHome[index]['typeLink'] == "slide"){
-                        Get.offAllNamed(RoutesHome.root, arguments: 'alquran');
-                        // return AlquranPage();
-                      } else {
-                        Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
-                      }
-                    }
-                  },
+                  onTap: ctrl.listMenuHome[index]['onTap']! as void Function(),
                   borderRadius: BorderRadius.circular(20),
                   splashColor: Colors.green.withOpacity(0.5),
                   child: Column(
@@ -386,6 +371,8 @@ class DashboardPage extends StatelessWidget {
   }
 
   getListItem(DashboardController ctrl) {
+    print("ctrl.isLoadingKajianTafsir ${ctrl.isLoadingKajianTafsir}");
+    print("ctrl.isLoadingKajianTafsir ${ctrl.listDoaSlider.length}");
     return SizedBox(
       height: 151,
       child: ListView.separated(

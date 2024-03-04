@@ -14,7 +14,9 @@ class KalenderdzulhijjahPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF27B8A8),
+        foregroundColor: Colors.white,
         title: Text('Jadwal Imsakiyah'),
+        centerTitle: true,
         // systemOverlayStyle: SystemUiOverlayStyle(
         //   statusBarColor: Colors.red,
         //   statusBarIconBrightness: Brightness.dark,

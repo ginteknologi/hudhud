@@ -8,7 +8,8 @@ import 'package:masjid_app/pages/artikel/artikel_controller.dart';
 import 'package:masjid_app/routes/artikel/index.dart';
 
 class ArtikelPage extends StatelessWidget {
-  const ArtikelPage({super.key});
+  final ArtikelController ctrl = Get.put(ArtikelController());
+  ArtikelPage({super.key});
 
   layout(ArtikelController ctrl, BuildContext context) {
     return SafeArea(
@@ -17,15 +18,14 @@ class ArtikelPage extends StatelessWidget {
             child: Padding(
                 padding: const EdgeInsets.only(left: 21, right: 21),
                 child: Column(children: [
-                  
                   // getListCategory(ctrl),
                   // SizedBox(
                   //   height: 10,
                   // ),
                   getListArtikel(ctrl, context),
                   SizedBox(
-                height: 20,
-              )
+                    height: 20,
+                  )
                 ]))));
   }
 
@@ -137,8 +137,6 @@ class ArtikelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(ArtikelController());
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(

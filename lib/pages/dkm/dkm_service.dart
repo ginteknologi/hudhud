@@ -21,7 +21,6 @@ class DkmService extends GetConnect {
         final List<SosmedData> newData = data.map((json) {
           return SosmedData.fromJson(json);
         }).toList();
-        print(newData);
         return newData;
       } else if (response.statusCode == 401) {
         // RemoteData.authError();

@@ -21,7 +21,6 @@ class KajianPage extends StatelessWidget {
           elevation: 0,
           centerTitle: true,
           title: Text(Get.arguments['judul']),
-          // title: Text('kajian'),
         ),
         body: PagedListView<int, KajianData>.separated(
           pagingController: ctrl.pagingController,

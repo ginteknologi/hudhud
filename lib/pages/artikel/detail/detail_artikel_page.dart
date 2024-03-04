@@ -12,7 +12,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:masjid_app/routes/artikel/index.dart';
 
 class DetailArtikelPage extends StatelessWidget {
-  const DetailArtikelPage({super.key});
+  final DetailArtikelController ctrl = Get.put(DetailArtikelController());
 
   layout(DetailArtikelController ctrl, BuildContext context) {
     return SafeArea(
@@ -220,6 +220,7 @@ class DetailArtikelPage extends StatelessWidget {
             subtitleStyle: context.textTheme.labelMedium
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
             onTap: () {
+              Get.delete<DetailArtikelController>();
               Get.toNamed(
                   '${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
               // Get.offAllNamed(
@@ -260,12 +261,10 @@ class DetailArtikelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailArtikelController());
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarWSWidget.getAppbarWidget(
-          title: "Artikel", context: context, elevation: 0),
+          title: "Artikel Detail", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value
           ? CircularProgressIndicator()
           : layout(ctrl, context)),

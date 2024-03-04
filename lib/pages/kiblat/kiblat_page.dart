@@ -8,39 +8,36 @@ class KiblatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-        backgroundColor: Color(0xFF27B8A8),
-        title: Text('Jadwal Imsakiyah'),
-        // systemOverlayStyle: SystemUiOverlayStyle(
-        //   statusBarColor: Colors.red,
-        //   statusBarIconBrightness: Brightness.dark,
-        // ),
+      appBar: AppBar(
+        // foregroundColor: Colors.white,
+        // backgroundColor: Color(0xFF27B8A8),
+        title: Text('Kiblat'),
         elevation: 0,
       ),
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: FutureBuilder(
-          future: FlutterQiblah.androidDeviceSensorSupport(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              );
-            }
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: FutureBuilder(
+        future: FlutterQiblah.androidDeviceSensorSupport(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            );
+          }
 
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error.toString()}'),
-              );
-            }
-            if (snapshot.hasData) {
-              return const KiblatCompass();
-            } else {
-              return const Text('Error');
-            }
-          },
-        ),
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error.toString()}'),
+            );
+          }
+          if (snapshot.hasData) {
+            return const KiblatCompass();
+          } else {
+            return const Text('Error');
+          }
+        },
+      ),
     );
   }
 }
