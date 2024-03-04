@@ -36,7 +36,7 @@ class KajianPage extends StatelessWidget {
                 },
                 dense: true,
                 title: AutoSizeText(
-                  item.judul,
+                  item.judul!,
                   maxLines: 1,
                   presetFontSizes: [Get.width / 30],
                   style: TextStyle(fontWeight: FontWeight.bold),

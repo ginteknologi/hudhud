@@ -31,7 +31,7 @@ class ListItemUiWidget extends StatelessWidget {
 
   int id;
   String? category;
-  String title;
+  String? title;
   TextStyle? titleStyle;
   String? subTitle;
   TextStyle? subtitleStyle;

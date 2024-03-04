@@ -30,12 +30,12 @@ class DetailArtikelController extends GetxController {
           judul: result['data']['judul'],
           isi: result['data']['isi'],
           image: result['data']['image'],
-          category: result['data']['category'],
+          category_artikel: result['data']['category_artikel'],
           updatedAt: result['data']['updatedAt']);
       String judul = result['data']['judul'];
       String content = _convertHtmlToText(result['data']['isi']);
       String link = 'Dibagikan dari aplikasi\n\n Marbot App';
-
+print(detail);
       share.value = '$judul\n\n$content\n\n$link';
 
       final listartikel = await ArtikelService().getListArtikellain();

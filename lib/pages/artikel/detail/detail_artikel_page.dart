@@ -57,7 +57,7 @@ class DetailArtikelPage extends StatelessWidget {
                               const BorderRadius.all(Radius.circular(10)),
                         ),
                         child: Text(
-                          ctrl.detail.value.category?['name'],
+                          ctrl.detail.value.category_artikel?['name'] ?? '',
                           style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.white),
                         ),

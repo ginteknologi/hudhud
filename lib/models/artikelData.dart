@@ -2,7 +2,7 @@ class ArtikelData {
   int id;
   String judul, updatedAt, image;
   String? isi, idCategoryArtikel; 
-  Map? category;
+  Map? category_artikel;
   ArtikelData(
       {required this.id,
       required this.judul,
@@ -10,6 +10,6 @@ class ArtikelData {
       required this.image,
       this.idCategoryArtikel,
       this.isi,
-      this.category
+      this.category_artikel
       });
 }

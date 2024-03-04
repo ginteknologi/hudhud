@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -7,7 +5,6 @@ import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
-import 'package:masjid_app/models/kontenSosmed.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/service/dashboard_service.dart';
@@ -18,41 +15,16 @@ class DashboardController extends GetxController {
 
   final dataStore = GetStorage();
   var isLoadingKajianLive = true.obs;
-  var isLoadingKajian = true.obs;
+  var isLoadingKajianTafsir = true.obs;
   var isLoadingArtikel = true.obs;
   var isLoadingLokasi = false.obs;
-  var isLoadingKontenSosmed = true.obs;
+  var isLoadingDoaDashboard = true.obs;
 
   var listMenuHome = [].obs;
-  var listKajianSlider = <KajianData>[
-    KajianData(
-        id: 1,
-        judul: 'judul',
-        subjudul: 'subjudul',
-        image: 'https://dummyimage.com/600x400/000/fff',
-        link: 'link'),
-    KajianData(
-        id: 1,
-        judul: 'judul',
-        subjudul: 'subjudul',
-        image: 'https://dummyimage.com/600x400/000/fff',
-        link: 'link'),
-    KajianData(
-        id: 1,
-        judul: 'judul',
-        subjudul: 'subjudul',
-        image: 'https://dummyimage.com/600x400/000/fff',
-        link: 'link'),
-  ].obs;
-  var listKajian = [].obs;
-  var listKontenSosmed = [].obs;
-  var listArtikel = <ArtikelData>[
-    ArtikelData(
-        id: 1,
-        judul: "dummy",
-        updatedAt: "1992-10-10",
-        image: "https://dummyimage.com/600x400/000/fff"),
-  ].obs;
+  var listKajianSlider = <KajianData>[].obs;
+  var listKajianLiveSlider = <KajianData>[].obs;
+  var listDoaSlider = <KajianData>[].obs;
+  var listArtikel = <ArtikelData>[].obs;
   var listAllMenu = [].obs;
   var listKota = [].obs;
   var latestArtikel = {}.obs;
@@ -90,6 +62,7 @@ class DashboardController extends GetxController {
         listArtikel.add(ArtikelData(
             id: element['id'],
             judul: element['judul'],
+            category_artikel: element['category_artikel'],
             updatedAt: element['updatedAt'],
             image: element['image']));
       }
@@ -102,45 +75,94 @@ class DashboardController extends GetxController {
   getMenuHome() async {
     return listMenuHome.value = [
       {
-        "label": "Sedekah",
-        "icon": "assets/icons/sedekah_blur.svg",
-        "urlNav": ""
+        "label": "Al Quran",
+        "icon": "assets/icons/newQuran.svg",
+        "urlNav": "/quran",
+        "typeLink": "slide"
       },
       {
         "label": "Kiblat",
         "icon": "assets/icons/kiblat.svg",
-        "urlNav": "/kiblat"
+        "urlNav": "/kiblat",
+        "typeLink": "newtab"
       },
-      {"label": "Do'a", "icon": "assets/icons/doa.svg", "urlNav": "/doa"},
+      {
+        "label": "Do'a", 
+        "icon": "assets/icons/doa.svg", 
+        "urlNav": "/doa",
+        "typeLink": "newtab"
+      },
       {
         "label": "Informasi",
         "icon": "assets/icons/informasi.svg",
-        "urlNav": "/artikel"
+        "urlNav": "/artikel",
+        "typeLink": "newtab"
+
       },
       {
         "label": "Hadits",
         "icon": "assets/icons/hadits.svg",
-        "urlNav": "/hadits"
+        "urlNav": "/hadits",
+        "typeLink": "newtab"
       },
       {
         "label": "Dzikir Pagi Petang",
         "icon": "assets/icons/dzikir_pagi_petang.svg",
-        "urlNav": "/dzikir"
+        "urlNav": "/dzikir",
+        "typeLink": "newtab"
       },
       {
         "label": "Jadwal Imsakiyah",
         "icon": "assets/icons/jadwal_imsak.svg",
-        "urlNav": "/kalenderdzulhijjah"
+        "urlNav": "/kalenderdzulhijjah",
+        "typeLink": "newtab"
+      },
+      {
+        "label": "Cari Masjid",
+        "icon": "assets/icons/wews.svg",
+        "urlNav": "",
+        "typeLink": "newtab"
+
+      },
+      {
+        "label": "Instagram",
+        "icon": "assets/icons/insta2.svg",
+        "urlNav": "https://www.instagram.com/marbot.aplikasi/",
+        "typeLink": "external"
+
+      },
+      {
+        "label": "Youtube",
+        "icon": "assets/icons/Youtube.svg",
+        "urlNav": "https://www.youtube.com/@MarbotAplikasi",
+        "typeLink": "external"
+
       },
     ];
   }
 
-  getSliderKajianLive() async {
+  getSliderKajianTafsir() async {
     try {
-      final result = await DashboardService().getSliderKajian();
-      listKajianSlider.value = [];
+      final result = await DashboardService().getSliderKajian('tafsir');
       for (var element in result['data']) {
         listKajianSlider.add(KajianData(
+            id: element['id'],
+            judul: element['judul'],
+            subjudul: element['subjudul'],
+            image: element['image'],
+            link: element['link']));
+      }
+      isLoadingKajianTafsir.value = false;
+    } catch (e) {
+      print(e);
+      print('<<<<<<<<error getSliderKajian>>>>>>>>');
+    }
+  }
+  getSliderKajianLive() async {
+    try {
+      final result = await DashboardService().getSliderKajian('live');
+      for (var element in result['data']) {
+        listKajianLiveSlider.add(KajianData(
             id: element['id'],
             judul: element['judul'],
             subjudul: element['subjudul'],
@@ -153,36 +175,15 @@ class DashboardController extends GetxController {
     }
   }
 
-  getSliderKontenSosmed() async {
+  getSliderDoaDashboard() async {
     try {
-      final result = await DashboardService().getSliderKajiLive();
-      listKontenSosmed.value = [];
+      final result = await DashboardService().getSliderKajian('doa_ramadhan');
       for (var i = 0; i < result['data'].length; i++) {
         var element = result['data'][i];
-        listKontenSosmed.add(SosmedData(
+        listDoaSlider.add(KajianData(
             id: element['id'], image: element['image'], link: element['link']));
       }
-      isLoadingKontenSosmed.value = false;
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future getKajianLive() async {
-    try {
-      final listresult = await DashboardService().getListKajiLive();
-      listKajian.value = listresult['data'];
-      isLoadingKajian.value = false;
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future getKajianTafsir() async {
-    try {
-      final listresult = await DashboardService().getListKajian();
-      listKajian.value = listresult['data'];
-      isLoadingKajian.value = false;
+      isLoadingDoaDashboard.value = false;
     } catch (e) {
       print(e);
     }
@@ -207,9 +208,10 @@ class DashboardController extends GetxController {
     super.onInit();
 
     getSliderKajianLive();
+    getSliderKajianTafsir();
     GetDataArtikel();
     getMenuHome();
-    getSliderKontenSosmed();
+    getSliderDoaDashboard();
     setFcm();
   }
 

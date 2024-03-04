@@ -20,14 +20,7 @@ class KajianController extends GetxController {
   Future<void> _fetchPage(int pageKey) async {
     try {
       var newItems;
-      if (Get.arguments['type'] == 'tafsir') {
-        newItems = await KajianService.getListKajian(
-            pageKey: pageKey, pageSize: _pageSize);
-      } else {
-        newItems = await KajianService.getListKajiLive(
-            pageKey: pageKey, pageSize: _pageSize);
-      }
-
+      newItems = await KajianService.getListKajian(type:Get.arguments['type'], pageKey: pageKey, pageSize: _pageSize);
       if (newItems.isNotEmpty) {
         if (newItems.length < _pageSize) {
           pagingController.appendLastPage(newItems);

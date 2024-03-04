@@ -5,38 +5,11 @@ import 'package:masjid_app/models/kajianData.dart';
 
 class KajianService {
   static Future<List<KajianData>> getListKajian(
-      {pageKey = 0, pageSize = 20}) async {
+      {type, pageKey = 0, pageSize = 20}) async {
     try {
       final response = await http.get(
           Uri.parse(
-              "${RemoteData.api}/kajian/list?page=$pageKey&limit=$pageSize"),
-          headers: <String, String>{
-            'Authorization': "Bearer ${authStore.read('jwt')}",
-            'Content-Type': 'application/json; charset=UTF-8',
-          });
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        final List<dynamic> data = jsonData['data'];
-        final List<KajianData> newData = data.map((json) {
-          return KajianData.fromJson(json);
-        }).toList();
-        return newData;
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (error) {
-      print("error di service");
-      print(error);
-      throw error;
-    }
-  }
-
-  static Future<List<KajianData>> getListKajiLive(
-      {pageKey = 0, pageSize = 20}) async {
-    try {
-      final response = await http.get(
-          Uri.parse(
-              "${RemoteData.api}/kajian/kaji-live/list?page=$pageKey&limit=$pageSize"),
+              "${RemoteData.api}/kajian/list?page=$pageKey&limit=$pageSize&type=$type"),
           headers: <String, String>{
             'Authorization': "Bearer ${authStore.read('jwt')}",
             'Content-Type': 'application/json; charset=UTF-8',

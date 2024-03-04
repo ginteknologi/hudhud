@@ -28,9 +28,9 @@ class DashboardService extends GetConnect {
     }
   }
 
-  Future getSliderKajian() async {
+  Future getSliderKajian(type) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/kajian/slider"),
+        Uri.parse("${RemoteData.api}/kajian/slider?type=$type"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -49,8 +49,9 @@ class DashboardService extends GetConnect {
     }
   }
 
-  Future getListKajian() async {
-    final response = await http.get(Uri.parse("${RemoteData.api}/kajian/list"),
+  Future getListKajian(type) async {
+    print(type);
+    final response = await http.get(Uri.parse("${RemoteData.api}/kajian/list?type=$type"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -69,45 +70,45 @@ class DashboardService extends GetConnect {
     }
   }
 
-  Future getListKajiLive() async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/kajian/kaji-live/list"),
-        headers: <String, String>{
-          'Authorization': "Bearer ${authStore.read('jwt')}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      return json;
-    } else if (response.statusCode == 401) {
-      // RemoteData.authError();
-    } else {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
+  // Future getListKajiLive() async {
+  //   final response = await http.get(
+  //       Uri.parse("${RemoteData.api}/kajian/kaji-live/list"),
+  //       headers: <String, String>{
+  //         'Authorization': "Bearer ${authStore.read('jwt')}",
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       });
+  //   if (response.statusCode == 200) {
+  //     final json = jsonDecode(response.body);
+  //     json['code'] = response.statusCode;
+  //     return json;
+  //   } else if (response.statusCode == 401) {
+  //     // RemoteData.authError();
+  //   } else {
+  //     final json = jsonDecode(response.body);
+  //     json['code'] = response.statusCode;
 
-      return json;
-    }
-  }
+  //     return json;
+  //   }
+  // }
 
-  Future getSliderKajiLive() async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/kajian/kaji-live/slider"),
-        headers: <String, String>{
-          'Authorization': "Bearer ${authStore.read('jwt')}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      return json;
-    } else if (response.statusCode == 401) {
-      // RemoteData.authError();
-    } else {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
+  // Future getSliderKajiLive() async {
+  //   final response = await http.get(
+  //       Uri.parse("${RemoteData.api}/kajian/kaji-live/slider"),
+  //       headers: <String, String>{
+  //         'Authorization': "Bearer ${authStore.read('jwt')}",
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       });
+  //   if (response.statusCode == 200) {
+  //     final json = jsonDecode(response.body);
+  //     json['code'] = response.statusCode;
+  //     return json;
+  //   } else if (response.statusCode == 401) {
+  //     // RemoteData.authError();
+  //   } else {
+  //     final json = jsonDecode(response.body);
+  //     json['code'] = response.statusCode;
 
-      return json;
-    }
-  }
+  //     return json;
+  //   }
+  // }
 }

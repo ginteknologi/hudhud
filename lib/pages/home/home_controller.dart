@@ -28,6 +28,10 @@ class HomeController extends GetxController
     // if (!gctrl.isLogin.value) {
     // Get.offAllNamed(RoutesAuth.root);
     // }
+    if (Get.arguments == 'alquran') {
+      type = BottomBarEnum.alquran.obs;
+      selectedIdx.value = 1;
+    }
     animateController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 400),

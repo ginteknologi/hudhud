@@ -3,7 +3,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:masjid_app/components/layout/custom_card_item.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/sosmedData.dart';
 import 'package:masjid_app/pages/dkm/dkm_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 // Pastikan impor ini sudah disertakan
@@ -64,7 +67,7 @@ class DkmPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                getListCategory(ctrl),
+                Obx(() => ctrl.isLoadingSlider.value ? SizedBox() : getListCategory(ctrl)),
                 SizedBox(
                   height: 20,
                 ),
@@ -72,62 +75,6 @@ class DkmPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 21),
                     child: Column(
                       children: [
-                        // Align(
-                        //   alignment: Alignment.centerLeft,
-                        //   child: Text("Member DKM Kami",
-                        //       style: context.textTheme.bodySmall?.copyWith(
-                        //           fontWeight: FontWeight.bold,
-                        //           color: Colors.black38)),
-                        // ),
-                        // ListView.builder(
-                        //   physics: const ClampingScrollPhysics(),
-                        //   itemCount: ctrl.listMemberDkm.length,
-                        //   shrinkWrap: true,
-                        //   itemBuilder: (context, index) {
-                        //     // Datum model = filteredEvents[index];
-                        //     return FadeInUp(
-                        //       child: ListItemUiWidget(
-                        //         id: ctrl.listMemberDkm[index]['id'],
-                        //         title: ctrl.listMemberDkm[index]['nama'],
-                        //         widthContent: MediaQuery.of(context).size.width,
-                        //         showIcon: IconPosition.left,
-                        //         iconLeft: Row(children: [
-                        //           ClipRRect(
-                        //             borderRadius: BorderRadius.circular(90),
-                        //             child: Image.asset(
-                        //               "assets/icons/app_icon.png",
-                        //               height: 60,
-                        //               width: 60,
-                        //               fit: BoxFit.cover,
-                        //             ),
-                        //           ),
-                        //         ]),
-                        //         titleStyle: context.textTheme.bodyMedium
-                        //             ?.copyWith(
-                        //                 fontWeight: FontWeight.bold,
-                        //                 color: Colors.black),
-                        //         subTitle: ctrl.listMemberDkm[index]['role'],
-                        //         subtitleStyle: context.textTheme.bodySmall
-                        //             ?.copyWith(
-                        //                 fontWeight: FontWeight.normal,
-                        //                 color: Colors.black),
-                        //       ),
-                        //     );
-                        //   },
-                        // ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     showDialog(
-                        //       context: context,
-                        //       builder: (BuildContext context) {
-                        //         return FullScreenImageDialog(
-                        //           imagePath: 'assets/img/struktur.jpeg',
-                        //         );
-                        //       },
-                        //     );
-                        //   },
-                        //   child: Text('Lihat lebih lengkap'),
-                        // ),
                         SizedBox(
                           height: 30,
                         ),
@@ -138,31 +85,72 @@ class DkmPage extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black38)),
                         ),
+                        Obx(
+                          () => ctrl.isLoadingList.value
+                              ? SizedBox(
+                                  height: 30,
+                                )
+                              : ListView.builder(
+                                  physics: const ClampingScrollPhysics(),
+                                  itemCount: ctrl.listKontak.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    // Datum model = filteredEvents[index];
+                                    final SosmedData item =
+                                        ctrl.listKontak[index];
+                                    return FadeInUp(
+                                      child: ListItemUiWidget(
+                                        id: item.id,
+                                        title: item.nama,
+                                        widthContent:
+                                            MediaQuery.of(context).size.width *
+                                                0.7,
+                                        showIcon: IconPosition.left,
+                                        iconLeft: SvgPicture.asset(item.icon,
+                                            height: 30, width: 30),
+                                        titleStyle: context.textTheme.bodySmall
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                        category: item.type,
+                                        onTap: () async {
+                                          final Uri url = Uri.parse(item.link);
+                                          if (!await launchUrl(url)) {
+                                            print('Tidak dapat membuka link');
+                                          }
+                                        },
+                                        // subtitleStyle: context.textTheme.bodySmall
+                                        //     ?.copyWith(
+                                        //         fontWeight: FontWeight.normal,
+                                        //         color: Colors.black),
+                                      ),
+                                    );
+                                  },
+                                ),
+                        ),
                         ListView.builder(
                           physics: const ClampingScrollPhysics(),
                           itemCount: ctrl.listKontak.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             // Datum model = filteredEvents[index];
+                            final SosmedData item = ctrl.listKontak[index];
                             return FadeInUp(
                               child: ListItemUiWidget(
-                                id: ctrl.listKontak[index]['id'],
-                                title: ctrl.listKontak[index]['title'],
+                                id: item.id,
+                                title: item.nama,
                                 widthContent:
                                     MediaQuery.of(context).size.width * 0.7,
                                 showIcon: IconPosition.left,
-                                iconLeft: SvgPicture.asset(
-                                    ctrl.listKontak[index]['icon'],
-                                    height: 30,
-                                    width: 30),
+                                iconLeft: SvgPicture.asset(item.icon,
+                                    height: 30, width: 30),
                                 titleStyle: context.textTheme.bodySmall
                                     ?.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black),
-                                category: ctrl.listKontak[index]['category'],
+                                category: item.type,
                                 onTap: () async {
-                                  final Uri url =
-                                      Uri.parse(ctrl.listKontak[index]['link']);
+                                  final Uri url = Uri.parse(item.link);
                                   if (!await launchUrl(url)) {
                                     print('Tidak dapat membuka link');
                                   }
@@ -196,43 +184,44 @@ class DkmPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: ctrl.listKontakv2.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            // Datum model = filteredEvents[index];
-                            return FadeInUp(
-                              child: ListItemUiWidget(
-                                id: ctrl.listKontakv2[index]['id'],
-                                title: ctrl.listKontakv2[index]['title'],
-                                widthContent:
-                                    MediaQuery.of(context).size.width * 0.7,
-                                showIcon: IconPosition.left,
-                                iconLeft: SvgPicture.asset(
-                                    ctrl.listKontakv2[index]['icon'],
-                                    height: 30,
-                                    width: 30),
-                                titleStyle: context.textTheme.bodySmall
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                category: ctrl.listKontakv2[index]['category'],
-                                onTap: () async {
-                                  final Uri url = Uri.parse(
-                                      ctrl.listKontakv2[index]['link']);
-                                  if (!await launchUrl(url)) {
-                                    print('Tidak dapat membuka link.');
-                                  }
-                                },
-                                // subtitleStyle: context.textTheme.bodySmall
-                                //     ?.copyWith(
-                                //         fontWeight: FontWeight.normal,
-                                //         color: Colors.black),
-                              ),
-                            );
-                          },
-                        )
+                        // ListView.builder(
+                        //   physics: const ClampingScrollPhysics(),
+                        //   itemCount: ctrl.listKontakv2.length,
+                        //   shrinkWrap: true,
+                        //   itemBuilder: (context, index) {
+                        //     // Datum model = filteredEvents[index];
+                        //     return FadeInUp(
+                        //       child: ListItemUiWidget(
+                        //         id: ctrl.listKontakv2[index]['id'],
+                        //         title: ctrl.listKontakv2[index]['title'],
+                        //         widthContent:
+                        //             MediaQuery.of(context).size.width * 0.7,
+                        //         showIcon: IconPosition.left,
+                        //         iconLeft: SvgPicture.asset(
+                        //             ctrl.listKontakv2[index]['icon'],
+                        //             height: 30,
+                        //             width: 30),
+                        //         titleStyle: context.textTheme.bodySmall
+                        //             ?.copyWith(
+                        //                 fontWeight: FontWeight.bold,
+                        //                 color: Colors.black),
+                        //         category: ctrl.listKontakv2[index]['category'],
+                        //         onTap: () async {
+                        //           final Uri url = Uri.parse(
+                        //               ctrl.listKontakv2[index]['link']);
+                        //           if (!await launchUrl(url)) {
+                        //             print('Tidak dapat membuka link.');
+                        //           }
+                        //         },
+                        //         // subtitleStyle: context.textTheme.bodySmall
+                        //         //     ?.copyWith(
+                        //         //         fontWeight: FontWeight.normal,
+                        //         //         color: Colors.black),
+                        //       ),
+                        //     );
+                        //   },
+                        // )
+
                       ],
                     ))
               ],
@@ -242,32 +231,22 @@ class DkmPage extends StatelessWidget {
   }
 
   getListCategory(DkmController ctrl) {
-    return Container(
-      height: 92,
-      constraints: BoxConstraints.loose(Size.infinite),
+    return SizedBox(
+      height: 100,
       child: ListView.separated(
-        // padding: EdgeInsets.only(left: 24, right: 24),
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: ctrl.listDkm.length,
+        itemCount: ctrl.listQuotes.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
-          return Container(
-            width: 140,
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(left: 10),
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-                color: Color(0xFF92E3A9),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: Text(
-              ctrl.listDkm[index]['label'],
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              style: context.textTheme.bodySmall
-                  ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-              softWrap: true,
-            ),
+          final KajianData item = ctrl.listQuotes[index];
+          return CustomCardItem(
+            title: item.judul ?? '',
+            subtitle: '',
+            imgPath: item.image,
+            islink: true,
+            link: item.link,
+            network: true,
           );
         },
       ),

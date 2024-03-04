@@ -1,10 +1,10 @@
 class KajianData {
   int id;
-  String? kategori, subjudul;
-  String judul, image, link;
+  String? judul, kategori, subjudul;
+  String image, link;
   KajianData(
       {required this.id,
-      required this.judul,
+      this.judul,
       this.subjudul,
       this.kategori,
       required this.image,

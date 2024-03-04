@@ -11,18 +11,20 @@ import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
-import 'package:masjid_app/models/kontenSosmed.dart';
 import 'package:masjid_app/pages/dashboard/component/countDown.dart';
 import 'package:masjid_app/pages/dashboard/component/ramadhanMenu.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
+import 'package:masjid_app/pages/home/home_page.dart';
 import 'package:masjid_app/routes/akun/index.dart';
+import 'package:masjid_app/routes/home/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:masjid_app/routes/kajian/index.dart';
+import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
 
 class DashboardPage extends StatelessWidget {
   final DashboardController ctrl = Get.find();
@@ -67,21 +69,31 @@ class DashboardPage extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(top: 10),
                             child: getSeparator(
-                                'Doa-Doa', 'Lihat Semua', context, ctrl),
+                                'Doa Ramadhan', 'Lihat Semua', context, ctrl),
+                          ),
+                          Skeletonizer(
+                            ignoreContainers: false,
+                            enabled: ctrl.isLoadingDoaDashboard.value,
+                            child: getListItem(ctrl),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: getSeparator(
+                                'Kajian Live', 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
                             enabled: ctrl.isLoadingKajianLive.value,
-                            child: getListItem(ctrl, true),
+                            child: getListItemKajianLive(ctrl),
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator('Kajian Tafsir Al-Quran',
+                            child: getSeparator('Kajian Tafsir Quran',
                                 'Lihat Semua', context, ctrl),
                           ),
                           Skeletonizer(
                             ignoreContainers: false,
-                            enabled: ctrl.isLoadingKajianLive.value,
+                            enabled: ctrl.isLoadingKajianTafsir.value,
                             child: getListItemKajian(ctrl),
                           ),
                           Container(
@@ -228,7 +240,7 @@ class DashboardPage extends StatelessWidget {
                 size: "medium",
                 positionChip: CrossAxisAlignment.start,
                 chipColor: Theme.of(context).primaryColor,
-                chipText: "Umum",
+                chipText: item.category_artikel?['name'],
                 chipTextStyle: TextStyle(
                     fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
                     fontWeight: FontWeight.normal,
@@ -261,10 +273,20 @@ class DashboardPage extends StatelessWidget {
           return Material(
               color: Colors.transparent,
               child: InkWell(
-                  onTap: () {
+                  onTap: () async {
                     if (ctrl.listMenuHome[index]['urlNav'] != '' &&
                         ctrl.listMenuHome[index]['urlNav'] != null) {
-                      Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
+                      if (ctrl.listMenuHome[index]['typeLink'] == "external") {
+                        final Uri url = Uri.parse(ctrl.listMenuHome[index]['urlNav']);
+                        if (!await launchUrl(url)) {
+                          print('Tidak dapat membuka link');
+                        }
+                      }else if(ctrl.listMenuHome[index]['typeLink'] == "slide"){
+                        Get.offAllNamed(RoutesHome.root, arguments: 'alquran');
+                        // return AlquranPage();
+                      } else {
+                        Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
+                      }
                     }
                   },
                   borderRadius: BorderRadius.circular(20),
@@ -324,12 +346,15 @@ class DashboardPage extends StatelessWidget {
                 highlightColor: Colors.transparent,
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 onTap: () async {
-                  if (nama == 'Doa-Doa') {
+                  if (nama == 'Doa Ramadhan') {
+                    Get.toNamed(RoutesKajian.root, arguments: {
+                      'judul': 'Doa-Doa',
+                      'type': 'doa_ramadhan'
+                    });
+                  } else if (nama == 'Kajian Live') {
                     Get.toNamed(RoutesKajian.root,
-                        arguments: {'judul': 'Doa-Doa', 'type': 'doa'});
-                    // await ctrl.getKajianLive();
+                        arguments: {'judul': 'Kajian Live', 'type': 'live'});
                   } else {
-                    // await ctrl.getKajianTafsir();
                     Get.toNamed(RoutesKajian.root, arguments: {
                       'judul': 'Kajian Tafsir Al-Quran',
                       'type': 'tafsir'
@@ -360,16 +385,16 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getListItem(DashboardController ctrl, flag) {
+  getListItem(DashboardController ctrl) {
     return SizedBox(
       height: 151,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: ctrl.listKontenSosmed.length,
+        itemCount: ctrl.listDoaSlider.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
-          final SosmedData item = ctrl.listKontenSosmed[index];
+          final KajianData item = ctrl.listDoaSlider[index];
           return CustomCardItem(
             title: item.judul ?? '',
             subtitle: '',
@@ -383,7 +408,34 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
+  getListItemKajianLive(DashboardController ctrl) {
+    return Obx(() {
+      return SizedBox(
+        height: 151,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          itemCount: ctrl.listKajianLiveSlider.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 10),
+          itemBuilder: (context, index) {
+            final KajianData item = ctrl.listKajianLiveSlider[index];
+            return CustomCardItem(
+              title: '${item.judul}',
+              subtitle: '${item.subjudul}',
+              kategori: '${item.kategori}',
+              imgPath: '${item.image}',
+              islink: true,
+              link: '${item.link}',
+              network: true,
+            );
+          },
+        ),
+      );
+    });
+  }
+
   getListItemKajian(DashboardController ctrl) {
+    print(ctrl.isLoadingKajianTafsir);
     return Obx(() {
       return SizedBox(
         height: 151,
@@ -409,103 +461,103 @@ class DashboardPage extends StatelessWidget {
     });
   }
 
-  void showSheet(
-      DashboardController ctrl, nama, BuildContext context, bool flag) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: flag,
-        useSafeArea: flag,
-        showDragHandle: false,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20.0),
-          ),
-        ),
-        builder: (BuildContext bc) {
-          return !flag
-              ? CustomModalBottomSheet(
-                  typeSheet: TypeBottomSheet.typeGridSheet,
-                  dataGrid: ctrl.listAllMenu,
-                )
-              : CustomModalBottomSheet(
-                  typeSheet: TypeBottomSheet.typeFullscreenSheet,
-                  content: [
-                    SizedBox(
-                      height: 30,
-                      child: Text(
-                        nama,
-                        style: context.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                    ),
-                    Obx(() {
-                      if (ctrl.isLoadingKajian.isTrue) {
-                        return Container(
-                            height: Get.height / 1.2,
-                            child: Center(child: CircularProgressIndicator()));
-                      }
-                      return SizedBox(
-                          height: MediaQuery.of(context).size.height -
-                              kBottomNavigationBarHeight -
-                              kToolbarHeight,
-                          child: ListView.builder(
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: ctrl.listKajian.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              var item = ctrl.listKajian[index];
-                              return ListItemUiWidget(
-                                onTap: () async {
-                                  final Uri url = Uri.parse(item['link']);
-                                  if (!await launchUrl(url)) {
-                                    print('Tidak dapat membuka link YouTube.');
-                                  }
-                                },
-                                minHeight: 70,
-                                vjustify: false,
-                                widthContent:
-                                    MediaQuery.of(context).size.width - 130,
-                                id: item['id'],
-                                title: item['judul'],
-                                showIcon: IconPosition.left,
-                                iconLeft: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(7),
-                                      child: Image.network(
-                                        item['image'],
-                                        width: 65,
-                                        height: 65,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                titleStyle: context.textTheme.labelMedium
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                subTitle: item['subjudul'],
-                                subtitleStyle: context.textTheme.labelMedium
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w100,
-                                        color: Colors.black),
-                                footerText: Moment.parse(item['updatedAt'])
-                                    .format("dd MMMM yyyy",
-                                        localeOverride: 'id'),
-                                footerTextStyle: context.textTheme.labelSmall
-                                    ?.copyWith(
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w100,
-                                        color: Colors.black),
-                              );
-                            },
-                          ));
-                    })
-                  ],
-                );
-        });
-  }
+  // void showSheet(
+  //     DashboardController ctrl, nama, BuildContext context, bool flag) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: flag,
+  //       useSafeArea: flag,
+  //       showDragHandle: false,
+  //       shape: const RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.vertical(
+  //           top: Radius.circular(20.0),
+  //         ),
+  //       ),
+  //       builder: (BuildContext bc) {
+  //         return !flag
+  //             ? CustomModalBottomSheet(
+  //                 typeSheet: TypeBottomSheet.typeGridSheet,
+  //                 dataGrid: ctrl.listAllMenu,
+  //               )
+  //             : CustomModalBottomSheet(
+  //                 typeSheet: TypeBottomSheet.typeFullscreenSheet,
+  //                 content: [
+  //                   SizedBox(
+  //                     height: 30,
+  //                     child: Text(
+  //                       nama,
+  //                       style: context.textTheme.titleMedium?.copyWith(
+  //                           fontWeight: FontWeight.bold, color: Colors.black),
+  //                     ),
+  //                   ),
+  //                   Obx(() {
+  //                     if (ctrl.isLoadingKajianTafsir.isTrue) {
+  //                       return Container(
+  //                           height: Get.height / 1.2,
+  //                           child: Center(child: CircularProgressIndicator()));
+  //                     }
+  //                     return SizedBox(
+  //                         height: MediaQuery.of(context).size.height -
+  //                             kBottomNavigationBarHeight -
+  //                             kToolbarHeight,
+  //                         child: ListView.builder(
+  //                           physics: const ClampingScrollPhysics(),
+  //                           itemCount: ctrl.listKajianSlider.length,
+  //                           shrinkWrap: true,
+  //                           itemBuilder: (context, index) {
+  //                             var item = ctrl.listKajianSlider[index];
+  //                             return ListItemUiWidget(
+  //                               onTap: () async {
+  //                                 final Uri url = Uri.parse(item['link']);
+  //                                 if (!await launchUrl(url)) {
+  //                                   print('Tidak dapat membuka link YouTube.');
+  //                                 }
+  //                               },
+  //                               minHeight: 70,
+  //                               vjustify: false,
+  //                               widthContent:
+  //                                   MediaQuery.of(context).size.width - 130,
+  //                               id: item['id'],
+  //                               title: item['judul'],
+  //                               showIcon: IconPosition.left,
+  //                               iconLeft: Stack(
+  //                                 children: [
+  //                                   ClipRRect(
+  //                                     borderRadius: BorderRadius.circular(7),
+  //                                     child: Image.network(
+  //                                       item['image'],
+  //                                       width: 65,
+  //                                       height: 65,
+  //                                       fit: BoxFit.cover,
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                               titleStyle: context.textTheme.labelMedium
+  //                                   ?.copyWith(
+  //                                       fontWeight: FontWeight.bold,
+  //                                       color: Colors.black),
+  //                               subTitle: item['subjudul'],
+  //                               subtitleStyle: context.textTheme.labelMedium
+  //                                   ?.copyWith(
+  //                                       fontWeight: FontWeight.w100,
+  //                                       color: Colors.black),
+  //                               footerText: Moment.parse(item['updatedAt'])
+  //                                   .format("dd MMMM yyyy",
+  //                                       localeOverride: 'id'),
+  //                               footerTextStyle: context.textTheme.labelSmall
+  //                                   ?.copyWith(
+  //                                       letterSpacing: 0,
+  //                                       fontWeight: FontWeight.w100,
+  //                                       color: Colors.black),
+  //                             );
+  //                           },
+  //                         ));
+  //                   })
+  //                 ],
+  //               );
+  //       });
+  // }
 
   void showPopup(context, Widget? content, double? height) {
     showDialog(
