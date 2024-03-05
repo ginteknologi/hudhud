@@ -83,6 +83,7 @@ dependencies:
   flutter_background_service_android: any
   http: any
   infinite_scroll_pagination: ^4.0.0
+  package_info_plus: ^4.2.0
 dependency_overrides:
   intl: any
 

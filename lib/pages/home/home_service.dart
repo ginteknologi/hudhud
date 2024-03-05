@@ -24,11 +24,10 @@ class HomeService extends GetConnect {
   //   } else {
   //     final json = jsonDecode(response.body);
   //     json['code'] = response.statusCode;
-      
+
   //     return json;
   //   }
   // }
-
 
   Future cekToken(token) async {
     final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
@@ -42,40 +41,39 @@ class HomeService extends GetConnect {
   }
 
   Future setToken(token) => cekToken(token).then((hasilcek) async {
-    try {
-    final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
-    if (hasilcek['data'].length > 0) {
-      var api = '${RemoteData.api}/fcm/${hasilcek['data'][0]['id']}';
-      final response = await http.put(
-        Uri.parse(api),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'user': dataUser['id'],
-          'token': token,
-        }),
-      );
-      return response;
-    } else {
-      var api = '${RemoteData.api}/fcm';
-      final response = await http.post(
-        Uri.parse(api),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'user': dataUser['id'],
-          'token': token,
-        }),
-      );
-      print('<<<<<<<<<response>>>>>>>>>');
-      return response;
-    }
-    } catch (e) {
-      print("<<<<<<Error SetToken Service>>>>>>");
-      print(e);
-    }
-  });
-    
+        try {
+          final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
+          if (hasilcek['data'].length > 0) {
+            var api = '${RemoteData.api}/fcm/${hasilcek['data'][0]['id']}';
+            final response = await http.put(
+              Uri.parse(api),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, dynamic>{
+                'user': dataUser['id'],
+                'token': token,
+              }),
+            );
+            return response;
+          } else {
+            var api = '${RemoteData.api}/fcm';
+            final response = await http.post(
+              Uri.parse(api),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, dynamic>{
+                'user': dataUser['id'],
+                'token': token,
+              }),
+            );
+            print('<<<<<<<<<response>>>>>>>>>');
+            return response;
+          }
+        } catch (e) {
+          print("<<<<<<Error SetToken Service>>>>>>");
+          print(e);
+        }
+      });
 }

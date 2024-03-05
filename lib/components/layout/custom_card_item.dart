@@ -78,8 +78,7 @@ class CustomCardItem extends StatelessWidget {
                         clipBehavior: Clip.antiAlias,
                         child: network
                             ? Image.network(
-                                imgPath ??
-                                    'https://masjidannimah.id/wp-admin/admin-ajax.php?action=imgedit-preview&_ajax_nonce=682b18d276&postid=2013&rand=30724',
+                                imgPath!,
                                 height: height,
                                 width: isFullWidth == true ? Get.width : 151,
                                 fit: BoxFit.cover,
@@ -99,52 +98,54 @@ class CustomCardItem extends StatelessWidget {
                         crossAxisAlignment: positionChip,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          chipText != null ? 
-                          Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              margin: positionChip == CrossAxisAlignment.end
-                                  ? const EdgeInsets.only(right: 5, top: 10)
-                                  : const EdgeInsets.only(left: 5, top: 10),
-                              decoration: BoxDecoration(
-                                color: chipColor,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(7),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 3),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // Visibility(
-                                    //     visible: size == 'small',
-                                    //     child: Container(
-                                    //         margin:
-                                    //             const EdgeInsets.only(right: 5),
-                                    //         child: SvgPicture.asset(
-                                    //             'assets/icons/live.svg',
-                                    //             height: 10,
-                                    //             width: 10))),
-                                    Text('$chipText',
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: chipTextStyle
-                                        // TextStyle(
-                                        //     color: Colors.white,
-                                        //     fontWeight: FontWeight.bold,
-                                        //     fontStyle: size == 'small'
-                                        //         ? FontStyle.italic
-                                        //         : FontStyle.normal,
-                                        //     fontSize: chipSize
-                                        // ),
-                                        )
-                                    
-                                  ],
-                                ),
-                              )) : Container(),
+                          chipText != null
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  margin: positionChip == CrossAxisAlignment.end
+                                      ? const EdgeInsets.only(right: 5, top: 10)
+                                      : const EdgeInsets.only(left: 5, top: 10),
+                                  decoration: BoxDecoration(
+                                    color: chipColor,
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(7),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 3),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        // Visibility(
+                                        //     visible: size == 'small',
+                                        //     child: Container(
+                                        //         margin:
+                                        //             const EdgeInsets.only(right: 5),
+                                        //         child: SvgPicture.asset(
+                                        //             'assets/icons/live.svg',
+                                        //             height: 10,
+                                        //             width: 10))),
+                                        Text('$chipText',
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.start,
+                                            style: chipTextStyle
+                                            // TextStyle(
+                                            //     color: Colors.white,
+                                            //     fontWeight: FontWeight.bold,
+                                            //     fontStyle: size == 'small'
+                                            //         ? FontStyle.italic
+                                            //         : FontStyle.normal,
+                                            //     fontSize: chipSize
+                                            // ),
+                                            )
+                                      ],
+                                    ),
+                                  ))
+                              : Container(),
                           Container(
                             width: isFullWidth == true ? Get.width : 151,
                             clipBehavior: Clip.antiAlias,

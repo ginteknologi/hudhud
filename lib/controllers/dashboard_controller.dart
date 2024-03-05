@@ -240,7 +240,7 @@ class DashboardController extends GetxController {
         listKajianSlider.add(KajianData(
             id: element['id'],
             judul: element['judul'],
-            subjudul: element['subjudul'],
+            subjudul: element['subjudul'] ?? "Tidak ada keterangan",
             image: element['image'],
             link: element['link']));
       }
@@ -259,7 +259,7 @@ class DashboardController extends GetxController {
         listKajianLiveSlider.add(KajianData(
             id: element['id'],
             judul: element['judul'],
-            subjudul: element['subjudul'],
+            subjudul: element['subjudul'] ?? "Tidak ada keterangan",
             image: element['image'],
             link: element['link']));
       }

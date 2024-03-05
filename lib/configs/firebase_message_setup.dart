@@ -108,7 +108,6 @@ void onStartPlay(ServiceInstance service) async {
 
 class SetupFirebase {
   static get onDidReceiveLocalNotification => null;
-
   static sendnotif({
     required String title,
     required String pesan,
