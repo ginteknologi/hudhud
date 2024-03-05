@@ -26,21 +26,24 @@ Future<void> main() async {
       Permission.notification,
     ].request();
     await SetupFirebase.initFirebase();
+
+    if (Platform.isAndroid) {
+      InAppUpdate.checkForUpdate().then((updateInfo) {
+        if (updateInfo.updateAvailability ==
+            UpdateAvailability.updateAvailable) {
+          InAppUpdate.performImmediateUpdate()
+              .then((value) => {
+                    Fluttertoast.showToast(
+                        msg: "Silahkah buka ulang aplikasi ...",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.CENTER)
+                  })
+              .catchError((e) => print(e));
+        }
+      });
+    }
   }
-  if (Platform.isAndroid) {
-    InAppUpdate.checkForUpdate().then((updateInfo) {
-      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-        InAppUpdate.performImmediateUpdate()
-            .then((value) => {
-                  Fluttertoast.showToast(
-                      msg: "Silahkah buka ulang aplikasi ...",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.CENTER)
-                })
-            .catchError((e) => print(e));
-      }
-    });
-  }
+
   runApp(
     EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('id', 'ID')],

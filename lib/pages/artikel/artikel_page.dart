@@ -29,51 +29,6 @@ class ArtikelPage extends StatelessWidget {
                 ]))));
   }
 
-  // getListCategory(ArtikelController ctrl) {
-  //   return Container(
-  //     height: 40,
-  //     constraints: BoxConstraints.loose(Size.infinite),
-  //     child: ListView.separated(
-  //       // padding: EdgeInsets.only(left: 24, right: 24),
-  //       scrollDirection: Axis.horizontal,
-  //       physics: const BouncingScrollPhysics(),
-  //       itemCount: ctrl.listCategoryFilter.length,
-  //       separatorBuilder: (context, index) => const SizedBox(width: 10),
-  //       itemBuilder: (context, index) {
-  //         return Obx(() => ChoiceChip(
-  //               shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(10),
-  //                   side: const BorderSide(width: 1, color: Colors.black12)),
-  //               selected: ctrl.listCategoryFilterSelected[index].value,
-  //               label: Text(
-  //                 ctrl.listCategoryFilter[index]['n e'],
-  //                 style: TextStyle(
-  //                     fontSize:
-  //                         Theme.of(context).textTheme.labelMedium?.fontSize,
-  //                     color: ctrl.listCategoryFilterSelected[index].value
-  //                         ? Colors.white
-  //                         : Colors.black),
-  //               ),
-  //               labelPadding: EdgeInsets.symmetric(horizontal: 10),
-  //               labelStyle: TextStyle(
-  //                   color: Colors.grey[300], fontWeight: FontWeight.w500),
-  //               backgroundColor: Colors.transparent,
-  //               pressElevation: 1,
-  //               selectedColor: Theme.of(context).primaryColor,
-  //               padding: EdgeInsets.all(8),
-  //               onSelected: (selected) {
-  //                 for (RxBool b in ctrl.listCategoryFilterSelected) {
-  //                   if (b.isTrue) b.value = false;
-  //                 }
-  //                 ctrl.listCategoryFilterSelected[index].value =
-  //                     !ctrl.listCategoryFilterSelected[index].value;
-  //               },
-  //             ));
-  //       },
-  //     ),
-  //   );
-  // }
-
   getListArtikel(ArtikelController ctrl, BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
@@ -142,7 +97,7 @@ class ArtikelPage extends StatelessWidget {
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel / Informasi", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value
-          ? CircularProgressIndicator()
+          ? Center(child: CircularProgressIndicator())
           : layout(ctrl, context)),
     );
   }

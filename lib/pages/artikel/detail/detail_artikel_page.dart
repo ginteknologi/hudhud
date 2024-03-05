@@ -19,7 +19,7 @@ class DetailArtikelPage extends StatelessWidget {
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Padding(
-                padding: const EdgeInsets.only(left: 21, right: 21),
+                padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -42,28 +42,10 @@ class DetailArtikelPage extends StatelessWidget {
                                         NetworkImage(ctrl.detail.value.image),
                                     fit: BoxFit.cover)),
                           )),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        // width: Get.width,
-                        // height: 170,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 5),
-                        constraints: BoxConstraints.loose(Size.infinite),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                        ),
-                        child: Text(
-                          ctrl.detail.value.category_artikel?['name'] ?? '',
-                          style: context.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
+                      Text(
+                        ctrl.detail.value.category_artikel?['name'] ?? '',
+                        style: context.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                       AutoSizeText(
                         ctrl.detail.value.judul,
@@ -100,8 +82,8 @@ class DetailArtikelPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           'p': Style(
-                              fontWeight: FontWeight.bold,
-                              fontSize: FontSize.small),
+                            fontSize: FontSize.medium,
+                          ),
                           'b': Style(
                             fontWeight: FontWeight.bold,
                           ),
@@ -109,6 +91,9 @@ class DetailArtikelPage extends StatelessWidget {
                             fontStyle: FontStyle.italic,
                           ),
                           'a': Style(
+                            color: Colors.blue,
+                          ),
+                          'br': Style(
                             color: Colors.blue,
                           ),
                         },
@@ -266,7 +251,7 @@ class DetailArtikelPage extends StatelessWidget {
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel Detail", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value
-          ? CircularProgressIndicator()
+          ? Center(child: CircularProgressIndicator())
           : layout(ctrl, context)),
     );
   }
