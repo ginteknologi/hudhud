@@ -178,6 +178,7 @@ class SetupFirebase {
     }
 
     messaging = FirebaseMessaging.instance;
+    await messaging.subscribeToTopic("all");
     messaging.getToken().then((value) async {
       authStore.write('fcmtoken', value);
       print('token firebase: ${value!}');
