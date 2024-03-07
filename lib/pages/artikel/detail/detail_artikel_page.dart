@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
+import 'package:masjid_app/configs/fileSetup.dart';
 import 'package:masjid_app/pages/artikel/detail/detail_artikel_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -153,9 +155,21 @@ class DetailArtikelPage extends StatelessWidget {
                                         .bodySmall
                                         ?.fontSize,
                                   ),
-                                  onPressed: () {
-                                    Share.share(ctrl.share.value,
+                                  onPressed: () async {
+                                    final result = await downloadAndSaveFile(
+                                      url: ctrl.detail.value.image,
+                                      pathsave: '/artikel',
+                                    );
+                                    final resultshare = await Share.shareXFiles(
+                                        [XFile(result)],
+                                        text: ctrl.share.value,
                                         subject: ctrl.detail.value.judul);
+
+                                    if (resultshare.status ==
+                                        ShareResultStatus.success) {
+                                      Fluttertoast.showToast(
+                                          msg: "Berhasil dishare");
+                                    }
                                   },
                                 ),
                               ),

@@ -1,11 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:masjid_app/configs/fileSetup.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/sosmedData.dart';
 import 'package:masjid_app/pages/dkm/dkm_service.dart';
 import 'package:masjid_app/service/dashboard_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DkmController extends GetxController {
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   late PackageInfo packageInfo;
   var isLoadingList = true.obs;
   var isLoadingSlider = true.obs;
@@ -40,6 +48,42 @@ class DkmController extends GetxController {
       isLoadingList.value = false;
       print(e);
     }
+  }
+
+  share(item) async {
+    Get.defaultDialog(
+        title: item.judul!,
+        titleStyle: TextStyle(fontSize: Get.width / 25),
+        textConfirm: 'Share Sekarang',
+        confirmTextColor: Colors.black,
+        buttonColor: Color(0xFF92E3A9),
+        backgroundColor: Colors.white,
+        radius: Get.width / 50,
+        onConfirm: () async {
+          final result = await downloadAndSaveFile(
+            url: item.image,
+            pathsave: '/quote',
+          );
+          final resultshare = await Share.shareXFiles(
+            [XFile(result)],
+            text: '#Dikirim dari Marbot app \https://s.id/downloadmarbotapp',
+          );
+
+          if (resultshare.status == ShareResultStatus.success) {
+            Fluttertoast.showToast(msg: "Berhasil dishare");
+          }
+          Get.back();
+        },
+        content: Container(
+          width: Get.width / 1.4,
+          height: Get.height / 4.5,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Get.width / 50),
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(item.image),
+                fit: BoxFit.fitWidth,
+              )),
+        ));
   }
 
   getSlider() async {

@@ -1,17 +1,15 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/layout/custom_card_item.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/configs/fileSetup.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/sosmedData.dart';
 import 'package:masjid_app/controllers/dkm_controller.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:masjid_app/routes/quote/index.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart' as Refresh;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 // Pastikan impor ini sudah disertakan
@@ -22,9 +20,17 @@ class DkmPage extends StatelessWidget {
   DkmPage({super.key});
 
   layout(BuildContext context) {
-    return RefreshIndicator(
+    return Refresh.SmartRefresher(
+      enablePullDown: true,
+      header: Refresh.ClassicHeader(),
+      controller: ctrl.refreshController,
+      onLoading: () async {
+        await ctrl.getSlider();
+        await ctrl.getData();
+        ctrl.refreshController.loadComplete();
+      },
       onRefresh: () async {
-        ctrl.getSlider();
+        ctrl.refreshController.refreshCompleted();
       },
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
@@ -32,7 +38,7 @@ class DkmPage extends StatelessWidget {
           children: [
             Container(
               width: Get.width,
-              height: 260,
+              height: Get.width / 2,
               constraints: BoxConstraints.loose(Size.infinite),
               clipBehavior: Clip.antiAlias,
               decoration: const BoxDecoration(
@@ -50,22 +56,25 @@ class DkmPage extends StatelessWidget {
                   children: [
                     Image.asset(
                       "assets/img/new-logo-text.png",
-                      height: 85,
-                      width: 180,
+                      fit: BoxFit.contain,
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: AutoSizeText(
-                          "Di bawah Naungan Allah, kita bersatu dalam keimanan di Masjid, tempat keberkahan dan ketenangan merajut jalinan kasih dan do'a.",
-                          maxLines: 4,
-                          textAlign: TextAlign.center,
-                          style: context.textTheme.labelSmall?.copyWith(
-                              fontWeight: FontWeight.normal,
-                              letterSpacing: -1,
-                              color: Colors.white)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: AutoSizeText(
+                            "Di bawah Naungan Allah, kita bersatu dalam keimanan di Masjid, tempat keberkahan dan ketenangan merajut jalinan kasih dan do'a.",
+                            maxLines: 4,
+                            presetFontSizes: [Get.width / 35],
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.labelSmall?.copyWith(
+                                fontWeight: FontWeight.normal,
+                                letterSpacing: 0.5,
+                                color: Colors.white)),
+                      ),
                     )
                   ],
                 ),
@@ -73,6 +82,25 @@ class DkmPage extends StatelessWidget {
             ),
             SizedBox(
               height: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                Get.toNamed(RoutesQuote.root);
+              },
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Get.width / 20),
+                  child: Text(
+                    "Lihat Semua",
+                    style: TextStyle(
+                        color: Colors.black87, fontSize: Get.width / 30),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
             ),
             Obx(() => getListCategory(ctrl)),
             Padding(
@@ -225,39 +253,7 @@ class DkmPage extends StatelessWidget {
             final KajianData item = ctrl.listQuotes[index];
             return GestureDetector(
               onTap: () {
-                Get.defaultDialog(
-                    title: item.judul!,
-                    titleStyle: TextStyle(fontSize: Get.width / 25),
-                    textConfirm: 'Share Sekarang',
-                    confirmTextColor: Colors.black,
-                    buttonColor: Color(0xFF92E3A9),
-                    backgroundColor: Colors.white,
-                    radius: Get.width / 50,
-                    onConfirm: () async {
-                      final result = await downloadAndSaveFile(
-                        url: item.image,
-                        pathsave: '/quote',
-                      );
-                      final resultshare = await Share.shareXFiles(
-                        [XFile(result)],
-                        text: '#Dikirim dari Marbot app',
-                      );
-
-                      if (resultshare.status == ShareResultStatus.success) {
-                        Fluttertoast.showToast(msg: "Berhasil dishare");
-                      }
-                      Get.back();
-                    },
-                    content: Container(
-                      width: Get.width / 1.4,
-                      height: Get.height / 4.5,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Get.width / 50),
-                          image: DecorationImage(
-                            image: CachedNetworkImageProvider(item.image),
-                            fit: BoxFit.fitWidth,
-                          )),
-                    ));
+                ctrl.share(item);
               },
               child: Container(
                 width: Get.width / 1.4,

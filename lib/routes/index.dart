@@ -10,6 +10,7 @@ import 'package:masjid_app/routes/home/index.dart';
 import 'package:masjid_app/routes/kalenderdzulhijjah/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
 import 'package:masjid_app/routes/onboard/index.dart';
+import 'package:masjid_app/routes/quote/index.dart';
 import 'package:masjid_app/routes/quran/index.dart';
 import 'package:masjid_app/routes/ruangan/index.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
@@ -37,6 +38,7 @@ class AppPages {
     ...PagesKalenderdzulhijjah.pages,
     ...PagesMuazin.pages,
     ...PagesKajian.pages,
+    ...PagesQuote.pages,
     ...PagesAlarm.pages
   ];
   // static var root = RoutesHome.root;
