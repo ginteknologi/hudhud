@@ -134,7 +134,7 @@ class DkmPage extends StatelessWidget {
                                   widthContent:
                                       MediaQuery.of(context).size.width * 0.7,
                                   showIcon: IconPosition.left,
-                                  iconLeft: SvgPicture.asset(item.icon,
+                                  iconLeft: SvgPicture.network(item.icon,
                                       height: 30, width: 30),
                                   titleStyle: context.textTheme.bodySmall
                                       ?.copyWith(
