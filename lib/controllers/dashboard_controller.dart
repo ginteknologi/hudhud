@@ -7,6 +7,7 @@ import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/controllers/home_controller.dart';
+import 'package:masjid_app/models/sedangLiveData.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/service/dashboard_service.dart';
@@ -23,8 +24,10 @@ class DashboardController extends GetxController {
   var isLoadingArtikel = true.obs;
   var isLoadingLokasi = false.obs;
   var isLoadingDoaDashboard = true.obs;
+  var isLoadingLive = true.obs;
 
   var listMenuHome = [].obs;
+  var listSedangLive = <SedangLiveData>[].obs;
   var listKajianSlider = <KajianData>[
     KajianData(
         id: 1,
@@ -139,6 +142,17 @@ class DashboardController extends GetxController {
             image: element['image']));
       }
       isLoadingArtikel.value = false;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  GetDataSedangLive() async {
+    try {
+      final data = await DashboardService().getSedangLive();
+      print(data);
+      listSedangLive.value = data;
+      isLoadingLive.value = false;
     } catch (e) {
       print(e);
     }
@@ -302,7 +316,7 @@ class DashboardController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
+    GetDataSedangLive();
     getSliderKajianLive();
     getSliderKajianTafsir();
     GetDataArtikel();

@@ -1,30 +1,32 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/layout/custom_card_item.dart';
-import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/configs/fileSetup.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/sedangLiveData.dart';
 import 'package:masjid_app/pages/dashboard/component/countDown.dart';
 import 'package:masjid_app/pages/dashboard/component/ramadhanMenu.dart';
+import 'package:masjid_app/pages/dashboard/component/sedangLive.dart';
 import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
-import 'package:masjid_app/pages/home/home_page.dart';
 import 'package:masjid_app/routes/akun/index.dart';
-import 'package:masjid_app/routes/home/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
 import 'package:masjid_app/routes/kajian/index.dart';
-import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardPage extends StatelessWidget {
   final DashboardController ctrl = Get.find();
@@ -36,6 +38,7 @@ class DashboardPage extends StatelessWidget {
         top: false,
         child: Obx(() {
           return Container(
+              padding: EdgeInsets.only(top: Get.height / 20),
               height: Get.height,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -43,72 +46,111 @@ class DashboardPage extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [Color(0xFF189A8C), Colors.white, Colors.white]),
               ),
-              child: Padding(
-                  padding: EdgeInsets.only(
-                      left: Get.width / 30,
-                      right: Get.width / 30,
-                      top: Get.height / 20),
-                  child: SingleChildScrollView(
-                      physics: const ClampingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          header(context),
-                          WaktuSolat(),
-                          getGridMenu(ctrl),
-                          SizedBox(
-                            height: Get.width / 30,
-                          ),
-                          CountDown_Widget(),
-                          SizedBox(
-                            height: Get.width / 30,
-                          ),
-                          RamadhanMenuWidget(),
-                          SizedBox(
-                            height: Get.width / 30,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator(
-                                'Doa Ramadhan', 'Lihat Semua', context, ctrl),
-                          ),
-                          Skeletonizer(
-                            ignoreContainers: false,
-                            enabled: ctrl.isLoadingDoaDashboard.value,
-                            child: getListItem(ctrl),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator(
-                                'Kajian Live', 'Lihat Semua', context, ctrl),
-                          ),
-                          Skeletonizer(
-                            ignoreContainers: false,
-                            enabled: ctrl.isLoadingKajianLive.value,
-                            child: getListItemKajianLive(ctrl),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator('Kajian Tafsir Quran',
-                                'Lihat Semua', context, ctrl),
-                          ),
-                          Skeletonizer(
-                            ignoreContainers: false,
-                            enabled: ctrl.isLoadingKajianTafsir.value,
-                            child: getListItemKajian(ctrl),
-                          ),
-                          Container(
-                            child: getSeparator('Terbaru', '', context, ctrl),
-                          ),
-                          Skeletonizer(
-                            ignoreContainers: false,
-                            enabled: ctrl.isLoadingArtikel.value,
-                            child: News(context, ctrl),
-                          ),
-                          SizedBox(
-                            height: Get.height / 30,
-                          )
-                        ],
-                      ))));
+              child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: header(context),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: WaktuSolat(),
+                      ),
+                      Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: Get.width / 30),
+                          child: getGridMenu(ctrl)),
+                      SizedBox(
+                        height: Get.width / 40,
+                      ),
+                      SedangLiveWidget(),
+                      SizedBox(
+                        height: Get.width / 30,
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: CountDown_Widget(),
+                      ),
+                      SizedBox(
+                        height: Get.width / 30,
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: RamadhanMenuWidget(),
+                      ),
+                      SizedBox(
+                        height: Get.width / 30,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: getSeparator(
+                            'Doa Ramadhan', 'Lihat Semua', context, ctrl),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width / 30),
+                        child: Skeletonizer(
+                          ignoreContainers: false,
+                          enabled: ctrl.isLoadingDoaDashboard.value,
+                          child: getListItem(ctrl),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: getSeparator('Riwayat Kajian Live',
+                            'Lihat Semua', context, ctrl),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width / 30),
+                        child: Skeletonizer(
+                          ignoreContainers: false,
+                          enabled: ctrl.isLoadingKajianLive.value,
+                          child: getListItemKajianLive(ctrl),
+                        ),
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        margin: const EdgeInsets.only(top: 10),
+                        child: getSeparator('Kajian Tafsir Quran',
+                            'Lihat Semua', context, ctrl),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width / 30),
+                        child: Skeletonizer(
+                          ignoreContainers: false,
+                          enabled: ctrl.isLoadingKajianTafsir.value,
+                          child: getListItemKajian(ctrl),
+                        ),
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: getSeparator('Terbaru', '', context, ctrl),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: Skeletonizer(
+                          ignoreContainers: false,
+                          enabled: ctrl.isLoadingArtikel.value,
+                          child: News(context, ctrl),
+                        ),
+                      ),
+                      SizedBox(
+                        height: Get.height / 30,
+                      )
+                    ],
+                  )));
         }));
   }
 
@@ -336,9 +378,11 @@ class DashboardPage extends StatelessWidget {
                       'judul': 'Doa-Doa',
                       'type': 'doa_ramadhan'
                     });
-                  } else if (nama == 'Kajian Live') {
-                    Get.toNamed(RoutesKajian.root,
-                        arguments: {'judul': 'Kajian Live', 'type': 'live'});
+                  } else if (nama == 'Riwayat Kajian Live') {
+                    Get.toNamed(RoutesKajian.root, arguments: {
+                      'judul': 'Riwayat Kajian Live',
+                      'type': 'live'
+                    });
                   } else {
                     Get.toNamed(RoutesKajian.root, arguments: {
                       'judul': 'Kajian Tafsir Al-Quran',
@@ -729,9 +773,13 @@ class DashboardPage extends StatelessWidget {
         statusBarColor: Colors.transparent));
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Colors.white,
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
+        // appBar: AppBar(
+        //   backgroundColor: Color(0xFF30A498),
+        //   toolbarHeight: 0,
+        // ),
         body: layout(context));
   }
 }
