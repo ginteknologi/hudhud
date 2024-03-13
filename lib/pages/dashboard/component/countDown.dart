@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -14,12 +15,10 @@ class CountDown_Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext) {
-    // Text(
-    //                           '${ctrl.remainingTime.inDays} Hari ${ctrl.remainingTime.inHours % 24} Jam ${ctrl.remainingTime.inMinutes % 60} Menit ${ctrl.remainingTime.inSeconds % 60} Detik',
-    //                           style: TextStyle(
-    //                               fontSize: 24, fontWeight: FontWeight.bold),
-    //                         )
     return Obx(() {
+      if (ctrl.eventData.value.status == false) {
+        return SizedBox();
+      }
       return Skeletonizer(
         enabled: ctrl.isLoadingEvent.value,
         child: Container(

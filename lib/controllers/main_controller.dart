@@ -29,9 +29,11 @@ class MainController extends GetxController {
     total_sedekah: 0,
   ));
 
-  Rx<LokasiSayaData> mylokasi =
-      LokasiSayaData(keteranganLokasi: "Belum ada lokasi", lat: -6.195438799475241, long: 106.82264795337655)
-          .obs;
+  Rx<LokasiSayaData> mylokasi = LokasiSayaData(
+          keteranganLokasi: "Belum ada lokasi",
+          lat: -6.195438799475241,
+          long: 106.82264795337655)
+      .obs;
 
   Rx<bookmarkData> ayatBookmark = bookmarkData(
           namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)

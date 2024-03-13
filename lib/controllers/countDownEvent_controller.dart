@@ -21,6 +21,7 @@ class CountDownEventController extends GetxController {
       final data = await EventCountDownService.getData();
       _targetDate.value = DateTime.parse(data['selesai']);
       eventData.value = EventCountDownData(
+          status: true,
           description: data['keterangan'],
           limitDate: data['selesai'],
           title: data['judul'],
