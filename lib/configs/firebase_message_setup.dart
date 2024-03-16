@@ -7,8 +7,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/firebase_options.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+// import 'package:flutter_background_service/flutter_background_service.dart';
+// import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 // import 'package:simple_moment/simple_moment.dart';
 
 final authStore = GetStorage();
@@ -33,78 +33,78 @@ void onDidReceiveNotificationResponse(
   }
 }
 
-Future<void> Scheduling() async {
-  try {
-    final service = FlutterBackgroundService();
-    await service.configure(
-        iosConfiguration: IosConfiguration(),
-        androidConfiguration:
-            AndroidConfiguration(onStart: onStartPlay, isForegroundMode: true));
-    await service.startService();
-  } catch (e) {
-    print(e);
-  }
-}
+// Future<void> Scheduling() async {
+//   try {
+//     final service = FlutterBackgroundService();
+//     await service.configure(
+//         iosConfiguration: IosConfiguration(),
+//         androidConfiguration:
+//             AndroidConfiguration(onStart: onStartPlay, isForegroundMode: true));
+//     await service.startService();
+//   } catch (e) {
+//     print(e);
+//   }
+// }
 
-@pragma('vm:entry-point')
-final FlutterLocalNotificationsPlugin notiFPlugin =
-    FlutterLocalNotificationsPlugin();
-void onStartPlay(ServiceInstance service) async {
-  if (service is AndroidServiceInstance) {
-    service.on('setAsForeground').listen((event) {
-      service.setAsForegroundService();
-    });
+// @pragma('vm:entry-point')
+// final FlutterLocalNotificationsPlugin notiFPlugin =
+//     FlutterLocalNotificationsPlugin();
+// void onStartPlay(ServiceInstance service) async {
+//   if (service is AndroidServiceInstance) {
+//     service.on('setAsForeground').listen((event) {
+//       service.setAsForegroundService();
+//     });
 
-    service.on('setAsBackground').listen((event) {
-      service.setAsBackgroundService();
-    });
-  }
-  service.on('stopService').listen((event) {
-    service.stopSelf();
-  });
+//     service.on('setAsBackground').listen((event) {
+//       service.setAsBackgroundService();
+//     });
+//   }
+//   service.on('stopService').listen((event) {
+//     service.stopSelf();
+//   });
 
-  // Timer.periodic(const Duration(seconds: 1200), (timer) async {
-  //   print('checking adzan');
-  //   if (service is AndroidServiceInstance) {
-  //     print('checking adzan 2');
-  //     notiFPlugin.show(
-  //       DateTime.now().microsecond + DateTime.now().minute,
-  //       'Adzan',
-  //       'Waktunya Sholat',
-  //       NotificationDetails(
-  //         android: AndroidNotificationDetails(
-  //           'adzan_notification',
-  //           'Adzan Notif',
-  //           channelDescription: 'channel adzan notif',
-  //           importance: Importance.max,
-  //           priority: Priority.high,
-  //           autoCancel: false,
-  //           playSound: true,
-  //           sound: RawResourceAndroidNotificationSound('adzan'),
-  //           enableVibration: false,
-  //           audioAttributesUsage: AudioAttributesUsage.media,
-  //           actions: <AndroidNotificationAction>[
-  //             AndroidNotificationAction(
-  //               'adzan_notification',
-  //               'Tutup Adzan',
-  //               // icon: DrawableResourceAndroidBitmap('@mipmap/ic_largeIcon'),
-  //               showsUserInterface: false,
-  //               // By default, Android plugin will dismiss the notification when the
-  //               // user tapped on a action (this mimics the behavior on iOS).
-  //               cancelNotification: true,
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     );
+// Timer.periodic(const Duration(seconds: 1200), (timer) async {
+//   print('checking adzan');
+//   if (service is AndroidServiceInstance) {
+//     print('checking adzan 2');
+//     notiFPlugin.show(
+//       DateTime.now().microsecond + DateTime.now().minute,
+//       'Adzan',
+//       'Waktunya Sholat',
+//       NotificationDetails(
+//         android: AndroidNotificationDetails(
+//           'adzan_notification',
+//           'Adzan Notif',
+//           channelDescription: 'channel adzan notif',
+//           importance: Importance.max,
+//           priority: Priority.high,
+//           autoCancel: false,
+//           playSound: true,
+//           sound: RawResourceAndroidNotificationSound('adzan'),
+//           enableVibration: false,
+//           audioAttributesUsage: AudioAttributesUsage.media,
+//           actions: <AndroidNotificationAction>[
+//             AndroidNotificationAction(
+//               'adzan_notification',
+//               'Tutup Adzan',
+//               // icon: DrawableResourceAndroidBitmap('@mipmap/ic_largeIcon'),
+//               showsUserInterface: false,
+//               // By default, Android plugin will dismiss the notification when the
+//               // user tapped on a action (this mimics the behavior on iOS).
+//               cancelNotification: true,
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
 
-  //     if (await service.isForegroundService()) {
-  //       service.setForegroundNotificationInfo(
-  //           title: 'PushNotif', content: 'updates at ${DateTime.now()}');
-  //     }
-  //   }
-  // });
-}
+//     if (await service.isForegroundService()) {
+//       service.setForegroundNotificationInfo(
+//           title: 'PushNotif', content: 'updates at ${DateTime.now()}');
+//     }
+//   }
+// });
+// }
 
 class SetupFirebase {
   static get onDidReceiveLocalNotification => null;

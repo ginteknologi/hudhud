@@ -12,6 +12,9 @@ class WaktuSolat extends StatelessWidget {
   WaktuSolat({super.key});
 
   layout(BuildContext context) {
+    if (ctrl.isLoading.isTrue) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return Card(
       elevation: 0,
       color: const Color(0xFFF5F5F5),
@@ -72,13 +75,13 @@ class WaktuSolat extends StatelessWidget {
                                                         FontWeight.normal,
                                                     color: Colors.white)),
                                       ]),
-                                  
-                                            SizedBox(height: Get.height / 150),
+                                  SizedBox(height: Get.height / 150),
                                   Expanded(
                                     child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           AutoSizeText(
                                               ctrl.waktuSolat.value.label,
@@ -89,19 +92,20 @@ class WaktuSolat extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.normal,
                                                       color: Colors.white)),
-                                                    SizedBox(height: 1),
+                                          SizedBox(height: 1),
                                           AutoSizeText(
                                               ctrl.waktuSolat.value.time24!,
                                               maxLines: 1,
                                               style: context
                                                   .textTheme.displayMedium
                                                   ?.copyWith(
-                                                      fontWeight: FontWeight.w900,
+                                                      fontWeight:
+                                                          FontWeight.w900,
                                                       color: Colors.white,
                                                       height: 1))
                                         ]),
                                   ),
-                                            SizedBox(height: Get.height / 150),
+                                  SizedBox(height: Get.height / 150),
                                   Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       crossAxisAlignment:

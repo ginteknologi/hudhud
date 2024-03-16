@@ -22,6 +22,7 @@ class WaktuSolatController extends GetxController {
   var imsak = "".obs;
   var berbuka = "".obs;
   var hijriDate = {}.obs;
+
   Rx<WaktuSolatData> waktuSolat =
       WaktuSolatData(label: "label", time: "time", status: true).obs;
   RxList<WaktuSolatData> list = <WaktuSolatData>[
@@ -52,8 +53,8 @@ class WaktuSolatController extends GetxController {
   ].obs;
   Future getWaktuSolat() async {
     try {
-      final myCoordinates = Coordinates(
-          gctrl.mylokasi.value.lat, gctrl.mylokasi.value.long);
+      final myCoordinates =
+          Coordinates(gctrl.mylokasi.value.lat, gctrl.mylokasi.value.long);
       final waktu = CalculationMethod.singapore.getParameters();
       final prayerTimes = PrayerTimes.today(myCoordinates, waktu);
       list.value = [
@@ -89,6 +90,7 @@ class WaktuSolatController extends GetxController {
           DateFormat.jm().format(fajrTime.subtract(Duration(minutes: 10)));
       berbuka.value = DateFormat.jm().format(prayerTimes.maghrib);
       _updateNextSalat();
+      isLoading.value = false;
     } catch (e) {
       print("error getwaktusolat");
       print(e);
@@ -131,11 +133,11 @@ class WaktuSolatController extends GetxController {
 
   void _calculateTimeToNextSalat(String nextSalatTime) {
     try {
-        var cekwaktu = nextSalatTime.contains(".");
-        var default_split = ":";
-        if (cekwaktu) {
-          default_split = ".";
-        }      
+      var cekwaktu = nextSalatTime.contains(".");
+      var default_split = ":";
+      if (cekwaktu) {
+        default_split = ".";
+      }
       DateTime now = DateTime.now();
       DateTime nextSalatDateTime = DateTime(
         now.year,

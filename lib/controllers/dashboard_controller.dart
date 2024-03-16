@@ -2,7 +2,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/configs/firebase_message_setup.dart';
+// import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/artikelData.dart';
 import 'package:masjid_app/models/kajianData.dart';
@@ -118,7 +118,7 @@ class DashboardController extends GetxController {
         lat: position.latitude,
         long: position.longitude,
       );
-      await Scheduling();
+      // await Scheduling();
       isLoadingLokasi.value = false;
       Get.back();
     } else if (statusLokasi.isDenied) {

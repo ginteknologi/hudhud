@@ -14,6 +14,5 @@ class HomeBinding implements Bindings {
     Get.lazyPut(() => DashboardController());
     Get.lazyPut(() => MuazinController());
     Get.lazyPut(() => CountDownEventController());
-    Get.lazyPut(() => WaktuSolatController());
   }
 }
