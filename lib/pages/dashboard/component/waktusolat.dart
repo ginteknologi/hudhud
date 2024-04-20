@@ -41,7 +41,7 @@ class WaktuSolat extends StatelessWidget {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    "https://nos.wjv-1.neo.id/marbot/assets/waktusolat_backround.png"),
+                                    "https://marbot.nos.wjv-1.neo.id/assets/waktusolat_backround.png"),
                                 fit: BoxFit.cover)),
                         child: Row(
                           children: [
