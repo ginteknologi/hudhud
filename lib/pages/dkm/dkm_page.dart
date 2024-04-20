@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,6 @@ class DkmPage extends StatelessWidget {
   layout(BuildContext context) {
     return Refresh.SmartRefresher(
       enablePullDown: true,
-      header: Refresh.ClassicHeader(),
       controller: ctrl.refreshController,
       onLoading: () async {
         await ctrl.getSlider();

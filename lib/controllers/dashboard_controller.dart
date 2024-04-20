@@ -12,12 +12,14 @@ import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/service/dashboard_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardController extends GetxController {
   final ctrlmain = Get.find<MainController>();
   final ctrlhome = Get.find<HomeController>();
-
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   final dataStore = GetStorage();
   var isLoadingKajianLive = true.obs;
   var isLoadingKajianTafsir = true.obs;

@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:alarm/model/alarm_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
-import 'package:alarm/alarm.dart';
 import 'package:in_app_update/in_app_update.dart';
 // import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/date_symbol_data_local.dart';
