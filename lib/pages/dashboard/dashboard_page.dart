@@ -95,7 +95,7 @@ class DashboardPage extends StatelessWidget {
                       margin: const EdgeInsets.only(top: 10),
                       padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
                       child: getSeparator(
-                          'Doa Ramadhan', 'Lihat Semua', context, ctrl),
+                          'Sahabat Masjid', 'Lihat Semua', context, ctrl),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: Get.width / 30),
@@ -373,9 +373,9 @@ class DashboardPage extends StatelessWidget {
                 highlightColor: Colors.transparent,
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 onTap: () async {
-                  if (nama == 'Doa Ramadhan') {
+                  if (nama == 'Sahabat Masjid') {
                     Get.toNamed(RoutesKajian.root, arguments: {
-                      'judul': 'Doa-Doa',
+                      'judul': 'Sahabat masjid',
                       'type': 'doa_ramadhan'
                     });
                   } else if (nama == 'Riwayat Kajian Live') {
