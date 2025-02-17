@@ -98,7 +98,10 @@ class DetailArtikelPage extends StatelessWidget {
                           'p': Style(
                               fontSize: FontSize.medium,
                               margin: Margins.zero,
+                              padding: HtmlPaddings.zero,
+                              lineHeight: LineHeight(1.2),
                               textAlign: TextAlign.justify),
+                          'br': Style(margin: Margins.only(bottom: 1)),
                           'b': Style(
                             fontWeight: FontWeight.bold,
                           ),

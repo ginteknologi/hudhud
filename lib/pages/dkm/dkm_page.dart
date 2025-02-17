@@ -161,21 +161,21 @@ class DkmPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Marbot Apps Supporting Formasi Satu",
-                            style: context.textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ),
-                        Image.asset(
-                          "assets/img/formasi-satu.png",
-                          // height: 85,
-                          width: 180,
-                          alignment: Alignment.centerLeft,
-                        ),
+                        // Align(
+                        //   alignment: Alignment.center,
+                        //   child: Text(
+                        //     "Marbot Apps Supporting Formasi Satu",
+                        //     style: context.textTheme.bodySmall?.copyWith(
+                        //         fontWeight: FontWeight.bold,
+                        //         color: Colors.black),
+                        //   ),
+                        // ),
+                        // Image.asset(
+                        //   "assets/img/formasi-satu.png",
+                        //   // height: 85,
+                        //   width: 180,
+                        //   alignment: Alignment.centerLeft,
+                        // ),
                         SizedBox(
                           height: 5,
                         ),
