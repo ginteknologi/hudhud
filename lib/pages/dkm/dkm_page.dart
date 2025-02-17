@@ -102,7 +102,7 @@ class DkmPage extends StatelessWidget {
             ),
             Obx(() => getListCategory(ctrl)),
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 21),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     SizedBox(

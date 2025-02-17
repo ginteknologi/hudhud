@@ -44,10 +44,15 @@ class DetailArtikelPage extends StatelessWidget {
                                         NetworkImage(ctrl.detail.value.image),
                                     fit: BoxFit.cover)),
                           )),
-                      Text(
-                        ctrl.detail.value.category_artikel?['name'] ?? '',
-                        style: context.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 5),
+                        child: Text(
+                          ctrl.detail.value.category_artikel?['name'] ?? '',
+                          style: context.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 12),
+                        ),
                       ),
                       AutoSizeText(
                         ctrl.detail.value.judul,
@@ -73,19 +78,27 @@ class DetailArtikelPage extends StatelessWidget {
                         height: 20,
                       ),
                       Html(
-                        data: ctrl.detail.value.isi,
+                        data: (ctrl.detail.value.isi ?? '')
+                            .replaceAllMapped(
+                                RegExp(r'\n{2,}'), (match) => '\n')
+                            .replaceAll('<br><br>', '<br>')
+                            .replaceAll('<p></p>', '')
+                            .trim(),
                         style: {
+                          'body': Style(
+                              margin: Margins.zero, padding: HtmlPaddings.zero),
                           'h2': Style(
-                            fontSize: FontSize(18.0),
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: FontSize(18.0),
+                              fontWeight: FontWeight.bold,
+                              margin: Margins.zero),
                           'h3': Style(
-                            fontSize: FontSize(18.0),
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: FontSize(18.0),
+                              fontWeight: FontWeight.bold,
+                              margin: Margins.zero),
                           'p': Style(
-                            fontSize: FontSize.medium,
-                          ),
+                              fontSize: FontSize.medium,
+                              margin: Margins.zero,
+                              textAlign: TextAlign.justify),
                           'b': Style(
                             fontWeight: FontWeight.bold,
                           ),
@@ -93,9 +106,6 @@ class DetailArtikelPage extends StatelessWidget {
                             fontStyle: FontStyle.italic,
                           ),
                           'a': Style(
-                            color: Colors.blue,
-                          ),
-                          'br': Style(
                             color: Colors.blue,
                           ),
                         },
