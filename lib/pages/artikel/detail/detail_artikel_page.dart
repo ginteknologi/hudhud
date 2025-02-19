@@ -9,6 +9,7 @@ import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/configs/fileSetup.dart';
 import 'package:masjid_app/pages/artikel/detail/detail_artikel_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:masjid_app/routes/artikel/index.dart';
@@ -77,48 +78,67 @@ class DetailArtikelPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      Html(
-                        data: (ctrl.detail.value.isi ?? '')
-                            .replaceAllMapped(
-                                RegExp(r'\n{2,}'), (match) => '\n')
-                            .replaceAll('<br><br>', '<br>')
-                            .replaceAll('<p></p>', '')
-                            .trim(),
-                        style: {
-                          'body': Style(
-                              margin: Margins.zero, padding: HtmlPaddings.zero),
-                          'h2': Style(
-                              fontSize: FontSize(18.0),
-                              fontWeight: FontWeight.bold,
-                              margin: Margins.zero),
-                          'h3': Style(
-                              fontSize: FontSize(18.0),
-                              fontWeight: FontWeight.bold,
-                              margin: Margins.zero),
-                          'p': Style(
-                              fontSize: FontSize.medium,
-                              margin: Margins.zero,
-                              padding: HtmlPaddings.zero,
-                              lineHeight: LineHeight(1.2),
-                              textAlign: TextAlign.justify),
-                          'br': Style(margin: Margins.only(bottom: 1)),
-                          'b': Style(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          'i': Style(
-                            fontStyle: FontStyle.italic,
-                          ),
-                          'a': Style(
-                            color: Colors.blue,
-                          ),
+                      // Html(
+                      //   data: (ctrl.detail.value.isi ?? '')
+                      //       .replaceAllMapped(
+                      //           RegExp(r'\n{2,}'), (match) => '\n')
+                      //       .replaceAll('<br><br>', '<br>')
+                      //       .replaceAll('<p></p>', '')
+                      //       .trim(),
+                      //   style: {
+                      //     'body': Style(
+                      //         margin: Margins.zero, padding: HtmlPaddings.zero),
+                      //     'h2': Style(
+                      //         fontSize: FontSize(18.0),
+                      //         fontWeight: FontWeight.bold,
+                      //         margin: Margins.zero),
+                      //     'h3': Style(
+                      //         fontSize: FontSize(18.0),
+                      //         fontWeight: FontWeight.bold,
+                      //         margin: Margins.zero),
+                      //     'p': Style(
+                      //         fontSize: FontSize.medium,
+                      //         margin: Margins.zero,
+                      //         padding: HtmlPaddings.zero,
+                      //         lineHeight: LineHeight(1.2),
+                      //         textAlign: TextAlign.justify),
+                      //     'br': Style(margin: Margins.only(bottom: 0.1)),
+                      //     'b': Style(
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //     'i': Style(
+                      //       fontStyle: FontStyle.italic,
+                      //     ),
+                      //     'a': Style(
+                      //       color: Colors.blue,
+                      //     ),
+                      //   },
+                      // ),
+                      HtmlWidget(
+                        ctrl.detail.value.isi ?? '',
+                        customStylesBuilder: (element) {
+                          if (element.localName == 'p') {
+                            return {
+                              'margin': '0px 0px 2px 0px',
+                              'padding': '0px 0px 0px 0px',
+                              'text-align': 'justify',
+                              'font-size': '14px',
+                            };
+                          }
+                          if (element.localName == 'br') {
+                            return {
+                              'margin': '0px 0px 0px 0px',
+                              'padding': '0px 0px 0px 0px'
+                            };
+                          }
+                          if (element.localName == 'h2' ||
+                              element.localName == 'h3') {
+                            return {'font-size': '18px', 'font-weight': 'bold'};
+                          }
+                          return null;
                         },
+                        textStyle: TextStyle(fontSize: 14, color: Colors.black),
                       ),
-                      // Text(
-                      //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer fringilla libero a turpis viverra vehicula. Sed ac pellentesque ligula, ac pharetra justo. Donec ut erat vitae tortor accumsan convallis. Aenean ornare commodo purus sed semper. Sed fermentum et mi ac condimentum. Etiam sed sagittis ex, in imperdiet urna. Cras iaculis ante et purus molestie lacinia. Mauris id dolor et velit tempus imperdiet sit amet vel arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus interdum venenatis quam. Fusce ullamcorper at arcu ut placerat. Nulla",
-                      //     style: context.textTheme.bodySmall?.copyWith(
-                      //         fontWeight: FontWeight.normal,
-                      //         letterSpacing: 0,
-                      //         color: Colors.black)),
                       const SizedBox(
                         height: 20,
                       ),

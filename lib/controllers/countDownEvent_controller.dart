@@ -7,7 +7,7 @@ import 'package:masjid_app/service/eventCountDown_service.dart';
 class CountDownEventController extends GetxController {
   var isLoadingEvent = true.obs;
   late Timer _timer;
-  Rx<DateTime> _targetDate = DateTime.parse("2024-02-30").obs;
+  Rx<DateTime> _targetDate = DateTime.parse("2025-02-28").obs;
   RxList<Map<String, dynamic>> countdownData = <Map<String, dynamic>>[].obs;
   Rx<EventCountDownData> eventData = Rx(EventCountDownData(
     title: 'Default Title',
@@ -27,6 +27,7 @@ class CountDownEventController extends GetxController {
           title: data['judul'],
           imageUrl: data['image']);
       isLoadingEvent.value = false;
+      print("ini >>>>>>>>>>>>>>>>>> eventData");
       print(eventData);
     } catch (e) {
       print("error controller EventCountDownService");

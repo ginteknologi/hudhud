@@ -35,9 +35,7 @@ class DetailArtikelController extends GetxController {
       String judul = result['data']['judul'];
       String content = _convertHtmlToText(result['data']['isi']);
       String link = 'Dibagikan dari aplikasi\n\n Marbot App';
-print(detail);
       share.value = '$judul\n\n$content\n\n$link';
-
       final listartikel = await ArtikelService().getListArtikellain();
       for (var element in listartikel['data']) {
         listArtikels.add(ArtikelData(
