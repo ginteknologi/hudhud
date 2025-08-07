@@ -31,7 +31,7 @@ class ContentHaditsPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            'Hadits No.1',
+                            'Hadits No. ${ctrl.list.isNotEmpty ? ctrl.list[ctrl.currentIndex.value].NoHdt : "-"}',
                             style: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -46,23 +46,71 @@ class ContentHaditsPage extends StatelessWidget {
                             children: [
                               SvgPicture.asset("assets/icons/book_mark.svg",
                                   height: 20, width: 20),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              AutoSizeText(
-                                ctrl.arguments['content'].Kitab_Indonesia,
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black,
+                              SizedBox(width: 10),
+                              Container(
+                                width: MediaQuery.of(context).size.width *
+                                    0.6, // Batasi lebar maksimal
+                                child: Text(
+                                  ctrl.arguments['content'].Kitab_Indonesia,
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black,
+                                  ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  maxLines: 2, // Agar tetap rapi
                                 ),
-                              )
+                              ),
                             ],
-                          )
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width *
+                                    0.6, // Batasi lebar maksimal
+                                child: Text(
+                                  ctrl.arguments['babIndonesia'] ?? "",
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black,
+                                  ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  maxLines: 2, // Agar tetap rapi
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Obx(() => ElevatedButton(
+                                    onPressed: ctrl.currentIndex.value > 0
+                                        ? () => ctrl.previousHadits()
+                                        : null,
+                                    child: Text("Previous"),
+                                  )),
+                              Obx(() => ElevatedButton(
+                                    onPressed: ctrl.currentIndex.value <
+                                            ctrl.list.length - 1
+                                        ? () => ctrl.nextHadits()
+                                        : null,
+                                    child: Text("Next"),
+                                  )),
+                            ],
+                          ),
                         ],
                       ),
                       InkWell(
                         onTap: () {
-                          Share.share("${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content'].Kitab_Indonesia}\n\n${ctrl.list[0].Isi_Arab}\n\n${ctrl.list[0].Isi_Indonesia} \n\n Dibagikan dari aplikasi\n\n Marbot App",
+                          Share.share(
+                              "${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content'].Kitab_Indonesia}\n\n${ctrl.list[0].Isi_Arab}\n\n${ctrl.list[0].Isi_Indonesia} \n\n Dibagikan dari aplikasi\n\n Marbot App",
                               subject: ctrl.arguments['detail']['longNama']);
                         },
                         child: Icon(
@@ -89,20 +137,29 @@ class ContentHaditsPage extends StatelessWidget {
                       children: [
                         Container(
                           height: 300,
-                          child: Text(
-                            ctrl.list[0].Isi_Arab,
-                            textAlign: TextAlign.center,
-                          ),
+                          child: Obx(() => Text(
+                                ctrl.list.isNotEmpty
+                                    ? ctrl
+                                        .list[ctrl.currentIndex.value].Isi_Arab
+                                    : "Tidak ada data",
+                                textAlign: TextAlign.center,
+                              )),
                         ),
-                        AutoSizeText(
-                          ctrl.list[0].Isi_Indonesia,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 10,
-                            color: Colors.black,
-                          ),
-                          softWrap: true,
+                        SizedBox(
+                          height: 20,
                         ),
+                        Obx(() => AutoSizeText(
+                              ctrl.list.isNotEmpty
+                                  ? ctrl.list[ctrl.currentIndex.value]
+                                      .Isi_Indonesia
+                                  : "Tidak ada data",
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 10,
+                                color: Colors.black,
+                              ),
+                              softWrap: true,
+                            )),
                       ],
                     )),
               ],

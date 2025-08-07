@@ -288,7 +288,7 @@ class DashboardPage extends StatelessWidget {
                     fontWeight: FontWeight.normal,
                     color: Colors.white),
                 title: item.judul,
-                subtitle: Moment.parse(item.updatedAt)
+                subtitle: Moment.parse(item.publish_date)
                     .format("dd MMMM yyyy", localeOverride: 'id'),
                 imgPath: item.image,
                 linkRoute: '/artikel/${item.id}',

@@ -18,6 +18,7 @@ class ArtikelController extends GetxController {
             judul: element['judul'],
             image: element['image'],
             category_artikel: element['category_artikel'],
+            publish_date: element['publish_date'],
             updatedAt: element['updatedAt']));
       }
       isLoadingList.value = false;

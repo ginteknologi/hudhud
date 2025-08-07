@@ -95,12 +95,14 @@ class DashboardController extends GetxController {
         id: 1,
         judul: "dummy",
         updatedAt: "1992-10-10",
-        image: "https://dummyimage.com/600x400/000/fff"),
+        image: "https://dummyimage.com/600x400/000/fff",
+        publish_date: ''),
     ArtikelData(
         id: 1,
         judul: "dummy",
         updatedAt: "1992-10-10",
-        image: "https://dummyimage.com/600x400/000/fff"),
+        image: "https://dummyimage.com/600x400/000/fff",
+        publish_date: ''),
   ].obs;
   var listAllMenu = [].obs;
   var listKota = [].obs;
@@ -141,6 +143,7 @@ class DashboardController extends GetxController {
             judul: element['judul'],
             category_artikel: element['category_artikel'],
             updatedAt: element['updatedAt'],
+            publish_date: element['publish_date'],
             image: element['image']));
       }
       isLoadingArtikel.value = false;

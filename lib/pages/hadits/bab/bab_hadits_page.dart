@@ -72,7 +72,6 @@ class BabHaditsPage extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            
                             SizedBox(
                               width: 20,
                             ),
@@ -97,7 +96,9 @@ class BabHaditsPage extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  'Bab ' + ctrl.arguments['content'].ID_Kitab.toString(),
+                                  'Bab ' +
+                                      ctrl.arguments['content'].ID_Kitab
+                                          .toString(),
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -133,7 +134,12 @@ class BabHaditsPage extends StatelessWidget {
                           id: ctrl.list[index].ID_Bab,
                           title: ctrl.list[index].Bab_Indonesia,
                           onTap: () {
-                            Get.toNamed(RoutesHadits.content, arguments: {'content': ctrl.arguments['content'], 'detail': ctrl.arguments['detail'], 'bab': ctrl.list[index]});
+                            Get.toNamed(RoutesHadits.content, arguments: {
+                              'content': ctrl.arguments['content'],
+                              'detail': ctrl.arguments['detail'],
+                              'bab': ctrl.list[index],
+                              'babIndonesia': ctrl.list[index].Bab_Indonesia
+                            });
                           },
                           titleStyle: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.black),

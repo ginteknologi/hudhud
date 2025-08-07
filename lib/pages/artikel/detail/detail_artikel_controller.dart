@@ -13,6 +13,7 @@ class DetailArtikelController extends GetxController {
     judul: '',
     updatedAt: '',
     image: '',
+    publish_date: '',
   ));
   List listCategoryFilter = [].obs;
   late List<RxBool> listCategoryFilterSelected;
@@ -31,7 +32,8 @@ class DetailArtikelController extends GetxController {
           isi: result['data']['isi'],
           image: result['data']['image'],
           category_artikel: result['data']['category_artikel'],
-          updatedAt: result['data']['updatedAt']);
+          updatedAt: result['data']['updatedAt'],
+          publish_date: result['data']['publish_date']);
       String judul = result['data']['judul'];
       String content = _convertHtmlToText(result['data']['isi']);
       String link = 'Dibagikan dari aplikasi\n\n Marbot App';
@@ -42,6 +44,7 @@ class DetailArtikelController extends GetxController {
             id: element['id'],
             judul: element['judul'],
             image: element['image'],
+            publish_date: element['publish_date'],
             updatedAt: element['updatedAt']));
       }
       isLoadingList.value = false;
