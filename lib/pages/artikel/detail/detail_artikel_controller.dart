@@ -47,6 +47,8 @@ class DetailArtikelController extends GetxController {
             publish_date: element['publish_date'],
             updatedAt: element['updatedAt']));
       }
+      listArtikels.sort((a, b) =>
+          DateTime.parse(b.updatedAt).compareTo(DateTime.parse(a.updatedAt)));
       isLoadingList.value = false;
     } catch (e) {
       print(e);

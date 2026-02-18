@@ -10,16 +10,17 @@ class AuthService extends GetConnect {
   Future getProfile(userGoogle) async {
     try {
       final response = await http.post(
-          Uri.parse("${RemoteData.api}/profile"),
-          headers: <String, String>{
-            'Authorization': "Bearer ${authStore.read('jwt')}",
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+        Uri.parse("${RemoteData.api}/profile"),
+        headers: <String, String>{
+          'Authorization': "Bearer ${authStore.read('jwt')}",
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
         body: jsonEncode(<String, dynamic>{
           'name': userGoogle['name'],
           'email': userGoogle['email'],
           'photo': userGoogle['photo'],
-        }),);
+        }),
+      );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         json['code'] = response.statusCode;
@@ -29,13 +30,18 @@ class AuthService extends GetConnect {
       } else {
         final json = jsonDecode(response.body);
         json['code'] = response.statusCode;
-        
+
         return json;
       }
     } catch (e) {
       print('<<<<<<<start>>>>>>>');
-      print('Login Error');
-      print(e);
+      print('Login Error: $e');
+      print('<<<<<<<end>>>>>>>');
+      return {
+        "code": 500,
+        "message": "Gagal terhubung ke server: $e",
+        "data": {}
+      };
     }
   }
 }

@@ -107,7 +107,7 @@ void onDidReceiveNotificationResponse(
 // }
 
 class SetupFirebase {
-  static get onDidReceiveLocalNotification => null;
+  // static get onDidReceiveLocalNotification => null;
   static sendnotif({
     required String title,
     required String pesan,
@@ -137,38 +137,63 @@ class SetupFirebase {
   }
 
   static Future initFirebase() async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+    if (Firebase.apps.isEmpty) {
+      try {
+        await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform);
+      } catch (e) {
+        print("Firebase already initialized: $e");
+      }
+    }
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
     if (!kIsWeb) {
       channel = const AndroidNotificationChannel(
-          'high_importance_channel', // id
-          'High Importance Notifications', // title
-          description:
-              'This channel is used for important notifications.', // description
-          importance: Importance.high,
-          playSound: true);
+        'high_importance_channel',
+        'High Importance Notifications',
+        description: 'This channel is used for important notifications.',
+        importance: Importance.high,
+        playSound: true,
+      );
 
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
       const AndroidInitializationSettings initializationSettingsAndroid =
           AndroidInitializationSettings('@mipmap/ic_launcher');
-      final DarwinInitializationSettings initializationSettingsIOS =
+
+      const DarwinInitializationSettings initializationSettingsIOS =
           DarwinInitializationSettings(
-              requestSoundPermission: false,
-              requestBadgePermission: false,
-              requestAlertPermission: false,
-              onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+      );
+
       const DarwinInitializationSettings initializationSettingsMacOS =
-          DarwinInitializationSettings();
+          DarwinInitializationSettings(
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+      );
 
       final InitializationSettings initializationSettings =
           InitializationSettings(
-              android: initializationSettingsAndroid,
-              iOS: initializationSettingsIOS,
-              macOS: initializationSettingsMacOS);
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+        macOS: initializationSettingsMacOS,
+      );
 
-      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+        // onDidReceiveBackgroundNotificationResponse: yourBgHandler, // opsional
+      );
+
+      // Buat notification channel Android (WAJIB untuk Android 8+)
+      final androidPlugin =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+      await androidPlugin?.createNotificationChannel(channel);
+
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
         alert: true,
@@ -179,31 +204,36 @@ class SetupFirebase {
 
     messaging = FirebaseMessaging.instance;
     await messaging.subscribeToTopic("all");
+
     messaging.getToken().then((value) async {
       authStore.write('fcmtoken', value);
-      print('token firebase: ${value!}');
+      debugPrint('token firebase: $value');
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
+      final notification = message.notification;
+      final android = message.notification?.android;
       final String jsonString = jsonEncode(message.data);
+
       if (notification != null && android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: '@mipmap/ic_launcher',
-              ),
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: '@mipmap/ic_launcher',
+              importance: Importance.high,
+              priority: Priority.high,
+              playSound: true,
             ),
-            payload: jsonString);
+          ),
+          payload: jsonString,
+        );
       }
     });
-    // await Scheduling();
   }
 }

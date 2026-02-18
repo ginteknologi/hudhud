@@ -179,7 +179,7 @@ bool isDarkMode() {
 }
 
 ThemeData darkTheme(context) {
-  final ColorScheme colorSceme = Theme.of(context).colorScheme.copyWith(
+  final colorScheme = Theme.of(context).colorScheme.copyWith(
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onBackground: Colors.white,
@@ -190,43 +190,41 @@ ThemeData darkTheme(context) {
         background: AppColors.backgroundDark,
         surface: AppColors.surfaceDark,
       );
-  const InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+
+  const inputDecorationTheme = InputDecorationTheme(
     fillColor: AppColors.surfaceDark,
     hintStyle: TextStyle(color: AppColors.appAccent),
-    border: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Colors.transparent,
-      ),
-    ),
+    border:
+        OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
   );
-  TabBarTheme tabBarTheme = TabBarTheme(
+
+  final tabBarTheme = TabBarThemeData(
     indicator: const UnderlineTabIndicator(
-      borderSide: BorderSide(
-        color: Colors.white,
-        width: 2.0,
-      ),
+      borderSide: BorderSide(color: Colors.white, width: 2.0),
     ),
     labelColor: Colors.white,
+    unselectedLabelColor: Colors.white54,
     labelStyle: GoogleFonts.poppins(
       fontSize: MediaQuery.of(context).size.width / 30,
       color: Colors.white,
     ),
-    unselectedLabelColor: Colors.white.withAlpha(100),
     unselectedLabelStyle: GoogleFonts.poppins(
       fontSize: MediaQuery.of(context).size.width / 30,
-      color: Colors.white.withAlpha(100),
+      color: Colors.white54,
     ),
   );
-  RadioThemeData radioTheme = RadioThemeData(
+
+  final radioTheme = RadioThemeData(
     fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
   );
-  CheckboxThemeData checkboxTheme = CheckboxThemeData(
+  final checkboxTheme = CheckboxThemeData(
     fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
   );
-  SwitchThemeData switchTheme = SwitchThemeData(
+  final switchTheme = SwitchThemeData(
     trackColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
     thumbColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
   );
+
   return ThemeData(
     tabBarTheme: tabBarTheme,
     inputDecorationTheme: inputDecorationTheme,
@@ -234,12 +232,12 @@ ThemeData darkTheme(context) {
     switchTheme: switchTheme,
     radioTheme: radioTheme,
     checkboxTheme: checkboxTheme,
-    colorScheme: colorSceme.copyWith(error: AppColors.appDanger),
+    colorScheme: colorScheme.copyWith(error: AppColors.appDanger),
   );
 }
 
 ThemeData lightTheme(context) {
-  final ColorScheme colorSceme = Theme.of(context).colorScheme.copyWith(
+  final colorScheme = Theme.of(context).colorScheme.copyWith(
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onBackground: Colors.black,
@@ -250,43 +248,42 @@ ThemeData lightTheme(context) {
         background: AppColors.background,
         surface: AppColors.surface,
       );
-  const InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+
+  const inputDecorationTheme = InputDecorationTheme(
     fillColor: AppColors.appAccent,
     hintStyle: TextStyle(color: AppColors.appPrimary2),
-    border: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Colors.transparent,
-      ),
-    ),
+    border:
+        OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
   );
-  TabBarTheme tabBarTheme = TabBarTheme(
+
+  final tabBarTheme = TabBarThemeData(
     indicator: const UnderlineTabIndicator(
-      borderSide: BorderSide(
-        color: AppColors.primary,
-        width: 2.0,
-      ),
+      borderSide: BorderSide(color: AppColors.primary, width: 2.0),
     ),
     labelColor: AppColors.primary,
+    unselectedLabelColor: AppColors.primary,
+    // ✅ versi kompatibel: langsung TextStyle
     labelStyle: GoogleFonts.poppins(
       fontSize: MediaQuery.of(context).size.width / 30,
       color: AppColors.primary,
     ),
-    unselectedLabelColor: AppColors.primary.withAlpha(100),
     unselectedLabelStyle: GoogleFonts.poppins(
       fontSize: MediaQuery.of(context).size.width / 30,
-      color: AppColors.primary.withAlpha(100),
+      color: AppColors.primary.withAlpha(140),
     ),
   );
-  SwitchThemeData switchTheme = SwitchThemeData(
+
+  final switchTheme = SwitchThemeData(
     trackColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
     thumbColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
   );
-  RadioThemeData radioTheme = RadioThemeData(
+  final radioTheme = RadioThemeData(
     fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
   );
-  CheckboxThemeData checkboxTheme = CheckboxThemeData(
+  final checkboxTheme = CheckboxThemeData(
     fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
   );
+
   return ThemeData(
     tabBarTheme: tabBarTheme,
     inputDecorationTheme: inputDecorationTheme,
@@ -295,6 +292,6 @@ ThemeData lightTheme(context) {
     radioTheme: radioTheme,
     checkboxTheme: checkboxTheme,
     primaryColor: AppColors.primary,
-    colorScheme: colorSceme.copyWith(error: AppColors.appDanger),
+    colorScheme: colorScheme.copyWith(error: AppColors.appDanger),
   );
 }

@@ -1,64 +1,37 @@
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:intl/intl.dart';
-import 'package:masjid_app/service/muazin_service.dart';
 import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/service/muazin_service.dart';
 
 class MuazinController extends GetxController {
-  static const _pageSize = 20;
-  final PagingController<int, KajianData> pagingController =
-      PagingController(firstPageKey: 1);
-  // DateTime sekarang = DateTime.now();
-  // DateFormat formatter = DateFormat.yMMMM();
+  static const int _pageSize = 20;
 
-  // var isLoading = true.obs;
-  // var listData = [].obs;
-  // var listMuadzin = <KajianData>[].obs;
-
-  // Future<void> getData() async {
-  //   try {
-  //     isLoading = true.obs;
-  //     final result = await MuazinService.getMuadzin();
-  //     listMuadzin.value = [];
-  //     for (var element in result['data']) {
-  //       listMuadzin.add(KajianData(
-  //           id: element['id'],
-  //           judul: element['judul'],
-  //           subjudul: element['subjudul'],
-  //           image: element['image'],
-  //           link: element['link']));
-  //     }
-  //     isLoading.value = false;
-  //   } catch (e) {
-  //     print("error");
-  //     print(e);
-  //   }
-  // }
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      final newItems =
-          await MuazinService.getMuadzin(pageKey: pageKey, pageSize: _pageSize);
-      if (newItems.isNotEmpty) {
-        if (newItems.length < _pageSize) {
-          pagingController.appendLastPage(newItems);
-        } else {
-          final nextPageKey = pageKey + 1;
-          pagingController.appendPage(newItems, nextPageKey);
-        }
-      } else {
-        pagingController.appendLastPage(newItems);
-      }
-    } catch (e) {
-      print("error");
-      print(e);
-    }
-  }
+  late final PagingController<int, KajianData> pagingController;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-    pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+
+    pagingController = PagingController<int, KajianData>(
+      // Pola resmi v5: berhenti saat halaman kosong berikutnya.
+      getNextPageKey: (state) =>
+          state.lastPageIsEmpty ? null : state.nextIntPageKey,
+      // Cukup return list item; lib yang urus state append/last page.
+      fetchPage: (pageKey) async {
+        final items = await MuazinService.getMuadzin(
+          pageKey: pageKey,
+          pageSize: _pageSize,
+        );
+        return items;
+      },
+    );
+  }
+
+  void refresh() => pagingController.refresh();
+
+  @override
+  void onClose() {
+    pagingController.dispose();
+    super.onClose();
   }
 }

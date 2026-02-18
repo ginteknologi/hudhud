@@ -66,7 +66,7 @@ class DetailArtikelPage extends StatelessWidget {
                       ),
                       Text(
                           DateFormat('HH:mm | dd MMMM yyyy').format(
-                              DateTime.parse(ctrl.detail.value.publish_date)
+                              DateTime.parse(ctrl.detail.value.updatedAt)
                                   .add(Duration(hours: 7))),
                           // '17:40' +
                           //     "  |  " +
@@ -262,7 +262,8 @@ class DetailArtikelPage extends StatelessWidget {
             footerContent: [
               Text(
                   DateFormat('HH:mm | dd MMMM yyyy').format(
-                      DateTime.parse(ctrl.listArtikels[index].publish_date)),
+                      DateTime.parse(ctrl.listArtikels[index].updatedAt)
+                          .add(const Duration(hours: 7))),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,

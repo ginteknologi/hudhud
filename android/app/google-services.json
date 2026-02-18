@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "317872716423",
     "project_id": "masjid-app-a497c",
-    "storage_bucket": "masjid-app-a497c.appspot.com"
+    "storage_bucket": "masjid-app-a497c.firebasestorage.app"
   },
   "client": [
     {
@@ -22,6 +22,30 @@
           }
         },
         {
+          "client_id": "317872716423-ha4primc5k3gfo00v0gq42mnuasjvctj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.masjid_app",
+            "certificate_hash": "db596b3eacd7f888a06c63c3d910f456cc5deb90"
+          }
+        },
+        {
+          "client_id": "317872716423-m9v644vrn5fn7repf7c6jmt7nrbsfju4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.masjid_app",
+            "certificate_hash": "a68fdf13405a04abe559db69e0492ccf93e555b2"
+          }
+        },
+        {
+          "client_id": "317872716423-o2f2psacu9h3ott360pmm1trs6sfjtvr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.masjid_app",
+            "certificate_hash": "5f427a05d22f84aff2bdb566636e73a46c035a4a"
+          }
+        },
+        {
           "client_id": "317872716423-3nt2oka3tl5f13lpupekarsaqr0jakod.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,6 +61,13 @@
             {
               "client_id": "317872716423-3nt2oka3tl5f13lpupekarsaqr0jakod.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "317872716423-7mpmhbsnml5uld2go6chp7artnorgof8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mesjidApp"
+              }
             }
           ]
         }
