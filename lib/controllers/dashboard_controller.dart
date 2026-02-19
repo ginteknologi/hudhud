@@ -137,7 +137,18 @@ class DashboardController extends GetxController {
     try {
       final artikelbaru = await DashboardService().getListArtikelBaru();
       listArtikel.value = [];
-      for (var element in artikelbaru['data']) {
+
+      // Sort data by publish_date descending (newest first)
+      List data = artikelbaru['data'] ?? [];
+      data.sort((a, b) {
+        DateTime dateA = DateTime.tryParse(a['publish_date'] ?? '') ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        DateTime dateB = DateTime.tryParse(b['publish_date'] ?? '') ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        return dateB.compareTo(dateA);
+      });
+
+      for (var element in data) {
         listArtikel.add(ArtikelData(
             id: element['id'],
             judul: element['judul'],
