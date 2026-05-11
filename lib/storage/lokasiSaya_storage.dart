@@ -30,10 +30,9 @@ class LokasiStorage {
   }
 
   void removeLokasi() {
-    box.remove('namaSurat');
-    box.remove('surat');
-    box.remove('ayat');
-    box.remove('totalAyat');
-    box.remove('index');
+    box.remove('keteranganLokasi');
+    box.remove('lat');
+    box.remove('long');
+    box.remove('gpsizin');
   }
 }

@@ -8,6 +8,7 @@ import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/models/lokasiSayaData.dart';
 import 'package:masjid_app/models/userData.dart';
 import 'package:masjid_app/storage/lokasiSaya_storage.dart';
+import 'package:masjid_app/storage/quran_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:masjid_app/routes/auth/index.dart';
 import 'package:just_audio/just_audio.dart';
@@ -103,6 +104,7 @@ class MainController extends GetxController {
       dataStore.remove('isLogin');
 
       lokasiStorage.removeLokasi();
+      QuranStorage().removeQuranHistory();
 
       isLogin.value = false;
       Get.offAllNamed(RoutesAuth.root);
@@ -156,68 +158,50 @@ class MainController extends GetxController {
 
   getCacheLokasi() async {
     try {
-      var lokasiSaatIni = lokasiStorage.getLokasi();
-
-      print("getwaktusolat 0 long main: ${lokasiSaatIni.long}");
-      print("getwaktusolat 0 lat main: ${lokasiSaatIni.lat}");
-      if (lokasiSaatIni.long == 0.0 || lokasiSaatIni.lat == 0.0) {
-        var statusLokasi = await Permission.location.request();
-        if (statusLokasi.isGranted) {
-          Position position = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
-          var ket = "";
-          List<Placemark> placemarks;
-
-          try {
-            placemarks = await placemarkFromCoordinates(
-                position.latitude, position.longitude);
-          } catch (e) {
-            print('error placemarkFromCoordinates');
-            placemarks = [];
-          }
-
-          if (placemarks.length > 0) {
+      // 1. Ambil data terakhir dari cache dulu (sebagai fallback cepat)
+      var lokasiTerakhir = lokasiStorage.getLokasi();
+      mylokasi.value = lokasiTerakhir;
+      
+      // 2. Cek izin lokasi
+      var statusLokasi = await Permission.location.status;
+      
+      // 3. Jika diizinkan, coba ambil lokasi terbaru (Proaktif)
+      if (statusLokasi.isGranted) {
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+            
+        var ket = "";
+        List<Placemark> placemarks;
+        try {
+          placemarks = await placemarkFromCoordinates(
+              position.latitude, position.longitude);
+          if (placemarks.isNotEmpty) {
             Placemark place = placemarks[0];
             ket = "${place.locality.toString()}, ${place.country.toString()}";
           } else {
-            ket = "Lokasi Tidak Ditemukan";
+            ket = "Lokasi Ditemukan";
           }
-          mylokasi.value = LokasiSayaData(
-            keteranganLokasi: ket,
-            lat: position.latitude,
-            long: position.longitude,
-          );
-          print("getwaktusolat 1 main: ${mylokasi.value.keteranganLokasi}");
-          print("getwaktusolat 1 main: ${position.latitude}");
-          print("getwaktusolat 1 main: ${position.longitude}");
-          lokasiStorage.saveLokasi(mylokasi.value);
-        } else if (statusLokasi.isDenied) {
-          mylokasi.value = LokasiSayaData(
-              keteranganLokasi: "Silahkan mengaktifkan izin lokasi",
-              lat: -6.195438799475241,
-              long: 106.82264795337655,
-              gpsizin: false);
-
-          lokasiStorage.saveLokasi(mylokasi.value);
-          print("getwaktusolat 3 main: ${mylokasi.value.keteranganLokasi}");
-          print("getwaktusolat 3 main: ${mylokasi.value.lat}");
-          print("getwaktusolat 3 main: ${mylokasi.value.long}");
+        } catch (e) {
+          ket = "Lokasi Terdeteksi";
         }
-      } else {
-        mylokasi.value = lokasiSaatIni;
 
-        print("getwaktusolat 4 main: ${mylokasi.value.keteranganLokasi}");
-        print("getwaktusolat 4 main: ${mylokasi.value.lat}");
-        print("getwaktusolat 4 main: ${mylokasi.value.long}");
-      }
+        // Update data terbaru
+        mylokasi.value = LokasiSayaData(
+          keteranganLokasi: ket,
+          lat: position.latitude,
+          long: position.longitude,
+          gpsizin: true,
+        );
+        
+        // Simpan ke cache
+        lokasiStorage.saveLokasi(mylokasi.value);
+        print("Lokasi otomatis terupdate: ${mylokasi.value.keteranganLokasi}");
+      } 
+      
       isloadingCache.value = false;
     } catch (e) {
-      print("error cache lokasi");
-      mylokasi.value = LokasiSayaData(
-          keteranganLokasi: "aktifkan izin lokasi",
-          lat: -6.195438799475241,
-          long: 106.82264795337655,
-          gpsizin: false);
+      print("error getCacheLokasi: $e");
+      // Jika error (misal GPS mati), pastikan loading berhenti agar UI tampil
       isloadingCache.value = false;
     }
   }

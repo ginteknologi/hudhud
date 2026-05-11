@@ -56,18 +56,18 @@ class WaktuSolatController extends GetxController {
       final myCoordinates = Coordinates(
           gctrl.mylokasi.value.lat, gctrl.mylokasi.value.long,
           validate: true);
-      final waktu = CalculationMethod.singapore.getParameters();
-      waktu.adjustments.fajr = 3;
+      
+      // Standar KEMENAG RI: Fajr 20.0, Isha 18.0
+      final waktu = CalculationParameters(fajrAngle: 20.0, ishaAngle: 18.0);
+      waktu.method = CalculationMethod.other;
+      
+      // Ikhtiyat (Waktu Pengaman) standar KEMENAG adalah +2 menit
+      waktu.adjustments.fajr = 2;
       waktu.adjustments.isha = 2;
       waktu.adjustments.asr = 2;
-      waktu.adjustments.maghrib = 3;
+      waktu.adjustments.maghrib = 2;
       waktu.adjustments.dhuhr = 2;
 
-      // waktu.fajrAngle = 20;
-      // waktu.ishaAngle = -18;
-      print("waktusolat  fajr: ${waktu.adjustments.fajr}");
-      print("waktusolat  isha: ${waktu.adjustments.isha}");
-      print("waktusolat  maghrib: ${waktu.adjustments.maghrib}");
       final prayerTimes = PrayerTimes.today(myCoordinates, waktu);
       list.value = [
         WaktuSolatData(

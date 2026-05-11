@@ -26,6 +26,7 @@ Future<void> main() async {
   if (!kIsWeb) {
     await [
       Permission.notification,
+      Permission.location,
     ].request();
     await SetupFirebase.initFirebase();
 

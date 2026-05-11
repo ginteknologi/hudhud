@@ -29,11 +29,6 @@ class EditAkunController extends GetxController {
   );
 
   pilihFile() async {
-    final status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-
     final image = await picker.pickImage(
         source: ImageSource.gallery, imageQuality: 70, maxWidth: 1000);
     if (image == null) return;
