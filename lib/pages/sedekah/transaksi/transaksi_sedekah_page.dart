@@ -9,7 +9,7 @@ import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_controller.
 class TransaksiSedekahPage extends StatelessWidget {
   const TransaksiSedekahPage({super.key});
 
-  layout(TransactionSedekahController ctrl, BuildContext context) {
+  SafeArea layout(TransactionSedekahController ctrl, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -305,7 +305,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                                 ctrl.inputAnonymous.value = value;
                               },
                               activeTrackColor: const Color(0xFF92E3A9),
-                              activeColor: Theme.of(context).primaryColor,
+                              activeThumbColor: Theme.of(context).primaryColor,
                               inactiveThumbColor: Colors.white,
                             ),
                           ),
@@ -337,7 +337,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                 ))));
   }
 
-  getListDenom(TransactionSedekahController ctrl, BuildContext context) {
+  SizedBox getListDenom(TransactionSedekahController ctrl, BuildContext context) {
     return SizedBox(
         height: 50,
         width: Get.width,
@@ -405,7 +405,7 @@ class TransaksiSedekahPage extends StatelessWidget {
     final ctrl = Get.put(TransactionSedekahController());
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Transaksi", context: context, elevation: 0),
         body: layout(ctrl, context),

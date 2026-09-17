@@ -8,7 +8,7 @@ import 'package:masjid_app/models/kajianData.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MuazinPage extends StatelessWidget {
-  MuazinPage({Key? key}) : super(key: key);
+  MuazinPage({super.key});
 
   final MuazinController ctrl = Get.find<MuazinController>();
 
@@ -113,7 +113,7 @@ class MuazinPage extends StatelessWidget {
 class _ErrorRetry extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
-  const _ErrorRetry({required this.message, required this.onRetry, super.key});
+  const _ErrorRetry({required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_compass.dart';
 
 class KiblatPage extends StatelessWidget {
-  const KiblatPage({Key? key}) : super(key: key);
+  const KiblatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class KiblatPage extends StatelessWidget {
         title: Text('Kiblat'),
         elevation: 0,
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: FutureBuilder(
         future: FlutterQiblah.androidDeviceSensorSupport(),
         builder: (context, snapshot) {

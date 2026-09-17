@@ -8,18 +8,18 @@ class KeepAliveScrollablePositionedList extends StatefulWidget {
   final IndexedWidgetBuilder itemBuilder;
 
   const KeepAliveScrollablePositionedList({
-    Key? key,
+    super.key,
     required this.itemScrollController,
     required this.itemPositionsListener,
     required this.itemCount,
     required this.itemBuilder,
-  }) : super(key: key);
+  });
 
   @override
   _KeepAliveScrollablePositionedListState createState() =>
       _KeepAliveScrollablePositionedListState();
 
-  static builder(
+  static void builder(
       {required bool shrinkWrap,
       required itemCount,
       required Column Function(dynamic context, dynamic index) itemBuilder}) {}

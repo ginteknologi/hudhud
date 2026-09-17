@@ -9,7 +9,7 @@ class ArtikelController extends GetxController {
   List listCategoryFilter = [].obs;
   late List<RxBool> listCategoryFilterSelected;
 
-  getData() async {
+  Future<void> getData() async {
     try {
       final result = await ArtikelService().getListArtikel();
       for (var element in result['data']) {

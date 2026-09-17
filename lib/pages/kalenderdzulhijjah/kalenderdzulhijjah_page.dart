@@ -48,7 +48,7 @@ class KalenderdzulhijjahPage extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "${ctrl.tahunBulan.value}",
+                          ctrl.tahunBulan.value,
                           style: TextStyle(
                               color: Colors.white, fontSize: Get.width / 28),
                         ),
@@ -119,7 +119,7 @@ class KalenderdzulhijjahPage extends StatelessWidget {
     );
   }
 
-  _buildTableHR(List<String> values) {
+  TableRow _buildTableHR(List<String> values) {
     return TableRow(
       decoration: BoxDecoration(
           color: Color(0xFF814D03),

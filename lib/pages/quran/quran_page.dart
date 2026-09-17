@@ -11,9 +11,9 @@ import 'package:masjid_app/pages/quran/quran_controller.dart';
 
 class QuranPage extends StatelessWidget {
   final TypeViewQuran typeView;
-  QuranPage({super.key, required this.typeView});
+  const QuranPage({super.key, required this.typeView});
 
-  layout(QuranController ctrl, BuildContext context) {
+  SafeArea layout(QuranController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -164,7 +164,7 @@ class QuranPage extends StatelessWidget {
                                             ['translation']['id'],
                                         hasRightContent: true,
                                         showIcon: IconPosition.left,
-                                        iconLeft: Container(
+                                        iconLeft: SizedBox(
                                           height: 42,
                                           width: 42,
                                           child: Stack(

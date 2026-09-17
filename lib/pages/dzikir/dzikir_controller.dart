@@ -20,7 +20,7 @@ class DzikirController extends GetxController {
     return parse(document.body!.text).documentElement!.text;
   }
   
-  getData() async {
+  Future<void> getData() async {
     try {
     final results = await DzikirService().getList();
     // for (var element in results['data']) {

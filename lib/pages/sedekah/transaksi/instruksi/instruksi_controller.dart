@@ -10,7 +10,7 @@ class InstruksiController extends GetxController {
   var dataInvoice = {}.obs;
   List dataintruksi = [].obs;
 
-  getData() async {
+  Future<void> getData() async {
     try {
       var invoiceID = dataStore.read('dataInvoice');
       dataPayment.value = dataStore.read('inputDataPembayaran');
@@ -22,12 +22,12 @@ class InstruksiController extends GetxController {
     }
   }
 
-  goToMetode(String id) {
+  void goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }
 
-  getListIntruksi() {
+  List<dynamic> getListIntruksi() {
     return dataintruksi = [
       {
         "id": 1,

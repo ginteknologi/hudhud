@@ -20,7 +20,7 @@ class BookingRuanganController extends GetxController {
 
   var formInput = [].obs;
 
-  getForm() async {
+  Future<List<dynamic>> getForm() async {
     return formInput.value = [
       {
         "type": "datepicker",
@@ -81,7 +81,7 @@ class BookingRuanganController extends GetxController {
     ];
   }
 
-  proceedBooking() async {
+  Future<Map<String, Object>> proceedBooking() async {
     isLoadingList.value = true;
     var status = {"code": 400, "message": "Mohon cek kembali koneksi anda."};
     try {

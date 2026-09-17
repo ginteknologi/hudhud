@@ -11,7 +11,7 @@ import 'package:easy_localization/easy_localization.dart';
 class DetailNotifikasiPage extends StatelessWidget {
   const DetailNotifikasiPage({super.key});
 
-  layout(BuildContext context, DetailNotifikasiController ctrl) {
+  SafeArea layout(BuildContext context, DetailNotifikasiController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -74,7 +74,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                       height: 85,
                                       child: Padding(
                                         padding: EdgeInsets.all(15),
@@ -91,7 +91,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
                                                 )),
-                                            AutoSizeText("Tanggal : "+ DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['createdAt'])),
+                                            AutoSizeText("Tanggal : ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['createdAt']))}",
                                                 maxLines: 1,
                                                 style: context
                                                     .textTheme.bodyMedium
@@ -204,7 +204,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                 )),
                             Positioned(
                                 top: 75,
-                                child: Container(
+                                child: SizedBox(
                                   height: 20,
                                   width: Get.width - 85,
                                   child: Row(
@@ -225,7 +225,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                         SizedBox(
                           height: 20,
                         ),
-                        Container(
+                        SizedBox(
                           width: Get.width,
                           child: ButtonElevated(
                             title: 'Lihat Invoice',
@@ -252,14 +252,14 @@ class DetailNotifikasiPage extends StatelessWidget {
     final ctrl = Get.put(DetailNotifikasiController());
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "", context: context, elevation: 0),
         body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Container(
+            child: SizedBox(
               width: Get.width,
               child: ButtonElevated(
                 title: 'Kembali Ke Beranda',

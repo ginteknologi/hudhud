@@ -10,7 +10,7 @@ class DetailNotifikasiController extends GetxController {
   List listNotif = [].obs;
   final id = Get.parameters['id'];
   var dataUser = {};
-  getData() async {
+  Future<void> getData() async {
     final result = await NotifikasiService().getDetail(id);
     result['data']['data'] = jsonDecode(result['data']['data']);
     print(result['data']['data']['transaksi']['invoice']);

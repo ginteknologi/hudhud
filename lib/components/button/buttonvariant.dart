@@ -24,7 +24,7 @@ class ButtonVariant extends StatelessWidget {
   final textStyle;
   final Widget child;
   const ButtonVariant({
-    Key? key,
+    super.key,
     this.label = 'Label',
     this.color = AppColors.appPrimary,
     this.bgcolor = AppColors.textPrimary,
@@ -48,24 +48,24 @@ class ButtonVariant extends StatelessWidget {
     this.textTooltip = '',
     // Text Config
     this.textStyle = "",
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    var _bgcolor = isDisabled ? bgcolor.withOpacity(.5) : bgcolor;
-    var _color = isDisabled ? color.withOpacity(.5) : color;
-    var _textStyle =
+    var bgColor = isDisabled ? bgcolor.withValues(alpha: .5) : bgcolor;
+    var fgColor = isDisabled ? color.withValues(alpha: .5) : color;
+    var txtStyle =
         textStyle == "" ? Theme.of(context).textTheme.labelLarge : textStyle;
-    _textStyle = _textStyle!.copyWith(color: isInverted ? _bgcolor : _color);
-    var _textTooltip = textTooltip.isEmpty ? label : textTooltip;
+    txtStyle = txtStyle!.copyWith(color: isInverted ? bgColor : fgColor);
+    var tooltipText = textTooltip.isEmpty ? label : textTooltip;
     final ButtonStyle buttonStyle = OutlinedButton.styleFrom(
-      foregroundColor: isInverted ? _bgcolor : _color, padding: EdgeInsets.zero,
-      backgroundColor: isInverted ? _color : _bgcolor,
+      foregroundColor: isInverted ? bgColor : fgColor, padding: EdgeInsets.zero,
+      backgroundColor: isInverted ? fgColor : bgColor,
       side: BorderSide(
           color: border > 0
               ? isInverted
-                  ? _bgcolor
-                  : _color
+                  ? bgColor
+                  : fgColor
               : Colors.transparent,
           width: border),
       shape: RoundedRectangleBorder(
@@ -91,7 +91,7 @@ class ButtonVariant extends StatelessWidget {
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
-                          color: isInverted ? _bgcolor : _color,
+                          color: isInverted ? bgColor : fgColor,
                           strokeWidth: 3,
                         ),
                       ),
@@ -104,7 +104,7 @@ class ButtonVariant extends StatelessWidget {
                         children: [
                           Text(
                             label,
-                            style: _textStyle,
+                            style: txtStyle,
                           ),
                         ],
                       ),
@@ -115,16 +115,16 @@ class ButtonVariant extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDisabled || isLoading
             ? isInverted
-                ? _color
-                : _bgcolor
+                ? fgColor
+                : bgColor
             : Colors.transparent,
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(
             color: isDisabled || isLoading
                 ? border > 0
                     ? isInverted
-                        ? _bgcolor
-                        : _color
+                        ? bgColor
+                        : fgColor
                     : Colors.transparent
                 : Colors.transparent,
             width: border),
@@ -140,7 +140,7 @@ class ButtonVariant extends StatelessWidget {
           ? buttonChild
           : hasTooltip
               ? Tooltip(
-                  message: _textTooltip,
+                  message: tooltipText,
                   child: OutlinedButton(
                     onPressed: isDisabled ? () {} : onPressed,
                     style: buttonStyle,

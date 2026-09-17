@@ -6,6 +6,8 @@ import 'package:masjid_app/models/waktuSolatData.dart';
 class AlarmSolatPage extends StatelessWidget {
   final AlarmSolatController alarmController = Get.put(AlarmSolatController());
 
+  AlarmSolatPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

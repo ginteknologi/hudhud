@@ -5,7 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 
 class ListCardUiWidget extends StatelessWidget {
   ListCardUiWidget(
-      {required this.id,
+      {super.key, required this.id,
       this.type,
       this.title,
       this.subtitle,
@@ -43,7 +43,7 @@ class ListCardUiWidget extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
             highlightColor: Colors.transparent,
-            splashColor: Colors.green.withOpacity(0.5),
+            splashColor: Colors.green.withValues(alpha: 0.5),
             onTap: onTap,
             child: Card(
               elevation: elevation,

@@ -69,7 +69,7 @@ class MainController extends GetxController {
     }
   }
 
-  loadHistoryQuran() async {
+  Future<void> loadHistoryQuran() async {
     try {
       if (dataStore.read('perAyatLastRead') == null) {
         dataStore.write('perAyatLastRead', {
@@ -98,7 +98,7 @@ class MainController extends GetxController {
     }
   }
 
-  logout() async {
+  Future<void> logout() async {
     try {
       dataStore.remove('userLogin');
       dataStore.remove('isLogin');
@@ -114,16 +114,51 @@ class MainController extends GetxController {
     }
   }
 
-  updateLokasi({required ketLokasi, required lat, required long}) async {
+  /// Ambil nama lokasi dari koordinat.
+  /// geocoding 5.x: method bukan lagi top-level function, tapi method
+  /// dari instance `Geocoding`. Mengembalikan null jika gagal.
+  Future<String?> _reverseGeocode(double lat, double long) async {
+    try {
+      List<Placemark> placemarks =
+          await Geocoding().placemarkFromCoordinates(lat, long);
+      if (placemarks.isEmpty) return null;
+
+      Placemark place = placemarks[0];
+      var namaLokasi = [
+        place.locality ?? '',
+        place.country ?? '',
+      ].where((e) => e.isNotEmpty).join(', ');
+
+      return namaLokasi.isEmpty ? null : namaLokasi;
+    } catch (e) {
+      print("<<<<<<<< error reverse geocoding >>>>>>>>");
+      print(e);
+      return null;
+    }
+  }
+
+  /// Simpan hasil geolokasi terbaru ke state + cache.
+  void _setLokasiTerbaru(Position position, String keterangan) {
+    mylokasi.value = LokasiSayaData(
+      keteranganLokasi: keterangan,
+      lat: position.latitude,
+      long: position.longitude,
+      gpsizin: true,
+    );
+    lokasiStorage.saveLokasi(mylokasi.value);
+    print("Lokasi otomatis terupdate: ${mylokasi.value.keteranganLokasi}");
+  }
+
+  Future<void> updateLokasi({required ketLokasi, required lat, required long}) async {
     mylokasi.value = LokasiSayaData(
       keteranganLokasi: ketLokasi,
       lat: lat,
       long: long,
     );
-    // lokasiSaatIni = ketLokasi;
+    lokasiStorage.saveLokasi(mylokasi.value);
   }
 
-  saveStorage(json) async {
+  Future<void> saveStorage(json) async {
     try {
       dataStore.write('isLogin', true);
       dataStore.write('userLogin', json);
@@ -143,7 +178,7 @@ class MainController extends GetxController {
     }
   }
 
-  removeStorage() async {
+  Future<void> removeStorage() async {
     dataStore.remove('userLogin');
     dataStore.write('isLogin', false);
     isLogin.value = false;
@@ -156,7 +191,7 @@ class MainController extends GetxController {
     );
   }
 
-  getCacheLokasi() async {
+  Future<void> getCacheLokasi() async {
     try {
       // 1. Ambil data terakhir dari cache dulu (sebagai fallback cepat)
       var lokasiTerakhir = lokasiStorage.getLokasi();
@@ -167,36 +202,30 @@ class MainController extends GetxController {
       
       // 3. Jika diizinkan, coba ambil lokasi terbaru (Proaktif)
       if (statusLokasi.isGranted) {
+        // geolocator 14.x: pakai parameter `locationSettings`,
+        // `desiredAccuracy` sudah deprecated.
         Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-            
-        var ket = "";
-        List<Placemark> placemarks;
-        try {
-          placemarks = await placemarkFromCoordinates(
-              position.latitude, position.longitude);
-          if (placemarks.isNotEmpty) {
-            Placemark place = placemarks[0];
-            ket = "${place.locality.toString()}, ${place.country.toString()}";
-          } else {
-            ket = "Lokasi Ditemukan";
-          }
-        } catch (e) {
-          ket = "Lokasi Terdeteksi";
-        }
-
-        // Update data terbaru
-        mylokasi.value = LokasiSayaData(
-          keteranganLokasi: ket,
-          lat: position.latitude,
-          long: position.longitude,
-          gpsizin: true,
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            timeLimit: Duration(seconds: 20),
+          ),
         );
-        
-        // Simpan ke cache
-        lokasiStorage.saveLokasi(mylokasi.value);
-        print("Lokasi otomatis terupdate: ${mylokasi.value.keteranganLokasi}");
-      } 
+
+        // Reverse geocoding dipisah, kalau gagal kita tetap simpan
+        // koordinatnya dengan keterangan fallback.
+        var ket = await _reverseGeocode(position.latitude, position.longitude) ??
+            "Lokasi Terdeteksi";
+
+        _setLokasiTerbaru(position, ket);
+      } else if (statusLokasi.isDenied) {
+        // Izin ditolak: tetap pakai cache, tapi tandai gps belum aktif.
+        mylokasi.value = LokasiSayaData(
+          keteranganLokasi: mylokasi.value.keteranganLokasi,
+          lat: mylokasi.value.lat,
+          long: mylokasi.value.long,
+          gpsizin: false,
+        );
+      }
       
       isloadingCache.value = false;
     } catch (e) {

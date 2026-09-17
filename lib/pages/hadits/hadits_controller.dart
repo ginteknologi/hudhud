@@ -7,7 +7,7 @@ class HaditsController extends GetxController {
   RxList list = [].obs;
   var txtController = TextEditingController();
 
-  getData() async {
+  Future<void> getData() async {
     try {
       isLoadingList.value = true;
       final result = await HaditsService().getBooks();

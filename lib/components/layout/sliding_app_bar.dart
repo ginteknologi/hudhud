@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class SlidingAppBar extends StatelessWidget implements PreferredSizeWidget {
-  SlidingAppBar({
+  const SlidingAppBar({super.key, 
     required this.child,
     required this.controller,
     required this.visible,

@@ -22,7 +22,7 @@ class DetailArtikelController extends GetxController {
     return parse(document.body!.text).documentElement!.text;
   }
 
-  getData() async {
+  Future<void> getData() async {
     try {
       isLoadingList.value = true;
       final result = await ArtikelService().getDetailArtikel();

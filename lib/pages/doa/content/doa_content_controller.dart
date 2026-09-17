@@ -20,7 +20,7 @@ class ContentDoaController extends GetxController {
     var document = parse(htmlString);
     return parse(document.body!.text).documentElement!.text;
   }
-  getData() async {
+  Future<void> getData() async {
     try {
       final result = await DoaService().getDetail();
       // list.value = result['data'];
@@ -34,9 +34,9 @@ class ContentDoaController extends GetxController {
             updatedAt: result['data']['updatedAt']);
       String judul = result['data']['judul'] != null ? result['data']['judul'] + '\n\n':'';
       String arabic = result['data']['arabic'] != null ? result['data']['arabic'] + '\n\n':'';
-      String transliteration = result['data']['transliteration'] != null ? _convertHtmlToText(result['data']['transliteration']) + '\n\n':'';
-      String translations = result['data']['translations'] != null ? _convertHtmlToText(result['data']['translations']) + '\n\n':'';
-      String isi = result['data']['isi'] != null ? _convertHtmlToText(result['data']['isi']) + '\n\n' : '';
+      String transliteration = result['data']['transliteration'] != null ? '${_convertHtmlToText(result['data']['transliteration'])}\n\n':'';
+      String translations = result['data']['translations'] != null ? '${_convertHtmlToText(result['data']['translations'])}\n\n':'';
+      String isi = result['data']['isi'] != null ? '${_convertHtmlToText(result['data']['isi'])}\n\n' : '';
 
       String link = 'Dibagikan dari aplikasi\n Marbot App';
       share.value = '$judul $arabic $transliteration $translations $isi $link';

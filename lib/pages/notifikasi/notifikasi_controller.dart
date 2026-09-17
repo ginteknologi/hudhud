@@ -5,7 +5,7 @@ class NotifikasiController extends GetxController {
   var isLoadingList = true.obs;
   var list = [].obs;
 
-  getData() async {
+  Future<void> getData() async {
     try {
     final result = await NotifikasiService().getList();
     list.value = result['data'];

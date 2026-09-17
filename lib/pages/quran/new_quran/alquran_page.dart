@@ -21,6 +21,8 @@ class AlquranPage extends StatelessWidget {
 // class AlquranPageState extends State<AlquranPage> {
   final ctrl = Get.put(AlquranController());
   final gctrl = Get.find<MainController>();
+
+  AlquranPage({super.key});
   // AlquranPage({Key? key}) : super(key: key);
 
   // @override
@@ -31,7 +33,7 @@ class AlquranPage extends StatelessWidget {
   //       .addPostFrameCallback((_) => showPopupAlquran(ctrl, context, 'siang'));
   // }
 
-  layout(BuildContext context) {
+  SafeArea layout(BuildContext context) {
     return SafeArea(
       top: false,
       child: SingleChildScrollView(
@@ -109,7 +111,7 @@ class AlquranPage extends StatelessWidget {
     );
   }
 
-  tilawahMenu(BuildContext context,
+  Container tilawahMenu(BuildContext context,
       {title, route, required bookmarkData history}) {
     return Container(
       decoration: BoxDecoration(
@@ -139,7 +141,7 @@ class AlquranPage extends StatelessWidget {
           ),
           subtitle: Text(
             history.totalAyat == 0
-                ? "${history.namaSurat}"
+                ? history.namaSurat
                 : "${history.namaSurat} (${history.ayat}:${history.totalAyat})",
             style: TextStyle(
               fontSize: Get.width * 0.03,
@@ -150,7 +152,7 @@ class AlquranPage extends StatelessWidget {
     );
   }
 
-  getGridMenu(AlquranController ctrl) {
+  Padding getGridMenu(AlquranController ctrl) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0),
       child: GridView.builder(
@@ -278,7 +280,7 @@ class AlquranPage extends StatelessWidget {
     );
   }
 
-  showPopup(AlquranController ctrl, context, Widget? content, double? height) {
+  void showPopup(AlquranController ctrl, context, Widget? content, double? height) {
     showDialog(
         context: context,
         builder: (BuildContext bc) {

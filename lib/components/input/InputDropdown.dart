@@ -13,7 +13,7 @@ class InputDropdown extends StatelessWidget {
   final bool? filled;
   final void Function(dynamic newValue) onChanged;
   const InputDropdown(
-      {Key? key,
+      {super.key,
       required this.input,
       required this.label,
       required this.data,
@@ -23,18 +23,17 @@ class InputDropdown extends StatelessWidget {
       required this.onChanged,
       this.filled = false,
       this.fillColor,
-      this.dropdownColor})
-      : super(key: key);
+      this.dropdownColor});
 
   @override
   Widget build(BuildContext context) {
-    List _data = [
+    List data = [
       {
         'label': placeholder,
         'id': "",
       }
     ];
-    _data.addAll(data);
+    data.addAll(data);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: margin),
       child: Column(
@@ -51,8 +50,8 @@ class InputDropdown extends StatelessWidget {
                         ? Theme.of(context).colorScheme.error
                         : Theme.of(context)
                             .colorScheme
-                            .onBackground
-                            .withOpacity(.1)),
+                            .onSurface
+                            .withValues(alpha: .1)),
               ),
               label: Text(label),
               labelStyle: Theme.of(context).textTheme.titleMedium,
@@ -73,9 +72,9 @@ class InputDropdown extends StatelessWidget {
               underline: const SizedBox(),
               value: input.toString() == 'null' ? "" : input,
               items: List.generate(
-                _data.length,
+                data.length,
                 (index) {
-                  final getData = _data[index];
+                  final getData = data[index];
                   return DropdownMenuItem(
                     enabled: getData['id'] != '' ? true : false,
                     value: getData['id'],
@@ -87,12 +86,12 @@ class InputDropdown extends StatelessWidget {
                                   .textTheme
                                   .bodySmall!
                                   .color!
-                                  .withOpacity(1)
+                                  .withValues(alpha: 1)
                               : Theme.of(context)
                                   .textTheme
                                   .bodySmall!
                                   .color!
-                                  .withOpacity(.3)),
+                                  .withValues(alpha: .3)),
                     ),
                   );
                 },

@@ -26,9 +26,9 @@ import 'package:masjid_app/routes/kajian/index.dart';
 class DashboardPage extends StatelessWidget {
   final DashboardController ctrl = Get.find();
   final MainController gctrl = Get.find<MainController>();
-  DashboardPage({Key? key}) : super(key: key);
+  DashboardPage({super.key});
 
-  layout(BuildContext context) {
+  Obx layout(BuildContext context) {
     return Obx(() {
       return Container(
           padding: EdgeInsets.only(top: Get.height / 20),
@@ -197,7 +197,7 @@ class DashboardPage extends StatelessWidget {
                         showPopup(context, dialogTerkini(context), 200);
                       },
                       borderRadius: BorderRadius.circular(20),
-                      splashColor: Colors.green.withOpacity(0.5),
+                      splashColor: Colors.green.withValues(alpha: 0.5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
@@ -244,7 +244,7 @@ class DashboardPage extends StatelessWidget {
                     Get.toNamed(RoutesAkun.root);
                   },
                   borderRadius: BorderRadius.circular(20),
-                  splashColor: Colors.green.withOpacity(0.5),
+                  splashColor: Colors.green.withValues(alpha: 0.5),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: Image.network(
@@ -265,7 +265,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  News(BuildContext context, DashboardController ctrl) {
+  ListView News(BuildContext context, DashboardController ctrl) {
     return ListView.builder(
         primary: false,
         itemCount: ctrl.listArtikel.length,
@@ -307,7 +307,7 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  getGridMenu(DashboardController ctrl) {
+  Padding getGridMenu(DashboardController ctrl) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0),
       child: GridView.builder(
@@ -323,7 +323,7 @@ class DashboardPage extends StatelessWidget {
               child: InkWell(
                   onTap: ctrl.listMenuHome[index]['onTap']! as void Function(),
                   borderRadius: BorderRadius.circular(20),
-                  splashColor: Colors.green.withOpacity(0.5),
+                  splashColor: Colors.green.withValues(alpha: 0.5),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
@@ -358,7 +358,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getSeparator(String nama, final String? sub, BuildContext context,
+  Material getSeparator(String nama, final String? sub, BuildContext context,
       DashboardController ctrl) {
     return Material(
       color: Colors.transparent,
@@ -420,7 +420,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getListItem(DashboardController ctrl) {
+  SizedBox getListItem(DashboardController ctrl) {
     print("ctrl.isLoadingKajianTafsir ${ctrl.isLoadingKajianTafsir}");
     print("ctrl.isLoadingKajianTafsir ${ctrl.listDoaSlider.length}");
     return SizedBox(
@@ -445,7 +445,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getListItemKajianLive(DashboardController ctrl) {
+  Obx getListItemKajianLive(DashboardController ctrl) {
     return Obx(() {
       return SizedBox(
         height: 151,
@@ -460,9 +460,9 @@ class DashboardPage extends StatelessWidget {
               title: '${item.judul}',
               subtitle: '${item.subjudul}',
               kategori: '${item.kategori}',
-              imgPath: '${item.image}',
+              imgPath: item.image,
               islink: true,
-              link: '${item.link}',
+              link: item.link,
               network: true,
             );
           },
@@ -471,7 +471,7 @@ class DashboardPage extends StatelessWidget {
     });
   }
 
-  getListItemKajian(DashboardController ctrl) {
+  Obx getListItemKajian(DashboardController ctrl) {
     print(ctrl.isLoadingKajianTafsir);
     return Obx(() {
       return SizedBox(
@@ -487,9 +487,9 @@ class DashboardPage extends StatelessWidget {
               title: '${item.judul}',
               subtitle: '${item.subjudul}',
               kategori: '${item.kategori}',
-              imgPath: '${item.image}',
+              imgPath: item.image,
               islink: true,
-              link: '${item.link}',
+              link: item.link,
               network: true,
             );
           },
@@ -640,7 +640,7 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  dialogTerkini(BuildContext context) {
+  Column dialogTerkini(BuildContext context) {
     return Column(
       children: [
         Text(
@@ -674,7 +674,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  dialogCari(DashboardController ctrl, gctrl, BuildContext context, bc) {
+  Column dialogCari(DashboardController ctrl, gctrl, BuildContext context, bc) {
     return Column(
       children: [
         Text(
@@ -711,7 +711,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  dialogKota(BuildContext context, DashboardController ctrl) {
+  Column dialogKota(BuildContext context, DashboardController ctrl) {
     return Column(
       children: [
         Row(

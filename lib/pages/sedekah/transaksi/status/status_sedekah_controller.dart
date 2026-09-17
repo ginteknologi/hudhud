@@ -9,7 +9,7 @@ class StatusSedekahController extends GetxController {
   var dataPayment = {}.obs;
   var dataInvoice = {}.obs;
 
-  getData() async {
+  Future<void> getData() async {
     try {
       var invoiceID = dataStore.read('dataInvoice');
       dataPayment.value = dataStore.read('inputDataPembayaran');
@@ -21,7 +21,7 @@ class StatusSedekahController extends GetxController {
     }
   }
 
-  goToMetode(String id) {
+  void goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }

@@ -8,7 +8,7 @@ class OnboardController extends GetxController {
   var list = {}.obs;
   var index = 0.obs;
 
-  getData() async {
+  Future<void> getData() async {
     var result = {"data": []};
     list.value = result;
     isLoadingList.value = false;

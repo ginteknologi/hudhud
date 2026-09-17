@@ -14,7 +14,7 @@ class MetodeTransaksiSedekahPage extends StatefulWidget {
 
 class _MetodeTransaksiSedekahPageState
     extends State<MetodeTransaksiSedekahPage> {
-  layout(MetodeTransaksiController ctrl, BuildContext context) {
+  SafeArea layout(MetodeTransaksiController ctrl, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -44,7 +44,7 @@ class _MetodeTransaksiSedekahPageState
                               dense: true,
                               controlAffinity: ListTileControlAffinity.trailing,
                               tileColor:
-                                  Theme.of(context).colorScheme.background,
+                                  Theme.of(context).colorScheme.surface,
                               title: Row(
                                 children: [
                                   Image.network(
@@ -117,7 +117,7 @@ class _MetodeTransaksiSedekahPageState
                               dense: true,
                               controlAffinity: ListTileControlAffinity.trailing,
                               tileColor:
-                                  Theme.of(context).colorScheme.background,
+                                  Theme.of(context).colorScheme.surface,
                               title: Row(
                                 children: [
                                   Image.network(
@@ -176,7 +176,7 @@ class _MetodeTransaksiSedekahPageState
   Widget build(BuildContext context) {
     final ctrl = Get.put(MetodeTransaksiController());
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
         // body: Obx(() => ctrl.isLoading.value ? CircularProgressIndicator()) : layout(ctrl, context)),

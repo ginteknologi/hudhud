@@ -95,7 +95,7 @@ class LogOutPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
       body: layout(ctrl, context),

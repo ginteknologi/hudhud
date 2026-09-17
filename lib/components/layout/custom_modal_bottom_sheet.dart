@@ -30,7 +30,7 @@ class CustomModalBottomSheet extends StatelessWidget {
   double? height;
   final List<Widget> content;
 
-  alertSheet(context) {
+  Wrap alertSheet(context) {
     return Wrap(
       spacing: 60, // Add spacing between the child widgets.
       children: <Widget>[
@@ -86,10 +86,10 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
-  gridSheet(context) {
+  Padding gridSheet(context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
-      child: Container(
+      child: SizedBox(
           height: MediaQuery.of(context).size.height / 3,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,7 +98,7 @@ class CustomModalBottomSheet extends StatelessWidget {
                 width: MediaQuery.of(context).size.width / 4,
                 height: 5,
                 margin: EdgeInsets.only(bottom: 10),
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -127,7 +127,7 @@ class CustomModalBottomSheet extends StatelessWidget {
                                         }
                                       },
                                   borderRadius: BorderRadius.circular(20),
-                                  splashColor: Colors.green.withOpacity(0.5),
+                                  splashColor: Colors.green.withValues(alpha: 0.5),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -167,10 +167,10 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
-  customSheet(context) {
+  Padding customSheet(context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
-      child: Container(
+      child: SizedBox(
           height: height ?? 350,
           // constraints: BoxConstraints.loose(Size.infinite),
           child: Column(
@@ -180,7 +180,7 @@ class CustomModalBottomSheet extends StatelessWidget {
                 width: MediaQuery.of(context).size.width / 4,
                 height: 5,
                 margin: EdgeInsets.only(bottom: 20),
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -196,7 +196,7 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
-  fullScreenSheet(context) {
+  Padding fullScreenSheet(context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
       child: Container(

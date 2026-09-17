@@ -36,7 +36,7 @@ class InputText extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   const InputText({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onSubmit,
     required this.onEditingComplete,
@@ -69,16 +69,16 @@ class InputText extends StatelessWidget {
     this.fillColor = Colors.transparent,
     this.suffixIcon,
     this.prefixIcon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    final _inputStyle =
+    final inputStyleVal =
         inputStyle == "" ? Theme.of(context).textTheme.bodySmall : inputStyle;
-    final _placeholderStyle = placeholderStyle == ""
+    final placeholderStyleVal = placeholderStyle == ""
         ? Theme.of(context).textTheme.bodySmall
         : placeholderStyle;
-    final _labelStyle =
+    final labelStyleVal =
         labelStyle == "" ? Theme.of(context).textTheme.titleMedium : labelStyle;
     var counterText = "".obs;
     final TextFormField textChild = TextFormField(
@@ -86,7 +86,7 @@ class InputText extends StatelessWidget {
       obscureText: isPassword,
       maxLength: maxLength,
       autofocus: autofocus,
-      style: _inputStyle,
+      style: inputStyleVal,
       textAlign: textAlign,
       keyboardType: inputType,
       inputFormatters: <TextInputFormatter>[
@@ -106,10 +106,10 @@ class InputText extends StatelessWidget {
             borderRadius: BorderRadius.circular(radius),
             borderSide: const BorderSide(color: Colors.red)),
         errorStyle: hasErrorText
-            ? _inputStyle!.merge(const TextStyle(color: Colors.red))
+            ? inputStyleVal!.merge(const TextStyle(color: Colors.red))
             : const TextStyle(height: .01, color: Colors.transparent),
         filled: !enabled || isFill,
-        fillColor: !enabled ? fillColor.withOpacity(.25) : fillColor,
+        fillColor: !enabled ? fillColor.withValues(alpha: .25) : fillColor,
         isDense: isDense,
         enabled: enabled,
         contentPadding: inputPadding,
@@ -120,7 +120,7 @@ class InputText extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           borderSide: BorderSide(
               color: enableBorder
-                  ? Theme.of(context).colorScheme.onBackground.withOpacity(.1)
+                  ? Theme.of(context).colorScheme.onSurface.withValues(alpha: .1)
                   : Colors.transparent),
         ),
         focusedBorder: OutlineInputBorder(
@@ -134,10 +134,10 @@ class InputText extends StatelessWidget {
             : FloatingLabelBehavior.never,
         floatingLabelStyle: Theme.of(context).textTheme.titleMedium,
         hintText: placeholder,
-        hintStyle: _placeholderStyle!
-            .copyWith(color: _placeholderStyle!.color!.withOpacity(.5)),
+        hintStyle: placeholderStyleVal!
+            .copyWith(color: placeholderStyleVal!.color!.withValues(alpha: .5)),
         labelText: labelPosition == 'float' ? label : null,
-        labelStyle: _labelStyle,
+        labelStyle: labelStyleVal,
         // icon:,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
@@ -163,10 +163,10 @@ class InputText extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 5),
               child: Text(
                 label,
-                style: _labelStyle!.copyWith(
+                style: labelStyleVal!.copyWith(
                     color: !enabled
-                        ? Colors.grey.withOpacity(.1)
-                        : _labelStyle!.color),
+                        ? Colors.grey.withValues(alpha: .1)
+                        : labelStyleVal!.color),
               ),
             ),
           textChild,

@@ -46,7 +46,7 @@ class SedangLiveWidget extends StatelessWidget {
             SizedBox(
               height: Get.width / 40,
             ),
-            Container(
+            SizedBox(
               width: Get.width / 2.5,
               height: Get.height / 8,
               child: ListView.builder(

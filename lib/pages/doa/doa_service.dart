@@ -28,7 +28,7 @@ class DoaService extends GetConnect {
   }
   Future getListDoa(category) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/doa/list/${category}"),
+        Uri.parse("${RemoteData.api}/doa/list/$category"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -46,9 +46,9 @@ class DoaService extends GetConnect {
     }
   }
   Future getListSearchDoa(category, search) async {
-    print("${RemoteData.api}/doa/list/${category}?search=${search}");
+    print("${RemoteData.api}/doa/list/$category?search=$search");
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/doa/list/${category}?search=${search}"),
+        Uri.parse("${RemoteData.api}/doa/list/$category?search=$search"),
         headers: <String, String>{
           // 'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

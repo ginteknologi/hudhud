@@ -10,7 +10,7 @@ class ContentHaditsController extends GetxController {
   var txtController = TextEditingController();
   var currentIndex = 0.obs;
 
-  getList() async {
+  Future<void> getList() async {
     try {
       isLoadingList.value = true;
       final result = await HaditsService().getContent(

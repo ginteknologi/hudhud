@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class CustomDialog extends StatelessWidget {
   CustomDialog(
-      {this.imgPath,
+      {super.key, this.imgPath,
       this.chipText,
       this.title,
       this.kategori,
@@ -46,7 +46,7 @@ class CustomDialog extends StatelessWidget {
               onTap: () {
                 //Get.toNamed(AppRoutes.detailEventScreen);
               },
-              child: Container(
+              child: SizedBox(
                 height: height,
                 width: isFullWidth == true ? Get.width : 151,
                 child: Stack(
@@ -127,9 +127,9 @@ class CustomDialog extends StatelessWidget {
                                     end: Alignment.bottomCenter,
                                     colors: [
                                       Colors.transparent,
-                                      Colors.black.withOpacity(0.5)
+                                      Colors.black.withValues(alpha: 0.5)
                                     ]),
-                                // color: Colors.black.withOpacity(0.5),
+                                // color: Colors.black.withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(7),
                                     bottomRight: Radius.circular(7)),

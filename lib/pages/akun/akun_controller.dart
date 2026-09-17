@@ -7,7 +7,7 @@ class AkunController extends GetxController{
   var list = {}.obs;
 
   
-  getData() async {
+  Future<void> getData() async {
     final result = await AkunService().getList(page: 0, limit: 10);
     list.value = result['data'];
     isLoadingList.value = false;
@@ -15,8 +15,4 @@ class AkunController extends GetxController{
   
   
   
-  @override
-  void onInit(){
-    super.onInit();
-  }
 }

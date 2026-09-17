@@ -15,6 +15,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ListAyatQuranPage extends StatelessWidget {
+  @override
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
   final ListAyatQuranController ctrl = Get.put(ListAyatQuranController());
 
@@ -71,7 +72,7 @@ class ListAyatQuranPage extends StatelessWidget {
     );
   }
 
-  showDialogFilter() {
+  void showDialogFilter() {
     Get.defaultDialog(
       onWillPop: () {
         ctrl.inputSurah.text = "";
@@ -154,7 +155,7 @@ class ListAyatQuranPage extends StatelessWidget {
                       hintText: 'Cari surah',
                       hintStyle: Get.textTheme.bodySmall!.copyWith(
                           color:
-                              Get.textTheme.bodySmall!.color!.withOpacity(.5)),
+                              Get.textTheme.bodySmall!.color!.withValues(alpha: .5)),
                       contentPadding: EdgeInsets.all(13),
                       border: OutlineInputBorder(),
                     ),
@@ -227,7 +228,7 @@ class ListAyatQuranPage extends StatelessWidget {
               AutoSizeText(
                 ctrl.detail.isEmpty
                     ? "Total Ayat :"
-                    : "Jumlah Ayat : " + ctrl.detail['ayat'].toString(),
+                    : "Jumlah Ayat : ${ctrl.detail['ayat']}",
                 maxLines: 1,
                 textAlign: TextAlign.left,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -288,7 +289,7 @@ class ListAyatQuranPage extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      if (ctrl.listAudio.length > 0) {
+                      if (ctrl.listAudio.isNotEmpty) {
                         if (ctrl.isPlaySound.isTrue) {
                           ctrl.isPlaySound.value = false;
                           ctrl.player.pause();
@@ -376,7 +377,7 @@ class ListAyatQuranPage extends StatelessWidget {
     );
   }
 
-  listAyat(banyakAyat, int indexPage, itemScrollController) {
+  ScrollablePositionedList listAyat(banyakAyat, int indexPage, itemScrollController) {
     return ScrollablePositionedList.builder(
         itemScrollController: itemScrollController,
         // itemPositionsListener: ctrl.itemPositionsListener,
@@ -423,7 +424,7 @@ class ListAyatQuranPage extends StatelessWidget {
                                   ],
                                 ),
                                 // Baris kedua
-                                Container(
+                                SizedBox(
                                   height: 42,
                                   width: 42,
                                   child: Stack(

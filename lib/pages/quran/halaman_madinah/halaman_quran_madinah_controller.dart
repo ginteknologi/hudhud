@@ -35,7 +35,7 @@ class HalamanQuranMadinahController extends GetxController
   var initialPage = 0.obs;
   int toSurat = 0;
 
-  getQuran() async {
+  Future<List<dynamic>> getQuran() async {
     try {
       lastReadPerhalaman.value = dataStore.read('madinahLastRead');
       final String jsonString = await rootBundle
@@ -46,10 +46,11 @@ class HalamanQuranMadinahController extends GetxController
     } catch (e) {
       print('<<<<<<<<error controller getDataSearch>>>>>>>>');
       print(e);
+      return [];
     }
   }
 
-  getDataSearch() async {
+  Future<void> getDataSearch() async {
     try {
       // lastRead.value = dataStore.read('perAyatLastRead');
       isLoadingList.value = true;
@@ -62,7 +63,7 @@ class HalamanQuranMadinahController extends GetxController
     }
   }
 
-  goToData(itemData) async {
+  Future<void> goToData(itemData) async {
     try {
       isLoadingList.value = true;
       Map filteredData = listSurah.firstWhereOrNull((item) =>
@@ -79,7 +80,7 @@ class HalamanQuranMadinahController extends GetxController
     }
   }
 
-  goToNumber(numbertogo) async {
+  Future<void> goToNumber(numbertogo) async {
     try {
       isLoadingList.value = true;
       final result = await QuranService().getNumber(numbertogo);
@@ -95,7 +96,7 @@ class HalamanQuranMadinahController extends GetxController
     }
   }
 
-  goToHal(numbertogo) async {
+  Future<void> goToHal(numbertogo) async {
     try {
       isLoadingList.value = true;
       Map filteredData = listSurah
@@ -110,7 +111,7 @@ class HalamanQuranMadinahController extends GetxController
     }
   }
 
-  bookmark() async {
+  Future<void> bookmark() async {
     isLoadingList.value = true;
     print('<<<<<<<<<<<wei>>>>>>>>>>>');
     isLoadingList.value = false;

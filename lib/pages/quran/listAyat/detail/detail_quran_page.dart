@@ -9,7 +9,7 @@ import 'package:masjid_app/pages/quran/listAyat/detail/detail_quran_controller.d
 class DetailAyatQuranPage extends StatelessWidget {
   const DetailAyatQuranPage({super.key});
 
-  layout(DetailAyatQuranController ctrl, MainController gctrl,
+  SafeArea layout(DetailAyatQuranController ctrl, MainController gctrl,
       BuildContext context) {
     return SafeArea(
         child: SizedBox(
@@ -367,7 +367,7 @@ class DetailAyatQuranPage extends StatelessWidget {
             )));
   }
 
-  getList(DetailAyatQuranController ctrl, MainController gctrl, context) {
+  Obx getList(DetailAyatQuranController ctrl, MainController gctrl, context) {
     return Obx(() => !ctrl.isLoadingDetail.value
         ? ListView.builder(
             physics: const ClampingScrollPhysics(),

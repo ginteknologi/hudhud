@@ -10,7 +10,7 @@ Future downloadAndSaveFile(
   if (!(await subfolderDirectory.exists())) {
     await subfolderDirectory.create(recursive: true);
   }
-  final String lokasiSave = '${directory.path}${pathsave}/$fileName';
+  final String lokasiSave = '${directory.path}$pathsave/$fileName';
   var kondisi = checkIfFileExists(fileName: fileName, pathsave: pathsave);
   if (await kondisi) {
     print('File sudah ada.');
@@ -27,7 +27,7 @@ Future downloadAndSaveFile(
 Future<bool> checkIfFileExists(
     {required String fileName, required String pathsave}) async {
   final directory = await getApplicationDocumentsDirectory();
-  final String lokasiSave = '${directory.path}${pathsave}/$fileName';
+  final String lokasiSave = '${directory.path}$pathsave/$fileName';
   final File file = File(lokasiSave);
   return file.exists();
 }
@@ -35,7 +35,7 @@ Future<bool> checkIfFileExists(
 Future<String> checkIfFile(
     {required String fileName, required String pathsave}) async {
   final directory = await getApplicationDocumentsDirectory();
-  final String lokasiSave = '${directory.path}${pathsave}/$fileName';
+  final String lokasiSave = '${directory.path}$pathsave/$fileName';
   final File file = File(lokasiSave);
   bool exists = await file.exists();
 

@@ -7,14 +7,14 @@ class SedekahController extends GetxController {
   RxList list = [].obs;
   List listSedekah = [].obs;
 
-  getData() async {
+  Future<void> getData() async {
     final result = await SedekahService().getList();
     list.value = result['data'];
     print(list);
     isLoadingList.value = false;
   }
 
-  goToDetail(String id) {
+  void goToDetail(String id) {
     // print(RoutesSedekah.detail, id: id);
     Get.toNamed('${RoutesSedekah.root}/$id');
   }

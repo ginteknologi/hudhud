@@ -10,7 +10,7 @@ import 'package:share_plus/share_plus.dart';
 class ContentDoaPage extends StatelessWidget {
   const ContentDoaPage({super.key});
 
-  layout(ContentDoaController ctrl, BuildContext context) {
+  SafeArea layout(ContentDoaController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -32,7 +32,7 @@ class ContentDoaPage extends StatelessWidget {
                                     child: InkWell(
                                         highlightColor: Colors.transparent,
                                         splashColor:
-                                            Colors.green.withOpacity(0.5),
+                                            Colors.green.withValues(alpha: 0.5),
                                         child: Card(
                                           elevation: 0,
                                           color: Colors.white,
@@ -269,7 +269,7 @@ class ContentDoaPage extends StatelessWidget {
                                         ),
                                       ),
                                       Flexible(
-                                        child: Container(
+                                        child: SizedBox(
                                           width: double.infinity,
                                           child: ButtonElevated(
                                             title: 'Bagikan',
@@ -314,7 +314,7 @@ class ContentDoaPage extends StatelessWidget {
     final ctrl = Get.put(ContentDoaController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a > Do'a Harian > Detail", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value

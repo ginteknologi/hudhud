@@ -9,7 +9,7 @@ import 'package:masjid_app/routes/doa/index.dart';
 class DoaPage extends StatelessWidget {
   const DoaPage({super.key});
 
-  layout(BuildContext context, DoaController ctrl) {
+  SafeArea layout(BuildContext context, DoaController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -55,7 +55,7 @@ class DoaPage extends StatelessWidget {
     final ctrl = Get.put(DoaController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value ? const Center(child: CircularProgressIndicator()) : layout(context, ctrl)),

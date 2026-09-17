@@ -3,7 +3,6 @@ import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:masjid_app/configs/remote_data.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class MainService extends GetConnect {
   final authStore = GetStorage();

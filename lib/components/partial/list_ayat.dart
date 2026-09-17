@@ -53,7 +53,7 @@ class ListAyatWidget extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       // Baris pertama
-                      Container(
+                      SizedBox(
                         height: 42,
                         width: 42,
                         child: Stack(
@@ -69,7 +69,7 @@ class ListAyatWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: 42,
                         width: 42,
                         child: Stack(
@@ -94,7 +94,7 @@ class ListAyatWidget extends StatelessWidget {
                         ),
                       ),
                       // Baris kedua
-                      Container(
+                      SizedBox(
                         height: 42,
                         width: 42,
                         child: Stack(

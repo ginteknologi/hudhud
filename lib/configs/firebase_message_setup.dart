@@ -108,7 +108,7 @@ void onDidReceiveNotificationResponse(
 
 class SetupFirebase {
   // static get onDidReceiveLocalNotification => null;
-  static sendnotif({
+  static void sendnotif({
     required String title,
     required String pesan,
     dynamic payload,

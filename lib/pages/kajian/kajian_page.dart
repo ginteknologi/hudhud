@@ -111,7 +111,7 @@ class KajianPage extends StatelessWidget {
 class _ErrorRetry extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
-  const _ErrorRetry({required this.message, required this.onRetry, super.key});
+  const _ErrorRetry({required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

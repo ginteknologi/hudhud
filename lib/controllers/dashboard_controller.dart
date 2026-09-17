@@ -108,22 +108,56 @@ class DashboardController extends GetxController {
   var listKota = [].obs;
   var latestArtikel = {}.obs;
 
-  getLokasi() async {
+  Future<void> getLokasi() async {
     var statusLokasi = await Permission.location.request();
     if (statusLokasi.isGranted) {
       isLoadingLokasi.value = true;
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      Placemark place = placemarks[0];
-      ctrlmain.updateLokasi(
-        ketLokasi: "${place.locality.toString()}, ${place.country.toString()}",
-        lat: position.latitude,
-        long: position.longitude,
-      );
+      try {
+        // geolocator 14.x: pakai parameter `locationSettings`,
+        // `desiredAccuracy` sudah deprecated.
+        Position position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            timeLimit: Duration(seconds: 20),
+          ),
+        );
+
+        // geocoding 5.x: method tidak lagi berupa top-level function,
+        // tapi method dari instance `Geocoding`.
+        var ket = "Lokasi Terdeteksi";
+        try {
+          List<Placemark> placemarks = await Geocoding()
+              .placemarkFromCoordinates(position.latitude, position.longitude);
+          if (placemarks.isNotEmpty) {
+            Placemark place = placemarks[0];
+            var namaLokasi = [
+              place.locality ?? '',
+              place.country ?? '',
+            ].where((e) => e.isNotEmpty).join(', ');
+            if (namaLokasi.isNotEmpty) ket = namaLokasi;
+          }
+        } catch (e) {
+          print("<<<<<<<< error reverse geocoding >>>>>>>>");
+          print(e);
+        }
+
+        // Update data terbaru (sekaligus simpan ke cache)
+        ctrlmain.updateLokasi(
+          ketLokasi: ket,
+          lat: position.latitude,
+          long: position.longitude,
+        );
+        print("Lokasi terupdate: ${ctrlmain.mylokasi.value.keteranganLokasi}");
+      } catch (e) {
+        print("<<<<<<<< error getLokasi >>>>>>>>");
+        print(e);
+        Fluttertoast.showToast(
+          msg: "Gagal mengambil lokasi, pastikan GPS aktif dan coba lagi",
+        );
+      } finally {
+        isLoadingLokasi.value = false;
+      }
       // await Scheduling();
-      isLoadingLokasi.value = false;
       Get.back();
     } else if (statusLokasi.isDenied) {
       print('Izin ditolak');
@@ -133,7 +167,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  GetDataArtikel() async {
+  Future<void> GetDataArtikel() async {
     try {
       final artikelbaru = await DashboardService().getListArtikelBaru();
       listArtikel.value = [];
@@ -163,7 +197,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  GetDataSedangLive() async {
+  Future<void> GetDataSedangLive() async {
     try {
       final data = await DashboardService().getSedangLive();
       print(data);
@@ -174,7 +208,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  getMenuHome() async {
+  Future<List<dynamic>> getMenuHome() async {
     return listMenuHome.value = [
       {
         "label": "Al Quran",
@@ -262,7 +296,7 @@ class DashboardController extends GetxController {
     ];
   }
 
-  getSliderKajianTafsir() async {
+  Future<void> getSliderKajianTafsir() async {
     try {
       final result = await DashboardService().getSliderKajian('tafsir');
       listKajianSlider.value = [];
@@ -281,7 +315,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  getSliderKajianLive() async {
+  Future<void> getSliderKajianLive() async {
     try {
       final result = await DashboardService().getSliderKajian('live');
       listKajianLiveSlider.value = [];
@@ -299,7 +333,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  getSliderDoaDashboard() async {
+  Future<void> getSliderDoaDashboard() async {
     try {
       final result = await DashboardService().getSliderKajian('doa_ramadhan');
       listDoaSlider.value = [];
@@ -315,7 +349,7 @@ class DashboardController extends GetxController {
     }
   }
 
-  setFcm() async {
+  Future<void> setFcm() async {
     try {
       final isLogin = dataStore.read('isLogin');
       if (isLogin.toString() == 'true') {
@@ -341,8 +375,4 @@ class DashboardController extends GetxController {
     setFcm();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

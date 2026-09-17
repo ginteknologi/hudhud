@@ -1,4 +1,4 @@
-import 'package:auto_size_text/auto_size_text.dart'; // (masih terpakai? boleh dibiarkan)
+// (masih terpakai? boleh dibiarkan)
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -89,7 +89,7 @@ class QuotePage extends StatelessWidget {
 class _ErrorRetry extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
-  const _ErrorRetry({required this.message, required this.onRetry, super.key});
+  const _ErrorRetry({required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

@@ -27,6 +27,7 @@ class MuazinController extends GetxController {
     );
   }
 
+  @override
   void refresh() => pagingController.refresh();
 
   @override

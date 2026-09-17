@@ -30,6 +30,7 @@ class KajianController extends GetxController {
     );
   }
 
+  @override
   void refresh() => pagingController.refresh();
 
   @override

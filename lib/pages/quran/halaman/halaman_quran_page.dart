@@ -19,7 +19,7 @@ class HalamanQuranPage extends StatefulWidget {
 
 class _HalamanQuranPageState extends State<HalamanQuranPage>
     with SingleTickerProviderStateMixin {
-  layout(HalamanQuranController ctrl, BuildContext context,
+  SafeArea layout(HalamanQuranController ctrl, BuildContext context,
       HomeController ctrlHome) {
     return SafeArea(
         child: Obx(() => ctrl.isLoadingList.value
@@ -178,7 +178,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
         });
   }
 
-  showDialogFilter(HalamanQuranController ctrl, flag) {
+  void showDialogFilter(HalamanQuranController ctrl, flag) {
     Get.defaultDialog(
       backgroundColor: Colors.transparent,
       barrierDismissible: true,
@@ -294,7 +294,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                       ),
                       ctrl.isMax.value != true
                           ? Container()
-                          : Container(
+                          : SizedBox(
                               width: Get.width - 25,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -469,7 +469,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                           showDialogFilter(ctrl, true);
                         },
                         borderRadius: BorderRadius.circular(20),
-                        splashColor: Colors.green.withOpacity(0.5),
+                        splashColor: Colors.green.withValues(alpha: 0.5),
                         child: const Icon(
                           Icons.tune_rounded,
                           color: Colors.white,

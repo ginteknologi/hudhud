@@ -11,7 +11,7 @@ class ArtikelPage extends StatelessWidget {
   final ArtikelController ctrl = Get.put(ArtikelController());
   ArtikelPage({super.key});
 
-  layout(ArtikelController ctrl, BuildContext context) {
+  SafeArea layout(ArtikelController ctrl, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -29,7 +29,7 @@ class ArtikelPage extends StatelessWidget {
                 ]))));
   }
 
-  getListArtikel(ArtikelController ctrl, BuildContext context) {
+  ListView getListArtikel(ArtikelController ctrl, BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: ctrl.listArtikels.length,
@@ -93,7 +93,7 @@ class ArtikelPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel / Informasi", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value

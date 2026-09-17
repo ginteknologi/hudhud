@@ -20,7 +20,7 @@ class AlquranController extends GetxController {
   var ayatSaatIni = 'Belum dibookmark'.obs;
   var listMenu = [].obs;
 
-  getData() async {
+  Future<void> getData() async {
     try {
       final result = await AlquranService().getRandom();
       list.value = result['data'];

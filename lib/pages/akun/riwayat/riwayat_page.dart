@@ -11,7 +11,7 @@ import 'package:easy_localization/easy_localization.dart';
 class RiwayatPage extends StatelessWidget {
   const RiwayatPage({super.key});
 
-  layout(RiwayatController ctrl, BuildContext context) {
+  SafeArea layout(RiwayatController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -136,7 +136,7 @@ class RiwayatPage extends StatelessWidget {
                         child: Padding(
                             padding: const EdgeInsets.only(
                                 left: 21, right: 21, top: 21),
-                            child: ctrl.listRiwayat.length > 0 ?
+                            child: ctrl.listRiwayat.isNotEmpty ?
                              Column(
                               children: [
                                 ListView.builder(
@@ -148,9 +148,8 @@ class RiwayatPage extends StatelessWidget {
                                       child: ListItemUiWidget(
                                         typeDivider: TypeDivider.dashed,
                                         id: ctrl.listRiwayat[index]['id'],
-                                        title: priceFormat.format(ctrl
-                                                .listRiwayat[index]['nominal']) +
-                                            ',-',
+                                        title: '${priceFormat.format(ctrl
+                                                .listRiwayat[index]['nominal'])},-',
                                         onTap: () {
                                           ctrl.goToDetail(
                                               ctrl.listRiwayat[index]);
@@ -205,7 +204,7 @@ class RiwayatPage extends StatelessWidget {
     final ctrl = Get.put(RiwayatController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
       body: Obx(() => ctrl.isLoadingList.value == true ? CircularProgressIndicator() : layout(ctrl, context)),

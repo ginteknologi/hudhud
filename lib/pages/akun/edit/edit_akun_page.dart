@@ -8,7 +8,7 @@ import 'package:masjid_app/pages/akun/edit/edit_akun_controller.dart';
 class EditAkunPage extends StatelessWidget {
   const EditAkunPage({super.key});
 
-  layout(BuildContext context, EditAkunController ctrl) {
+  SafeArea layout(BuildContext context, EditAkunController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -32,9 +32,8 @@ class EditAkunPage extends StatelessWidget {
                                             boxShadow: [
                                               BoxShadow(
                                                 offset: Offset(0, 4),
-                                                color: Colors.black.withOpacity(
-                                                  0.3,
-                                                ),
+                                                color: Colors.black
+                                                    .withValues(alpha: 0.3),
                                                 blurRadius: 3,
                                               ),
                                             ],
@@ -44,9 +43,7 @@ class EditAkunPage extends StatelessWidget {
                                           onTap: () {
                                             ctrl.pilihFile();
                                           },
-                                          child: Obx(() => ctrl.inputFoto.value
-                                                          .length <
-                                                      1 &&
+                                          child: Obx(() => ctrl.inputFoto.value.isEmpty &&
                                                   !ctrl.isNewfile.value
                                               ? CircleAvatar(
                                                   radius: 70,
@@ -70,12 +67,6 @@ class EditAkunPage extends StatelessWidget {
                                       bottom: 1,
                                       right: 1,
                                       child: Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: Icon(
-                                              Icons.add_a_photo_outlined,
-                                              color: Colors.black),
-                                        ),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 3,
@@ -87,6 +78,12 @@ class EditAkunPage extends StatelessWidget {
                                             ),
                                           ),
                                           color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Icon(
+                                              Icons.add_a_photo_outlined,
+                                              color: Colors.black),
                                         ),
                                       ),
                                     ),
@@ -158,14 +155,14 @@ class EditAkunPage extends StatelessWidget {
     final ctrl = Get.put(EditAkunController());
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Profile > Edit Profile", context: context, elevation: 0),
         body: layout(context, ctrl),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
-            child: Container(
+            child: SizedBox(
               width: Get.width,
               child: ButtonElevated(
                 title: 'Simpan',

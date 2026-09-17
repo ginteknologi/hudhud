@@ -18,7 +18,7 @@ class DkmPage extends StatelessWidget {
 
   DkmPage({super.key});
 
-  layout(BuildContext context) {
+  Refresh.SmartRefresher layout(BuildContext context) {
     return Refresh.SmartRefresher(
       enablePullDown: true,
       controller: ctrl.refreshController,
@@ -237,7 +237,7 @@ class DkmPage extends StatelessWidget {
     );
   }
 
-  getListCategory(DkmController ctrl) {
+  Container getListCategory(DkmController ctrl) {
     return Container(
       height: Get.height / 4.5,
       margin: const EdgeInsets.only(left: 15),
@@ -274,7 +274,7 @@ class DkmPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: layout(context),
     );
   }

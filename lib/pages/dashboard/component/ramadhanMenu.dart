@@ -28,7 +28,7 @@ class RamadhanMenuWidget extends StatelessWidget {
           child: SvgPicture.asset("assets/icons/imsak.svg"),
         ),
         Expanded(
-          child: Container(
+          child: SizedBox(
             height: Get.height / 15,
             // color: Color(0xFFDCDCDC),
             child: Column(
@@ -71,7 +71,7 @@ class RamadhanMenuWidget extends StatelessWidget {
           child: SvgPicture.asset("assets/icons/buka.svg"),
         ),
         Expanded(
-          child: Container(
+          child: SizedBox(
             height: Get.height / 15,
             // color: Color(0xFFDCDCDC),
             child: Column(

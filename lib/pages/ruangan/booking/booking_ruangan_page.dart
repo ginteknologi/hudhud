@@ -13,7 +13,7 @@ import 'package:masjid_app/pages/ruangan/booking/booking_ruangan_controller.dart
 class BookingRuanganPage extends StatelessWidget {
   const BookingRuanganPage({super.key});
 
-  layout(BookingRuanganController ctrl, BuildContext context) {
+  SafeArea layout(BookingRuanganController ctrl, BuildContext context) {
     return SafeArea(
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 21),
@@ -164,7 +164,7 @@ class BookingRuanganPage extends StatelessWidget {
     final ctrl = Get.put(BookingRuanganController());
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Ruangan > List Jadwal > Booking Ruangan",
             context: context,

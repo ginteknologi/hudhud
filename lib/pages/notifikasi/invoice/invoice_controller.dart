@@ -10,7 +10,7 @@ class InvoiceController extends GetxController {
   final id = Get.parameters['invoice'];
   var dataUser = {};
   var status_invoice = '';
-  getData() async {
+  Future<void> getData() async {
     final result = await NotifikasiService().getDetailInvoice(id);
     list.value = result['data'];
     if (result['data']['status'] == 'paid') {

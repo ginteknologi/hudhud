@@ -23,7 +23,7 @@ class DetailAyatQuranController extends GetxController {
 
   var isChecked = false.obs;
 
-  getData() async {
+  Future<void> getData() async {
     final result = await QuranService().getDetail(surahId.toString());
     detail.value = result['data'];
     listAyat = detail['verses'];
@@ -34,7 +34,7 @@ class DetailAyatQuranController extends GetxController {
     isLoadingDetail.value = false;
   }
 
-  bookmark(selectedData, index) async {
+  Future<void> bookmark(selectedData, index) async {
     isLoadingDetail.value = true;
     if (ayatBookmarked.value) {
       gctrl.perAyatLastRead['ayatNumber'] = 0;

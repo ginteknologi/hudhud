@@ -12,19 +12,19 @@ class MetodeTransaksiController extends GetxController {
   RxString inputTypeBayar = "".obs;
   var dataMetodeBayar = {}.obs;
 
-  getData() async {
+  Future<void> getData() async {
     final result = await TransaksiSedekahServices().getData();
     dataBillProduct.value = result['data'];
     isLoading.value = false;
   }
 
-  goToMetode(String id) {
+  void goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
     print(id);
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }
 
-  goToNextPage(String id) {
+  void goToNextPage(String id) {
     final idData = Get.parameters['id'];
     var dataBayar = dataStore.read('inputDataPembayaran');
     dataBayar['idPayment'] = id;
@@ -39,7 +39,7 @@ class MetodeTransaksiController extends GetxController {
     }
   }
 
-  procceedPayment(id) async {
+  Future<Map<String, Object>> procceedPayment(id) async {
     isLoading.value = true;
     var status = {"code": 400, "message": "Mohon cek kembali koneksi anda."};
     try {
@@ -56,7 +56,7 @@ class MetodeTransaksiController extends GetxController {
     return status;
   }
 
-  goToEwallet(id) {
+  void goToEwallet(id) {
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/payment');
   }
 

@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/controllers/waktuSolat_controller.dart';
@@ -11,7 +10,7 @@ class WaktuSolat extends StatelessWidget {
   final WaktuSolatController ctrl = Get.find();
   WaktuSolat({super.key});
 
-  layout(BuildContext context) {
+  Widget layout(BuildContext context) {
     if (ctrl.isLoading.isTrue) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -55,7 +54,7 @@ class WaktuSolat extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         AutoSizeText(
-                                          "${ctrl.hijriahDate.value}",
+                                          ctrl.hijriahDate.value,
                                           maxLines: 1,
                                           presetFontSizes: [Get.width / 37],
                                           style: context.textTheme.labelSmall

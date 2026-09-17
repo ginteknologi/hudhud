@@ -18,7 +18,7 @@ class JadwalRuanganPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(JadwalRuanganController());
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Ruangan > List Jadwal", context: context, elevation: 0),
         body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
@@ -43,7 +43,7 @@ class JadwalRuanganPage extends StatelessWidget {
         ]);
   }
 
-  layout(JadwalRuanganController ctrl, BuildContext context) {
+  SafeArea layout(JadwalRuanganController ctrl, BuildContext context) {
     return SafeArea(
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 21),
@@ -117,7 +117,7 @@ class JadwalRuanganPage extends StatelessWidget {
                   const Divider(
                     color: Colors.black26,
                   ),
-                  ctrl.list.length > 0 ? ListView.builder(
+                  ctrl.list.isNotEmpty ? ListView.builder(
                     physics: const ClampingScrollPhysics(),
                     itemCount: ctrl.list.length,
                     shrinkWrap: true,
@@ -160,7 +160,7 @@ class JadwalRuanganPage extends StatelessWidget {
                                               color:
                                                   Theme.of(context).primaryColor),
                                     ),
-                                    Text('${int.parse(ctrl.list[index]['jam_mulai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_mulai'].split(':')[1])} - ' + '${int.parse(ctrl.list[index]['jam_selesai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_selesai'].split(':')[1])}',
+                                    Text('${int.parse(ctrl.list[index]['jam_mulai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_mulai'].split(':')[1])} - ' '${int.parse(ctrl.list[index]['jam_selesai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_selesai'].split(':')[1])}',
                                         style: context.textTheme.labelSmall
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,

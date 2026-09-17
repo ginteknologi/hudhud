@@ -9,9 +9,9 @@ import 'package:masjid_app/pages/quran/pengaturan/alquran_pengaturan_controller.
 import 'package:masjid_app/controllers/main_controller.dart';
 
 class AlquranPengaturanPage extends StatelessWidget {
-  const AlquranPengaturanPage({Key? key}) : super(key: key);
+  const AlquranPengaturanPage({super.key});
 
-  layout(AlquranPengaturanController ctrl, MainController gctrl,
+  SafeArea layout(AlquranPengaturanController ctrl, MainController gctrl,
       BuildContext context) {
     return SafeArea(
       top: false,
@@ -163,7 +163,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                               child: InkWell(
                                   onTap: () {},
                                   borderRadius: BorderRadius.circular(20),
-                                  splashColor: Colors.green.withOpacity(0.5),
+                                  splashColor: Colors.green.withValues(alpha: 0.5),
                                   child: Icon(
                                     Icons.delete_rounded,
                                     color: Colors.black,
@@ -193,7 +193,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                                     ctrl.downloadFile("halaman");
                                   },
                                   borderRadius: BorderRadius.circular(20),
-                                  splashColor: Colors.green.withOpacity(0.5),
+                                  splashColor: Colors.green.withValues(alpha: 0.5),
                                   child: Icon(
                                     Icons.download_rounded,
                                     color: Colors.black,
@@ -222,7 +222,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                                     showPopup(ctrl, gctrl, context);
                                   },
                                   borderRadius: BorderRadius.circular(20),
-                                  splashColor: Colors.green.withOpacity(0.5),
+                                  splashColor: Colors.green.withValues(alpha: 0.5),
                                   child: Icon(
                                     Icons.download_rounded,
                                     color: Colors.black,
@@ -351,7 +351,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                                         },
                                         borderRadius: BorderRadius.circular(20),
                                         splashColor:
-                                            Colors.green.withOpacity(0.5),
+                                            Colors.green.withValues(alpha: 0.5),
                                         child: Text("Lanjutkan",
                                             style: TextStyle(
                                               fontWeight: FontWeight.w300,
@@ -371,7 +371,7 @@ class AlquranPengaturanPage extends StatelessWidget {
                                         },
                                         borderRadius: BorderRadius.circular(20),
                                         splashColor:
-                                            Colors.green.withOpacity(0.5),
+                                            Colors.green.withValues(alpha: 0.5),
                                         child: Text("Pause",
                                             style: TextStyle(
                                               fontWeight: FontWeight.w300,

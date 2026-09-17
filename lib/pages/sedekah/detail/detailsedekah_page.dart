@@ -14,7 +14,7 @@ import 'package:masjid_app/theme.dart';
 class DetailSedekahPage extends StatelessWidget {
   const DetailSedekahPage({super.key});
 
-  layout(DetailSedekahController ctrl, BuildContext context) {
+  NestedScrollView layout(DetailSedekahController ctrl, BuildContext context) {
     print(ctrl.detail['sedekahs'] != []);
     return NestedScrollView(
         controller: ctrl.scrollController,
@@ -179,7 +179,7 @@ class DetailSedekahPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
+                  SizedBox(
                     width: Get.width,
                     child: Row(children: [
                       Flexible(
@@ -261,7 +261,7 @@ class DetailSedekahPage extends StatelessWidget {
         ));
   }
 
-  getList(ctrl, context) {
+  ListView getList(ctrl, context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: 5,
@@ -271,7 +271,7 @@ class DetailSedekahPage extends StatelessWidget {
         return FadeInUp(
           child: ListItemSedekahWidget(
             id: 1,
-            title: 'Sedekah ${index}',
+            title: 'Sedekah $index',
             dueDay: 20,
             targetPrice: 5000000,
             totalPrice: 1000000,
@@ -286,7 +286,7 @@ class DetailSedekahPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(DetailSedekahController());
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Detail Sedekah", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),

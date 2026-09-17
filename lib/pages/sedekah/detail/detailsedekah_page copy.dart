@@ -10,7 +10,7 @@ import 'package:masjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
 class DetailSedekahPage extends StatelessWidget {
   const DetailSedekahPage({super.key});
 
-  layout(DetailSedekahController ctrl, BuildContext context) {
+  SafeArea layout(DetailSedekahController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -186,7 +186,7 @@ class DetailSedekahPage extends StatelessWidget {
                     ),
                     Padding(
                         padding: const EdgeInsets.only(left: 21, right: 21),
-                        child: Container(
+                        child: SizedBox(
                           width: Get.width,
                           child: Row(children: [
                             Flexible(
@@ -263,7 +263,7 @@ class DetailSedekahPage extends StatelessWidget {
                     //     ),
                     //   ],
                     // ),
-                    Container(
+                    SizedBox(
                       height: 500,
                       child: TabBarView(
                         controller: ctrl.tabController,
@@ -313,7 +313,7 @@ class DetailSedekahPage extends StatelessWidget {
                 ))));
   }
 
-  getList(ctrl, context) {
+  ListView getList(ctrl, context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: 5,
@@ -323,7 +323,7 @@ class DetailSedekahPage extends StatelessWidget {
         return FadeInUp(
           child: ListItemSedekahWidget(
             id: 1,
-            title: 'Sedekah ${index}',
+            title: 'Sedekah $index',
             dueDay: 20,
             targetPrice: 5000000,
             totalPrice: 1000000,
@@ -340,7 +340,7 @@ class DetailSedekahPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Detail Sedekah", context: context, elevation: 0),
       body: layout(ctrl, context),

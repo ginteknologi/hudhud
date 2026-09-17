@@ -9,7 +9,7 @@ class DetailHaditsController extends GetxController {
   final Map arguments = Get.arguments ?? {};
   var txtController = TextEditingController();
 
-  getList() async {
+  Future<void> getList() async {
     try {
       isLoadingList.value = true;
       final result = await HaditsService().getList(arguments['detail']['namaTabel']);

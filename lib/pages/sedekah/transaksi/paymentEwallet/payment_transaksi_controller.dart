@@ -13,7 +13,7 @@ class PaymentTransaksiController extends GetxController {
   RxString inputPembayaran = "".obs;
   TextEditingController nomorInput = TextEditingController();
 
-  getData() async {
+  Future<void> getData() async {
     // final result = await SedekahService().getList();
     // list.value = result['data'];
     dataBillProduct.value = dataStore.read('inputDataPembayaran');
@@ -21,7 +21,7 @@ class PaymentTransaksiController extends GetxController {
     isLoading.value = false;
   }
 
-  procceedPayment(id) async {
+  Future<Map<String, Object>> procceedPayment(id) async {
     isLoading.value = true;
     var status = {"code": 400, "message": "Mohon cek kembali koneksi anda."};
     try {

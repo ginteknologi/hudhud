@@ -7,7 +7,6 @@ import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/models/userData.dart';
 import 'package:masjid_app/pages/akun/akun_service.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:minio_new/minio.dart';
 
 class EditAkunController extends GetxController {
@@ -28,7 +27,7 @@ class EditAkunController extends GetxController {
     secretKey: '8PG4OCho1aJJaZlYoa0cc+lQlODCF8EMla+rNKR0',
   );
 
-  pilihFile() async {
+  Future<void> pilihFile() async {
     final image = await picker.pickImage(
         source: ImageSource.gallery, imageQuality: 70, maxWidth: 1000);
     if (image == null) return;
@@ -37,12 +36,12 @@ class EditAkunController extends GetxController {
     isNewfile.value = true;
   }
 
-  batalFile() {
+  void batalFile() {
     newfile = null;
     isNewfile.value = false;
   }
 
-  getData() async {
+  Future<void> getData() async {
     final result = await AkunService().getList(page: 0, limit: 10);
     list.value = result['data'];
     isLoadingList.value = false;
@@ -57,7 +56,7 @@ class EditAkunController extends GetxController {
 
   Future simpan() async {
     try {
-      var photo = null;
+      String? photo;
       if (newfile != null) {
         var file = File(newfile!.path);
         final bytes = await file.readAsBytes();

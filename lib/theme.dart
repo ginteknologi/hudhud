@@ -26,12 +26,12 @@ class AppColors {
   static const Color textDark = Colors.black;
   static const Color grey = Color(0xFFE8E8E8);
 
-  static Color switchColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
-      MaterialState.selected,
+  static Color switchColor(Set<WidgetState> states) {
+    const Set<WidgetState> interactiveStates = <WidgetState>{
+      WidgetState.pressed,
+      WidgetState.hovered,
+      WidgetState.focused,
+      WidgetState.selected,
     };
     if (states.any(interactiveStates.contains)) {
       return appPrimary;
@@ -71,7 +71,7 @@ String kmbGenerator({value, String format = 'kmb'}) {
   }
 }
 
-bytesToSize(bytes) {
+Map<String, Object> bytesToSize(bytes) {
   var result = {
     'size': 0,
     'type': 'Bytes',
@@ -94,7 +94,7 @@ class AppVariables {
   static const EdgeInsets containerSpacing = EdgeInsets.symmetric(
     vertical: appPadding,
   );
-  static buatHargaPersen(harga, potongan) {
+  static dynamic buatHargaPersen(harga, potongan) {
     final data = ((potongan / harga) * 100).round();
     return data;
   }
@@ -106,7 +106,7 @@ Color calculateTextColor(Color background) {
       : Colors.white;
 }
 
-loadTextTheme(context, type) {
+TextTheme loadTextTheme(context, type) {
   TextStyle defaultTextStyle;
   if (type == 'dark') {
     defaultTextStyle = const TextStyle(
@@ -182,12 +182,10 @@ ThemeData darkTheme(context) {
   final colorScheme = Theme.of(context).colorScheme.copyWith(
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: Colors.white,
         onSurface: Colors.white,
         primary: AppColors.primaryDark,
         error: AppColors.appDanger,
         secondary: AppColors.secondaryDark,
-        background: AppColors.backgroundDark,
         surface: AppColors.surfaceDark,
       );
 
@@ -215,14 +213,14 @@ ThemeData darkTheme(context) {
   );
 
   final radioTheme = RadioThemeData(
-    fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
+    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
   );
   final checkboxTheme = CheckboxThemeData(
-    fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
+    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
   );
   final switchTheme = SwitchThemeData(
-    trackColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
-    thumbColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
+    trackColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
+    thumbColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
   );
 
   return ThemeData(
@@ -240,12 +238,10 @@ ThemeData lightTheme(context) {
   final colorScheme = Theme.of(context).colorScheme.copyWith(
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onBackground: Colors.black,
         onSurface: Colors.black,
         primary: AppColors.primary,
         error: AppColors.appDanger,
         secondary: AppColors.secondary,
-        background: AppColors.background,
         surface: AppColors.surface,
       );
 
@@ -274,14 +270,14 @@ ThemeData lightTheme(context) {
   );
 
   final switchTheme = SwitchThemeData(
-    trackColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
-    thumbColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
+    trackColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
+    thumbColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
   );
   final radioTheme = RadioThemeData(
-    fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
+    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
   );
   final checkboxTheme = CheckboxThemeData(
-    fillColor: MaterialStateProperty.resolveWith(AppColors.switchColor),
+    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
   );
 
   return ThemeData(

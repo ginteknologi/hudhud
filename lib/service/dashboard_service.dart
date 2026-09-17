@@ -93,7 +93,7 @@ class DashboardService extends GetConnect {
     } catch (error) {
       print("error di service getSedangLive");
       print(error);
-      throw error;
+      rethrow;
     }
   }
 }

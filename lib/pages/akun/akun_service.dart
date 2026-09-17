@@ -32,7 +32,7 @@ class AkunService extends GetConnect {
   Future postProfile(id, nama, phone, photo) async {
     try {
     final response =
-        await http.put(Uri.parse("${RemoteData.api}/profile/${id}"),
+        await http.put(Uri.parse("${RemoteData.api}/profile/$id"),
             headers: <String, String>{
               'Authorization': "Bearer ${authStore.read('jwt')}",
               'Content-Type': 'application/json; charset=UTF-8',

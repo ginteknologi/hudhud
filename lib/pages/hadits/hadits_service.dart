@@ -29,7 +29,7 @@ class HaditsService extends GetConnect {
   }
   Future getList(data) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/hadits/detail/${data}"),
+        Uri.parse("${RemoteData.api}/hadits/detail/$data"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -49,7 +49,7 @@ class HaditsService extends GetConnect {
   }
   Future getBab(data, kitab) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/hadits/detail/bab/${kitab}?kitab=${data}"),
+        Uri.parse("${RemoteData.api}/hadits/detail/bab/$kitab?kitab=$data"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -69,7 +69,7 @@ class HaditsService extends GetConnect {
   }
   Future getContent(data, idkitab, idbab) async {
     final response = await http.get(
-        Uri.parse("${RemoteData.api}/hadits/detail/bab/content/${data}?ID_Kitab=${idkitab}&ID_Bab=${idbab}"),
+        Uri.parse("${RemoteData.api}/hadits/detail/bab/content/$data?ID_Kitab=$idkitab&ID_Bab=$idbab"),
         headers: <String, String>{
           'Authorization': "Bearer ${authStore.read('jwt')}",
           'Content-Type': 'application/json; charset=UTF-8',

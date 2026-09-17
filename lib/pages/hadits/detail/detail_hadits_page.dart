@@ -7,9 +7,9 @@ import 'package:masjid_app/pages/hadits/detail/detail_hadits_controller.dart';
 import 'package:masjid_app/routes/hadits/index.dart';
 
 class DetailHaditsPage extends StatelessWidget {
-  DetailHaditsPage({super.key});
+  const DetailHaditsPage({super.key});
 
-  layout(DetailHaditsController ctrl, BuildContext context) {
+  SafeArea layout(DetailHaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -101,7 +101,7 @@ class DetailHaditsPage extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  ctrl.arguments['detail']['hadits'].toString() + ' Hadits',
+                                  '${ctrl.arguments['detail']['hadits']} Hadits',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -155,7 +155,7 @@ class DetailHaditsPage extends StatelessWidget {
                                 Container(
                                   width: 42.0,
                                   height: 42.0,
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                     color: Color.fromARGB(103, 19, 112, 101),
                                     shape: BoxShape.circle,
                                   ),

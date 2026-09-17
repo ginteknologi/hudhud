@@ -29,6 +29,7 @@ class QuoteController extends GetxController {
     );
   }
 
+  @override
   void refresh() => pagingController.refresh();
 
   @override

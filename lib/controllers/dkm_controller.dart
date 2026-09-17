@@ -39,7 +39,7 @@ class DkmController extends GetxController {
         link: 'link'),
   ].obs;
   var version = "0.0.0".obs;
-  getData() async {
+  Future<void> getData() async {
     try {
       final data = await DkmService().getList();
       listKontak.value = data;
@@ -50,7 +50,7 @@ class DkmController extends GetxController {
     }
   }
 
-  share(item) async {
+  Future<void> share(item) async {
     Get.defaultDialog(
         title: item.judul!,
         titleStyle: TextStyle(fontSize: Get.width / 25),
@@ -66,7 +66,7 @@ class DkmController extends GetxController {
           );
           final resultshare = await Share.shareXFiles(
             [XFile(result)],
-            text: '#Dikirim dari Marbot app \https://s.id/downloadmarbotapp',
+            text: '#Dikirim dari Marbot app https://s.id/downloadmarbotapp',
           );
 
           if (resultshare.status == ShareResultStatus.success) {
@@ -86,7 +86,7 @@ class DkmController extends GetxController {
         ));
   }
 
-  getSlider() async {
+  Future<void> getSlider() async {
     try {
       final result = await DashboardService().getSliderKajian('quotes');
       listQuotes.value = [];
@@ -104,7 +104,7 @@ class DkmController extends GetxController {
     }
   }
 
-  getVersion() async {
+  Future<void> getVersion() async {
     packageInfo = await PackageInfo.fromPlatform();
     version.value = packageInfo.version;
   }

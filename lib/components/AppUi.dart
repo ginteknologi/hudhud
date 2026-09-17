@@ -5,7 +5,7 @@ import 'package:masjid_app/theme.dart';
 import 'package:masjid_app/fonts.dart';
 
 class AppUi {
-  static loading({
+  static SizedBox loading({
     String title = 'Mohon tunggu',
     required RxBool noConnection,
     required void Function() onReload,
@@ -45,7 +45,7 @@ class AppUi {
     );
   }
 
-  static gradientBackground({
+  static Stack gradientBackground({
     required child,
     required colors,
     Alignment begin = Alignment.topCenter,

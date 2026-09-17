@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class ListItemUiWidget extends StatelessWidget {
   ListItemUiWidget(
-      {required this.id,
+      {super.key, required this.id,
       this.category,
       this.title = "title",
       this.titleStyle,
@@ -60,7 +60,7 @@ class ListItemUiWidget extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           highlightColor: Colors.transparent,
-          splashColor: Colors.green.withOpacity(0.5),
+          splashColor: Colors.green.withValues(alpha: 0.5),
           onTap: onTap,
           child: Column(
             mainAxisSize: MainAxisSize.min,

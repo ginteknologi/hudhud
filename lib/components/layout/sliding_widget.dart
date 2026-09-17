@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class SlidingWidget extends StatelessWidget {
-  SlidingWidget({
+  SlidingWidget({super.key, 
     this.child,
     required this.controller,
     required this.visible,

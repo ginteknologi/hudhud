@@ -12,12 +12,11 @@ class EasyImageViewPager extends StatefulWidget {
 
   /// Create new instance, using the [imageProviders] to populate the [PageView]
   const EasyImageViewPager(
-      {Key? key,
+      {super.key,
       required this.imageProviders,
       required this.idxInitial,
       // required this.search,
-      required this.onTap})
-      : super(key: key);
+      required this.onTap});
 
   @override
   _EasyImageViewPagerState createState() => _EasyImageViewPagerState();
@@ -27,7 +26,7 @@ class _EasyImageViewPagerState extends State<EasyImageViewPager> {
   final dataStore = GetStorage();
   late PageController _pageController =
       PageController(initialPage: widget.idxInitial - 1);
-  bool _pagingEnabled = true;
+  final bool _pagingEnabled = true;
 
   @override
   void initState() {
@@ -106,20 +105,20 @@ class EasyImageView extends StatefulWidget {
 
   /// Create a new instance
   const EasyImageView({
-    Key? key,
+    super.key,
     required this.imageProvider,
     required this.imageSource,
     this.minScale = 1.0,
     this.maxScale = 5.0,
     this.onScaleChanged,
-  }) : super(key: key);
+  });
 
   @override
   _EasyImageViewState createState() => _EasyImageViewState();
 }
 
 class _EasyImageViewState extends State<EasyImageView> {
-  late TransformationController _transformationController =
+  late final TransformationController _transformationController =
       TransformationController();
 
   @override
@@ -139,7 +138,7 @@ class _EasyImageViewState extends State<EasyImageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).orientation != Orientation.portrait
             ? double.infinity

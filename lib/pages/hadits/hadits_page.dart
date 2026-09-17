@@ -9,7 +9,7 @@ class HaditsPage extends StatelessWidget {
   final HaditsController ctrl = Get.put(HaditsController());
   HaditsPage({super.key});
 
-  layout(HaditsController ctrl, BuildContext context) {
+  SafeArea layout(HaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
       child: SingleChildScrollView(
@@ -112,7 +112,7 @@ class HaditsPage extends StatelessWidget {
     );
   }
 
-  DataGrid(HaditsController ctrl) {
+  GridView DataGrid(HaditsController ctrl) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -130,7 +130,7 @@ class HaditsPage extends StatelessWidget {
                   arguments: {'detail': ctrl.list[index]});
             },
             borderRadius: BorderRadius.circular(20),
-            splashColor: Colors.green.withOpacity(0.5),
+            splashColor: Colors.green.withValues(alpha: 0.5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,

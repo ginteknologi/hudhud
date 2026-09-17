@@ -22,7 +22,7 @@ class EventCountDownService {
       print("error di service");
       print(error);
       // Handle general error
-      throw error;
+      rethrow;
     }
   }
 }

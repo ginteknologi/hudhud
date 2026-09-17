@@ -6,7 +6,7 @@ class DoaController extends GetxController {
   var isLoadingList = true.obs;
   var list = <KategoriDoaData>[].obs;
 
-  getData() async {
+  Future<void> getData() async {
     try {
       final result = await DoaService().getList();
       for (var element in result['data']) {

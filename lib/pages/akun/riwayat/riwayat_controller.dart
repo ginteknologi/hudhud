@@ -13,11 +13,11 @@ class RiwayatController extends GetxController {
   TextEditingController inputLink = TextEditingController();
   var txtController = TextEditingController();
 
-  goToDetail(param) {
+  void goToDetail(param) {
     _showPopup();
   }
 
-  getRiwayats() async {
+  Future<void> getRiwayats() async {
     final result = await RiwayatService().getList();
     listRiwayat.value = result['data']['history'];
     totalSedekah = result['data']['total_sedekah'];

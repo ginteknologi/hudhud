@@ -30,8 +30,4 @@ class HomeController extends GetxController
   ];
   var selectedIdx = 0.obs;
 
-  @override
-  void onInit() async {
-    super.onInit();
-  }
 }

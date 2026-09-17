@@ -8,7 +8,6 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/configs/fileSetup.dart';
 import 'package:masjid_app/pages/artikel/detail/detail_artikel_controller.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:share_plus/share_plus.dart';
@@ -17,7 +16,9 @@ import 'package:masjid_app/routes/artikel/index.dart';
 class DetailArtikelPage extends StatelessWidget {
   final DetailArtikelController ctrl = Get.put(DetailArtikelController());
 
-  layout(DetailArtikelController ctrl, BuildContext context) {
+  DetailArtikelPage({super.key});
+
+  SafeArea layout(DetailArtikelController ctrl, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -228,7 +229,7 @@ class DetailArtikelPage extends StatelessWidget {
                     ]))));
   }
 
-  getListArtikel(DetailArtikelController ctrl, BuildContext context) {
+  ListView getListArtikel(DetailArtikelController ctrl, BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: ctrl.listArtikels.length,
@@ -295,7 +296,7 @@ class DetailArtikelPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel Detail", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value

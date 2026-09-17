@@ -27,7 +27,7 @@ class KajianService {
     } catch (error) {
       print("error di service");
       print(error);
-      throw error;
+      rethrow;
     }
   }
 }

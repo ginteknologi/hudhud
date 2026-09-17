@@ -8,9 +8,9 @@ import 'package:masjid_app/pages/hadits/content/content_hadits_controller.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ContentHaditsPage extends StatelessWidget {
-  ContentHaditsPage({super.key});
+  const ContentHaditsPage({super.key});
 
-  layout(ContentHaditsController ctrl, BuildContext context) {
+  SafeArea layout(ContentHaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -47,7 +47,7 @@ class ContentHaditsPage extends StatelessWidget {
                               SvgPicture.asset("assets/icons/book_mark.svg",
                                   height: 20, width: 20),
                               SizedBox(width: 10),
-                              Container(
+                              SizedBox(
                                 width: MediaQuery.of(context).size.width *
                                     0.6, // Batasi lebar maksimal
                                 child: Text(
@@ -68,7 +68,7 @@ class ContentHaditsPage extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Container(
+                              SizedBox(
                                 width: MediaQuery.of(context).size.width *
                                     0.6, // Batasi lebar maksimal
                                 child: Text(
@@ -135,7 +135,7 @@ class ContentHaditsPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 21),
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           height: 300,
                           child: Obx(() => Text(
                                 ctrl.list.isNotEmpty

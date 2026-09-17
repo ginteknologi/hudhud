@@ -59,7 +59,7 @@ class AlquranPengaturanController extends GetxController {
         var element = listSurah[i];
         var response = await http.get(Uri.parse(element['file']));
         var bytes = response.bodyBytes;
-        File file = File(filePath + '/' + element['hal'].toString() + '.jpg');
+        File file = File('$filePath/${element['hal']}.jpg');
         await file.writeAsBytes(bytes);
         totalTerDownload++;
         progresDownload.value = (totalTerDownload / listSurah.length);
@@ -92,8 +92,4 @@ class AlquranPengaturanController extends GetxController {
     cancelled.value = true;
   }
 
-  @override
-  void onInit() async {
-    super.onInit();
-  }
 }

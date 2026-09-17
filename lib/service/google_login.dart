@@ -59,7 +59,7 @@ class GoogleLogin {
 
       String? idToken;
       try {
-        final auth = await user.authentication;
+        final auth = user.authentication;
         idToken = auth.idToken;
       } catch (_) {}
 

@@ -115,16 +115,16 @@ class WaktuSolatController extends GetxController {
       int index = 0;
       for (int i = 0; i < list.length; i++) {
         var cekwaktu = list[i].time24!.contains(".");
-        var default_split = ":";
+        var defaultSplit = ":";
         if (cekwaktu) {
-          default_split = ".";
+          defaultSplit = ".";
         }
         DateTime salatTime = DateTime(
           now.year,
           now.month,
           now.day,
-          int.parse(list[i].time24!.split(default_split)[0]),
-          int.parse(list[i].time24!.split(default_split)[1]),
+          int.parse(list[i].time24!.split(defaultSplit)[0]),
+          int.parse(list[i].time24!.split(defaultSplit)[1]),
         );
         if (salatTime.isAfter(now)) {
           index = i;
@@ -146,17 +146,17 @@ class WaktuSolatController extends GetxController {
   void _calculateTimeToNextSalat(String nextSalatTime) {
     try {
       var cekwaktu = nextSalatTime.contains(".");
-      var default_split = ":";
+      var defaultSplit = ":";
       if (cekwaktu) {
-        default_split = ".";
+        defaultSplit = ".";
       }
       DateTime now = DateTime.now();
       DateTime nextSalatDateTime = DateTime(
         now.year,
         now.month,
         now.day,
-        int.parse(nextSalatTime.split(default_split)[0]),
-        int.parse(nextSalatTime.split(default_split)[1]),
+        int.parse(nextSalatTime.split(defaultSplit)[0]),
+        int.parse(nextSalatTime.split(defaultSplit)[1]),
       );
 
       if (nextSalatDateTime.isBefore(now)) {
@@ -211,8 +211,4 @@ class WaktuSolatController extends GetxController {
     await getWaktuSolat();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

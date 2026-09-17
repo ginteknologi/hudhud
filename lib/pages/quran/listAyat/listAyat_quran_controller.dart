@@ -65,7 +65,7 @@ class ListAyatQuranController extends GetxController
     }
   }
 
-  prosesPencarian() async {
+  Future<void> prosesPencarian() async {
     var ddd = list.indexWhere((element) => element['nama'] == inputSurah.text);
     var getSurah = list.where((p0) => p0['nama'] == inputSurah.text).first;
     var newindex = myTabs.length - ddd - 1;
@@ -139,7 +139,7 @@ class ListAyatQuranController extends GetxController
     }
   }
 
-  playMurotal(listayatData item) async {
+  Future<void> playMurotal(listayatData item) async {
     try {
       int targetDataIndex =
           contentTab.indexWhere((data) => data["idContent"] == item.surat);
@@ -182,7 +182,7 @@ class ListAyatQuranController extends GetxController
     }
   }
 
-  changeTabIndex(index) async {
+  Future<void> changeTabIndex(index) async {
     tabIndex.value = index;
     detail.value = list[index];
     await getDetailData(surahId: detail['id']);

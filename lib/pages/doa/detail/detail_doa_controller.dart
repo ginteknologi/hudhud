@@ -12,7 +12,7 @@ class DetailDoaController extends GetxController {
 
   var txtController = TextEditingController();
 
-  getData() async {
+  Future<void> getData() async {
     try {
       list.clear();
       final result = await DoaService().getListDoa(id);
@@ -30,7 +30,7 @@ class DetailDoaController extends GetxController {
     }
   }
 
-  getSearchData() async {
+  Future<void> getSearchData() async {
     try {
       isLoadingList.value = true;
       list.clear();

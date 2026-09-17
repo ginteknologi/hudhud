@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar(
-      {required this.height,
+      {super.key, required this.height,
       this.styleType,
       this.leadingWidth,
       this.leading,
@@ -47,7 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         double.infinity,
         height,
       );
-  _getStyle() {
+  Container? _getStyle() {
     switch (styleType) {
       case Style.bgFillWhiteA700:
         return Container(

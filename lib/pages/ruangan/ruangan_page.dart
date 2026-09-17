@@ -8,7 +8,7 @@ import 'package:table_calendar/table_calendar.dart';
 class RuanganPage extends StatelessWidget {
   const RuanganPage({super.key});
 
-  layout(RuanganController ctrl, BuildContext context) {
+  Stack layout(RuanganController ctrl, BuildContext context) {
     return Stack(
       children: [
         SizedBox(
@@ -360,7 +360,7 @@ class RuanganPage extends StatelessWidget {
                             //           Get.toNamed(RoutesRuangan.jadwal);
                             //         },
                             //         borderRadius: BorderRadius.circular(20),
-                            //         splashColor: Colors.green.withOpacity(0.5),
+                            //         splashColor: Colors.green.withValues(alpha: 0.5),
                             //         child: Text(
                             //           "Lihat Detail",
                             //           style: TextStyle(

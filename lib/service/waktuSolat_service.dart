@@ -13,8 +13,8 @@ class WaktuSolatService {
       if (lat != null && long != null) {
         if (lat != 0.0 && long != 0.0) {
           query = [
-            "latitude=${lat}",
-            "longitude=${long}",
+            "latitude=$lat",
+            "longitude=$long",
           ];
         }
       }
@@ -37,7 +37,7 @@ class WaktuSolatService {
       print("error di service");
       print(error);
       // Handle general error
-      throw error;
+      rethrow;
     }
   }
 }

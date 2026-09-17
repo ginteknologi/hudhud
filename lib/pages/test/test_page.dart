@@ -4,12 +4,13 @@ import 'package:get/get.dart';
 
 class TestPage extends StatefulWidget {
 
-  const TestPage({Key? key}) : super(key: key);
+  const TestPage({super.key});
   @override
   State<TestPage> createState() => _TestPageState();
 }
   class _TestPageState extends State<TestPage> {
     String text = "Stop service";
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

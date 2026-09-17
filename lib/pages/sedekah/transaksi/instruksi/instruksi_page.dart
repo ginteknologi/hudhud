@@ -7,7 +7,7 @@ import 'package:masjid_app/pages/sedekah/transaksi/instruksi/instruksi_controlle
 class InstruksiPage extends StatelessWidget {
   const InstruksiPage({super.key});
 
-  layout(BuildContext context, InstruksiController ctrl) {
+  SafeArea layout(BuildContext context, InstruksiController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -172,7 +172,7 @@ class InstruksiPage extends StatelessWidget {
     final ctrl = Get.put(InstruksiController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Instruksi Pembayaran", context: context, elevation: 0),
       body: layout(context, ctrl),

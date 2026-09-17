@@ -19,7 +19,7 @@ class DetailSedekahController extends GetxController
   List listPenyaluran = [].obs;
   List listLaporan = [].obs;
 
-  getData() async {
+  Future<void> getData() async {
     final result = await DetailSedekahService().getList();
     detail.value = result['data'];
     listDonatur = result['data']['sedekahs'];
@@ -28,7 +28,7 @@ class DetailSedekahController extends GetxController
     isLoadingList.value = false;
   }
 
-  getListLaporan() {
+  List<dynamic> getListLaporan() {
     return listLaporan = [
       {
         "tanggal": "25 Oktober 2023",

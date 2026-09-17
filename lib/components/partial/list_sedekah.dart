@@ -7,7 +7,7 @@ import 'package:masjid_app/theme.dart';
 
 class ListItemSedekahWidget extends StatelessWidget {
   ListItemSedekahWidget(
-      {required this.id,
+      {super.key, required this.id,
       this.kategori,
       this.title,
       this.dueDay = 0,

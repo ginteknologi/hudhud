@@ -157,12 +157,12 @@ class CustomCardItem extends StatelessWidget {
                                   end: Alignment.bottomCenter,
                                   colors: [
                                     // Colors.transparent,
-                                    Colors.black.withOpacity(0.0),
-                                    Colors.black.withOpacity(0.3),
-                                    Colors.black.withOpacity(0.5),
-                                    Colors.black.withOpacity(0.7)
+                                    Colors.black.withValues(alpha: 0.0),
+                                    Colors.black.withValues(alpha: 0.3),
+                                    Colors.black.withValues(alpha: 0.5),
+                                    Colors.black.withValues(alpha: 0.7)
                                   ]),
-                              // color: Colors.black.withOpacity(0.5),
+                              // color: Colors.black.withValues(alpha: 0.5),
                               borderRadius: const BorderRadius.only(
                                   bottomLeft: Radius.circular(7),
                                   bottomRight: Radius.circular(7)),

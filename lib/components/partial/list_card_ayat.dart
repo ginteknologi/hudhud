@@ -64,7 +64,7 @@ class ListCardAyatWidget extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                             height: 42,
                             width: 42,
                             child: Stack(

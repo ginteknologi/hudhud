@@ -62,7 +62,7 @@ class JadwalRuanganController extends GetxController {
   RxString inputBulan = "".obs;
   RxString inputTahun = "".obs;
 
-  getData() async {
+  Future<void> getData() async {
     final result = await RuanganService().getDetail(inputTanggal, inputBulan, inputTahun);
     list.value = result['data'];
     isLoadingList.value = false;
@@ -113,7 +113,7 @@ class JadwalRuanganController extends GetxController {
   //   ];
   //   return listJadwal;
   // }
-  getParams() async {
+  Future<void> getParams() async {
     int currentYear = DateTime.now().year;
     for (int i = currentYear; i <= currentYear + 10; i++) {
       years.add(i.toString());

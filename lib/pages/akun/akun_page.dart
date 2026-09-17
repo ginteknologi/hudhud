@@ -12,7 +12,7 @@ import 'package:masjid_app/routes/home/index.dart';
 class AkunPage extends StatelessWidget {
   const AkunPage({super.key});
 
-  layout(BuildContext context, HomeController hctrl, MainController gctrl) {
+  SafeArea layout(BuildContext context, HomeController hctrl, MainController gctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -141,7 +141,7 @@ class AkunPage extends StatelessWidget {
     final gctrl = Get.find<MainController>();
     final hctrl = Get.find<HomeController>();
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Profile", context: context, elevation: 0),
       body: Obx(() => layout(context, hctrl, gctrl)),

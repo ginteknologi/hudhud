@@ -9,7 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 class NotifikasiPage extends StatelessWidget {
   const NotifikasiPage({super.key});
 
-  layout(BuildContext context, NotifikasiController ctrl) {
+  SafeArea layout(BuildContext context, NotifikasiController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -17,7 +17,7 @@ class NotifikasiPage extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 21),
-                child: ctrl.list.length > 0 ? 
+                child: ctrl.list.isNotEmpty ? 
                 ListView.builder(
                   physics: const ClampingScrollPhysics(),
                   itemCount: ctrl.list.length,
@@ -96,7 +96,7 @@ class NotifikasiPage extends StatelessWidget {
     final ctrl = Get.put(NotifikasiController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Notifikasi", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
