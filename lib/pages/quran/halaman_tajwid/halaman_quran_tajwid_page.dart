@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/controllers/home_controller.dart';
@@ -54,8 +54,6 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                   ],
                 ))));
   }
-
-  late final AnimationController _controller;
 
   void showPopup(
     HalamanQuranTajwidController ctrl,
@@ -171,7 +169,9 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                                   subtitleStyle: TextStyle(fontSize: 2),
                                   onTap: () async {
                                     await ctrl.goToData(item);
-                                    Navigator.pop(context);
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
                                   },
                                   titleStyle: context.textTheme.titleMedium
                                       ?.copyWith(
@@ -228,7 +228,7 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
               ],
             ),
           ),
-          Obx(() => ctrl.loadingFilter == true
+          Obx(() => ctrl.loadingFilter.value == true
               ? Text("data")
               : Container(
                   width: Get.width - 25,
@@ -394,10 +394,6 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 400),
-    );
   }
 
   @override

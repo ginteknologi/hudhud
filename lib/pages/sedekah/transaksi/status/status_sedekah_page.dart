@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
@@ -39,7 +37,6 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
   }
 
   Column layoutVa(StatusSedekahController ctrl, BuildContext context) {
-    var dataInvoice = jsonDecode(ctrl.dataInvoice['detail']['paymentSelect']);
     return Column(
       children: [
         Card(

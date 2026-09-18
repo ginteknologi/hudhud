@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/models/listayatData.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';

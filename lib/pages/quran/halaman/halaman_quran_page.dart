@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/controllers/home_controller.dart';
@@ -45,8 +45,6 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                   ],
                 ))));
   }
-
-  late final AnimationController _controller;
 
   void showPopup(
     HalamanQuranController ctrl,
@@ -162,7 +160,9 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
                                   subtitleStyle: TextStyle(fontSize: 2),
                                   onTap: () async {
                                     await ctrl.goToData(item);
-                                    Navigator.pop(context);
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
                                   },
                                   titleStyle: context.textTheme.titleMedium
                                       ?.copyWith(
@@ -219,7 +219,7 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
               ],
             ),
           ),
-          Obx(() => ctrl.loadingFilter == true
+          Obx(() => ctrl.loadingFilter.value == true
               ? Text("data")
               : Container(
                   width: Get.width - 25,
@@ -385,10 +385,6 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 400),
-    );
   }
 
   @override
@@ -396,11 +392,14 @@ class _HalamanQuranPageState extends State<HalamanQuranPage>
     final ctrl = Get.put(HalamanQuranController());
     final hctrl = Get.find<HomeController>();
     // final gctrl = Get.find<MainController>();
-    return WillPopScope(
-        onWillPop: () async {
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, dynamic result) {
+          if (didPop) {
+            return; // kalau sudah di-pop, tidak perlu lakukan apa-apa lagi
+          }
           // Logika yang dijalankan saat tombol kembali ditekan
           Get.back(result: 'refresh');
-          return false; // Kembalikan false agar tidak melakukan pop secara otomatis
         },
         child: Scaffold(
             backgroundColor: Color(0xFFF5F5F5),

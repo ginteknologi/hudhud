@@ -6,7 +6,7 @@ class InputDropdown extends StatelessWidget {
   final String input;
   final String label;
   final double margin;
-  final placeholder;
+  final String placeholder;
   final bool isError;
   final Color? dropdownColor;
   final Color? fillColor;
@@ -61,7 +61,10 @@ class InputDropdown extends StatelessWidget {
             child: DropdownButton(
               icon: SvgPicture.asset(
                 'assets/icons/icon_chevron_down.svg',
-                color: Colors.black45,
+                colorFilter: const ColorFilter.mode(
+                  Colors.black45,
+                  BlendMode.srcIn,
+                ),
                 width: 10,
               ),
               dropdownColor:

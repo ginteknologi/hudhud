@@ -13,9 +13,9 @@ class ButtonOutline extends StatelessWidget {
   final bool selected;
   final String showIcon;
   final bool iconOnly;
-  final iconLeft;
+  final Widget iconLeft;
   final bool vertical;
-  final iconRight;
+  final Widget iconRight;
   final double letterSpacing;
   final double textGap;
   final double textHeight;

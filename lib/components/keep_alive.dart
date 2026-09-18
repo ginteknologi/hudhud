@@ -16,7 +16,7 @@ class KeepAliveScrollablePositionedList extends StatefulWidget {
   });
 
   @override
-  _KeepAliveScrollablePositionedListState createState() =>
+  State<KeepAliveScrollablePositionedList> createState() =>
       _KeepAliveScrollablePositionedListState();
 
   static void builder(

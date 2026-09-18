@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:masjid_app/controllers/countDownEvent_controller.dart';
+import 'package:masjid_app/controllers/count_down_event_controller.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CountDown_Widget extends StatelessWidget {

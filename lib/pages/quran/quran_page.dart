@@ -3,7 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
 import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
@@ -232,11 +232,9 @@ class QuranPage extends StatelessWidget {
     print(TypeViewQuran.perayat);
     switch (type) {
       case TypeViewQuran.perayat:
-        return  ListAyatQuranPage();
+        return ListAyatQuranPage();
       case TypeViewQuran.perhalaman:
         return const HalamanQuranPage();
-      default:
-        return  ListAyatQuranPage();
     }
   }
 

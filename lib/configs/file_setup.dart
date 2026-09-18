@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 Future downloadAndSaveFile(
@@ -13,13 +14,17 @@ Future downloadAndSaveFile(
   final String lokasiSave = '${directory.path}$pathsave/$fileName';
   var kondisi = checkIfFileExists(fileName: fileName, pathsave: pathsave);
   if (await kondisi) {
-    print('File sudah ada.');
+    if (kDebugMode) {
+      debugPrint('File sudah ada.');
+    }
     return lokasiSave;
   } else {
     final response = await http.get(Uri.parse(url));
     final File file = File(lokasiSave);
     await file.writeAsBytes(response.bodyBytes);
-    print('File berhasil diunduh dan disimpan di: ${file.path}');
+    if (kDebugMode) {
+      debugPrint('File berhasil diunduh dan disimpan di: ${file.path}');
+    }
     return lokasiSave;
   }
 }

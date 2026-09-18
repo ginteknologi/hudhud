@@ -4,8 +4,9 @@ import 'package:get/get.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class ListCardUiWidget extends StatelessWidget {
-  ListCardUiWidget(
-      {super.key, required this.id,
+  const ListCardUiWidget(
+      {super.key,
+      required this.id,
       this.type,
       this.title,
       this.subtitle,
@@ -21,20 +22,20 @@ class ListCardUiWidget extends StatelessWidget {
       this.marginSeparator,
       this.usingDivider = true});
 
-  int id;
-  String? type;
-  String? title;
-  TextStyle? titleStyle;
-  String? subtitle;
-  TextStyle? subtitleStyle;
-  BoxDecoration? decoration;
-  bool hasFooter;
-  bool usingDivider;
-  VoidCallback? onTap;
-  double? elevation;
-  MainAxisAlignment? position;
-  double? height;
-  double? marginSeparator;
+  final int id;
+  final String? type;
+  final String? title;
+  final TextStyle? titleStyle;
+  final String? subtitle;
+  final TextStyle? subtitleStyle;
+  final BoxDecoration? decoration;
+  final bool hasFooter;
+  final bool usingDivider;
+  final VoidCallback? onTap;
+  final double? elevation;
+  final MainAxisAlignment? position;
+  final double? height;
+  final double? marginSeparator;
   final List<Widget> footerContent;
 
   @override

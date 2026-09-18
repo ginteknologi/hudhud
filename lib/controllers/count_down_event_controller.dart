@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/models/eventCountDown.dart';
 import 'package:masjid_app/service/eventCountDown_service.dart';
@@ -27,11 +28,15 @@ class CountDownEventController extends GetxController {
           title: data['judul'],
           imageUrl: data['image']);
       isLoadingEvent.value = false;
-      print("ini >>>>>>>>>>>>>>>>>> eventData");
-      print(eventData);
+      if (kDebugMode) {
+        debugPrint("ini >>>>>>>>>>>>>>>>>> eventData");
+        debugPrint(eventData.toString());
+      }
     } catch (e) {
-      print("error controller EventCountDownService");
-      print(e);
+      if (kDebugMode) {
+        debugPrint("error controller EventCountDownService");
+        debugPrint(e.toString());
+      }
     }
   }
 

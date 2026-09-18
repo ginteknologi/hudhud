@@ -48,7 +48,7 @@ dependencies:
   easy_localization: ^3.0.3
   flutter_svg: ^2.0.7
   flutter_remix: ^0.0.3
-  introduction_screen: ^4.0.0
+  introduction_screen: ^5.0.1
   auto_size_text: ^3.0.0
   table_calendar: ^3.0.9
   simple_moment: 1.1.1

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
-import 'package:masjid_app/configs/fileSetup.dart';
+import 'package:masjid_app/configs/file_setup.dart';
 import 'package:masjid_app/pages/artikel/detail/detail_artikel_controller.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -194,11 +194,13 @@ class DetailArtikelPage extends StatelessWidget {
                                       url: ctrl.detail.value.image,
                                       pathsave: '/artikel',
                                     );
-                                    final resultshare = await Share.shareXFiles(
-                                        [XFile(result)],
-                                        text: ctrl.share.value,
-                                        subject: ctrl.detail.value.judul);
-
+                                    final resultshare =
+                                        await SharePlus.instance.share(
+                                      ShareParams(
+                                          files: [XFile(result)],
+                                          text: ctrl.share.value,
+                                          subject: ctrl.detail.value.judul),
+                                    );
                                     if (resultshare.status ==
                                         ShareResultStatus.success) {
                                       Fluttertoast.showToast(

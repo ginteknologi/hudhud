@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:masjid_app/components/button/buttonvariant.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 // import 'package:masjid_app/components/input/InputDropdown.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/ruangan/booking/booking_ruangan_controller.dart';

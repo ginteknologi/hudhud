@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListItemUiWidget extends StatelessWidget {
-  ListItemUiWidget(
-      {super.key, required this.id,
+  const ListItemUiWidget(
+      {super.key,
+      required this.id,
       this.category,
       this.title = "title",
       this.titleStyle,
@@ -29,30 +30,30 @@ class ListItemUiWidget extends StatelessWidget {
       this.footerTextStyle,
       this.image});
 
-  int id;
-  String? category;
-  String? title;
-  TextStyle? titleStyle;
-  String? subTitle;
-  TextStyle? subtitleStyle;
-  String? footerText;
-  TextStyle? footerTextStyle;
+  final int id;
+  final String? category;
+  final String? title;
+  final TextStyle? titleStyle;
+  final String? subTitle;
+  final TextStyle? subtitleStyle;
+  final String? footerText;
+  final TextStyle? footerTextStyle;
   final List<Widget> rightContent;
   final Widget? iconLeft;
   final bool justify;
   final bool vjustify;
   final bool start;
   final IconPosition showIcon;
-  bool hasRightContent;
-  Widget? iconRight;
-  String? image;
-  TypeDivider typeDivider;
-  TypeList typeList;
-  bool listInset;
-  double? widthContent;
-  VoidCallback? onTap;
-  double? minHeight;
-  BoxDecoration? activeColor;
+  final bool hasRightContent;
+  final Widget? iconRight;
+  final String? image;
+  final TypeDivider typeDivider;
+  final TypeList typeList;
+  final bool listInset;
+  final double? widthContent;
+  final VoidCallback? onTap;
+  final double? minHeight;
+  final BoxDecoration? activeColor;
 
   @override
   Widget build(BuildContext context) {

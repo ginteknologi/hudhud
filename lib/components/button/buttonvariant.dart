@@ -21,7 +21,7 @@ class ButtonVariant extends StatelessWidget {
   final bool hasTooltip;
   final String textTooltip;
   final VoidCallback onPressed;
-  final textStyle;
+  final TextStyle? textStyle;
   final Widget child;
   const ButtonVariant({
     super.key,
@@ -47,19 +47,19 @@ class ButtonVariant extends StatelessWidget {
     this.hasTooltip = false,
     this.textTooltip = '',
     // Text Config
-    this.textStyle = "",
+    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     var bgColor = isDisabled ? bgcolor.withValues(alpha: .5) : bgcolor;
     var fgColor = isDisabled ? color.withValues(alpha: .5) : color;
-    var txtStyle =
-        textStyle == "" ? Theme.of(context).textTheme.labelLarge : textStyle;
+    var txtStyle = textStyle ?? Theme.of(context).textTheme.labelLarge;
     txtStyle = txtStyle!.copyWith(color: isInverted ? bgColor : fgColor);
     var tooltipText = textTooltip.isEmpty ? label : textTooltip;
     final ButtonStyle buttonStyle = OutlinedButton.styleFrom(
-      foregroundColor: isInverted ? bgColor : fgColor, padding: EdgeInsets.zero,
+      foregroundColor: isInverted ? bgColor : fgColor,
+      padding: EdgeInsets.zero,
       backgroundColor: isInverted ? fgColor : bgColor,
       side: BorderSide(
           color: border > 0

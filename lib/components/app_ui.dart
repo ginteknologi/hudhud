@@ -26,7 +26,7 @@ class AppUi {
                   Text(
                     noConnection.isTrue ? 'Tidak ada koneksi' : title,
                     textAlign: TextAlign.center,
-                    style: FontListV2.subtitle(context: Get.context),
+                    style: FontListV2.subtitle(context: Get.context!),
                   ),
                 if (noConnection.isTrue)
                   ButtonVariant(
@@ -37,7 +37,7 @@ class AppUi {
                     height: 40,
                     radius: 10,
                     label: 'Muat Ulang',
-                    textStyle: FontListV2.subtitle(context: Get.context),
+                    textStyle: FontListV2.subtitle(context: Get.context!),
                   ),
               ],
             )),
@@ -46,8 +46,8 @@ class AppUi {
   }
 
   static Stack gradientBackground({
-    required child,
-    required colors,
+    required Widget child,
+    required List<Color> colors,
     Alignment begin = Alignment.topCenter,
     Alignment end = Alignment.bottomCenter,
   }) {
@@ -68,5 +68,4 @@ class AppUi {
       ],
     );
   }
-
 }

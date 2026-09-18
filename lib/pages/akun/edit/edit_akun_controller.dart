@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
@@ -29,7 +30,10 @@ class EditAkunController extends GetxController {
 
   Future<void> pilihFile() async {
     final image = await picker.pickImage(
-        source: ImageSource.gallery, imageQuality: 70, maxWidth: 1000);
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 1000,
+    );
     if (image == null) return;
     newfile = File(image.path);
     fileName.value = image.name;
@@ -43,7 +47,8 @@ class EditAkunController extends GetxController {
 
   Future<void> getData() async {
     final result = await AkunService().getList(page: 0, limit: 10);
-    list.value = result['data'];
+
+    list.value = result?['data'] ?? {};
     isLoadingList.value = false;
   }
 
@@ -54,7 +59,7 @@ class EditAkunController extends GetxController {
     return randomString;
   }
 
-  Future simpan() async {
+  Future<void> simpan() async {
     try {
       String? photo;
       if (newfile != null) {
@@ -62,31 +67,49 @@ class EditAkunController extends GetxController {
         final bytes = await file.readAsBytes();
         DateTime now = DateTime.now();
         int currentTimeInMillis = now.millisecondsSinceEpoch;
+
         await minio.putObject(
           'marbot',
           'avatar/$currentTimeInMillis-${fileName.value}',
           Stream<Uint8List>.value(bytes),
-          metadata: {'x-amz-acl': 'public-read', 'Content-type': 'image/png'},
-          onProgress: (bytes) => print('$bytes uploaded'),
+          metadata: {
+            'x-amz-acl': 'public-read',
+            'Content-type': 'image/png',
+          },
+          onProgress: (bytes) {
+            if (kDebugMode) {
+              debugPrint('$bytes uploaded');
+            }
+          },
         );
+
         photo =
             "https://nos.wjv-1.neo.id/marbot/avatar/$currentTimeInMillis-${fileName.value}";
       }
-      final result = await AkunService().postProfile(gctrl.userLogin.value.id,
-          txtController.text, phoneController.text, photo);
-      if (result['code'] == 200) {
+
+      final result = await AkunService().postProfile(
+        gctrl.userLogin.value.id as String,
+        txtController.text,
+        phoneController.text,
+        photo ?? '',
+      );
+
+      if (result != null && result['code'] == 200) {
         gctrl.userLogin.value = UserData(
-            id: result['data']['id'],
-            nama: result['data']['nama'],
-            email: result['data']['email'],
-            photo: result['data']['photo'] ??
-                'https://nos.wjv-1.neo.id/marbot/assets/app_icon.png',
-            total_sedekah: result['data']['total_sedekah'],
-            phone: result['data']['phone']);
+          id: result['data']['id'],
+          nama: result['data']['nama'],
+          email: result['data']['email'],
+          photo: result['data']['photo'] ??
+              'https://nos.wjv-1.neo.id/marbot/assets/app_icon.png',
+          total_sedekah: result['data']['total_sedekah'],
+          phone: result['data']['phone'],
+        );
         Get.back();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

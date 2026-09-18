@@ -41,7 +41,10 @@ Future<void> main() async {
                         toastLength: Toast.LENGTH_LONG,
                         gravity: ToastGravity.CENTER)
                   })
-              .catchError((e) => print(e));
+              .catchError((e) {
+                print(e);
+                return <Future<bool?>>{};
+              });
         }
       });
     }

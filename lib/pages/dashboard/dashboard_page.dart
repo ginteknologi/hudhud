@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' as Refresh;
+import 'package:pull_to_refresh/pull_to_refresh.dart' as refresh;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
@@ -39,14 +40,14 @@ class DashboardPage extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: [Color(0xFF189A8C), Colors.white, Colors.white]),
           ),
-          child: Refresh.SmartRefresher(
+          child: refresh.SmartRefresher(
             enablePullDown: true,
             controller: ctrl.refreshController,
             onLoading: () async {
-              await ctrl.GetDataSedangLive();
+              await ctrl.getDataSedangLive();
               await ctrl.getSliderKajianLive();
               await ctrl.getSliderKajianTafsir();
-              await ctrl.GetDataArtikel();
+              await ctrl.getDataArtikel();
               await ctrl.getMenuHome();
               await ctrl.getSliderDoaDashboard();
               ctrl.refreshController.loadComplete();
@@ -142,7 +143,7 @@ class DashboardPage extends StatelessWidget {
                       child: Skeletonizer(
                         ignoreContainers: false,
                         enabled: ctrl.isLoadingArtikel.value,
-                        child: News(context, ctrl),
+                        child: news(context, ctrl),
                       ),
                     ),
                     SizedBox(
@@ -265,7 +266,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  ListView News(BuildContext context, DashboardController ctrl) {
+  ListView news(BuildContext context, DashboardController ctrl) {
     return ListView.builder(
         primary: false,
         itemCount: ctrl.listArtikel.length,
@@ -421,8 +422,10 @@ class DashboardPage extends StatelessWidget {
   }
 
   SizedBox getListItem(DashboardController ctrl) {
-    print("ctrl.isLoadingKajianTafsir ${ctrl.isLoadingKajianTafsir}");
-    print("ctrl.isLoadingKajianTafsir ${ctrl.listDoaSlider.length}");
+    if (kDebugMode) {
+      debugPrint("ctrl.isLoadingKajianTafsir ${ctrl.isLoadingKajianTafsir}");
+      debugPrint("ctrl.isLoadingKajianTafsir ${ctrl.listDoaSlider.length}");
+    }
     return SizedBox(
       height: 151,
       child: ListView.separated(
@@ -472,7 +475,11 @@ class DashboardPage extends StatelessWidget {
   }
 
   Obx getListItemKajian(DashboardController ctrl) {
-    print(ctrl.isLoadingKajianTafsir);
+    if (kDebugMode) {
+      debugPrint("ctrl.isLoadingKajianTafsir ${ctrl.isLoadingKajianTafsir}");
+      debugPrint(
+          "ctrl.listKajianSlider.length ${ctrl.listKajianSlider.length}");
+    }
     return Obx(() {
       return SizedBox(
         height: 151,
@@ -596,7 +603,7 @@ class DashboardPage extends StatelessWidget {
   //       });
   // }
 
-  void showPopup(context, Widget? content, double? height) {
+  void showPopup(BuildContext context, Widget? content, double? height) {
     showDialog(
         context: context,
         builder: (BuildContext bc) {

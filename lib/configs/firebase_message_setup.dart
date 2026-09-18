@@ -18,7 +18,9 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print('Handling a background message ${message.messageId}');
+  if (kDebugMode) {
+    debugPrint('Handling a background message ${message.messageId}');
+  }
 }
 
 void onDidReceiveNotificationResponse(
@@ -142,7 +144,9 @@ class SetupFirebase {
         await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform);
       } catch (e) {
-        print("Firebase already initialized: $e");
+        if (kDebugMode) {
+          debugPrint("Firebase already initialized: $e");
+        }
       }
     }
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

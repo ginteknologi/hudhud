@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomCardItem extends StatelessWidget {
-  CustomCardItem(
+  const CustomCardItem(
       {super.key,
       this.imgPath,
       this.chipText,
@@ -26,22 +26,22 @@ class CustomCardItem extends StatelessWidget {
           fontSize: 9),
       this.isFullWidth = false});
 
-  String? imgPath;
-  CrossAxisAlignment positionChip;
-  String? chipText;
-  TextStyle? chipTextStyle;
-  Color chipColor;
-  String? title;
-  String? subtitle;
-  String? size;
-  String? link;
-  String? linkRoute;
+  final String? imgPath;
+  final CrossAxisAlignment positionChip;
+  final String? chipText;
+  final TextStyle? chipTextStyle;
+  final Color chipColor;
+  final String? title;
+  final String? subtitle;
+  final String? size;
+  final String? link;
+  final String? linkRoute;
   final String? kategori;
-  double? width;
-  double? height;
-  bool isFullWidth;
-  bool network;
-  bool islink;
+  final double? width;
+  final double? height;
+  final bool isFullWidth;
+  final bool network;
+  final bool islink;
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +56,11 @@ class CustomCardItem extends StatelessWidget {
                 if (islink) {
                   final Uri url = Uri.parse(link!);
                   if (!await launchUrl(url)) {
-                    print('Tidak dapat membuka link YouTube.');
+                    debugPrint('Tidak dapat membuka link YouTube.');
                   }
                 }
                 if (linkRoute != null) {
-                  print(linkRoute);
+                  debugPrint(linkRoute);
                   Get.toNamed(linkRoute!);
                 }
                 //Get.toNamed(AppRoutes.detailEventScreen);

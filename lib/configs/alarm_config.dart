@@ -1,10 +1,15 @@
 import 'dart:isolate';
 
-class alarmConfig {
+import 'package:flutter/foundation.dart';
+
+class AlarmConfig {
   @pragma('vm:entry-point')
   static void printHello() {
     final DateTime now = DateTime.now();
     final int isolateId = Isolate.current.hashCode;
-    print("[$now] Hello, world! isolate=$isolateId function='$printHello'");
+    if (kDebugMode) {
+      debugPrint(
+          "[$now] Hello, world! isolate=$isolateId function='$printHello'");
+    }
   }
 }

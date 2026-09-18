@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class CustomModalBottomSheet extends StatelessWidget {
-  CustomModalBottomSheet(
+  const CustomModalBottomSheet(
       {super.key,
       this.typeSheet = TypeBottomSheet.typeAlertSheet,
       this.titleAlert,
@@ -15,22 +15,22 @@ class CustomModalBottomSheet extends StatelessWidget {
       this.onTap,
       this.content = const []});
 
-  TypeBottomSheet typeSheet;
+  final TypeBottomSheet typeSheet;
   // alert
-  String? titleAlert;
-  String? textAlert;
-  bool? closeButton;
-  String? confirmText;
+  final String? titleAlert;
+  final String? textAlert;
+  final bool? closeButton;
+  final String? confirmText;
 
   // grid sheet
   final List? dataGrid;
-  VoidCallback? onTap;
+  final VoidCallback? onTap;
 
   // custom sheet
-  double? height;
+  final double? height;
   final List<Widget> content;
 
-  Wrap alertSheet(context) {
+  Wrap alertSheet(BuildContext context) {
     return Wrap(
       spacing: 60, // Add spacing between the child widgets.
       children: <Widget>[
@@ -86,7 +86,7 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
-  Padding gridSheet(context) {
+  Padding gridSheet(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
       child: SizedBox(
@@ -127,7 +127,8 @@ class CustomModalBottomSheet extends StatelessWidget {
                                         }
                                       },
                                   borderRadius: BorderRadius.circular(20),
-                                  splashColor: Colors.green.withValues(alpha: 0.5),
+                                  splashColor:
+                                      Colors.green.withValues(alpha: 0.5),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -167,7 +168,7 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
-  Padding customSheet(context) {
+  Padding customSheet(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
       child: SizedBox(
@@ -196,7 +197,7 @@ class CustomModalBottomSheet extends StatelessWidget {
     );
   }
 
-  Padding fullScreenSheet(context) {
+  Padding fullScreenSheet(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0),
       child: Container(

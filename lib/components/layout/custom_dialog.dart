@@ -3,8 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class CustomDialog extends StatelessWidget {
-  CustomDialog(
-      {super.key, this.imgPath,
+  const CustomDialog(
+      {super.key,
+      this.imgPath,
       this.chipText,
       this.title,
       this.kategori,
@@ -21,18 +22,18 @@ class CustomDialog extends StatelessWidget {
           fontSize: 9),
       this.isFullWidth = false});
 
-  String? imgPath;
-  CrossAxisAlignment positionChip;
-  String? chipText;
-  TextStyle? chipTextStyle;
-  Color chipColor;
-  String? title;
-  String? subtitle;
-  String? size;
+  final String? imgPath;
+  final CrossAxisAlignment positionChip;
+  final String? chipText;
+  final TextStyle? chipTextStyle;
+  final Color chipColor;
+  final String? title;
+  final String? subtitle;
+  final String? size;
   final String? kategori;
-  double? width;
-  double? height;
-  bool isFullWidth;
+  final double? width;
+  final double? height;
+  final bool isFullWidth;
 
   @override
   Widget build(BuildContext context) {

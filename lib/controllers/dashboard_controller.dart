@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -137,8 +138,10 @@ class DashboardController extends GetxController {
             if (namaLokasi.isNotEmpty) ket = namaLokasi;
           }
         } catch (e) {
-          print("<<<<<<<< error reverse geocoding >>>>>>>>");
-          print(e);
+          if (kDebugMode) {
+            debugPrint("<<<<<<<< error reverse geocoding >>>>>>>>");
+            debugPrint(e.toString());
+          }
         }
 
         // Update data terbaru (sekaligus simpan ke cache)
@@ -147,10 +150,15 @@ class DashboardController extends GetxController {
           lat: position.latitude,
           long: position.longitude,
         );
-        print("Lokasi terupdate: ${ctrlmain.mylokasi.value.keteranganLokasi}");
+        if (kDebugMode) {
+          debugPrint(
+              "Lokasi terupdate: ${ctrlmain.mylokasi.value.keteranganLokasi}");
+        }
       } catch (e) {
-        print("<<<<<<<< error getLokasi >>>>>>>>");
-        print(e);
+        if (kDebugMode) {
+          debugPrint("<<<<<<<< error getLokasi >>>>>>>>");
+          debugPrint(e.toString());
+        }
         Fluttertoast.showToast(
           msg: "Gagal mengambil lokasi, pastikan GPS aktif dan coba lagi",
         );
@@ -160,14 +168,16 @@ class DashboardController extends GetxController {
       // await Scheduling();
       Get.back();
     } else if (statusLokasi.isDenied) {
-      print('Izin ditolak');
+      if (kDebugMode) {
+        debugPrint('Izin ditolak');
+      }
       Get.back();
     } else if (statusLokasi.isPermanentlyDenied) {
       openAppSettings();
     }
   }
 
-  Future<void> GetDataArtikel() async {
+  Future<void> getDataArtikel() async {
     try {
       final artikelbaru = await DashboardService().getListArtikelBaru();
       listArtikel.value = [];
@@ -193,18 +203,27 @@ class DashboardController extends GetxController {
       }
       isLoadingArtikel.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint("<<<<<<<< error GetDataArtikel >>>>>>>>");
+        debugPrint(e.toString());
+      }
     }
   }
 
-  Future<void> GetDataSedangLive() async {
+  Future<void> getDataSedangLive() async {
     try {
       final data = await DashboardService().getSedangLive();
-      print(data);
+      if (kDebugMode) {
+        debugPrint("<<<<<<<< GetDataSedangLive >>>>>>>>");
+        debugPrint(data.toString());
+      }
       listSedangLive.value = data;
       isLoadingLive.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint("<<<<<<<< error GetDataSedangLive >>>>>>>>");
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -310,8 +329,10 @@ class DashboardController extends GetxController {
       }
       isLoadingKajianTafsir.value = false;
     } catch (e) {
-      print(e);
-      print('<<<<<<<<error getSliderKajian>>>>>>>>');
+      if (kDebugMode) {
+        debugPrint("<<<<<<<< error getSliderKajian >>>>>>>>");
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -329,7 +350,10 @@ class DashboardController extends GetxController {
       }
       isLoadingKajianLive.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint("<<<<<<<< error getSliderKajianLive >>>>>>>>");
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -338,14 +362,19 @@ class DashboardController extends GetxController {
       final result = await DashboardService().getSliderKajian('doa_ramadhan');
       listDoaSlider.value = [];
       for (var i = 0; i < result['data'].length; i++) {
-        print(result['data'][i]['image']);
+        if (kDebugMode) {
+          debugPrint(result['data'][i]['image']);
+        }
         var element = result['data'][i];
         listDoaSlider.add(KajianData(
             id: element['id'], image: element['image'], link: element['link']));
       }
       isLoadingDoaDashboard.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint("<<<<<<<< error getSliderDoaDashboard >>>>>>>>");
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -355,24 +384,27 @@ class DashboardController extends GetxController {
       if (isLogin.toString() == 'true') {
         final fcm = dataStore.read('fcmtoken');
         await HomeService().setToken(fcm);
-        print('done fcm saving');
+        if (kDebugMode) {
+          debugPrint('done fcm saving');
+        }
       }
     } catch (e) {
-      print("<<<<<<<<<<Error set fcm>>>>>>>>>>>>");
-      print(e);
+      if (kDebugMode) {
+        debugPrint("<<<<<<<<<<Error set fcm>>>>>>>>>>>>");
+        debugPrint(e.toString());
+      }
     }
   }
 
   @override
   void onInit() async {
     super.onInit();
-    GetDataSedangLive();
+    getDataSedangLive();
     getSliderKajianLive();
     getSliderKajianTafsir();
-    GetDataArtikel();
+    getDataArtikel();
     getMenuHome();
     getSliderDoaDashboard();
     setFcm();
   }
-
 }

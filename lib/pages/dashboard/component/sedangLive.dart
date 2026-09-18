@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/configs/fileSetup.dart';
+import 'package:masjid_app/configs/file_setup.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/models/sedangLiveData.dart';
 import 'package:share_plus/share_plus.dart';

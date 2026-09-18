@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/configs/fileSetup.dart';
+import 'package:masjid_app/configs/file_setup.dart';
 import 'package:masjid_app/models/kajianData.dart';
 import 'package:masjid_app/models/sosmedData.dart';
 import 'package:masjid_app/pages/dkm/dkm_service.dart';
