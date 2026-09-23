@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `masjid_app` (dir name `marbot`) — mosque app for Masjid An-Ni'mah. Riverpod + GoRouter + Firebase, Indonesian-only UI. Flutter **3.13.6** via FVM (`.fvm/fvm_config.json`) — much older than `../HabitFarm` and `../kkapps`; never copy dependency versions across those projects, and never invoke a global Flutter SDK here.
 
-Dart package name is `masjid_app`, so every import is `package:masjid_app/...` regardless of directory name. Android `applicationId`/`namespace`: `com.masjid_app`.
+Dart package name is `masjid_app`, so every import is `package:masjid_app/...` regardless of directory name. Android `applicationId`/`namespace`: `com.example.masjid_app` (`android/app/build.gradle.kts:9,21`).
 
 ## Commands
 
