@@ -49,7 +49,7 @@ class DetailArtikelPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 5),
                         child: Text(
-                          ctrl.detail.value.category_artikel?['name'] ?? '',
+                          ctrl.detail.value.categoryArtikel?['name'] ?? '',
                           style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,

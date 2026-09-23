@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
@@ -83,7 +84,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             AutoSizeText(
-                                                "No. Invoice : " + ctrl.list['data']['transaksi']['invoice'],
+                                                "No. Invoice : ${ctrl.list['data']['transaksi']['invoice']}",
                                                 maxLines: 1,
                                                 style: context
                                                     .textTheme.bodyMedium
@@ -91,7 +92,8 @@ class DetailNotifikasiPage extends StatelessWidget {
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
                                                 )),
-                                            AutoSizeText("Tanggal : ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['createdAt']))}",
+                                            AutoSizeText(
+                                                "Tanggal : ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['createdAt']))}",
                                                 maxLines: 1,
                                                 style: context
                                                     .textTheme.bodyMedium
@@ -235,8 +237,13 @@ class DetailNotifikasiPage extends StatelessWidget {
                             color: Colors.white,
                             radius: 5,
                             onPressed: () {
-                              print(ctrl.list['data']['transaksi']['invoice']);
-                              Get.toNamed('${RoutesNotifikasi.root}/detail/invoice/${ctrl.list['data']['transaksi']['invoice']}');
+                              if (kDebugMode) {
+                                debugPrint(ctrl.list['data']['transaksi']
+                                        ['invoice']
+                                    .toString());
+                              }
+                              Get.toNamed(
+                                  '${RoutesNotifikasi.root}/detail/invoice/${ctrl.list['data']['transaksi']['invoice']}');
                             },
                           ),
                         ),
@@ -255,7 +262,9 @@ class DetailNotifikasiPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "", context: context, elevation: 0),
-        body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
+        body: Obx(() => ctrl.isLoadingList.value
+            ? Center(child: CircularProgressIndicator())
+            : layout(context, ctrl)),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),

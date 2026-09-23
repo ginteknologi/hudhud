@@ -105,13 +105,19 @@ class ContentDoaPage extends StatelessWidget {
                                                                     .centerRight,
                                                                 child:
                                                                     AutoSizeText(
-                                                                  ctrl.list.value.arabic!,
+                                                                  ctrl
+                                                                      .list
+                                                                      .value
+                                                                      .arabic!,
                                                                   textAlign:
-                                                                      TextAlign.start,
-                                                                  style: context.textTheme.titleSmall
+                                                                      TextAlign
+                                                                          .start,
+                                                                  style: context
+                                                                      .textTheme
+                                                                      .titleSmall
                                                                       ?.copyWith(
-                                                                          fontWeight: FontWeight
-                                                                              .bold),
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
                                                                   maxLines: 2,
                                                                 ))
                                                             : Container(),
@@ -293,9 +299,13 @@ class ContentDoaPage extends StatelessWidget {
                                             ),
                                             onPressed: () {
                                               // Gunakan plugin share_plus untuk berbagi teks artikel
-                                              Share.share(ctrl.share.value,
+                                              SharePlus.instance.share(
+                                                ShareParams(
+                                                  text: ctrl.share.value,
                                                   subject:
-                                                      ctrl.list.value.judul);
+                                                      ctrl.list.value.judul,
+                                                ),
+                                              );
                                             },
                                           ),
                                         ),

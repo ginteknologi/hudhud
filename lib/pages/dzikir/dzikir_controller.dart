@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/dzikir/dzikir_service.dart';
 import 'package:html/parser.dart';
-import 'package:masjid_app/models/doaData.dart';
+import 'package:masjid_app/models/doa_data.dart';
 
 class DzikirController extends GetxController {
   var isLoadingList = true.obs;
@@ -49,7 +50,9 @@ class DzikirController extends GetxController {
     }
     isLoadingList.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

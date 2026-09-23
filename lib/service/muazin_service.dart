@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:masjid_app/configs/remote_data.dart';
-import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/kajian_data.dart';
 
 class MuazinService {
   static Future getMuadzin({pageKey, pageSize}) async {

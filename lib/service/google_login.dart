@@ -1,6 +1,6 @@
 // lib/service/google_login.dart
 import 'dart:async';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode, debugPrint;
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleLogin {
@@ -81,7 +81,9 @@ class GoogleLogin {
         "data": {}
       };
     } catch (e) {
-      print("Google Sign In Error: $e");
+      if (kDebugMode) {
+        debugPrint("Google Sign In Error: $e");
+      }
       return {"code": 500, "message": "Login gagal: $e", "data": {}};
     } finally {
       await sub.cancel();

@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/models/bookmarkData.dart';
-import 'package:masjid_app/models/lokasiSayaData.dart';
-import 'package:masjid_app/models/userData.dart';
-import 'package:masjid_app/storage/lokasiSaya_storage.dart';
+import 'package:masjid_app/models/bookmark_data.dart';
+import 'package:masjid_app/models/lokasi_saya_data.dart';
+import 'package:masjid_app/models/user_data.dart';
+import 'package:masjid_app/storage/lokasi_saya_storage.dart';
 import 'package:masjid_app/storage/quran_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:masjid_app/routes/auth/index.dart';
@@ -27,7 +28,7 @@ class MainController extends GetxController {
     nama: "Guest",
     email: "guest",
     photo: "https://nos.wjv-1.neo.id/marbot/assets/app_icon.png",
-    total_sedekah: 0,
+    totalSedekah: 0,
   ));
 
   Rx<LokasiSayaData> mylokasi = LokasiSayaData(
@@ -36,16 +37,16 @@ class MainController extends GetxController {
           long: 106.82264795337655)
       .obs;
 
-  Rx<bookmarkData> ayatBookmark = bookmarkData(
+  Rx<BookmarkData> ayatBookmark = BookmarkData(
           namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
       .obs;
-  Rx<bookmarkData> indonesiaBookmark = bookmarkData(
+  Rx<BookmarkData> indonesiaBookmark = BookmarkData(
           namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
       .obs;
-  Rx<bookmarkData> madinahBookmark = bookmarkData(
+  Rx<BookmarkData> madinahBookmark = BookmarkData(
           namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
       .obs;
-  Rx<bookmarkData> tajwidBookmark = bookmarkData(
+  Rx<BookmarkData> tajwidBookmark = BookmarkData(
           namaSurat: "Belum ada bookmark", surat: 0, ayat: 0, totalAyat: 0)
       .obs;
 
@@ -63,7 +64,9 @@ class MainController extends GetxController {
         userLogin.value = dataStore.read('userLogin');
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
       dataStore.write('isLogin', false);
       isLogin.value = false;
     }
@@ -94,7 +97,9 @@ class MainController extends GetxController {
       tajwidLastRead.value = dataStore.read('tajwidLastRead');
       madinahLastRead.value = dataStore.read('madinahLastRead');
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -109,8 +114,10 @@ class MainController extends GetxController {
       isLogin.value = false;
       Get.offAllNamed(RoutesAuth.root);
     } catch (e) {
-      print(e);
-      print('gk ada session');
+      if (kDebugMode) {
+        debugPrint(e.toString());
+        debugPrint('gk ada session');
+      }
     }
   }
 
@@ -131,8 +138,10 @@ class MainController extends GetxController {
 
       return namaLokasi.isEmpty ? null : namaLokasi;
     } catch (e) {
-      print("<<<<<<<< error reverse geocoding >>>>>>>>");
-      print(e);
+      if (kDebugMode) {
+        debugPrint("<<<<<<<< error reverse geocoding >>>>>>>>");
+        debugPrint(e.toString());
+      }
       return null;
     }
   }
@@ -146,10 +155,16 @@ class MainController extends GetxController {
       gpsizin: true,
     );
     lokasiStorage.saveLokasi(mylokasi.value);
-    print("Lokasi otomatis terupdate: ${mylokasi.value.keteranganLokasi}");
+    if (kDebugMode) {
+      debugPrint(
+          "Lokasi otomatis terupdate: ${mylokasi.value.keteranganLokasi}");
+    }
   }
 
-  Future<void> updateLokasi({required ketLokasi, required lat, required long}) async {
+  Future<void> updateLokasi(
+      {required String ketLokasi,
+      required double lat,
+      required double long}) async {
     mylokasi.value = LokasiSayaData(
       keteranganLokasi: ketLokasi,
       lat: lat,
@@ -158,7 +173,7 @@ class MainController extends GetxController {
     lokasiStorage.saveLokasi(mylokasi.value);
   }
 
-  Future<void> saveStorage(json) async {
+  Future<void> saveStorage(Map<String, dynamic> json) async {
     try {
       dataStore.write('isLogin', true);
       dataStore.write('userLogin', json);
@@ -169,12 +184,14 @@ class MainController extends GetxController {
         email: json['email'],
         photo: json['photo'] ??
             'https://nos.wjv-1.neo.id/marbot/assets/app_icon.png',
-        total_sedekah: json['total_sedekah'],
+        totalSedekah: json['total_sedekah'],
         phone: json['phone'],
       );
     } catch (e) {
-      print('<<<error saveStorage main_controller>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<error saveStorage main_controller>>>');
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -187,7 +204,7 @@ class MainController extends GetxController {
       nama: "Guest",
       email: "guest",
       photo: "https://nos.wjv-1.neo.id/marbot/assets/app_icon.png",
-      total_sedekah: 0,
+      totalSedekah: 0,
     );
   }
 
@@ -196,10 +213,10 @@ class MainController extends GetxController {
       // 1. Ambil data terakhir dari cache dulu (sebagai fallback cepat)
       var lokasiTerakhir = lokasiStorage.getLokasi();
       mylokasi.value = lokasiTerakhir;
-      
+
       // 2. Cek izin lokasi
       var statusLokasi = await Permission.location.status;
-      
+
       // 3. Jika diizinkan, coba ambil lokasi terbaru (Proaktif)
       if (statusLokasi.isGranted) {
         // geolocator 14.x: pakai parameter `locationSettings`,
@@ -213,8 +230,9 @@ class MainController extends GetxController {
 
         // Reverse geocoding dipisah, kalau gagal kita tetap simpan
         // koordinatnya dengan keterangan fallback.
-        var ket = await _reverseGeocode(position.latitude, position.longitude) ??
-            "Lokasi Terdeteksi";
+        var ket =
+            await _reverseGeocode(position.latitude, position.longitude) ??
+                "Lokasi Terdeteksi";
 
         _setLokasiTerbaru(position, ket);
       } else if (statusLokasi.isDenied) {
@@ -226,10 +244,12 @@ class MainController extends GetxController {
           gpsizin: false,
         );
       }
-      
+
       isloadingCache.value = false;
     } catch (e) {
-      print("error getCacheLokasi: $e");
+      if (kDebugMode) {
+        debugPrint("error getCacheLokasi: $e");
+      }
       // Jika error (misal GPS mati), pastikan loading berhenti agar UI tampil
       isloadingCache.value = false;
     }

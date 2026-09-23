@@ -9,12 +9,12 @@ import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/layout/custom_card_item.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/models/artikelData.dart';
-import 'package:masjid_app/models/kajianData.dart';
-import 'package:masjid_app/pages/dashboard/component/countDown.dart';
-import 'package:masjid_app/pages/dashboard/component/ramadhanMenu.dart';
-import 'package:masjid_app/pages/dashboard/component/sedangLive.dart';
-import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
+import 'package:masjid_app/models/artikel_data.dart';
+import 'package:masjid_app/models/kajian_data.dart';
+import 'package:masjid_app/pages/dashboard/component/count_down.dart';
+import 'package:masjid_app/pages/dashboard/component/ramadhan_menu.dart';
+import 'package:masjid_app/pages/dashboard/component/sedang_live.dart';
+import 'package:masjid_app/pages/dashboard/component/waktu_solat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
@@ -80,7 +80,7 @@ class DashboardPage extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
-                      child: CountDown_Widget(),
+                      child: CountDownWidget(),
                     ),
                     SizedBox(
                       height: Get.width / 30,
@@ -283,7 +283,7 @@ class DashboardPage extends StatelessWidget {
                 size: "medium",
                 positionChip: CrossAxisAlignment.start,
                 chipColor: Theme.of(context).primaryColor,
-                chipText: item.category_artikel?['name'],
+                chipText: item.categoryArtikel?['name'],
                 chipTextStyle: TextStyle(
                     fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
                     fontWeight: FontWeight.normal,
@@ -291,10 +291,10 @@ class DashboardPage extends StatelessWidget {
                 title: item.judul,
                 subtitle: () {
                   try {
-                    return Moment.parse(item.publish_date)
+                    return Moment.parse(item.publishDate)
                         .format("dd MMMM yyyy", localeOverride: 'id');
                   } catch (e) {
-                    return item.publish_date;
+                    return item.publishDate;
                   }
                 }(),
                 imgPath: item.image,

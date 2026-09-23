@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_service.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
@@ -18,7 +19,9 @@ class InstruksiController extends GetxController {
       dataInvoice.value = result['data'];
       isLoading.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

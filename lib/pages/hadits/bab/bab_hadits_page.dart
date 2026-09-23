@@ -80,7 +80,7 @@ class BabHaditsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ctrl.arguments['content'].Kitab_Indonesia,
+                                  ctrl.arguments['content'].kitabIndonesia,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -96,7 +96,7 @@ class BabHaditsPage extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  'Bab ${ctrl.arguments['content'].ID_Kitab}',
+                                  'Bab ${ctrl.arguments['content'].idKitab}',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -129,14 +129,14 @@ class BabHaditsPage extends StatelessWidget {
                       // Datum model = filteredEvents[index];
                       return FadeInUp(
                         child: ListItemUiWidget(
-                          id: ctrl.list[index].ID_Bab,
-                          title: ctrl.list[index].Bab_Indonesia,
+                          id: ctrl.list[index].idBab,
+                          title: ctrl.list[index].babIndonesia,
                           onTap: () {
                             Get.toNamed(RoutesHadits.content, arguments: {
                               'content': ctrl.arguments['content'],
                               'detail': ctrl.arguments['detail'],
                               'bab': ctrl.list[index],
-                              'babIndonesia': ctrl.list[index].Bab_Indonesia
+                              'babIndonesia': ctrl.list[index].babIndonesia
                             });
                           },
                           titleStyle: context.textTheme.titleMedium?.copyWith(
@@ -162,7 +162,7 @@ class BabHaditsPage extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          ctrl.list[index].ID_Bab.toString(),
+                                          ctrl.list[index].idBab.toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)

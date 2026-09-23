@@ -7,7 +7,7 @@ import 'package:masjid_app/configs/remote_data.dart';
 class ProfileService extends GetConnect {
   final authStore = GetStorage();
 
-    Future setToken(token) async {
+    Future<Map<String, dynamic>?> setToken(String token) async {
     final response = await http.post(Uri.parse("${RemoteData.api}/fcm/set"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -20,6 +20,7 @@ class ProfileService extends GetConnect {
       return json;
     } else if (response.statusCode == 401) {
       // RemoteData.authError();
+      return null;
     } else {
       final json = jsonDecode(response.body);
       json['code'] = response.statusCode;

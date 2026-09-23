@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:masjid_app/configs/remote_data.dart';
-import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/kajian_data.dart';
 
 class KajianService {
   static Future<List<KajianData>> getListKajian(
@@ -25,8 +26,12 @@ class KajianService {
         throw Exception('Failed to load data');
       }
     } catch (error) {
-      print("error di service");
-      print(error);
+      if (kDebugMode) {
+        debugPrint("error di service");
+      }
+      if (kDebugMode) {
+        debugPrint(error.toString());
+      }
       rethrow;
     }
   }

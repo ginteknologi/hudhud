@@ -31,7 +31,7 @@ class ContentHaditsPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            'Hadits No. ${ctrl.list.isNotEmpty ? ctrl.list[ctrl.currentIndex.value].NoHdt : "-"}',
+                            'Hadits No. ${ctrl.list.isNotEmpty ? ctrl.list[ctrl.currentIndex.value].noHdt : "-"}',
                             style: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -51,7 +51,7 @@ class ContentHaditsPage extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width *
                                     0.6, // Batasi lebar maksimal
                                 child: Text(
-                                  ctrl.arguments['content'].Kitab_Indonesia,
+                                  ctrl.arguments['content'].kitabIndonesia,
                                   style: context.textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black,
@@ -109,9 +109,12 @@ class ContentHaditsPage extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          Share.share(
-                              "${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content'].Kitab_Indonesia}\n\n${ctrl.list[0].Isi_Arab}\n\n${ctrl.list[0].Isi_Indonesia} \n\n Dibagikan dari aplikasi\n\n Marbot App",
-                              subject: ctrl.arguments['detail']['longNama']);
+                          if (ctrl.list.isEmpty) return;
+                          final hadits = ctrl.list[ctrl.currentIndex.value];
+                          SharePlus.instance.share(ShareParams(
+                              text:
+                                  "${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content'].kitabIndonesia}\n\n${hadits.isiArab}\n\n${hadits.isiIndonesia} \n\n Dibagikan dari aplikasi\n\n Marbot App",
+                              subject: ctrl.arguments['detail']['longNama']));
                         },
                         child: Icon(
                           Icons.share,
@@ -139,8 +142,7 @@ class ContentHaditsPage extends StatelessWidget {
                           height: 300,
                           child: Obx(() => Text(
                                 ctrl.list.isNotEmpty
-                                    ? ctrl
-                                        .list[ctrl.currentIndex.value].Isi_Arab
+                                    ? ctrl.list[ctrl.currentIndex.value].isiArab
                                     : "Tidak ada data",
                                 textAlign: TextAlign.center,
                               )),
@@ -150,8 +152,8 @@ class ContentHaditsPage extends StatelessWidget {
                         ),
                         Obx(() => AutoSizeText(
                               ctrl.list.isNotEmpty
-                                  ? ctrl.list[ctrl.currentIndex.value]
-                                      .Isi_Indonesia
+                                  ? ctrl
+                                      .list[ctrl.currentIndex.value].isiIndonesia
                                   : "Tidak ada data",
                               style: context.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w300,

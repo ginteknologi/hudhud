@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
@@ -15,7 +16,9 @@ class DetailSedekahPage extends StatelessWidget {
   const DetailSedekahPage({super.key});
 
   NestedScrollView layout(DetailSedekahController ctrl, BuildContext context) {
-    print(ctrl.detail['sedekahs'] != []);
+    if (kDebugMode) {
+      debugPrint((ctrl.detail['sedekahs'] != []).toString());
+    }
     return NestedScrollView(
         controller: ctrl.scrollController,
         headerSliverBuilder: (context, value) {

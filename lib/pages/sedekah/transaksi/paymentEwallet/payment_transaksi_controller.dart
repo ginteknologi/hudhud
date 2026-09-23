@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_service.dart';
@@ -32,7 +33,9 @@ class PaymentTransaksiController extends GetxController {
         Get.offAllNamed('${RoutesSedekah.root}/$id/transaksi/status');
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
     isLoading.value = false;
     return status;    

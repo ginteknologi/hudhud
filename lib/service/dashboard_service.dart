@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:masjid_app/configs/remote_data.dart';
-import 'package:masjid_app/models/sedangLiveData.dart';
+import 'package:masjid_app/models/sedang_live_data.dart';
 
 class DashboardService extends GetConnect {
   final authStore = GetStorage();
@@ -51,7 +52,9 @@ class DashboardService extends GetConnect {
   }
 
   Future getListKajian(type) async {
-    print(type);
+    if (kDebugMode) {
+      debugPrint(type.toString());
+    }
     final response = await http.get(
         Uri.parse("${RemoteData.api}/kajian/list?type=$type"),
         headers: <String, String>{
@@ -91,8 +94,12 @@ class DashboardService extends GetConnect {
         throw Exception('Failed to load data');
       }
     } catch (error) {
-      print("error di service getSedangLive");
-      print(error);
+      if (kDebugMode) {
+        debugPrint("error di service getSedangLive");
+      }
+      if (kDebugMode) {
+        debugPrint(error.toString());
+      }
       rethrow;
     }
   }

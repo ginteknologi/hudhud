@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/models/menuBottomData.dart';
+import 'package:masjid_app/models/menu_bottom_data.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
 import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/controllers/home_controller.dart';

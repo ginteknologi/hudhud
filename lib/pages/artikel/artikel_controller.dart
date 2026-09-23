@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/models/artikelData.dart';
+import 'package:masjid_app/models/artikel_data.dart';
 import 'package:masjid_app/pages/artikel/artikel_service.dart';
 
 class ArtikelController extends GetxController {
@@ -17,13 +18,15 @@ class ArtikelController extends GetxController {
             id: element['id'],
             judul: element['judul'],
             image: element['image'],
-            category_artikel: element['category_artikel'],
-            publish_date: element['publish_date'],
+            categoryArtikel: element['category_artikel'],
+            publishDate: element['publish_date'],
             updatedAt: element['updatedAt']));
       }
       isLoadingList.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

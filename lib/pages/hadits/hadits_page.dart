@@ -103,7 +103,7 @@ class HaditsPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 21),
                   child: Column(
                     children: [
-                      DataGrid(ctrl),
+                      dataGrid(ctrl),
                     ],
                   )),
               SizedBox(height: 29),
@@ -112,7 +112,7 @@ class HaditsPage extends StatelessWidget {
     );
   }
 
-  GridView DataGrid(HaditsController ctrl) {
+  GridView dataGrid(HaditsController ctrl) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

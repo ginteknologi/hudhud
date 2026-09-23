@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/models/eventCountDown.dart';
+import 'package:masjid_app/models/event_count_down.dart';
 import 'package:masjid_app/service/eventCountDown_service.dart';
 
 class CountDownEventController extends GetxController {

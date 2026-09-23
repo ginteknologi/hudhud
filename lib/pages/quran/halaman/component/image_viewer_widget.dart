@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -19,10 +20,10 @@ class EasyImageViewPager extends StatefulWidget {
       required this.onTap});
 
   @override
-  _EasyImageViewPagerState createState() => _EasyImageViewPagerState();
+  EasyImageViewPagerState createState() => EasyImageViewPagerState();
 }
 
-class _EasyImageViewPagerState extends State<EasyImageViewPager> {
+class EasyImageViewPagerState extends State<EasyImageViewPager> {
   final dataStore = GetStorage();
   late PageController _pageController =
       PageController(initialPage: widget.idxInitial - 1);
@@ -57,7 +58,9 @@ Widget build(BuildContext context) {
 onPageChanged: (index) {
     ctrl.surahSaatIni.value = widget.imageProviders[index]['surat'];
     ctrl.halSaatIni.value = widget.imageProviders[index]['hal'].toString();
-  print('asdssad');
+  if (kDebugMode) {
+    debugPrint('asdssad');
+  }
 },
     reverse: true,
     physics: _pagingEnabled
@@ -69,8 +72,12 @@ onPageChanged: (index) {
       final image = widget.imageProviders[index]['file'];
       dataStore.write('indonesiaLastRead', widget.imageProviders[index]);
       // gctrl.indonesiaLastRead = widget.imageProviders[index];
-      print('<<<<<<<wei>>>>>>>');
-      print(widget.imageProviders[index]);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<wei>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(widget.imageProviders[index].toString());
+      }
       return EasyImageView(
         imageSource: "server",
         imageProvider: image,
@@ -114,10 +121,10 @@ class EasyImageView extends StatefulWidget {
   });
 
   @override
-  _EasyImageViewState createState() => _EasyImageViewState();
+  EasyImageViewState createState() => EasyImageViewState();
 }
 
-class _EasyImageViewState extends State<EasyImageView> {
+class EasyImageViewState extends State<EasyImageView> {
   late final TransformationController _transformationController =
       TransformationController();
 

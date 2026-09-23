@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/sedekah/detail/detailsedekah_service.dart';
@@ -24,7 +25,9 @@ class DetailSedekahController extends GetxController
     detail.value = result['data'];
     listDonatur = result['data']['sedekahs'];
     listPenyaluran = result['data']['penyalur_campaigns'];
-    print(listPenyaluran);
+    if (kDebugMode) {
+      debugPrint(listPenyaluran.toString());
+    }
     isLoadingList.value = false;
   }
 

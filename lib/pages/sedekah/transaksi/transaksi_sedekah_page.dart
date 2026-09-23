@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
@@ -301,7 +302,9 @@ class TransaksiSedekahPage extends StatelessWidget {
                             () => Switch(
                               value: ctrl.inputAnonymous.value,
                               onChanged: (value) {
-                                print(value);
+                                if (kDebugMode) {
+                                  debugPrint(value.toString());
+                                }
                                 ctrl.inputAnonymous.value = value;
                               },
                               activeTrackColor: const Color(0xFF92E3A9),
@@ -424,10 +427,14 @@ class TransaksiSedekahPage extends StatelessWidget {
                 onPressed: () {
                   final result = ctrl.postInput();
                   if (result['code'] == 200) {
-                    print('berhasil');
+                    if (kDebugMode) {
+                      debugPrint('berhasil');
+                    }
                     ctrl.goToMetode('1');
                   } else {
-                    print('gagal');
+                    if (kDebugMode) {
+                      debugPrint('gagal');
+                    }
                   }
                 },
               ),

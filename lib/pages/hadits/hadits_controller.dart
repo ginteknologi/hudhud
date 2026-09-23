@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/hadits/hadits_service.dart';
@@ -11,12 +12,18 @@ class HaditsController extends GetxController {
     try {
       isLoadingList.value = true;
       final result = await HaditsService().getBooks();
-      print(result['data']);
-      list.value = result['data'];
+
+      if (result != null && result['data'] != null) {
+        list.value = result['data'];
+      }
+
       isLoadingList.value = false;
     } catch (e) {
-      print('error haidst');
-      print(e);
+      isLoadingList.value = false;
+      if (kDebugMode) {
+        debugPrint('error hadits');
+        debugPrint(e.toString());
+      }
     }
   }
 

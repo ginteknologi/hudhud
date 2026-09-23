@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
@@ -7,7 +8,7 @@ import 'package:masjid_app/configs/remote_data.dart';
 class AuthService extends GetConnect {
   final authStore = GetStorage();
 
-  Future getProfile(userGoogle) async {
+  Future getProfile(Map<String, dynamic> userGoogle) async {
     try {
       final response = await http.post(
         Uri.parse("${RemoteData.api}/profile"),
@@ -34,9 +35,11 @@ class AuthService extends GetConnect {
         return json;
       }
     } catch (e) {
-      print('<<<<<<<start>>>>>>>');
-      print('Login Error: $e');
-      print('<<<<<<<end>>>>>>>');
+      if (kDebugMode) {
+        debugPrint('<<<<<<<start>>>>>>>');
+        debugPrint('Login Error: $e');
+        debugPrint('<<<<<<<end>>>>>>>');
+      }
       return {
         "code": 500,
         "message": "Gagal terhubung ke server: $e",

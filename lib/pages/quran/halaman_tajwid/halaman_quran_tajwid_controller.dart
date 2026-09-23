@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/controllers/home_controller.dart';
@@ -43,8 +44,12 @@ class HalamanQuranTajwidController extends GetxController
       isLoadingList.value = false;
       return listSurah;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
       return [];
     }
   }
@@ -55,11 +60,17 @@ class HalamanQuranTajwidController extends GetxController
       isLoadingList.value = true;
       final result = await QuranService().getList(searchController.text);
       list = result['data'];
-      print(list);
+      if (kDebugMode) {
+        debugPrint(list.toString());
+      }
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -72,11 +83,17 @@ class HalamanQuranTajwidController extends GetxController
       surahSaatIni.value = filteredData['surat'];
       halSaatIni.value = filteredData['hal'].toString();
       toSurat = filteredData['id'];
-      print(filteredData['id']);
+      if (kDebugMode) {
+        debugPrint(filteredData['id'].toString());
+      }
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -91,8 +108,12 @@ class HalamanQuranTajwidController extends GetxController
       toSurat = filteredData['id'];
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -106,14 +127,20 @@ class HalamanQuranTajwidController extends GetxController
       toSurat = filteredData['id'];
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
   Future<void> bookmark() async {
     isLoadingList.value = true;
-    print('<<<<<<<<<<<wei>>>>>>>>>>>');
+    if (kDebugMode) {
+      debugPrint('<<<<<<<<<<<wei>>>>>>>>>>>');
+    }
     isLoadingList.value = false;
   }
 

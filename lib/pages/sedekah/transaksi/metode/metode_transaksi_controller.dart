@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:get_storage/get_storage.dart';
@@ -20,7 +21,9 @@ class MetodeTransaksiController extends GetxController {
 
   void goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
-    print(id);
+    if (kDebugMode) {
+      debugPrint(id.toString());
+    }
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }
 
@@ -29,7 +32,9 @@ class MetodeTransaksiController extends GetxController {
     var dataBayar = dataStore.read('inputDataPembayaran');
     dataBayar['idPayment'] = id;
     dataBayar['dataMetodeBayar'] = dataMetodeBayar;
-    print(inputTypeBayar.value);
+    if (kDebugMode) {
+      debugPrint(inputTypeBayar.value.toString());
+    }
     if (inputTypeBayar.value.toString() == 'va') {
       dataBayar['metode'] = inputTypeBayar.value;
       procceedPayment(idData);
@@ -50,7 +55,9 @@ class MetodeTransaksiController extends GetxController {
         Get.offAllNamed('${RoutesSedekah.root}/$id/transaksi/status');
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
     isLoading.value = false;
     return status;

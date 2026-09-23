@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/controllers/alarm_solat_controller.dart';
-import 'package:masjid_app/models/waktuSolatData.dart';
+import 'package:masjid_app/models/waktu_solat_data.dart';
 
 class AlarmSolatPage extends StatelessWidget {
   final AlarmSolatController alarmController = Get.put(AlarmSolatController());
@@ -21,8 +21,9 @@ class AlarmSolatPage extends StatelessWidget {
             return ListTile(
               title: Text(item.label),
               subtitle: Text(item.time),
-              trailing:
-                  item.alarm == 0 ? Icon(Icons.alarm) : Icon(Icons.alarm_off),
+              trailing: (item.alarm ?? false)
+                ? const Icon(Icons.alarm)
+                : const Icon(Icons.alarm_off),
             );
           }),
     );

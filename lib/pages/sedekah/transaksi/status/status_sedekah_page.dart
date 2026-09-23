@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
@@ -28,7 +29,9 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
   }
 
   Widget getCurrentLayout(StatusSedekahController ctrl, BuildContext context) {
-    print('<<<<<<<<<<>>>>>>>>>>');
+    if (kDebugMode) {
+      debugPrint('<<<<<<<<<<>>>>>>>>>>');
+    }
     if (ctrl.dataPayment['metode'] == 'va') {
       return layoutVa(ctrl, context);
     } else {

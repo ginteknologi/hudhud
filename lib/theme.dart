@@ -52,7 +52,7 @@ final priceOnlyFormat = NumberFormat.currency(
   name: '',
 );
 
-String kmbGenerator({value, String format = 'kmb'}) {
+String kmbGenerator({dynamic value, String format = 'kmb'}) {
   if (value > 999 && value < 99999) {
     final result = (value / 1000).toStringAsFixed(0);
     return format == 'kmb' ? result + 'K' : result + 'ribu';
@@ -71,7 +71,7 @@ String kmbGenerator({value, String format = 'kmb'}) {
   }
 }
 
-Map<String, Object> bytesToSize(bytes) {
+Map<String, Object> bytesToSize(dynamic bytes) {
   var result = {
     'size': 0,
     'type': 'Bytes',
@@ -94,7 +94,7 @@ class AppVariables {
   static const EdgeInsets containerSpacing = EdgeInsets.symmetric(
     vertical: appPadding,
   );
-  static dynamic buatHargaPersen(harga, potongan) {
+  static dynamic buatHargaPersen(dynamic harga, dynamic potongan) {
     final data = ((potongan / harga) * 100).round();
     return data;
   }
@@ -106,7 +106,7 @@ Color calculateTextColor(Color background) {
       : Colors.white;
 }
 
-TextTheme loadTextTheme(context, type) {
+TextTheme loadTextTheme(BuildContext context, String type) {
   TextStyle defaultTextStyle;
   if (type == 'dark') {
     defaultTextStyle = const TextStyle(
@@ -178,7 +178,7 @@ bool isDarkMode() {
   return isDarkMode;
 }
 
-ThemeData darkTheme(context) {
+ThemeData darkTheme(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme.copyWith(
         onPrimary: Colors.white,
         onSecondary: Colors.white,
@@ -234,7 +234,7 @@ ThemeData darkTheme(context) {
   );
 }
 
-ThemeData lightTheme(context) {
+ThemeData lightTheme(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme.copyWith(
         onPrimary: Colors.white,
         onSecondary: Colors.white,

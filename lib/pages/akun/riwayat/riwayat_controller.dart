@@ -13,7 +13,7 @@ class RiwayatController extends GetxController {
   TextEditingController inputLink = TextEditingController();
   var txtController = TextEditingController();
 
-  void goToDetail(param) {
+  void goToDetail( Map<String, dynamic> param) {
     _showPopup();
   }
 

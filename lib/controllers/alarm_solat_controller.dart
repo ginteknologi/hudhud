@@ -1,8 +1,8 @@
 import 'package:adhan/adhan.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:masjid_app/models/waktuSolatData.dart';
-import 'package:masjid_app/storage/lokasiSaya_storage.dart';
+import 'package:masjid_app/models/waktu_solat_data.dart';
+import 'package:masjid_app/storage/lokasi_saya_storage.dart';
 
 class AlarmSolatController extends GetxController {
   var isLoading = false.obs;

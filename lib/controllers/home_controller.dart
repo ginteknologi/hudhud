@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:masjid_app/models/menuBottomData.dart';
+import 'package:masjid_app/models/menu_bottom_data.dart';
 // import 'package:masjid_app/routes/auth/index.dart';
 
 class HomeController extends GetxController

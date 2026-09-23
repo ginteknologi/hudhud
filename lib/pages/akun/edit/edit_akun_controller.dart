@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
-import 'package:masjid_app/models/userData.dart';
+import 'package:masjid_app/models/user_data.dart';
 import 'package:masjid_app/pages/akun/akun_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minio_new/minio.dart';
@@ -101,7 +100,7 @@ class EditAkunController extends GetxController {
           email: result['data']['email'],
           photo: result['data']['photo'] ??
               'https://nos.wjv-1.neo.id/marbot/assets/app_icon.png',
-          total_sedekah: result['data']['total_sedekah'],
+          totalSedekah: result['data']['total_sedekah'],
           phone: result['data']['phone'],
         );
         Get.back();

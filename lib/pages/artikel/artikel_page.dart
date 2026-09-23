@@ -60,7 +60,7 @@ class ArtikelPage extends StatelessWidget {
             footerContent: [
               Text(
                   DateFormat('dd MMMM yyyy HH:mm').format(
-                      DateTime.parse(ctrl.listArtikels[index].publish_date)
+                      DateTime.parse(ctrl.listArtikels[index].publishDate)
                           .add(Duration(hours: 7))),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(

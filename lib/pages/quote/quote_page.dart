@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:masjid_app/controllers/dkm_controller.dart';
 import 'package:masjid_app/controllers/quote_controller.dart';
-import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/kajian_data.dart';
 
 class QuotePage extends StatelessWidget {
   QuotePage({super.key});

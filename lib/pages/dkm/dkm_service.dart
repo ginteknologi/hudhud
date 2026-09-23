@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:masjid_app/configs/remote_data.dart';
-import 'package:masjid_app/models/sosmedData.dart';
+import 'package:masjid_app/models/sosmed_data.dart';
 
 class DkmService extends GetConnect {
   final authStore = GetStorage();
@@ -31,7 +32,9 @@ class DkmService extends GetConnect {
         return json;
       }
     } catch (e) {
-      print("<<<<error service getList sosmed>>>>");
+      if (kDebugMode) {
+        debugPrint("<<<<error service getList sosmed>>>>");
+      }
     }
   }
 }

@@ -98,19 +98,17 @@ class KalenderdzulhijjahPage extends StatelessWidget {
       ),
       children: values
           .map(
-            (value) => Container(
-              child: TableCell(
-                child: Container(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                      border: Border(
-                    bottom: BorderSide(color: Colors.black12, width: 1),
-                  )),
-                  child: Text(
-                    value,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: Get.width / 38),
-                  ),
+            (value) => TableCell(
+              child: Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                    border: Border(
+                  bottom: BorderSide(color: Colors.black12, width: 1),
+                )),
+                child: Text(
+                  value,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: Get.width / 38),
                 ),
               ),
             ),

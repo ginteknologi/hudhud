@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/configs/file_setup.dart';
-import 'package:masjid_app/models/kajianData.dart';
-import 'package:masjid_app/models/sosmedData.dart';
+import 'package:masjid_app/models/kajian_data.dart';
+import 'package:masjid_app/models/sosmed_data.dart';
 import 'package:masjid_app/pages/dkm/dkm_service.dart';
 import 'package:masjid_app/service/dashboard_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -46,11 +47,13 @@ class DkmController extends GetxController {
       isLoadingList.value = false;
     } catch (e) {
       isLoadingList.value = false;
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
-  Future<void> share(item) async {
+  Future<void> share(KajianData item) async {
     Get.defaultDialog(
         title: item.judul!,
         titleStyle: TextStyle(fontSize: Get.width / 25),
@@ -64,12 +67,14 @@ class DkmController extends GetxController {
             url: item.image,
             pathsave: '/quote',
           );
-          final resultshare = await Share.shareXFiles(
-            [XFile(result)],
-            text: '#Dikirim dari Marbot app https://s.id/downloadmarbotapp',
+          final resultShare = await SharePlus.instance.share(
+            ShareParams(
+              files: [XFile(result)],
+              text: '#Dikirim dari Marbot app https://s.id/downloadmarbotapp',
+            ),
           );
 
-          if (resultshare.status == ShareResultStatus.success) {
+          if (resultShare.status == ShareResultStatus.success) {
             Fluttertoast.showToast(msg: "Berhasil dishare");
           }
           Get.back();
@@ -100,7 +105,9 @@ class DkmController extends GetxController {
       }
       isLoadingSlider.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

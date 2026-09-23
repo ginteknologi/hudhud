@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/kajian_data.dart';
 import 'package:masjid_app/service/kajian_service.dart';
 
 class QuoteController extends GetxController {

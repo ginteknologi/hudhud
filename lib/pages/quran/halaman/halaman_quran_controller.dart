@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/controllers/home_controller.dart';
@@ -44,8 +45,12 @@ class HalamanQuranController extends GetxController
       isLoadingList.value = false;
       return listSurah;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
       return [];
     }
   }
@@ -58,8 +63,12 @@ class HalamanQuranController extends GetxController
       list = result['data'];
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -74,8 +83,12 @@ class HalamanQuranController extends GetxController
       toSurat = filteredData['id'];
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -90,8 +103,12 @@ class HalamanQuranController extends GetxController
       toSurat = filteredData['id'];
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -105,8 +122,12 @@ class HalamanQuranController extends GetxController
       toSurat = filteredData['id'];
       isLoadingList.value = false;
     } catch (e) {
-      print('<<<<<<<<error controller getDataSearch>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<error controller getDataSearch>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

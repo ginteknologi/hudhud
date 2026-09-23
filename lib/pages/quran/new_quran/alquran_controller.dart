@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_service.dart';
@@ -26,7 +27,9 @@ class AlquranController extends GetxController {
       list.value = result['data'];
       isLoadingRandom.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -90,7 +93,9 @@ class AlquranController extends GetxController {
         'icon': 'assets/icons/pengaturan.png'
       }
     ];
-    print("listMenu.length");
+    if (kDebugMode) {
+      debugPrint("listMenu.length");
+    }
     super.onInit();
   }
 }

@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/artikel/artikel_service.dart';
 import 'package:html/parser.dart';
-import 'package:masjid_app/models/artikelData.dart';
+import 'package:masjid_app/models/artikel_data.dart';
 
 class DetailArtikelController extends GetxController {
   var isLoadingList = true.obs;
@@ -13,7 +14,7 @@ class DetailArtikelController extends GetxController {
     judul: '',
     updatedAt: '',
     image: '',
-    publish_date: '',
+    publishDate: '',
   ));
   List listCategoryFilter = [].obs;
   late List<RxBool> listCategoryFilterSelected;
@@ -31,9 +32,9 @@ class DetailArtikelController extends GetxController {
           judul: result['data']['judul'],
           isi: result['data']['isi'],
           image: result['data']['image'],
-          category_artikel: result['data']['category_artikel'],
+          categoryArtikel: result['data']['category_artikel'],
           updatedAt: result['data']['updatedAt'],
-          publish_date: result['data']['publish_date']);
+          publishDate: result['data']['publish_date']);
       String judul = result['data']['judul'];
       String content = _convertHtmlToText(result['data']['isi']);
       String link = 'Dibagikan dari aplikasi\n\n Marbot App';
@@ -44,14 +45,16 @@ class DetailArtikelController extends GetxController {
             id: element['id'],
             judul: element['judul'],
             image: element['image'],
-            publish_date: element['publish_date'],
+            publishDate: element['publish_date'],
             updatedAt: element['updatedAt']));
       }
       listArtikels.sort((a, b) =>
           DateTime.parse(b.updatedAt).compareTo(DateTime.parse(a.updatedAt)));
       isLoadingList.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

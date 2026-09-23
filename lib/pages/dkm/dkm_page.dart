@@ -4,11 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/models/kajianData.dart';
-import 'package:masjid_app/models/sosmedData.dart';
+import 'package:masjid_app/models/kajian_data.dart';
+import 'package:masjid_app/models/sosmed_data.dart';
 import 'package:masjid_app/controllers/dkm_controller.dart';
 import 'package:masjid_app/routes/quote/index.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' as Refresh;
+import 'package:pull_to_refresh/pull_to_refresh.dart' as refresh;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 // Pastikan impor ini sudah disertakan
@@ -18,8 +18,8 @@ class DkmPage extends StatelessWidget {
 
   DkmPage({super.key});
 
-  Refresh.SmartRefresher layout(BuildContext context) {
-    return Refresh.SmartRefresher(
+  refresh.SmartRefresher layout(BuildContext context) {
+    return refresh.SmartRefresher(
       enablePullDown: true,
       controller: ctrl.refreshController,
       onLoading: () async {

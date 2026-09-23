@@ -5,10 +5,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 // import 'package:masjid_app/configs/firebase_message_setup.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
-import 'package:masjid_app/models/artikelData.dart';
-import 'package:masjid_app/models/kajianData.dart';
+import 'package:masjid_app/models/artikel_data.dart';
+import 'package:masjid_app/models/kajian_data.dart';
 import 'package:masjid_app/controllers/home_controller.dart';
-import 'package:masjid_app/models/sedangLiveData.dart';
+import 'package:masjid_app/models/sedang_live_data.dart';
 import 'package:masjid_app/pages/home/home_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/service/dashboard_service.dart';
@@ -97,13 +97,13 @@ class DashboardController extends GetxController {
         judul: "dummy",
         updatedAt: "1992-10-10",
         image: "https://dummyimage.com/600x400/000/fff",
-        publish_date: ''),
+        publishDate: ''),
     ArtikelData(
         id: 1,
         judul: "dummy",
         updatedAt: "1992-10-10",
         image: "https://dummyimage.com/600x400/000/fff",
-        publish_date: ''),
+        publishDate: ''),
   ].obs;
   var listAllMenu = [].obs;
   var listKota = [].obs;
@@ -196,9 +196,9 @@ class DashboardController extends GetxController {
         listArtikel.add(ArtikelData(
             id: element['id'],
             judul: element['judul'],
-            category_artikel: element['category_artikel'],
+            categoryArtikel: element['category_artikel'],
             updatedAt: element['updatedAt'],
-            publish_date: element['publish_date'],
+            publishDate: element['publish_date'],
             image: element['image']));
       }
       isLoadingArtikel.value = false;

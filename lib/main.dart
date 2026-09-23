@@ -9,7 +9,7 @@ import 'package:in_app_update/in_app_update.dart';
 // import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:masjid_app/configs/firebase_message_setup.dart';
-import 'package:masjid_app/controllers/waktuSolat_controller.dart';
+import 'package:masjid_app/controllers/waktu_solat_controller.dart';
 import 'package:masjid_app/routes/index.dart';
 import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -42,9 +42,11 @@ Future<void> main() async {
                         gravity: ToastGravity.CENTER)
                   })
               .catchError((e) {
-                print(e);
-                return <Future<bool?>>{};
-              });
+            if (kDebugMode) {
+              debugPrint(e.toString());
+            }
+            return <Future<bool?>>{};
+          });
         }
       });
     }

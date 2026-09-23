@@ -1,6 +1,7 @@
 import "dart:io";
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,9 @@ class AlquranPengaturanController extends GetxController {
 
   void downloadFile(String type) async {
     try {
-      print(paused.value);
+      if (kDebugMode) {
+        debugPrint(paused.value.toString());
+      }
       String jsonString = '';
       download.value = true;
       if (type == 'halaman') {
@@ -39,11 +42,15 @@ class AlquranPengaturanController extends GetxController {
       final listSurah = json.decode(jsonString);
       String dir = (await getApplicationDocumentsDirectory()).path;
       String filePath = '$dir/quran/$type';
-      print(filePath);
+      if (kDebugMode) {
+        debugPrint(filePath.toString());
+      }
       Directory directory = Directory(filePath);
       bool exists = await directory.exists();
       if (exists) {
-        print('Folder ada');
+        if (kDebugMode) {
+          debugPrint('Folder ada');
+        }
       } else {
         directory.create(recursive: true);
       }
@@ -64,16 +71,26 @@ class AlquranPengaturanController extends GetxController {
         totalTerDownload++;
         progresDownload.value = (totalTerDownload / listSurah.length);
         persenDownload.value = (progresDownload * 100).toInt();
-        print(progresDownload);
-        print(persenDownload);
+        if (kDebugMode) {
+          debugPrint(progresDownload.toString());
+        }
+        if (kDebugMode) {
+          debugPrint(persenDownload.toString());
+        }
         if (i == listSurah.length - 1) {
           download.value = false;
-          print(download);
+          if (kDebugMode) {
+            debugPrint(download.toString());
+          }
         }
       }
-      print(listSurah);
+      if (kDebugMode) {
+        debugPrint(listSurah.toString());
+      }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
