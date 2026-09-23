@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 
 class CustomModalBottomSheet extends StatelessWidget {
   const CustomModalBottomSheet(
@@ -120,11 +119,6 @@ class CustomModalBottomSheet extends StatelessWidget {
                                   onTap: onTap ??
                                       () {
                                         Navigator.pop(context);
-                                        if (dataGrid?[index]['urlNav'] !=
-                                            null) {
-                                          Get.toNamed(
-                                              dataGrid?[index]['urlNav']);
-                                        }
                                       },
                                   borderRadius: BorderRadius.circular(20),
                                   splashColor:

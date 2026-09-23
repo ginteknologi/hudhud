@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 class InputText extends StatelessWidget {
   final String placeholder;
@@ -80,7 +79,6 @@ class InputText extends StatelessWidget {
         : placeholderStyle;
     final labelStyleVal =
         labelStyle == "" ? Theme.of(context).textTheme.titleMedium : labelStyle;
-    var counterText = "".obs;
     final TextFormField textChild = TextFormField(
       textInputAction: inputAction,
       obscureText: isPassword,
@@ -142,11 +140,7 @@ class InputText extends StatelessWidget {
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
       ),
-      onChanged: showCounter
-          ? (newValue) {
-              counterText.value = controller.text;
-            }
-          : onChanged,
+      onChanged: onChanged,
       onFieldSubmitted: onSubmit,
       onEditingComplete: onEditingComplete,
       validator: validator,

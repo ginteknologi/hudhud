@@ -1,46 +1,46 @@
-import 'package:get_storage/get_storage.dart';
+import 'dart:convert';
+import 'package:masjid_app/core/storage/preferences_service.dart';
 
 class AppStorage {
-  final authStore = GetStorage();
-  Map<String, dynamic> get(id) {
+  Map<String, dynamic> get(dynamic id) {
     try {
-      var result = authStore.read(id);
-      if (result == null) {
+      final key = id.toString();
+      final str = PreferencesService.getString(key);
+      if (str == null) {
         throw "empty";
       }
-      var json = {
+      final dynamic result = jsonDecode(str);
+      return {
         "code": 200,
         "message": "Success.",
         "data": result,
       };
-      return json;
     } catch (_) {
-      var json = {
+      return {
         "code": 404,
         "message": "Not found.",
         "data": [],
       };
-      return json;
     }
   }
 
-  Map<String, Object> write(id, data) {
-    authStore.write(id, data);
-    var json = {
+  Map<String, Object> write(dynamic id, dynamic data) {
+    final key = id.toString();
+    PreferencesService.setString(key, jsonEncode(data));
+    return {
       "code": 200,
       "message": "Success",
       "data": [],
     };
-    return json;
   }
 
-  Map<String, Object> remove(id) {
-    authStore.remove(id);
-    var json = {
+  Map<String, Object> remove(dynamic id) {
+    final key = id.toString();
+    PreferencesService.remove(key);
+    return {
       "code": 200,
       "message": "Success.",
       "data": [],
     };
-    return json;
   }
 }

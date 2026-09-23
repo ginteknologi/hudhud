@@ -1,8 +1,4 @@
-// import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:masjid_app/theme.dart';
 
 class ListItemSedekahWidget extends StatelessWidget {
@@ -30,12 +26,13 @@ class ListItemSedekahWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Material(
         color: Colors.transparent,
         child: InkWell(
           highlightColor: Colors.transparent,
           onTap: () {
-            Get.toNamed('${RoutesSedekah.root}/$id');
+            // Can be opened or tapped
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -45,7 +42,7 @@ class ListItemSedekahWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 0, top: 10, right: 0),
                 child: Container(
-                  width: Get.width,
+                  width: screenWidth,
                   margin: const EdgeInsets.only(right: 2, bottom: 11),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),

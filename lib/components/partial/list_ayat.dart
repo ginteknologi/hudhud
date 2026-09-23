@@ -1,21 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
-class ListAyatWidget extends StatelessWidget {
-  ListAyatWidget(
-      {super.key,
-      required this.id,
-      this.nomor,
-      this.ayat,
-      this.descEN,
-      this.descIDN,
-      this.audioFile,
-      this.onTap,
-      this.activeColor,
-      required this.bookmarked});
+class ListAyatWidget extends StatefulWidget {
+  const ListAyatWidget({
+    super.key,
+    required this.id,
+    this.nomor,
+    this.ayat,
+    this.descEN,
+    this.descIDN,
+    this.audioFile,
+    this.onTap,
+    this.activeColor,
+    required this.bookmarked,
+  });
 
   final int id;
   final String? nomor;
@@ -25,41 +25,79 @@ class ListAyatWidget extends StatelessWidget {
   final String? audioFile;
   final bool bookmarked;
   final VoidCallback? onTap;
-  final RxBool onplay = false.obs;
-  final AudioPlayer audioPlayer = AudioPlayer();
   final Color? activeColor;
 
   @override
+  State<ListAyatWidget> createState() => _ListAyatWidgetState();
+}
+
+class _ListAyatWidgetState extends State<ListAyatWidget> {
+  bool _isPlaying = false;
+  AudioPlayer? _audioPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer = AudioPlayer();
+    _audioPlayer!.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        if (mounted) setState(() => _isPlaying = false);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _togglePlay() async {
+    if (_audioPlayer == null || widget.audioFile == null || widget.audioFile!.isEmpty) return;
+
+    if (_isPlaying) {
+      await _audioPlayer!.pause();
+      if (mounted) setState(() => _isPlaying = false);
+    } else {
+      try {
+        await _audioPlayer!.setUrl(widget.audioFile!);
+        await _audioPlayer!.play();
+        if (mounted) setState(() => _isPlaying = true);
+      } catch (e) {
+        debugPrint('Audio error: $e');
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Duration? audioPosition;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Column(children: [
       Container(
-          width: Get.width,
-          // height: 210,
-          color: Color.fromARGB(255, 233, 233, 233),
+          width: screenWidth,
+          color: const Color.fromARGB(255, 233, 233, 233),
           constraints: BoxConstraints.loose(Size.infinite),
           child: Row(
             children: [
               Container(
                 width: 50,
-                padding: EdgeInsets.only(left: 15, right: 15),
+                padding: const EdgeInsets.only(left: 15, right: 15),
                 constraints: BoxConstraints.loose(Size.infinite),
-                color: Color.fromARGB(255, 233, 233, 233),
+                color: const Color.fromARGB(255, 233, 233, 233),
                 child: Align(
-                  alignment:
-                      Alignment.center, // Align the content vertically center
+                  alignment: Alignment.center,
                   child: Column(
                     children: <Widget>[
-                      // Baris pertama
                       SizedBox(
                         height: 42,
                         width: 42,
                         child: Stack(
                           children: <Widget>[
                             InkWell(
-                              onTap: onTap,
+                              onTap: widget.onTap,
                               child: SvgPicture.asset(
-                                bookmarked
+                                widget.bookmarked
                                     ? 'assets/icons/active_bookmark.svg'
                                     : 'assets/icons/bookmark.svg',
                                 alignment: Alignment.center,
@@ -84,17 +122,16 @@ class ListAyatWidget extends StatelessWidget {
                             Positioned.fill(
                               child: Center(
                                 child: Text(
-                                  nomor!,
-                                  style: context.textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                                  widget.nomor ?? '',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      // Baris kedua
                       SizedBox(
                         height: 42,
                         width: 42,
@@ -103,48 +140,17 @@ class ListAyatWidget extends StatelessWidget {
                             Positioned.fill(
                               child: Center(
                                 child: InkWell(
-                                    onTap: () async {
-                                      if (onplay.value) {
-                                        debugPrint("clicked pause");
-                                        audioPosition = audioPlayer.position;
-                                        await audioPlayer.pause();
-                                        onplay.value = false;
-                                      } else {
-                                        debugPrint("clicked play");
-                                        if (audioPosition != null) {
-                                          await audioPlayer
-                                              .seek(audioPosition!);
-                                        } else {
-                                          await audioPlayer.setUrl(audioFile!);
-                                        }
-                                        await audioPlayer.play();
-                                        onplay.value = true;
-
-                                        audioPlayer.playerStateStream
-                                            .listen((PlayerState state) {
-                                          if (state.processingState ==
-                                              ProcessingState.completed) {
-                                            // File selesai diputar
-                                            debugPrint("Selesai");
-                                            audioPosition = null;
-                                            onplay.value = false;
-                                          }
-                                        });
-                                      }
-                                    },
-                                    child: Obx(
-                                      () => onplay.value
-                                          ? Icon(
-                                              Icons.pause_rounded,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            )
-                                          : Icon(
-                                              Icons.play_arrow_rounded,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
-                                    )),
+                                  onTap: _togglePlay,
+                                  child: _isPlaying
+                                      ? Icon(
+                                          Icons.pause_rounded,
+                                          color: Theme.of(context).primaryColor,
+                                        )
+                                      : Icon(
+                                          Icons.play_arrow_rounded,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                ),
                               ),
                             ),
                           ],
@@ -156,57 +162,48 @@ class ListAyatWidget extends StatelessWidget {
               ),
               Expanded(
                   child: Container(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 color: Colors.white,
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    // Container(
-                    //   height: 500,
-                    //   decoration:
-                    //       BoxDecoration(color: Colors.red),
-                    // )
+                    const SizedBox(height: 20),
                     Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Align(
                           alignment: Alignment.centerRight,
                           child: AutoSizeText(
-                            ayat!,
+                            widget.ayat ?? '',
                             textAlign: TextAlign.end,
-                            style: context.textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                             maxLines: 15,
                           ),
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20),
                         Align(
                             alignment: Alignment.centerLeft,
                             child: AutoSizeText(
-                              descEN!,
+                              widget.descEN ?? '',
                               textAlign: TextAlign.start,
-                              style: context.textTheme.labelMedium?.copyWith(
-                                  fontWeight: FontWeight.w300,
-                                  fontStyle: FontStyle.italic),
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    fontStyle: FontStyle.italic,
+                                  ),
                             )),
-                        SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20),
                         Align(
                             alignment: Alignment.centerLeft,
                             child: AutoSizeText(
-                              descIDN!,
+                              widget.descIDN ?? '',
                               textAlign: TextAlign.start,
-                              style: context.textTheme.labelMedium?.copyWith(
-                                fontWeight: FontWeight.w300,
-                              ),
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                  ),
                             ))
                       ],
                     )
@@ -215,7 +212,7 @@ class ListAyatWidget extends StatelessWidget {
               ))
             ],
           )),
-      Divider(
+      const Divider(
         color: Color.fromARGB(255, 226, 226, 226),
         thickness: 3,
         height: 2,

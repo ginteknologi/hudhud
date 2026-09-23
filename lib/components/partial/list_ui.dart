@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ListItemUiWidget extends StatelessWidget {
   const ListItemUiWidget(
@@ -75,7 +74,7 @@ class ListItemUiWidget extends StatelessWidget {
                       ? EdgeInsets.only(left: 0, top: 10, right: 0)
                       : EdgeInsets.only(left: 0, top: 10, right: 0),
                   child: Container(
-                    width: Get.width,
+                    width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.only(right: 2, bottom: 11),
                     decoration: typeList == TypeList.solid
                         ? BoxDecoration(

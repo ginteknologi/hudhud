@@ -1,15 +1,18 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/hadits/detail/detail_hadits_controller.dart';
-import 'package:masjid_app/routes/hadits/index.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/models/hadist_data.dart';
+import 'package:masjid_app/providers/hadits_providers.dart';
 
-class DetailHaditsPage extends StatelessWidget {
+class DetailHaditsPage extends ConsumerWidget {
   const DetailHaditsPage({super.key});
 
-  SafeArea layout(DetailHaditsController ctrl, BuildContext context) {
+  SafeArea layout(
+      BuildContext context, Map<String, dynamic> detail, List<ListKitabData> list) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -19,7 +22,7 @@ class DetailHaditsPage extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  width: Get.width,
+                  width: MediaQuery.of(context).size.width,
                   height: 260,
                   constraints: BoxConstraints.loose(Size.infinite),
                   clipBehavior: Clip.antiAlias,
@@ -56,7 +59,7 @@ class DetailHaditsPage extends StatelessWidget {
                               width: 20,
                             ),
                             Text(
-                              ctrl.arguments['detail']['longNama'],
+                              detail['longNama'],
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   height: 1,
@@ -85,7 +88,7 @@ class DetailHaditsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ctrl.arguments['detail']['longNama'],
+                                  detail['longNama'],
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -101,7 +104,7 @@ class DetailHaditsPage extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  '${ctrl.arguments['detail']['hadits']} Hadits',
+                                  '${detail['hadits']} Hadits',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -128,22 +131,30 @@ class DetailHaditsPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 21),
                   child: ListView.builder(
                     physics: const ClampingScrollPhysics(),
-                    itemCount: ctrl.list.length,
+                    itemCount: list.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       // Datum model = filteredEvents[index];
+                      final kitab = list[index];
                       return FadeInUp(
                         child: ListItemUiWidget(
-                          id: ctrl.list[index].idKitab,
-                          title: ctrl.list[index].kitabIndonesia,
+                          id: kitab.idKitab,
+                          title: kitab.kitabIndonesia,
                           onTap: () {
-                            if (ctrl.arguments['detail']['namaTabel'] == 'arbain') {
-                              Get.toNamed(RoutesHadits.content, arguments: {'content': ctrl.list[index], 'detail' : ctrl.arguments['detail'], 'bab': ctrl.list[index]});
-                            } else{
-                              Get.toNamed(RoutesHadits.bab, arguments: {'content': ctrl.list[index], 'detail': ctrl.arguments['detail']});
+                            if (detail['namaTabel'] == 'arbain') {
+                              context.push(
+                                  '${AppRoutes.hadits}/${kitab.idKitab}/${kitab.idBab ?? kitab.idKitab}',
+                                  extra: {
+                                    'content': kitab,
+                                    'detail': detail,
+                                    'bab': kitab
+                                  });
+                            } else {
+                              context.push('${AppRoutes.hadits}/bab/${kitab.idKitab}',
+                                  extra: {'content': kitab, 'detail': detail});
                             }
                           },
-                          titleStyle: context.textTheme.titleMedium?.copyWith(
+                          titleStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.black),
                           subTitle: null,
                           showIcon: IconPosition.left,
@@ -166,7 +177,7 @@ class DetailHaditsPage extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          ctrl.list[index].idKitab.toString(),
+                                          kitab.idKitab.toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)
@@ -199,19 +210,25 @@ class DetailHaditsPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailHaditsController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final routeState = GoRouterState.of(context);
+    final extra = routeState.extra;
+    final detail =
+        extra is Map ? Map<String, dynamic>.from(extra) : <String, dynamic>{};
+    final namaTabel =
+        (detail['namaTabel'] ?? routeState.pathParameters['id'] ?? '').toString();
+    final listAsync = ref.watch(haditsDetailProvider(namaTabel));
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
       backgroundColor: Color(0xFFF5F5F5),
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: Obx(() => ctrl.isLoadingList.value
-          ? const Center(child: CircularProgressIndicator())
-          : layout(ctrl, context)),
+      body: listAsync.when(
+        data: (list) => layout(context, detail, list),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => layout(context, detail, const []),
+      ),
     );
   }
 }
-
-enum TypeViewQuran { perayat, perhalaman }

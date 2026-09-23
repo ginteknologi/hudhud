@@ -1,19 +1,36 @@
 import 'package:animate_do/animate_do.dart';
 // import 'package:easy_localization/easy_localization.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/doa/detail/detail_doa_controller.dart';
-import 'package:masjid_app/routes/doa/index.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/models/doa_models.dart';
+import 'package:masjid_app/providers/doa_providers.dart';
 
-class DetailDoaPage extends StatelessWidget {
+class DetailDoaPage extends ConsumerStatefulWidget {
   const DetailDoaPage({super.key});
 
-  SafeArea layout(DetailDoaController ctrl, BuildContext context) {
+  @override
+  ConsumerState<DetailDoaPage> createState() => _DetailDoaPageState();
+}
+
+class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  SafeArea layout(BuildContext context, String categoryId,
+      AsyncValue<List<DoaItemModel>> listAsync) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -29,7 +46,7 @@ class DetailDoaPage extends StatelessWidget {
                           child: Column(children: [
                             const SizedBox(height: 20),
                             InputText(
-                              suffixIcon: Icon(Icons.search),
+                              suffixIcon: const Icon(Icons.search),
                               labelPosition: 'none',
                               placeholder: 'Cari',
                               radius: 5,
@@ -38,11 +55,13 @@ class DetailDoaPage extends StatelessWidget {
                               placeholderStyle:
                                   Theme.of(context).textTheme.bodyMedium,
                               inputPadding: const EdgeInsets.all(15),
-                              controller: ctrl.txtController,
+                              controller: _searchController,
                               onSubmit: (newValue) {},
                               onEditingComplete: () {},
                               onChanged: (newValue) {
-                                ctrl.getSearchData();
+                                setState(() {
+                                  _query = newValue;
+                                });
                               },
                               validator: (newValue) {
                                 if (newValue!.isEmpty) {
@@ -52,10 +71,10 @@ class DetailDoaPage extends StatelessWidget {
                               },
                             )
                           ])),
-                      Obx(() => ctrl.isLoadingList.value
-                          ? const Center(child: CircularProgressIndicator())
-                          : Container(
-                              decoration: BoxDecoration(color: Colors.white),
+                      listAsync.when(
+                          data: (list) => Container(
+                              decoration:
+                                  const BoxDecoration(color: Colors.white),
                               child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 21, right: 21, top: 21),
@@ -63,50 +82,57 @@ class DetailDoaPage extends StatelessWidget {
                                     children: [
                                       ListView.builder(
                                         physics: const ClampingScrollPhysics(),
-                                        itemCount: ctrl.list.length,
+                                        itemCount: list.length,
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
                                           // Datum model = filteredEvents[index];
                                           return FadeInUp(
                                             child: ListCardUiWidget(
                                               type: 'wp',
-                                              id: ctrl.list[index].id,
-                                              title: ctrl.list[index].judul,
-                                              titleStyle: context
+                                              id: list[index].id,
+                                              title: list[index].judul,
+                                              titleStyle: Theme.of(context)
                                                   .textTheme.titleSmall
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Theme.of(context)
                                                           .primaryColor),
-                                              subtitle: ctrl.list[index].isi,
-                                              subtitleStyle: context
+                                              subtitle: list[index].arti,
+                                              subtitleStyle: Theme.of(context)
                                                   .textTheme.labelMedium
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.black45),
                                               onTap: () {
-                                                Get.toNamed(
-                                                    '${RoutesDoa.root}/${Get.parameters['id']}/${ctrl.list[index].id}');
+                                                context.push(AppRoutes
+                                                    .doaContent
+                                                    .replaceFirst(
+                                                        ':id', categoryId)
+                                                    .replaceFirst(
+                                                        ':content',
+                                                        list[index]
+                                                            .id
+                                                            .toString()));
                                               },
                                               hasFooter: true,
                                               footerContent: [
-                                                // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list[index]['date'])),
-                                                // style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
+                                                // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(list[index]['date'])),
+                                                // style: Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
                                                 // ),
 
                                                 // AutoSizeText(
-                                                //   ctrl.list[index]['isi'],
+                                                //   list[index]['isi'],
                                                 //   textAlign: TextAlign.end,
-                                                //   style: context.textTheme.labelSmall
+                                                //   style: Theme.of(context).textTheme.labelSmall
                                                 //       ?.copyWith(
                                                 //           fontWeight: FontWeight.bold,
                                                 //           letterSpacing: 0,
                                                 //           color: Colors.black54),
                                                 //   maxLines: 2,
                                                 // ),
-                                                // Text(ctrl.list[index]['isi'],
+                                                // Text(list[index]['isi'],
                                                 //     textAlign: TextAlign.start,
                                                 //     style: context
                                                 //         .textTheme.labelSmall
@@ -115,12 +141,12 @@ class DetailDoaPage extends StatelessWidget {
                                                 //                 FontWeight.bold,
                                                 //             letterSpacing: 0,
                                                 //             color: Colors.black54)),
-                                                Row(
+                                                const Row(
                                                   children: [
                                                     // Icon(
                                                     //   Icons.remove_red_eye_rounded,
                                                     //   color: Colors.black54,
-                                                    //   size: context.textTheme
+                                                    //   size: Theme.of(context).textTheme
                                                     //       .labelLarge?.fontSize,
                                                     // ),
                                                     SizedBox(
@@ -145,18 +171,23 @@ class DetailDoaPage extends StatelessWidget {
                                       )
                                     ],
                                   )),
-                            ))
+                              ),
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (_, __) => const SizedBox.shrink())
                     ]))));
   }
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailDoaController());
+    final categoryId = GoRouterState.of(context).pathParameters['id'] ?? '';
+    final listAsync = ref.watch(doaListProvider(
+        DoaListParams(categoryId: categoryId, query: _query)));
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Do'a > Do'a Harian", context: context, elevation: 0),
-        body: layout(ctrl, context));
+        body: layout(context, categoryId, listAsync));
   }
 }

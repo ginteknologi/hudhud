@@ -2,14 +2,13 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-// import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
 
 class LaporanTab extends StatelessWidget {
-  const LaporanTab({super.key});
+  const LaporanTab({super.key, required this.listPenyaluran});
 
-  SingleChildScrollView layout(DetailSedekahController ctrl, BuildContext context) {
+  final List<dynamic> listPenyaluran;
+
+  SingleChildScrollView layout(BuildContext context) {
     return SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
@@ -132,17 +131,17 @@ class LaporanTab extends StatelessWidget {
               // const SizedBox(
               //   height: 20,
               // ),
-              getList(ctrl, context),
+              getList(context),
               const SizedBox(
                 height: 10,
               ),
             ]));
   }
 
-  ListView getList(DetailSedekahController ctrl, BuildContext context) {
+  ListView getList(BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
-      itemCount: ctrl.listPenyaluran.length,
+      itemCount: listPenyaluran.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         // Datum model = filteredEvents[index];
@@ -180,8 +179,8 @@ class LaporanTab extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              DateFormat('dd MMMM yyyy').format(DateTime.parse(ctrl.listPenyaluran[index]['tanggal'])),
-                              style: context.textTheme.bodyMedium?.copyWith(
+                              DateFormat('dd MMMM yyyy').format(DateTime.parse(listPenyaluran[index]['tanggal'])),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Theme.of(context).primaryColor),
                             ),
@@ -193,8 +192,10 @@ class LaporanTab extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: AutoSizeText(
-                                    ctrl.listPenyaluran[index]['judul'],
-                                    style: context.textTheme.titleSmall
+                                    listPenyaluran[index]['judul'],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
                                         ?.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
@@ -263,8 +264,10 @@ class LaporanTab extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    ctrl.listPenyaluran[index]['isi'],
-                                    style: context.textTheme.bodySmall
+                                    listPenyaluran[index]['isi'],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
                                         ?.copyWith(
                                             fontWeight: FontWeight.w300,
                                             color: Colors.black),
@@ -290,7 +293,7 @@ class LaporanTab extends StatelessWidget {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10))),
                                         child: Image.network(
-                                          ctrl.listPenyaluran[index]['image'],
+                                          listPenyaluran[index]['image'],
                                           // "https://picsum.photos/250",
                                           // width: 250,
                                         ),
@@ -504,7 +507,6 @@ class LaporanTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailSedekahController());
-    return layout(ctrl, context);
+    return layout(context);
   }
 }

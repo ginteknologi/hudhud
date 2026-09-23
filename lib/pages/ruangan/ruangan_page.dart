@@ -1,14 +1,24 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/pages/ruangan/ruangan_controller.dart';
-import 'package:masjid_app/routes/ruangan/index.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/providers/ruangan_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class RuanganPage extends StatelessWidget {
+class RuanganPage extends ConsumerStatefulWidget {
   const RuanganPage({super.key});
 
-  Stack layout(RuanganController ctrl, BuildContext context) {
+  @override
+  ConsumerState<RuanganPage> createState() => _RuanganPageState();
+}
+
+class _RuanganPageState extends ConsumerState<RuanganPage> {
+  final DateTime selectedDay = DateTime.now();
+
+  Stack layout(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Stack(
       children: [
         SizedBox(
@@ -61,7 +71,7 @@ class RuanganPage extends StatelessWidget {
                                 ),
                                 child: Container(
                                   padding: const EdgeInsets.all(15),
-                                  width: Get.width,
+                                  width: screenWidth,
                                   height: 150,
                                 ) //SizedBox
                                 ),
@@ -73,7 +83,7 @@ class RuanganPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                      width: Get.width,
+                                      width: screenWidth,
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 21),
@@ -120,8 +130,7 @@ class RuanganPage extends StatelessWidget {
                                                           "Masjid An-Ni'mah",
                                                           textAlign:
                                                               TextAlign.center,
-                                                          style: context
-                                                              .textTheme
+                                                          style: Theme.of(context).textTheme
                                                               .labelSmall
                                                               ?.copyWith(
                                                                   fontFamily:
@@ -211,7 +220,7 @@ class RuanganPage extends StatelessWidget {
                   SliverToBoxAdapter(
                       child: Container(
                     decoration: const BoxDecoration(color: Color(0xFFF5F5F5)),
-                    width: Get.width,
+                    width: screenWidth,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child: Padding(
                         padding: const EdgeInsets.only(top: 70),
@@ -222,7 +231,7 @@ class RuanganPage extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("Jenis Kegiatan",
-                                    style: context.textTheme.titleMedium
+                                    style: Theme.of(context).textTheme.titleMedium
                                         ?.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black)),
@@ -233,14 +242,14 @@ class RuanganPage extends StatelessWidget {
                             ),
                             SizedBox(
                               height: 180,
-                              width: Get.width,
+                              width: screenWidth,
                               // constraints:
                               //     BoxConstraints.loose(Size.infinite),
                               child: ListView.separated(
                                 // padding: EdgeInsets.only(left: 24, right: 24),
                                 scrollDirection: Axis.horizontal,
                                 physics: const BouncingScrollPhysics(),
-                                itemCount: ctrl.listKegiatan.length,
+                                itemCount: ruanganKegiatanList.length,
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(width: 10),
                                 itemBuilder: (context, index) {
@@ -272,10 +281,10 @@ class RuanganPage extends StatelessWidget {
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              ctrl.listKegiatan[index]['label'],
+                                              ruanganKegiatanList[index]['label'],
                                               textAlign: TextAlign.left,
                                               maxLines: 2,
-                                              style: context.textTheme.bodySmall
+                                              style: Theme.of(context).textTheme.bodySmall
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -292,7 +301,7 @@ class RuanganPage extends StatelessWidget {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 5),
                                           child: AutoSizeText(
-                                            ctrl.listKegiatan[index]
+                                            ruanganKegiatanList[index]
                                                 ['subtitle'],
                                             textAlign: TextAlign.left,
                                             maxLines: 3,
@@ -337,10 +346,11 @@ class RuanganPage extends StatelessWidget {
 
                                   // Using `isSameDay` is recommended to disregard
                                   // the time-part of compared DateTime objects.
-                                  return isSameDay(ctrl.selectedDay.value, day);
+                                  return isSameDay(selectedDay, day);
                                 },
-                                onDaySelected: (selectedDay, focusedDay) {
-                                      Get.toNamed('${RoutesRuangan.jadwal}?tanggal=$selectedDay');
+                                onDaySelected: (daySelected, focusedDay) {
+                                      context.push(
+                                          '${AppRoutes.ruanganJadwal}?tanggal=$daySelected');
                                 },
                                 onFormatChanged: (format) {},
                                 onPageChanged: (focusedDay) {},
@@ -402,11 +412,9 @@ class RuanganPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(RuanganController());
-
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: layout(ctrl, context),
+      body: layout(context),
     );
   }
 }

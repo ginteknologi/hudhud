@@ -1,13 +1,46 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/instruksi/instruksi_controller.dart';
 
 class InstruksiPage extends StatelessWidget {
   const InstruksiPage({super.key});
 
-  SafeArea layout(BuildContext context, InstruksiController ctrl) {
+  List<dynamic> getListIntruksi() {
+    return [
+      {
+        "id": 1,
+        "label": "Masukkan kartu ATM dan PIN",
+      },
+      {
+        "id": 1,
+        "label": "Pilih menu Bayar/Beli",
+      },
+      {
+        "id": 1,
+        "label": "Pilih menu Lainnya, hingga menemukan menu Multipayment",
+      },
+      {
+        "id": 1,
+        "label":
+            "Masukkan Kode Biller Tokopedia (88708), lalu pilih Benar Masukkan Nomor Virtual Account Tokopedia, lalu pilih tombol Benar",
+      },
+      {
+        "id": 1,
+        "label": "Masukkan Angka 1 untuk memilih tagihan, lalu pilih tombol Ya",
+      },
+      {
+        "id": 1,
+        "label": "Akan muncul konfirmasi pembayaran, lalu pilih tombol Ya",
+      },
+      {
+        "id": 1,
+        "label": "Simpan struk sebagai bukti pembayaran Anda",
+      },
+    ];
+  }
+
+  SafeArea layout(BuildContext context) {
+    final dataintruksi = getListIntruksi();
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -27,23 +60,26 @@ class InstruksiPage extends StatelessWidget {
                             color: const Color(0xFFDADADA),
                             child: ExpansionTile(
                               title: Text("ATM Mandiri",
-                                  style: context.textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0,
-                                      color: Colors.black)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0,
+                                          color: Colors.black)),
                               children: [
                                 Container(
-                                  width: Get.width - 40,
+                                  width: MediaQuery.of(context).size.width - 40,
                                   padding: EdgeInsets.only(
                                       top: 20, left: 20, right: 20, bottom: 20),
                                   color: Colors.white,
                                   child: ListView.builder(
                                     physics: const ClampingScrollPhysics(),
-                                    itemCount: ctrl.dataintruksi.length,
+                                    itemCount: dataintruksi.length,
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       // Datum model = filteredEvents[index];
-                                      var item = ctrl.dataintruksi[index];
+                                      var item = dataintruksi[index];
                                       var no = index + 1;
                                       return Padding(
                                           padding: EdgeInsets.only(bottom: 5),
@@ -59,8 +95,9 @@ class InstruksiPage extends StatelessWidget {
                                                   child: AutoSizeText(
                                                       item['label'],
                                                       maxLines: 4,
-                                                      style: context
-                                                          .textTheme.bodySmall
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
@@ -101,23 +138,26 @@ class InstruksiPage extends StatelessWidget {
                             color: const Color(0xFFDADADA),
                             child: ExpansionTile(
                               title: Text("Mandiri Internet Banking",
-                                  style: context.textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0,
-                                      color: Colors.black)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0,
+                                          color: Colors.black)),
                               children: [
                                 Container(
-                                  width: Get.width - 40,
+                                  width: MediaQuery.of(context).size.width - 40,
                                   padding: EdgeInsets.only(
                                       top: 20, left: 20, right: 20, bottom: 20),
                                   color: Colors.white,
                                   child: ListView.builder(
                                     physics: const ClampingScrollPhysics(),
-                                    itemCount: ctrl.dataintruksi.length,
+                                    itemCount: dataintruksi.length,
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       // Datum model = filteredEvents[index];
-                                      var item = ctrl.dataintruksi[index];
+                                      var item = dataintruksi[index];
                                       var no = index + 1;
                                       return Padding(
                                           padding: EdgeInsets.only(bottom: 5),
@@ -133,8 +173,9 @@ class InstruksiPage extends StatelessWidget {
                                                   child: AutoSizeText(
                                                       item['label'],
                                                       maxLines: 4,
-                                                      style: context
-                                                          .textTheme.bodySmall
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall
                                                           ?.copyWith(
                                                               fontWeight:
                                                                   FontWeight
@@ -169,13 +210,11 @@ class InstruksiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(InstruksiController());
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Instruksi Pembayaran", context: context, elevation: 0),
-      body: layout(context, ctrl),
+      body: layout(context),
     );
   }
 }

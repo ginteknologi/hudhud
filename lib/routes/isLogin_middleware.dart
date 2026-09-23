@@ -8,7 +8,7 @@ class IsLoginMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final dataLogin = authStore.read('isLogin');
-    if (dataLogin as bool != true) {
+    if (dataLogin != true) {
       Fluttertoast.showToast(
           msg: "Untuk bisa mengakses fitur ini silahkan login dahulu.",
           toastLength: Toast.LENGTH_SHORT,

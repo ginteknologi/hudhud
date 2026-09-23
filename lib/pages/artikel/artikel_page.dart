@@ -1,17 +1,18 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
-import 'package:masjid_app/pages/artikel/artikel_controller.dart';
-import 'package:masjid_app/routes/artikel/index.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/models/artikel_data.dart';
+import 'package:masjid_app/providers/artikel_provider.dart';
 
-class ArtikelPage extends StatelessWidget {
-  final ArtikelController ctrl = Get.put(ArtikelController());
-  ArtikelPage({super.key});
+class ArtikelPage extends ConsumerWidget {
+  const ArtikelPage({super.key});
 
-  SafeArea layout(ArtikelController ctrl, BuildContext context) {
+  SafeArea layout(BuildContext context, List<ArtikelData> listArtikels) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -22,48 +23,47 @@ class ArtikelPage extends StatelessWidget {
                   // SizedBox(
                   //   height: 10,
                   // ),
-                  getListArtikel(ctrl, context),
+                  getListArtikel(listArtikels, context),
                   SizedBox(
                     height: 20,
                   )
                 ]))));
   }
 
-  ListView getListArtikel(ArtikelController ctrl, BuildContext context) {
+  ListView getListArtikel(List<ArtikelData> listArtikels, BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
-      itemCount: ctrl.listArtikels.length,
+      itemCount: listArtikels.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
         // Datum model = filteredEvents[index];
+        final artikel = listArtikels[index];
         return FadeInUp(
           child: ListCardUiWidget(
-            id: ctrl.listArtikels[index].id,
-            title: ctrl.listArtikels[index].judul,
+            id: artikel.id,
+            title: artikel.judul,
             position: MainAxisAlignment.end,
             usingDivider: false,
             height: 170,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(ctrl.listArtikels[index].image),
-                    fit: BoxFit.cover)),
-            titleStyle: context.textTheme.titleSmall
+                    image: NetworkImage(artikel.image), fit: BoxFit.cover)),
+            titleStyle: Theme.of(context).textTheme.titleSmall
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             marginSeparator: 0,
-            subtitleStyle: context.textTheme.labelMedium
+            subtitleStyle: Theme.of(context).textTheme.labelMedium
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
             onTap: () {
-              Get.toNamed(
-                  '${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
+              context.push('${AppRoutes.artikel}/${artikel.id}');
             },
             hasFooter: true,
             footerContent: [
               Text(
                   DateFormat('dd MMMM yyyy HH:mm').format(
-                      DateTime.parse(ctrl.listArtikels[index].publishDate)
+                      DateTime.parse(artikel.publishDate)
                           .add(Duration(hours: 7))),
                   textAlign: TextAlign.start,
-                  style: context.textTheme.labelSmall?.copyWith(
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,
                       letterSpacing: 0,
                       color: Colors.white)),
@@ -72,14 +72,14 @@ class ArtikelPage extends StatelessWidget {
                   // Icon(
                   //   Icons.remove_red_eye_rounded,
                   //   color: Colors.white,
-                  //   size: context.textTheme.labelLarge?.fontSize,
+                  //   size: Theme.of(context).textTheme.labelLarge?.fontSize,
                   // ),
                   SizedBox(
                     width: 5,
                   ),
                   // Text(ctrl.listArtikels[index]['viewer'],
                   //     textAlign: TextAlign.end,
-                  //     style: context.textTheme.labelMedium?.copyWith(
+                  //     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   //         fontWeight: FontWeight.w300, color: Colors.white)),
                 ],
               ),
@@ -91,14 +91,17 @@ class ArtikelPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final artikelAsync = ref.watch(artikelListProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel / Informasi", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value
-          ? Center(child: CircularProgressIndicator())
-          : layout(ctrl, context)),
+      body: artikelAsync.when(
+        data: (listArtikels) => layout(context, listArtikels),
+        loading: () => Center(child: CircularProgressIndicator()),
+        error: (err, stack) => layout(context, const []),
+      ),
     );
   }
 }

@@ -4,14 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/firebase_options.dart';
 import 'package:open_filex/open_filex.dart';
-// import 'package:flutter_background_service/flutter_background_service.dart';
-// import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-// import 'package:simple_moment/simple_moment.dart';
 
-final authStore = GetStorage();
 late FirebaseMessaging messaging;
 late AndroidNotificationChannel channel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -210,7 +206,7 @@ class SetupFirebase {
     await messaging.subscribeToTopic("all");
 
     messaging.getToken().then((value) async {
-      authStore.write('fcmtoken', value);
+      PreferencesService.fcmToken = value;
       debugPrint('token firebase: $value');
     });
 

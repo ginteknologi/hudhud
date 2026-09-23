@@ -1,22 +1,107 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_controller.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/providers/sedekah_provider.dart';
 
-class TransaksiSedekahPage extends StatelessWidget {
+/// Port of the GetX `String.isPhoneNumber` helper that this form used before.
+bool _isPhoneNumber(String s) {
+  if (s.length > 16 || s.length < 9) return false;
+  return RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$').hasMatch(s);
+}
+
+class TransaksiSedekahPage extends ConsumerStatefulWidget {
   const TransaksiSedekahPage({super.key});
 
-  SafeArea layout(TransactionSedekahController ctrl, BuildContext context) {
+  @override
+  ConsumerState<TransaksiSedekahPage> createState() =>
+      _TransaksiSedekahPageState();
+}
+
+class _TransaksiSedekahPageState extends ConsumerState<TransaksiSedekahPage> {
+  final inputKey = GlobalKey<FormState>();
+
+  // The old controller never called loadStorage(), so this stays false and the
+  // email/name fields stay enabled.
+  bool isLogin = false;
+  bool inputAnonymous = false;
+
+  List<Map<String, dynamic>> denom = [];
+  late List<bool> denomSelected;
+
+  MoneyMaskedTextController inputNominal = MoneyMaskedTextController(
+    decimalSeparator: '',
+    thousandSeparator: '.',
+    leftSymbol: 'Rp. ',
+    rightSymbol: '',
+    initialValue: 0,
+    precision: 0,
+  );
+  TextEditingController inputNama = TextEditingController();
+  TextEditingController inputNomor = TextEditingController();
+  TextEditingController inputEmail = TextEditingController();
+  TextEditingController inputPesan = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getDenom();
+  }
+
+  @override
+  void dispose() {
+    inputNominal.dispose();
+    inputNama.dispose();
+    inputNomor.dispose();
+    inputEmail.dispose();
+    inputPesan.dispose();
+    super.dispose();
+  }
+
+  void setSedekah(dynamic nominal) {
+    inputNominal.text = nominal;
+  }
+
+  List<Map<String, dynamic>> getDenom() {
+    denom = [
+      {"id": 1, "label": "Rp. 10.000", "value": "10000"},
+      {"id": 2, "label": "Rp. 50.000", "value": "50000"},
+      {"id": 3, "label": "Rp. 100.000", "value": "100000"},
+    ];
+    denomSelected = List.generate(denom.length, (index) => false);
+    return denom;
+  }
+
+  /// Writes the payment payload under the same storage key the metode/payment
+  /// pages read. Returns true when the form validates.
+  bool postInput(Map<String, dynamic> detail) {
+    if (inputKey.currentState!.validate()) {
+      writeInputPembayaran({
+        "nominal": inputNominal.numberValue,
+        'nama': inputNama.text,
+        'email': inputEmail.text, // ganti sama email login
+        'nomor': inputNomor.text,
+        'anonim': inputAnonymous,
+        'pesan': inputPesan.text,
+        'id_campaign': detail['id'],
+      });
+      return true;
+    }
+    return false;
+  }
+
+  SafeArea layout(Map<String, dynamic> detail, String id, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Form(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                key: ctrl.inputKey,
+                key: inputKey,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 21, right: 21),
                   child: Column(
@@ -30,49 +115,48 @@ class TransaksiSedekahPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                             //set border radius more than 50% of height and width to make circle
                           ),
-                          child: Obx(() {
-                            return SizedBox(
-                                width: Get.width,
-                                // height: Get.height / 7,
-                                child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        AutoSizeText(
-                                          ctrl.list['judul'].toString(),
-                                          maxLines: 1,
-                                          style: context.textTheme.titleMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        AutoSizeText(
-                                          ctrl.list['subjudul'].toString(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall
-                                                  ?.fontSize,
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.normal),
-                                          maxLines: 2,
-                                        ),
-                                        // Flexible(
-                                        //     flex: 1,
-                                        //     child: Container(
-                                        //       constraints:
-                                        //           BoxConstraints.loose(Size.infinite),
-                                        //     )),
-                                      ],
-                                    )));
-                          }) //SizedBox
-                          ),
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              // height: Get.height / 7,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      AutoSizeText(
+                                        detail['judul'].toString(),
+                                        maxLines: 1,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      AutoSizeText(
+                                        detail['subjudul'].toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall
+                                                ?.fontSize,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.normal),
+                                        maxLines: 2,
+                                      ),
+                                      // Flexible(
+                                      //     flex: 1,
+                                      //     child: Container(
+                                      //       constraints:
+                                      //           BoxConstraints.loose(Size.infinite),
+                                      //     )),
+                                    ],
+                                  )))),
                       const SizedBox(height: 10),
                       Align(
                         alignment: Alignment.centerLeft,
@@ -88,7 +172,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      getListDenom(ctrl, context),
+                      getListDenom(context),
                       // Wrap(
                       //   spacing: 10,
                       //   children: ctrl.denom
@@ -155,7 +239,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                             ),
                           ),
                           InputText(
-                            controller: ctrl.inputNominal,
+                            controller: inputNominal,
                             labelPosition: "none",
                             placeholder: "Rp. ",
                             isFill: true,
@@ -181,7 +265,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                             validator: (newValue) {
                               if (newValue!.isEmpty) {
                                 return "Mohon untuk diisi.";
-                              } else if (ctrl.inputNominal.numberValue < 1000) {
+                              } else if (inputNominal.numberValue < 1000) {
                                 return "Nominal kurang dari Rp. 1.000,-";
                               }
                               return null;
@@ -208,8 +292,8 @@ class TransaksiSedekahPage extends StatelessWidget {
                             ),
                           ),
                           InputText(
-                            enabled: !ctrl.isLogin.value,
-                            controller: ctrl.inputEmail,
+                            enabled: !isLogin,
+                            controller: inputEmail,
                             labelPosition: "none",
                             placeholder: "Email",
                             isFill: true,
@@ -229,8 +313,8 @@ class TransaksiSedekahPage extends StatelessWidget {
                             },
                           ),
                           InputText(
-                            enabled: !ctrl.isLogin.value,
-                            controller: ctrl.inputNama,
+                            enabled: !isLogin,
+                            controller: inputNama,
                             labelPosition: "none",
                             placeholder: "Nama Lengkap",
                             isFill: true,
@@ -250,7 +334,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                             },
                           ),
                           InputText(
-                            controller: ctrl.inputNomor,
+                            controller: inputNomor,
                             labelPosition: "none",
                             placeholder: "Nomor Handphone Aktif",
                             isFill: true,
@@ -266,7 +350,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                             validator: (newValue) {
                               if (newValue!.isEmpty) {
                                 return "Mohon untuk diisi.";
-                              } else if (!newValue.isPhoneNumber) {
+                              } else if (!_isPhoneNumber(newValue)) {
                                 return "Hanya diisi nomor handphone dengan benar.";
                               }
                               return null;
@@ -281,7 +365,7 @@ class TransaksiSedekahPage extends StatelessWidget {
                             inputPadding: const EdgeInsets.all(15),
                             multiText: true,
                             maxLine: 5,
-                            controller: ctrl.inputPesan,
+                            controller: inputPesan,
                             onSubmit: (newValue) {
                               FocusScope.of(context).unfocus();
                             },
@@ -298,19 +382,16 @@ class TransaksiSedekahPage extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Obx(
-                            () => Switch(
-                              value: ctrl.inputAnonymous.value,
-                              onChanged: (value) {
-                                if (kDebugMode) {
-                                  debugPrint(value.toString());
-                                }
-                                ctrl.inputAnonymous.value = value;
-                              },
-                              activeTrackColor: const Color(0xFF92E3A9),
-                              activeThumbColor: Theme.of(context).primaryColor,
-                              inactiveThumbColor: Colors.white,
-                            ),
+                          Switch(
+                            value: inputAnonymous,
+                            onChanged: (value) {
+                              setState(() {
+                                inputAnonymous = value;
+                              });
+                            },
+                            activeTrackColor: const Color(0xFF92E3A9),
+                            activeThumbColor: Theme.of(context).primaryColor,
+                            inactiveThumbColor: Colors.white,
                           ),
                           const SizedBox(
                             width: 10,
@@ -340,30 +421,30 @@ class TransaksiSedekahPage extends StatelessWidget {
                 ))));
   }
 
-  SizedBox getListDenom(TransactionSedekahController ctrl, BuildContext context) {
+  SizedBox getListDenom(BuildContext context) {
     return SizedBox(
         height: 50,
-        width: Get.width,
+        width: MediaQuery.of(context).size.width,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(ctrl.denom.length, (index) {
+            children: List.generate(denom.length, (index) {
               return Container(
                 // width: 140,
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(left: 3),
 
-                child: Obx(() => ChoiceChip(
+                child: ChoiceChip(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                           side: const BorderSide(
                               width: 1, color: Colors.black12)),
-                      selected: ctrl.denomSelected[index].value,
+                      selected: denomSelected[index],
                       label: AutoSizeText(
-                        ctrl.denom[index]['label'],
+                        denom[index]['label'],
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
-                            color: ctrl.denomSelected[index].value
+                            color: denomSelected[index]
                                 ? Colors.white
                                 : Theme.of(context).primaryColor),
                         // TextStyle(
@@ -382,59 +463,55 @@ class TransaksiSedekahPage extends StatelessWidget {
                       selectedColor: Theme.of(context).primaryColor,
                       padding: const EdgeInsets.all(8),
                       onSelected: (selected) {
-                        ctrl.setSedekah(ctrl.denom[index]['value']);
-                        var idxBefore = ctrl.denomSelected
-                            .indexWhere((e) => e.value == true);
+                        setSedekah(denom[index]['value']);
+                        var idxBefore =
+                            denomSelected.indexWhere((e) => e == true);
                         if (index == idxBefore) {
-                          ctrl.denomSelected[index].value =
-                              !ctrl.denomSelected[index].value;
+                          setState(() {
+                            denomSelected[index] = !denomSelected[index];
+                          });
                           return;
                         } else {
-                          for (RxBool b in ctrl.denomSelected) {
-                            if (b.isTrue) b.value = false;
+                          for (var i = 0; i < denomSelected.length; i++) {
+                            if (denomSelected[i]) denomSelected[i] = false;
                           }
                         }
 
-                        ctrl.denomSelected[index].value =
-                            !ctrl.denomSelected[index].value;
+                        setState(() {
+                          denomSelected[index] = !denomSelected[index];
+                        });
                       },
-                    )),
+                    ),
               );
             })));
   }
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(TransactionSedekahController());
+    final id = GoRouterState.of(context).pathParameters['id'] ?? '';
+    final detail = ref.watch(campaignDetailProvider(id)).valueOrNull ??
+        <String, dynamic>{};
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Transaksi", context: context, elevation: 0),
-        body: layout(ctrl, context),
+        body: layout(detail, id, context),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
             child: SizedBox(
-              width: Get.width,
+              width: MediaQuery.of(context).size.width,
               child: ButtonElevated(
                 title: 'Lanjut Pembayaran',
-                width: Get.width,
+                width: MediaQuery.of(context).size.width,
                 bgcolor: Theme.of(context).primaryColor,
                 height: 45,
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  final result = ctrl.postInput();
-                  if (result['code'] == 200) {
-                    if (kDebugMode) {
-                      debugPrint('berhasil');
-                    }
-                    ctrl.goToMetode('1');
-                  } else {
-                    if (kDebugMode) {
-                      debugPrint('gagal');
-                    }
+                  if (postInput(detail)) {
+                    context.push('${AppRoutes.sedekah}/$id/transaksi/metode');
                   }
                 },
               ),

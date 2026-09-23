@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class ListCardUiWidget extends StatelessWidget {
   const ListCardUiWidget(
@@ -59,7 +58,7 @@ class ListCardUiWidget extends StatelessWidget {
                 //set border radius more than 50% of height and width to make circle
               ),
               child: Container(
-                  width: Get.width,
+                  width: MediaQuery.of(context).size.width,
                   height: height,
                   constraints: BoxConstraints.loose(Size.infinite),
                   decoration: decoration,
@@ -82,7 +81,9 @@ class ListCardUiWidget extends StatelessWidget {
                                 title!,
                                 textAlign: TextAlign.start,
                                 style: titleStyle ??
-                                    context.textTheme.titleMedium
+                                    Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                 maxLines: 2,
                               ),
@@ -94,14 +95,17 @@ class ListCardUiWidget extends StatelessWidget {
                               Align(
                                   alignment: Alignment.centerLeft,
                                   child: type == 'wp'
-                                      ? Html(data: subtitle!, style: {
-                                          "p": Style(fontSize: FontSize(13.0))
-                                        })
+                                      ? HtmlWidget(
+                                          subtitle!,
+                                          textStyle: const TextStyle(fontSize: 13.0),
+                                        )
                                       : AutoSizeText(
                                           subtitle!,
                                           textAlign: TextAlign.start,
                                           style: subtitleStyle ??
-                                              context.textTheme.labelMedium
+                                              Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.w300,
                                               ),

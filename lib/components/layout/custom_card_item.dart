@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomCardItem extends StatelessWidget {
@@ -45,6 +44,9 @@ class CustomCardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = isFullWidth ? screenWidth : (width ?? 151.0);
+
     return IntrinsicWidth(
       child: Align(
           alignment: Alignment.centerRight,
@@ -53,21 +55,16 @@ class CustomCardItem extends StatelessWidget {
             child: InkWell(
               highlightColor: Colors.transparent,
               onTap: () async {
-                if (islink) {
+                if (islink && link != null) {
                   final Uri url = Uri.parse(link!);
                   if (!await launchUrl(url)) {
-                    debugPrint('Tidak dapat membuka link YouTube.');
+                    debugPrint('Tidak dapat membuka link: $link');
                   }
                 }
-                if (linkRoute != null) {
-                  debugPrint(linkRoute);
-                  Get.toNamed(linkRoute!);
-                }
-                //Get.toNamed(AppRoutes.detailEventScreen);
               },
               child: SizedBox(
                 height: height,
-                width: isFullWidth == true ? Get.width : 151,
+                width: cardWidth,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -80,13 +77,13 @@ class CustomCardItem extends StatelessWidget {
                             ? Image.network(
                                 imgPath!,
                                 height: height,
-                                width: isFullWidth == true ? Get.width : 151,
+                                width: cardWidth,
                                 fit: BoxFit.cover,
                               )
                             : Image.asset(
                                 imgPath ?? 'assets/icons/doa.jpg',
                                 height: height,
-                                width: isFullWidth == true ? Get.width : 151,
+                                width: cardWidth,
                                 fit: BoxFit.cover,
                               ),
                       ),
@@ -100,7 +97,7 @@ class CustomCardItem extends StatelessWidget {
                         children: [
                           chipText != null
                               ? Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
                                   margin: positionChip == CrossAxisAlignment.end
                                       ? const EdgeInsets.only(right: 5, top: 10)
                                       : const EdgeInsets.only(left: 5, top: 10),
@@ -120,34 +117,16 @@ class CustomCardItem extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        // Visibility(
-                                        //     visible: size == 'small',
-                                        //     child: Container(
-                                        //         margin:
-                                        //             const EdgeInsets.only(right: 5),
-                                        //         child: SvgPicture.asset(
-                                        //             'assets/icons/live.svg',
-                                        //             height: 10,
-                                        //             width: 10))),
                                         Text('$chipText',
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.start,
-                                            style: chipTextStyle
-                                            // TextStyle(
-                                            //     color: Colors.white,
-                                            //     fontWeight: FontWeight.bold,
-                                            //     fontStyle: size == 'small'
-                                            //         ? FontStyle.italic
-                                            //         : FontStyle.normal,
-                                            //     fontSize: chipSize
-                                            // ),
-                                            )
+                                            style: chipTextStyle)
                                       ],
                                     ),
                                   ))
                               : Container(),
                           Container(
-                            width: isFullWidth == true ? Get.width : 151,
+                            width: cardWidth,
                             clipBehavior: Clip.antiAlias,
                             padding: const EdgeInsets.only(
                                 left: 10, right: 10, top: 15),
@@ -156,13 +135,11 @@ class CustomCardItem extends StatelessWidget {
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                   colors: [
-                                    // Colors.transparent,
                                     Colors.black.withValues(alpha: 0.0),
                                     Colors.black.withValues(alpha: 0.3),
                                     Colors.black.withValues(alpha: 0.5),
                                     Colors.black.withValues(alpha: 0.7)
                                   ]),
-                              // color: Colors.black.withValues(alpha: 0.5),
                               borderRadius: const BorderRadius.only(
                                   bottomLeft: Radius.circular(7),
                                   bottomRight: Radius.circular(7)),
@@ -173,8 +150,7 @@ class CustomCardItem extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                    width:
-                                        isFullWidth == true ? Get.width : 151,
+                                    width: cardWidth,
                                     margin: const EdgeInsets.only(
                                         left: 6, top: 5, right: 12),
                                     child: Row(
@@ -204,7 +180,7 @@ class CustomCardItem extends StatelessWidget {
                                       ],
                                     )),
                                 Container(
-                                  width: isFullWidth == true ? Get.width : 151,
+                                  width: cardWidth,
                                   margin: const EdgeInsets.only(
                                       left: 6, right: 12, top: 2),
                                   child: Text(

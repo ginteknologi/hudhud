@@ -1,14 +1,93 @@
-import 'package:get/get.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/akun/edit/edit_akun_controller.dart';
+import 'package:masjid_app/providers/akun_provider.dart';
+import 'package:masjid_app/providers/auth_provider.dart';
 
-class EditAkunPage extends StatelessWidget {
+class EditAkunPage extends ConsumerStatefulWidget {
   const EditAkunPage({super.key});
 
-  SafeArea layout(BuildContext context, EditAkunController ctrl) {
+  @override
+  ConsumerState<EditAkunPage> createState() => _EditAkunPageState();
+}
+
+class _EditAkunPageState extends ConsumerState<EditAkunPage> {
+  final txtController = TextEditingController();
+  final phoneController = TextEditingController();
+  final picker = ImagePicker();
+
+  String inputFoto = '';
+  File? newfile;
+  String fileName = '';
+  bool isNewfile = false;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(authNotifierProvider).valueOrNull;
+    inputFoto = user?.photo ?? '';
+    txtController.text = user?.name ?? '';
+    phoneController.text = AkunRepository.savedPhone;
+  }
+
+  @override
+  void dispose() {
+    txtController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  Future<void> pilihFile() async {
+    final image = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 1000,
+    );
+    if (image == null) return;
+    setState(() {
+      newfile = File(image.path);
+      fileName = image.name;
+      isNewfile = true;
+    });
+  }
+
+  Future<void> simpan() async {
+    if (isLoading) return;
+    setState(() => isLoading = true);
+
+    final ok = await ref.read(akunRepositoryProvider).simpanProfile(
+          nama: txtController.text,
+          phone: phoneController.text,
+          newFile: newfile,
+          fileName: fileName,
+        );
+
+    if (!mounted) return;
+    setState(() => isLoading = false);
+    if (ok) context.pop();
+  }
+
+  Widget _avatar() {
+    if (isNewfile && newfile != null) {
+      return CircleAvatar(radius: 70, backgroundImage: FileImage(newfile!));
+    }
+    if (inputFoto.isNotEmpty) {
+      return CircleAvatar(radius: 70, backgroundImage: NetworkImage(inputFoto));
+    }
+    return const CircleAvatar(
+      radius: 70,
+      backgroundImage: AssetImage("assets/icons/app_icon.png"),
+    );
+  }
+
+  SafeArea layout(BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -41,27 +120,9 @@ class EditAkunPage extends StatelessWidget {
                                                 Radius.circular(70))),
                                         child: InkWell(
                                           onTap: () {
-                                            ctrl.pilihFile();
+                                            pilihFile();
                                           },
-                                          child: Obx(() => ctrl.inputFoto.value.isEmpty &&
-                                                  !ctrl.isNewfile.value
-                                              ? CircleAvatar(
-                                                  radius: 70,
-                                                  backgroundImage: AssetImage(
-                                                      "assets/icons/app_icon.png"))
-                                              : !ctrl.isNewfile.value
-                                                  ? CircleAvatar(
-                                                      radius: 70,
-                                                      backgroundImage:
-                                                          NetworkImage(ctrl
-                                                              .inputFoto.value),
-                                                    )
-                                                  : CircleAvatar(
-                                                      radius: 70,
-                                                      backgroundImage:
-                                                          FileImage(
-                                                              ctrl.newfile!),
-                                                    )),
+                                          child: _avatar(),
                                         )),
                                     Positioned(
                                       bottom: 1,
@@ -108,7 +169,7 @@ class EditAkunPage extends StatelessWidget {
                           inputPadding: const EdgeInsets.all(15),
                           multiText: false,
                           maxLine: 1,
-                          controller: ctrl.txtController,
+                          controller: txtController,
                           onSubmit: (newValue) {},
                           onEditingComplete: () {},
                           onChanged: (newValue) {},
@@ -132,7 +193,7 @@ class EditAkunPage extends StatelessWidget {
                           inputPadding: const EdgeInsets.all(15),
                           multiText: false,
                           maxLine: 1,
-                          controller: ctrl.phoneController,
+                          controller: phoneController,
                           onSubmit: (newValue) {},
                           onEditingComplete: () {},
                           onChanged: (newValue) {},
@@ -152,27 +213,27 @@ class EditAkunPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(EditAkunController());
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Profile > Edit Profile", context: context, elevation: 0),
-        body: layout(context, ctrl),
+        body: layout(context),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
             child: SizedBox(
-              width: Get.width,
+              width: screenWidth,
               child: ButtonElevated(
                 title: 'Simpan',
-                width: Get.width,
+                width: screenWidth,
                 bgcolor: Theme.of(context).primaryColor,
                 height: 45,
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  ctrl.simpan();
+                  simpan();
                 },
               ),
             ),

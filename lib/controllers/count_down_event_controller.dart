@@ -20,13 +20,15 @@ class CountDownEventController extends GetxController {
   Future<void> getData() async {
     try {
       final data = await EventCountDownService.getData();
-      _targetDate.value = DateTime.parse(data['selesai']);
-      eventData.value = EventCountDownData(
-          status: true,
-          description: data['keterangan'],
-          limitDate: data['selesai'],
-          title: data['judul'],
-          imageUrl: data['image']);
+      if (data != null && data['selesai'] != null) {
+        _targetDate.value = DateTime.parse(data['selesai']);
+        eventData.value = EventCountDownData(
+            status: true,
+            description: data['keterangan'] ?? '',
+            limitDate: data['selesai'] ?? '',
+            title: data['judul'] ?? '',
+            imageUrl: data['image'] ?? 'https://nos.wjv-1.neo.id/marbot/assets/ramadhan-01.png');
+      }
       isLoadingEvent.value = false;
       if (kDebugMode) {
         debugPrint("ini >>>>>>>>>>>>>>>>>> eventData");

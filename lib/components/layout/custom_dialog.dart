@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 
 class CustomDialog extends StatelessWidget {
   const CustomDialog(
@@ -37,6 +36,9 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = isFullWidth ? screenWidth : (width ?? 151.0);
+
     return IntrinsicWidth(
       child: Align(
           alignment: Alignment.centerRight,
@@ -44,12 +46,10 @@ class CustomDialog extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               highlightColor: Colors.transparent,
-              onTap: () {
-                //Get.toNamed(AppRoutes.detailEventScreen);
-              },
+              onTap: () {},
               child: SizedBox(
                 height: height,
-                width: isFullWidth == true ? Get.width : 151,
+                width: cardWidth,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -61,7 +61,7 @@ class CustomDialog extends StatelessWidget {
                         child: Image.asset(
                           imgPath ?? 'assets/icons/image-item1.png',
                           height: height,
-                          width: isFullWidth == true ? Get.width : 151,
+                          width: cardWidth,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -106,31 +106,21 @@ class CustomDialog extends StatelessWidget {
                                       Text('$chipText',
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.start,
-                                          style: chipTextStyle
-                                          // TextStyle(
-                                          //     color: Colors.white,
-                                          //     fontWeight: FontWeight.bold,
-                                          //     fontStyle: size == 'small'
-                                          //         ? FontStyle.italic
-                                          //         : FontStyle.normal,
-                                          //     fontSize: chipSize
-                                          // ),
-                                          ),
+                                          style: chipTextStyle),
                                     ],
                                   ),
                                 )),
                             Container(
-                              width: isFullWidth == true ? Get.width : 151,
+                              width: cardWidth,
                               clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
                                       Colors.transparent,
-                                      Colors.black.withValues(alpha: 0.5)
+                                      Color(0x80000000),
                                     ]),
-                                // color: Colors.black.withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(7),
                                     bottomRight: Radius.circular(7)),
@@ -141,8 +131,7 @@ class CustomDialog extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                      width:
-                                          isFullWidth == true ? Get.width : 151,
+                                      width: cardWidth,
                                       margin: const EdgeInsets.only(
                                           left: 6, top: 5, right: 12),
                                       child: Row(
@@ -172,8 +161,7 @@ class CustomDialog extends StatelessWidget {
                                         ],
                                       )),
                                   Container(
-                                    width:
-                                        isFullWidth == true ? Get.width : 151,
+                                    width: cardWidth,
                                     margin: const EdgeInsets.only(
                                         left: 6, right: 12, top: 2),
                                     child: Text(

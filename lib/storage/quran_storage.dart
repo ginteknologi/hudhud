@@ -1,7 +1,30 @@
-import 'package:get_storage/get_storage.dart';
+import 'package:masjid_app/core/storage/preferences_service.dart';
+import 'package:masjid_app/models/bookmark_data.dart';
 
 class QuranStorage {
-  final box = GetStorage();
+  void saveBookmark(BookmarkData bookmark, [String type = 'ayat']) {
+    PreferencesService.setString('${type}_namaSurat', bookmark.namaSurat);
+    PreferencesService.setString('${type}_surat', bookmark.surat.toString());
+    PreferencesService.setString('${type}_ayat', bookmark.ayat.toString());
+    PreferencesService.setString('${type}_totalAyat', bookmark.totalAyat.toString());
+    PreferencesService.setString('${type}_index', bookmark.index.toString());
+  }
+
+  BookmarkData getBookmark([String type = 'ayat']) {
+    final namaSurat = PreferencesService.getString('${type}_namaSurat') ?? '';
+    final suratStr = PreferencesService.getString('${type}_surat');
+    final ayatStr = PreferencesService.getString('${type}_ayat');
+    final totalAyatStr = PreferencesService.getString('${type}_totalAyat');
+    final indexStr = PreferencesService.getString('${type}_index');
+
+    return BookmarkData(
+      namaSurat: namaSurat,
+      surat: int.tryParse(suratStr ?? '') ?? 0,
+      ayat: int.tryParse(ayatStr ?? '') ?? 0,
+      totalAyat: int.tryParse(totalAyatStr ?? '') ?? 0,
+      index: int.tryParse(indexStr ?? '') ?? 0,
+    );
+  }
 
   // Fungsi untuk menyimpan riwayat bacaan terakhir
   void saveLastRead({
@@ -11,30 +34,30 @@ class QuranStorage {
     int? totalAyat,
     int? index,
   }) {
-    box.write('namaSurat', namaSurat);
-    box.write('surat', surat);
-    box.write('ayat', ayat);
-    if (totalAyat != null) box.write('totalAyat', totalAyat);
-    if (index != null) box.write('index', index);
+    PreferencesService.setString('last_read_namaSurat', namaSurat);
+    PreferencesService.setString('last_read_surat', surat.toString());
+    PreferencesService.setString('last_read_ayat', ayat.toString());
+    if (totalAyat != null) PreferencesService.setString('last_read_totalAyat', totalAyat.toString());
+    if (index != null) PreferencesService.setString('last_read_index', index.toString());
   }
 
   // Fungsi untuk mengambil data riwayat bacaan
   Map<String, dynamic> getLastRead() {
     return {
-      'namaSurat': box.read('namaSurat'),
-      'surat': box.read('surat'),
-      'ayat': box.read('ayat'),
-      'totalAyat': box.read('totalAyat'),
-      'index': box.read('index'),
+      'namaSurat': PreferencesService.getString('last_read_namaSurat'),
+      'surat': int.tryParse(PreferencesService.getString('last_read_surat') ?? ''),
+      'ayat': int.tryParse(PreferencesService.getString('last_read_ayat') ?? ''),
+      'totalAyat': int.tryParse(PreferencesService.getString('last_read_totalAyat') ?? ''),
+      'index': int.tryParse(PreferencesService.getString('last_read_index') ?? ''),
     };
   }
 
   // Fungsi untuk menghapus riwayat bacaan (dipanggil saat logout)
   void removeQuranHistory() {
-    box.remove('namaSurat');
-    box.remove('surat');
-    box.remove('ayat');
-    box.remove('totalAyat');
-    box.remove('index');
+    PreferencesService.remove('last_read_namaSurat');
+    PreferencesService.remove('last_read_surat');
+    PreferencesService.remove('last_read_ayat');
+    PreferencesService.remove('last_read_totalAyat');
+    PreferencesService.remove('last_read_index');
   }
 }

@@ -1,12 +1,18 @@
 // lib/pages/onboarding/onboard_page.dart
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:masjid_app/pages/onboarding/onboard_controller.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/core/storage/preferences_service.dart';
 
 class OnboardPage extends StatelessWidget {
   OnboardPage({super.key});
+
+  void _finish(BuildContext context) {
+    PreferencesService.onboardingCompleted = true;
+    context.go(AppRoutes.auth);
+  }
 
   final onboardingPagesList = [
     PageViewModel(
@@ -119,7 +125,7 @@ class OnboardPage extends StatelessWidget {
     );
   }
 
-  Widget layout(OnboardController ctrl, BuildContext context) {
+  Widget layout(BuildContext context) {
     return SafeArea(
       child: Column(
         children: [
@@ -128,7 +134,7 @@ class OnboardPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
               child: TextButton(
-                onPressed: ctrl.goToLogin,
+                onPressed: () => _finish(context),
                 child: const Text("Lewati"),
               ),
             ),
@@ -152,7 +158,7 @@ class OnboardPage extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
 
               // Callback selesai
-              onDone: ctrl.goToLogin,
+              onDone: () => _finish(context),
 
               // Dekorasi dots optional
               dotsDecorator: const DotsDecorator(
@@ -167,8 +173,6 @@ class OnboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(OnboardController());
-
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark),
     );
@@ -176,7 +180,7 @@ class OnboardPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: layout(ctrl, context),
+      body: layout(context),
     );
   }
 }

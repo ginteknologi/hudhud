@@ -18,6 +18,7 @@ enum DialogPopupInfaq { subuh, pagi }
 
 class MainController extends GetxController {
   final lokasiStorage = LokasiStorage();
+  final quranStorage = QuranStorage();
   final player = AudioPlayer();
   final dataStore = GetStorage();
 

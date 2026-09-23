@@ -1,15 +1,56 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_controller.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/providers/sedekah_provider.dart';
 import 'package:masjid_app/theme.dart';
 
-class PaymentTransaksiSedekahPage extends StatelessWidget {
+class PaymentTransaksiSedekahPage extends ConsumerStatefulWidget {
   const PaymentTransaksiSedekahPage({super.key});
 
-  SafeArea layout(PaymentTransaksiController ctrl, BuildContext context) {
+  @override
+  ConsumerState<PaymentTransaksiSedekahPage> createState() =>
+      _PaymentTransaksiSedekahPageState();
+}
+
+class _PaymentTransaksiSedekahPageState
+    extends ConsumerState<PaymentTransaksiSedekahPage> {
+  bool isLoading = false;
+  Map<String, dynamic> dataBillProduct = {};
+  TextEditingController nomorInput = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    dataBillProduct = readInputPembayaran();
+    nomorInput.text = dataBillProduct['nomor']?.toString() ?? '';
+  }
+
+  @override
+  void dispose() {
+    nomorInput.dispose();
+    super.dispose();
+  }
+
+  Future<void> procceedPayment(String id) async {
+    setState(() {
+      isLoading = true;
+    });
+    final success =
+        await ref.read(sedekahOrderProvider.notifier).createOrderFromStorage();
+    if (!mounted) return;
+    setState(() {
+      isLoading = false;
+    });
+    if (success) {
+      context.go('${AppRoutes.sedekah}/$id/transaksi/status');
+    }
+  }
+
+  SafeArea layout(BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -29,13 +70,13 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                             //set border radius more than 50% of height and width to make circle
                           ),
                           child: Container(
-                            width: Get.width,
+                            width: MediaQuery.of(context).size.width,
                             padding: const EdgeInsets.all(15),
                             height: 350,
                             child: Align(
                               alignment: Alignment.topCenter,
-                              child: Text("Menggunakan ${ctrl.dataBillProduct['dataMetodeBayar']['name']}",
-                                style: context.textTheme.titleMedium?.copyWith(
+                              child: Text("Menggunakan ${dataBillProduct['dataMetodeBayar']['name']}",
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
@@ -55,7 +96,7 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                           ),
                           child: Container(
                               padding: const EdgeInsets.all(15),
-                              width: Get.width - 42,
+                              width: MediaQuery.of(context).size.width - 42,
                               height: 300,
                               child: Column(
                                 mainAxisAlignment:
@@ -64,8 +105,8 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                   Column(
                                     children: [
                                       const Text("Donasimu"),
-                                      Text(priceFormat.format(ctrl.dataBillProduct['nominal']) ,
-                                          style: context.textTheme.headlineSmall
+                                      Text(priceFormat.format(dataBillProduct['nominal']) ,
+                                          style: Theme.of(context).textTheme.headlineSmall
                                               ?.copyWith(
                                                   fontWeight: FontWeight.w900,
                                                   color: Colors.black)),
@@ -77,8 +118,8 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Tuliskan Nomor ${ctrl.dataBillProduct['dataMetodeBayar']['name']} anda",
-                                          style: context.textTheme.titleMedium
+                                      Text("Tuliskan Nomor ${dataBillProduct['dataMetodeBayar']['name']} anda",
+                                          style: Theme.of(context).textTheme.titleMedium
                                               ?.copyWith(
                                                   fontWeight: FontWeight.w900,
                                                   color: Colors.black)),
@@ -88,7 +129,7 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                       Text(
                                           "Pastikan nomor yang anda masukan sudah terdaftar dan memiliki dana yang aktif. ",
                                           textAlign: TextAlign.center,
-                                          style: context.textTheme.bodySmall
+                                          style: Theme.of(context).textTheme.bodySmall
                                               ?.copyWith(
                                                   fontWeight: FontWeight.normal,
                                                   color: Colors.black)),
@@ -106,11 +147,11 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
                                             .textTheme
                                             .bodyMedium,
                                         inputPadding: const EdgeInsets.all(10),
-                                        controller: ctrl.nomorInput,
+                                        controller: nomorInput,
                                         onSubmit: (newValue) {},
                                         onEditingComplete: () {},
                                         onChanged: (newValue) {
-                                          ctrl.dataBillProduct['phoneovo'] = newValue;
+                                          dataBillProduct['phoneovo'] = newValue;
                                         },
                                         validator: (newValue) {
                                           if (newValue!.isEmpty) {
@@ -133,26 +174,27 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(PaymentTransaksiController());
+    final id = GoRouterState.of(context).pathParameters['id'] ?? '';
+
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
-        body: Obx(() => ctrl.isLoading.value ? CircularProgressIndicator() : layout(ctrl, context)),
+        body: isLoading ? CircularProgressIndicator() : layout(context),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
             child: SizedBox(
-              width: Get.width,
+              width: MediaQuery.of(context).size.width,
               child: ButtonElevated(
                 title: 'Lanjutkan',
-                width: Get.width,
+                width: MediaQuery.of(context).size.width,
                 bgcolor: Theme.of(context).primaryColor,
                 height: 45,
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  ctrl.procceedPayment('1');
+                  procceedPayment(id);
                 },
               ),
             ),

@@ -1,15 +1,24 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/notifikasi/invoice/invoice_controller.dart';
+import 'package:masjid_app/providers/notifikasi_provider.dart';
 import 'package:masjid_app/theme.dart';
-import 'package:easy_localization/easy_localization.dart';
 
-class InvoiceNotifikasiPage extends StatelessWidget {
+class InvoiceNotifikasiPage extends ConsumerWidget {
   const InvoiceNotifikasiPage({super.key});
 
-  SafeArea layout(BuildContext context, InvoiceController ctrl) {
+  SafeArea layout(BuildContext context, Map<String, dynamic> list) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final status = list['status'];
+    final statusInvoice = status == 'paid'
+        ? 'Lunas'
+        : status == 'unpaid'
+            ? 'Menunggu Pembayaran'
+            : 'Dibatalkan';
+
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -30,7 +39,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                             //set border radius more than 50% of height and width to make circle
                           ),
                           child: Container(
-                              width: Get.width,
+                              width: screenWidth,
                               constraints: BoxConstraints.loose(Size.infinite),
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black38),
@@ -58,16 +67,14 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                           children: [
                                             Text(
                                               "INVOICE",
-                                              style: context
-                                                  .textTheme.titleMedium
+                                              style: Theme.of(context).textTheme.titleMedium
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
-                                              ctrl.statusInvoice,
-                                              style: context
-                                                  .textTheme.titleMedium
+                                              statusInvoice,
+                                              style: Theme.of(context).textTheme.titleMedium
                                                   ?.copyWith(
                                                 color: Theme.of(context)
                                                     .primaryColor,
@@ -75,9 +82,8 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                               ),
                                             ),
                                             AutoSizeText(
-                                              "Tanggal: ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['updatedAt']))}",
-                                              style: context
-                                                  .textTheme.labelSmall
+                                              "Tanggal: ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(list['updatedAt']))}",
+                                              style: Theme.of(context).textTheme.labelSmall
                                                   ?.copyWith(
                                                 letterSpacing: 0,
                                                 color: Colors.black45,
@@ -102,14 +108,14 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                           children: [
                                             Text(
                                               "Nama  :",
-                                              style: context.textTheme.bodySmall
+                                              style: Theme.of(context).textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.normal,
                                               ),
                                             ),
                                             Text(
-                                              ctrl.list['data_sedekah']['name'],
-                                              style: context.textTheme.bodySmall
+                                              list['data_sedekah']['name'],
+                                              style: Theme.of(context).textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -122,15 +128,15 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                           children: [
                                             Text(
                                               "Metode  :",
-                                              style: context.textTheme.bodySmall
+                                              style: Theme.of(context).textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.normal,
                                               ),
                                             ),
                                             Text(
-                                              ctrl.list['paymentSelect']
+                                              list['paymentSelect']
                                                   ['name'],
-                                              style: context.textTheme.bodySmall
+                                              style: Theme.of(context).textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -143,15 +149,15 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                           children: [
                                             Text(
                                               "Jumlah  :",
-                                              style: context.textTheme.bodySmall
+                                              style: Theme.of(context).textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.normal,
                                               ),
                                             ),
                                             Text(
                                               priceFormat
-                                                  .format(ctrl.list['nominal']),
-                                              style: context.textTheme.bodySmall
+                                                  .format(list['nominal']),
+                                              style: Theme.of(context).textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -165,7 +171,7 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                     ),
                                     AutoSizeText(
                                       "CitraGran Cibubur, RT005/011, Jatikarya, Jatisampurna, Bekasi, West Java 17435",
-                                      style: context.textTheme.labelSmall
+                                      style: Theme.of(context).textTheme.labelSmall
                                           ?.copyWith(
                                               fontWeight: FontWeight.w300,
                                               letterSpacing: 0),
@@ -180,16 +186,19 @@ class InvoiceNotifikasiPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(InvoiceController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final invoice = GoRouterState.of(context).pathParameters['invoice'] ?? '';
+    final invoiceAsync = ref.watch(invoiceDetailProvider(invoice));
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value
-          ? Center(child: CircularProgressIndicator())
-          : layout(context, ctrl)),
+      body: invoiceAsync.when(
+        data: (list) => layout(context, list),
+        loading: () => Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text('Gagal memuat invoice: $err')),
+      ),
     );
   }
 }

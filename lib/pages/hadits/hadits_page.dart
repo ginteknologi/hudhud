@@ -1,15 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/pages/hadits/hadits_controller.dart';
-import 'package:masjid_app/routes/hadits/index.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/providers/hadits_providers.dart';
 
-class HaditsPage extends StatelessWidget {
-  final HaditsController ctrl = Get.put(HaditsController());
-  HaditsPage({super.key});
+class HaditsPage extends ConsumerWidget {
+  const HaditsPage({super.key});
 
-  SafeArea layout(HaditsController ctrl, BuildContext context) {
+  SafeArea layout(BuildContext context, List<Map<String, dynamic>> books) {
     return SafeArea(
       top: false,
       child: SingleChildScrollView(
@@ -103,7 +103,7 @@ class HaditsPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 21),
                   child: Column(
                     children: [
-                      dataGrid(ctrl),
+                      dataGrid(context, books),
                     ],
                   )),
               SizedBox(height: 29),
@@ -112,11 +112,12 @@ class HaditsPage extends StatelessWidget {
     );
   }
 
-  GridView dataGrid(HaditsController ctrl) {
+  GridView dataGrid(BuildContext context, List<Map<String, dynamic>> books) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: ctrl.list.length,
+      itemCount: books.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         childAspectRatio: (48 / 90),
         crossAxisCount: 3,
@@ -126,8 +127,8 @@ class HaditsPage extends StatelessWidget {
           padding: const EdgeInsets.all(8), // Sesuaikan dengan kebutuhan Anda
           child: InkWell(
             onTap: () {
-              Get.toNamed(RoutesHadits.detail,
-                  arguments: {'detail': ctrl.list[index]});
+              context.push('${AppRoutes.hadits}/${books[index]['namaTabel']}',
+                  extra: books[index]);
             },
             borderRadius: BorderRadius.circular(20),
             splashColor: Colors.green.withValues(alpha: 0.5),
@@ -136,23 +137,23 @@ class HaditsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset(
-                  "assets/icons/${ctrl.list[index]['longNama']}.png",
+                  "assets/icons/${books[index]['longNama']}.png",
                   fit: BoxFit.fill,
                 ),
                 SizedBox(
-                  height: Get.width / 80,
+                  height: screenWidth / 80,
                 ),
                 AutoSizeText(
-                  ctrl.list[index]['longNama'],
+                  books[index]['longNama'],
                   textAlign: TextAlign.left,
                   maxLines: 1,
-                  presetFontSizes: [Get.width / 35],
+                  presetFontSizes: [screenWidth / 35],
                   style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
                 ),
                 AutoSizeText(
-                  '${ctrl.list[index]['hadits'].toString()} Hadits',
+                  '${books[index]['hadits'].toString()} Hadits',
                   maxLines: 1,
-                  presetFontSizes: [Get.width / 38],
+                  presetFontSizes: [screenWidth / 38],
                   style: TextStyle(fontSize: 10),
                 ),
                 // AutoSizeText(
@@ -185,7 +186,8 @@ class HaditsPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final booksAsync = ref.watch(haditsBooksProvider);
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
@@ -198,11 +200,11 @@ class HaditsPage extends StatelessWidget {
       backgroundColor: Color(0xFFF5F5F5),
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
-      body: Obx(() => ctrl.isLoadingList.value
-          ? const Center(child: CircularProgressIndicator())
-          : layout(ctrl, context)),
+      body: booksAsync.when(
+        data: (books) => layout(context, books),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => layout(context, const []),
+      ),
     );
   }
 }
-
-enum TypeViewQuran { perayat, perhalaman }

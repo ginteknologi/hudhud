@@ -1,18 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_controller.dart';
-import 'package:masjid_app/routes/home/index.dart';
-import 'package:masjid_app/routes/notifikasi/index.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/providers/auth_provider.dart';
+import 'package:masjid_app/providers/notifikasi_provider.dart';
 
-class DetailNotifikasiPage extends StatelessWidget {
+class DetailNotifikasiPage extends ConsumerWidget {
   const DetailNotifikasiPage({super.key});
 
-  SafeArea layout(BuildContext context, DetailNotifikasiController ctrl) {
+  SafeArea layout(BuildContext context, Map<String, dynamic> list, String userName) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -39,7 +42,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Text("Jazakallah Khairon",
-                              style: context.textTheme.titleLarge?.copyWith(
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.normal,
                                   fontFamily: "DMSerifDisplay",
                                   color: Theme.of(context).primaryColor)
@@ -51,8 +54,8 @@ class DetailNotifikasiPage extends StatelessWidget {
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: Text(ctrl.dataUser['name'],
-                              style: context.textTheme.titleLarge?.copyWith(
+                          child: Text(userName,
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black)
                               // TextStyle(
@@ -66,7 +69,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                           children: [
                             Container(
                               constraints: BoxConstraints.loose(Size.infinite),
-                              width: Get.width,
+                              width: screenWidth,
                               clipBehavior: Clip.antiAlias,
                               decoration: const BoxDecoration(
                                   color: Color(0xFFD9D9D9),
@@ -84,19 +87,17 @@ class DetailNotifikasiPage extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             AutoSizeText(
-                                                "No. Invoice : ${ctrl.list['data']['transaksi']['invoice']}",
+                                                "No. Invoice : ${list['data']['transaksi']['invoice']}",
                                                 maxLines: 1,
-                                                style: context
-                                                    .textTheme.bodyMedium
+                                                style: Theme.of(context).textTheme.bodyMedium
                                                     ?.copyWith(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
                                                 )),
                                             AutoSizeText(
-                                                "Tanggal : ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(ctrl.list['createdAt']))}",
+                                                "Tanggal : ${DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.parse(list['createdAt']))}",
                                                 maxLines: 1,
-                                                style: context
-                                                    .textTheme.bodyMedium
+                                                style: Theme.of(context).textTheme.bodyMedium
                                                     ?.copyWith(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
@@ -106,7 +107,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                       )),
                                   Container(
                                     height: 250,
-                                    width: Get.width,
+                                    width: screenWidth,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.only(
@@ -145,8 +146,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                             children: [
                                               AutoSizeText(
                                                 "Donasi Anda sudah Kami terima, Semoga Allah SWT membalas segala kebaikan dan membalas kelimpahan yang berlipat ganda serta keberkahan.",
-                                                style: context
-                                                    .textTheme.bodySmall
+                                                style: Theme.of(context).textTheme.bodySmall
                                                     ?.copyWith(
                                                   fontWeight: FontWeight.w300,
                                                   color: Colors.black,
@@ -158,8 +158,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                               ),
                                               AutoSizeText(
                                                 "Salam, ",
-                                                style: context
-                                                    .textTheme.bodySmall
+                                                style: Theme.of(context).textTheme.bodySmall
                                                     ?.copyWith(
                                                   fontWeight: FontWeight.w300,
                                                   color: Colors.black,
@@ -170,7 +169,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                           ),
                                           AutoSizeText(
                                             "DKM Mesjid An Ni'mah ",
-                                            style: context.textTheme.bodySmall
+                                            style: Theme.of(context).textTheme.bodySmall
                                                 ?.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
@@ -208,7 +207,7 @@ class DetailNotifikasiPage extends StatelessWidget {
                                 top: 75,
                                 child: SizedBox(
                                   height: 20,
-                                  width: Get.width - 85,
+                                  width: screenWidth - 85,
                                   child: Row(
                                     children: List.generate(
                                         150 ~/ 2,
@@ -228,22 +227,25 @@ class DetailNotifikasiPage extends StatelessWidget {
                           height: 20,
                         ),
                         SizedBox(
-                          width: Get.width,
+                          width: screenWidth,
                           child: ButtonElevated(
                             title: 'Lihat Invoice',
-                            width: Get.width,
+                            width: screenWidth,
                             bgcolor: Color(0xFF007EA6),
                             height: 45,
                             color: Colors.white,
                             radius: 5,
                             onPressed: () {
                               if (kDebugMode) {
-                                debugPrint(ctrl.list['data']['transaksi']
+                                debugPrint(list['data']['transaksi']
                                         ['invoice']
                                     .toString());
                               }
-                              Get.toNamed(
-                                  '${RoutesNotifikasi.root}/detail/invoice/${ctrl.list['data']['transaksi']['invoice']}');
+                              context.push(
+                                  AppRoutes.notifikasiInvoice.replaceFirst(
+                                      ':invoice',
+                                      list['data']['transaksi']['invoice']
+                                          .toString()));
                             },
                           ),
                         ),
@@ -255,30 +257,35 @@ class DetailNotifikasiPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailNotifikasiController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final id = GoRouterState.of(context).pathParameters['id'] ?? '';
+    final detailAsync = ref.watch(notifikasiDetailProvider(id));
+    final userName = ref.watch(authNotifierProvider).valueOrNull?.name ?? '';
 
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "", context: context, elevation: 0),
-        body: Obx(() => ctrl.isLoadingList.value
-            ? Center(child: CircularProgressIndicator())
-            : layout(context, ctrl)),
+        body: detailAsync.when(
+          data: (list) => layout(context, list, userName),
+          loading: () => Center(child: CircularProgressIndicator()),
+          error: (err, _) =>
+              Center(child: Text('Gagal memuat notifikasi: $err')),
+        ),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: SizedBox(
-              width: Get.width,
+              width: MediaQuery.of(context).size.width,
               child: ButtonElevated(
                 title: 'Kembali Ke Beranda',
-                width: Get.width,
+                width: MediaQuery.of(context).size.width,
                 bgcolor: Theme.of(context).primaryColor,
                 height: 45,
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  Get.offAllNamed(RoutesHome.root);
+                  context.go(AppRoutes.home);
                 },
               ),
             ),

@@ -1,16 +1,41 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:html/parser.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/pages/doa/content/doa_content_controller.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:masjid_app/models/doa_data.dart';
+import 'package:masjid_app/providers/doa_providers.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ContentDoaPage extends StatelessWidget {
+class ContentDoaPage extends ConsumerWidget {
   const ContentDoaPage({super.key});
 
-  SafeArea layout(ContentDoaController ctrl, BuildContext context) {
+  String _convertHtmlToText(String htmlString) {
+    final document = parse(htmlString);
+    return parse(document.body!.text).documentElement!.text;
+  }
+
+  String _buildShareText(DoaData data) {
+    final String judul = data.judul.isNotEmpty ? '${data.judul}\n\n' : '';
+    final String arabic = data.arabic != null ? '${data.arabic}\n\n' : '';
+    final String transliteration = data.transliteration != null
+        ? '${_convertHtmlToText(data.transliteration!)}\n\n'
+        : '';
+    final String translations = data.translations != null
+        ? '${_convertHtmlToText(data.translations!)}\n\n'
+        : '';
+    final String isi = data.isi != null
+        ? '${_convertHtmlToText(data.isi!)}\n\n'
+        : '';
+
+    const String link = 'Dibagikan dari aplikasi\n Marbot App';
+    return '$judul $arabic $transliteration $translations $isi $link';
+  }
+
+  SafeArea layout(DoaData data, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -21,7 +46,7 @@ class ContentDoaPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Container(
-                        decoration: BoxDecoration(color: Colors.white),
+                        decoration: const BoxDecoration(color: Colors.white),
                         child: Padding(
                             padding: const EdgeInsets.only(
                                 left: 21, right: 21, top: 21),
@@ -40,7 +65,7 @@ class ContentDoaPage extends StatelessWidget {
                                               const EdgeInsets.only(top: 20),
                                           clipBehavior: Clip.antiAlias,
                                           shape: RoundedRectangleBorder(
-                                            side: BorderSide(
+                                            side: const BorderSide(
                                               color: Color(0xFFDADADA),
                                             ),
                                             borderRadius:
@@ -48,11 +73,13 @@ class ContentDoaPage extends StatelessWidget {
                                             //set border radius more than 50% of height and width to make circle
                                           ),
                                           child: Container(
-                                              width: Get.width,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                               constraints: BoxConstraints.loose(
                                                   Size.infinite),
                                               child: Padding(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     top: 10,
                                                     left: 10,
                                                     right: 10,
@@ -77,11 +104,10 @@ class ContentDoaPage extends StatelessWidget {
                                                           alignment: Alignment
                                                               .centerLeft,
                                                           child: AutoSizeText(
-                                                            ctrl.list.value
-                                                                .judul,
+                                                            data.judul,
                                                             textAlign:
                                                                 TextAlign.start,
-                                                            style: context
+                                                            style: Theme.of(context)
                                                                 .textTheme
                                                                 .titleSmall
                                                                 ?.copyWith(
@@ -94,25 +120,21 @@ class ContentDoaPage extends StatelessWidget {
                                                             maxLines: 2,
                                                           ),
                                                         ),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list.value
-                                                                    .arabic !=
-                                                                null
+                                                        data.arabic != null
                                                             ? Align(
-                                                                alignment: Alignment
-                                                                    .centerRight,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .centerRight,
                                                                 child:
                                                                     AutoSizeText(
-                                                                  ctrl
-                                                                      .list
-                                                                      .value
-                                                                      .arabic!,
+                                                                  data.arabic!,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .start,
-                                                                  style: context
+                                                                  style: Theme.of(context)
                                                                       .textTheme
                                                                       .titleSmall
                                                                       ?.copyWith(
@@ -121,19 +143,17 @@ class ContentDoaPage extends StatelessWidget {
                                                                   maxLines: 2,
                                                                 ))
                                                             : Container(),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list.value
-                                                                    .transliteration !=
+                                                        data.transliteration !=
                                                                 null
                                                             ? Text(
-                                                                ctrl.list.value
-                                                                    .transliteration!,
+                                                                data.transliteration!,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .start,
-                                                                style: context
+                                                                style: Theme.of(context)
                                                                     .textTheme
                                                                     .labelMedium
                                                                     ?.copyWith(
@@ -143,49 +163,35 @@ class ContentDoaPage extends StatelessWidget {
                                                                         color: Colors
                                                                             .black54))
                                                             : Container(),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list.value
-                                                                    .translations !=
+                                                        data.translations !=
                                                                 null
                                                             ? Align(
                                                                 alignment:
                                                                     Alignment
                                                                         .bottomRight,
-                                                                child: Html(
-                                                                    data: ctrl
-                                                                        .list
-                                                                        .value
-                                                                        .translations!,
-                                                                    style: {
-                                                                      "p": Style(
-                                                                          fontSize:
-                                                                              FontSize(13.0))
-                                                                    }))
+                                                                child: HtmlWidget(
+                                                                    data.translations!,
+                                                                    textStyle: const TextStyle(fontSize: 13.0),
+                                                                  ))
                                                             : Container(),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 5,
                                                         ),
-                                                        ctrl.list.value.isi !=
-                                                                null
+                                                        data.isi != null
                                                             ? Align(
                                                                 alignment: Alignment
                                                                     .bottomRight,
-                                                                child: Html(
-                                                                    data: ctrl
-                                                                        .list
-                                                                        .value
-                                                                        .isi!,
-                                                                    style: {
-                                                                      "p": Style(
-                                                                          fontSize:
-                                                                              FontSize(13.0))
-                                                                    }))
+                                                                child: HtmlWidget(
+                                                                    data.isi!,
+                                                                    textStyle: const TextStyle(fontSize: 13.0),
+                                                                  ))
                                                             : Container(),
                                                       ],
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 10,
                                                     ),
                                                     Row(
@@ -195,21 +201,21 @@ class ContentDoaPage extends StatelessWidget {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(ctrl.list[index]['date'])),
-                                                        // style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
+                                                        // Text(DateFormat('dd MMMM yyyy').format( DateTime.parse(list[index]['date'])),
+                                                        // style: Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w300),
                                                         // ),
 
                                                         // AutoSizeText(
-                                                        //   ctrl.list[index]['isi'],
+                                                        //   list[index]['isi'],
                                                         //   textAlign: TextAlign.end,
-                                                        //   style: context.textTheme.labelSmall
+                                                        //   style: Theme.of(context).textTheme.labelSmall
                                                         //       ?.copyWith(
                                                         //           fontWeight: FontWeight.bold,
                                                         //           letterSpacing: 0,
                                                         //           color: Colors.black54),
                                                         //   maxLines: 2,
                                                         // ),
-                                                        // Text(ctrl.list[index]['isi'],
+                                                        // Text(list[index]['isi'],
                                                         //     textAlign: TextAlign.start,
                                                         //     style: context
                                                         //         .textTheme.labelSmall
@@ -218,12 +224,12 @@ class ContentDoaPage extends StatelessWidget {
                                                         //                 FontWeight.bold,
                                                         //             letterSpacing: 0,
                                                         //             color: Colors.black54)),
-                                                        Row(
+                                                        const Row(
                                                           children: [
                                                             // Icon(
                                                             //   Icons.remove_red_eye_rounded,
                                                             //   color: Colors.black54,
-                                                            //   size: context.textTheme
+                                                            //   size: Theme.of(context).textTheme
                                                             //       .labelLarge?.fontSize,
                                                             // ),
                                                             SizedBox(
@@ -247,20 +253,23 @@ class ContentDoaPage extends StatelessWidget {
                                                 ),
                                               )), //SizedBox
                                         ))),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Container(
                                   // height: 53,
-                                  width: Get.width,
-                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  width:
+                                      MediaQuery.of(context).size.width,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
                                         child: Container(
-                                          padding: EdgeInsets.only(right: 13.0),
+                                          padding:
+                                              const EdgeInsets.only(right: 13.0),
                                           child: AutoSizeText(
                                               "Yuk ingetin yang lain!",
                                               maxLines: 1,
@@ -279,7 +288,8 @@ class ContentDoaPage extends StatelessWidget {
                                           width: double.infinity,
                                           child: ButtonElevated(
                                             title: 'Bagikan',
-                                            width: Get.width,
+                                            width:
+                                                MediaQuery.of(context).size.width,
                                             bgcolor: const Color(0xFF92E3A9),
                                             height: 35,
                                             color: Colors.black,
@@ -301,9 +311,8 @@ class ContentDoaPage extends StatelessWidget {
                                               // Gunakan plugin share_plus untuk berbagi teks artikel
                                               SharePlus.instance.share(
                                                 ShareParams(
-                                                  text: ctrl.share.value,
-                                                  subject:
-                                                      ctrl.list.value.judul,
+                                                  text: _buildShareText(data),
+                                                  subject: data.judul,
                                                 ),
                                               );
                                             },
@@ -320,16 +329,21 @@ class ContentDoaPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(ContentDoaController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contentId =
+        GoRouterState.of(context).pathParameters['content'] ?? '';
+    final doaAsync = ref.watch(doaDetailProvider(contentId));
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a > Do'a Harian > Detail", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value
-          ? CircularProgressIndicator()
-          : layout(ctrl, context)),
+      body: doaAsync.when(
+        loading: () => const CircularProgressIndicator(),
+        error: (_, __) => const SizedBox.shrink(),
+        data: (data) => layout(
+            data ?? DoaData(id: 1, judul: '', updatedAt: ''), context),
+      ),
     );
   }
 }

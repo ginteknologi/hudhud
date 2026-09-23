@@ -1,70 +1,28 @@
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:masjid_app/configs/remote_data.dart';
+import 'package:masjid_app/core/network/api_client.dart';
+import 'package:masjid_app/core/network/api_endpoints.dart';
 
-class AlquranService extends GetConnect {
-  final authStore = GetStorage();
+/// Service Quran tanpa GetX. Jalur utama halaman sudah lewat
+/// lib/providers/quran_provider.dart; file ini dipertahankan untuk pemanggil lama.
+class AlquranService {
+  AlquranService({ApiClient? client}) : _client = client ?? ApiClient();
 
-  Future getList(search) async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/quran/surah?search=$search"),
-        headers: <String, String>{
-          // 'Authorization': "Bearer ${authStore.read('jwt')}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      return json;
-    } else if (response.statusCode == 401) {
-      // RemoteData.authError();
-    } else {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
+  final ApiClient _client;
 
-      return json;
-    }
+  Future<dynamic> getList(dynamic search) async {
+    final response = await _client.get<dynamic>(
+      ApiEndpoints.quranSurah,
+      queryParameters: {'search': search},
+    );
+    return response.data;
   }
-  Future getRandom() async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/quran/random-surah"),
-        headers: <String, String>{
-          // 'Authorization': "Bearer ${authStore.read('jwt')}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      return json;
-    } else if (response.statusCode == 401) {
-      // RemoteData.authError();
-    } else {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
 
-      return json;
-    }
+  Future<dynamic> getRandom() async {
+    final response = await _client.get<dynamic>(ApiEndpoints.quranRandom);
+    return response.data;
   }
-  Future getDetail(id) async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/quran/surah/$id"),
-        headers: <String, String>{
-          // 'Authorization': "Bearer ${authStore.read('jwt')}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      return json;
-    } else if (response.statusCode == 401) {
-      // RemoteData.authError();
-    } else {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
 
-      return json;
-    }
+  Future<dynamic> getDetail(dynamic id) async {
+    final response = await _client.get<dynamic>('${ApiEndpoints.quranDetail}/$id');
+    return response.data;
   }
 }

@@ -1,15 +1,17 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/notifikasi/notifikasi_controller.dart';
-import 'package:masjid_app/routes/notifikasi/index.dart';
-import 'package:easy_localization/easy_localization.dart';
-class NotifikasiPage extends StatelessWidget {
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/providers/notifikasi_provider.dart';
+
+class NotifikasiPage extends ConsumerWidget {
   const NotifikasiPage({super.key});
 
-  SafeArea layout(BuildContext context, NotifikasiController ctrl) {
+  SafeArea layout(BuildContext context, List<dynamic> list) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -17,25 +19,26 @@ class NotifikasiPage extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 21),
-                child: ctrl.list.isNotEmpty ? 
+                child: list.isNotEmpty ?
                 ListView.builder(
                   physics: const ClampingScrollPhysics(),
-                  itemCount: ctrl.list.length,
+                  itemCount: list.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return FadeInUp(
                       child: ListItemUiWidget(
-                        id: ctrl.list[index]['id'],
-                        title: ctrl.list[index]['judul'],
+                        id: list[index]['id'],
+                        title: list[index]['judul'],
                         onTap: () {
-                          if (ctrl.list[index]['jenis_notifikasi'] == 'transaksi') {
-                            Get.toNamed('${RoutesNotifikasi.root}/detail/${ctrl.list[index]['id']}');
-                          } 
+                          if (list[index]['jenis_notifikasi'] == 'transaksi') {
+                            context.push(AppRoutes.notifikasiDetail.replaceFirst(
+                                ':id', list[index]['id'].toString()));
+                          }
                         },
-                        titleStyle: context.textTheme.titleMedium?.copyWith(
+                        titleStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).primaryColor),
-                        category: ctrl.list[index]['jenis_notifikasi'],
+                        category: list[index]['jenis_notifikasi'],
                         hasRightContent: true,
                         rightContent: [
                           // Text(
@@ -45,7 +48,7 @@ class NotifikasiPage extends StatelessWidget {
                           //             ? "Menunggu Pembayaran"
                           //             : "Dibatalkan",
                           //     textAlign: TextAlign.end,
-                          //     style: context.textTheme.bodySmall?.copyWith(
+                          //     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           //         fontWeight: FontWeight.bold,
                           //         color:
                           //             ctrl.list[index]['type'] == "success"
@@ -54,16 +57,16 @@ class NotifikasiPage extends StatelessWidget {
                           //                         "pending"
                           //                     ? Color(0xFFFFA800)
                           //                     : Color(0xFFFF0000))),
-                          Text(DateFormat('HH:mm, dd MMMM yyyy').format(DateTime.parse(ctrl.list[index]['createdAt'])),
+                          Text(DateFormat('HH:mm, dd MMMM yyyy').format(DateTime.parse(list[index]['createdAt'])),
                               textAlign: TextAlign.end,
-                              style: context.textTheme.bodySmall?.copyWith(
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.normal,
                               ))
                         ],
                       ),
                     );
                   },
-                ) 
+                )
                 :
                 Center(
                   child: Column(
@@ -83,7 +86,7 @@ class NotifikasiPage extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),                
+                    ),
                   ),
                 )
               )
@@ -92,14 +95,18 @@ class NotifikasiPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(NotifikasiController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final listAsync = ref.watch(notifikasiListProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Notifikasi", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
+      body: listAsync.when(
+        data: (list) => layout(context, list),
+        loading: () => Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text('Gagal memuat notifikasi: $err')),
+      ),
     );
   }
 }

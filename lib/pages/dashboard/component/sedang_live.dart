@@ -4,37 +4,38 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:masjid_app/configs/file_setup.dart';
-import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/models/sedang_live_data.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SedangLiveWidget extends StatelessWidget {
-  final DashboardController ctrl = Get.find();
-  SedangLiveWidget({super.key});
+  final List<SedangLiveData> listSedangLive;
+  const SedangLiveWidget({super.key, this.listSedangLive = const []});
 
   @override
   Widget build(BuildContext context) {
-    if (ctrl.listSedangLive.isEmpty) {
-      return SizedBox();
+    if (listSedangLive.isEmpty) {
+      return const SizedBox();
     }
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color(0xFFD5EDEA),
       ),
-      height: Get.height / 4.7,
-      width: Get.width,
+      height: screenHeight / 4.7,
+      width: screenWidth,
       padding: EdgeInsets.symmetric(
-        vertical: Get.width / 30,
+        vertical: screenWidth / 30,
       ),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
               child: AutoSizeText(
                 "Sedang Live",
                 style: TextStyle(
@@ -45,37 +46,37 @@ class SedangLiveWidget extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: Get.width / 40,
+              height: screenWidth / 40,
             ),
             SizedBox(
-              width: Get.width / 2.5,
-              height: Get.height / 8,
+              width: screenWidth / 2.5,
+              height: screenHeight / 8,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: ctrl.listSedangLive.length,
-                itemBuilder: (item, index) {
-                  SedangLiveData item = ctrl.listSedangLive[index];
+                itemCount: listSedangLive.length,
+                itemBuilder: (context, index) {
+                  final SedangLiveData item = listSedangLive[index];
                   return Container(
-                    width: Get.width / 1.2,
-                    margin: EdgeInsets.only(left: Get.width / 80),
+                    width: screenWidth / 1.2,
+                    margin: EdgeInsets.only(left: screenWidth / 80),
                     child: GestureDetector(
                       onTap: () {
                         showDialog(
                             useSafeArea: false,
-                            context: Get.context!,
-                            builder: (BuildContext context) {
+                            context: context,
+                            builder: (BuildContext dialogContext) {
                               return Dialog(
                                 elevation: 3,
                                 child: Stack(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.all(Get.width / 30),
-                                      decoration: BoxDecoration(
+                                      padding: EdgeInsets.all(screenWidth / 30),
+                                      decoration: const BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(7)),
                                       ),
-                                      height: Get.height / 1.8,
+                                      height: screenHeight / 1.8,
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -85,39 +86,39 @@ class SedangLiveWidget extends StatelessWidget {
                                             AutoSizeText(item.masjid,
                                                 maxLines: 2,
                                                 presetFontSizes: [
-                                                  Get.width / 28
+                                                  screenWidth / 28
                                                 ],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     height: 0)),
                                             AutoSizeText(item.title,
                                                 maxLines: 2,
                                                 presetFontSizes: [
-                                                  Get.width / 28
+                                                  screenWidth / 28
                                                 ],
-                                                style: TextStyle()),
+                                                style: const TextStyle()),
                                             SizedBox(
-                                              height: Get.width / 30,
+                                              height: screenWidth / 30,
                                             ),
                                             AutoSizeText(
                                               item.keterangan,
                                               maxLines: 4,
-                                              presetFontSizes: [Get.width / 35],
+                                              presetFontSizes: [screenWidth / 35],
                                             ),
                                             SizedBox(
-                                              height: Get.width / 30,
+                                              height: screenWidth / 30,
                                             ),
                                             AutoSizeText(
                                               item.subtittle,
-                                              presetFontSizes: [Get.width / 35],
+                                              presetFontSizes: [screenWidth / 35],
                                               maxLines: 2,
                                             ),
                                             SizedBox(
-                                              height: Get.width / 30,
+                                              height: screenWidth / 30,
                                             ),
                                             Expanded(
                                               child: Container(
-                                                width: Get.width,
+                                                width: screenWidth,
                                                 decoration: BoxDecoration(
                                                     image: DecorationImage(
                                                         fit: BoxFit.fitHeight,
@@ -128,27 +129,26 @@ class SedangLiveWidget extends StatelessWidget {
                                               ),
                                             ),
                                             SizedBox(
-                                              height: Get.width / 30,
+                                              height: screenWidth / 30,
                                             ),
                                             Row(
                                               children: [
-                                                Spacer(),
+                                                const Spacer(),
                                                 ElevatedButton(
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                     backgroundColor:
-                                                        Color(0xFF0685FA),
+                                                        const Color(0xFF0685FA),
                                                     foregroundColor:
                                                         Colors.white,
                                                     maximumSize:
-                                                        Size(Get.width / 3, 40),
+                                                        Size(screenWidth / 3, 40),
                                                     shape:
                                                         RoundedRectangleBorder(
-                                                            //to set border radius to button
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        Get.width /
+                                                                        screenWidth /
                                                                             80)),
                                                   ),
                                                   onPressed: () async {
@@ -177,32 +177,34 @@ class SedangLiveWidget extends StatelessWidget {
                                                           msg:
                                                               "Berhasil dishare");
                                                     }
-                                                    Get.back();
+                                                    if (dialogContext.mounted) {
+                                                      Navigator.of(dialogContext).pop();
+                                                    }
                                                   },
                                                   child: AutoSizeText(
                                                     'Bagikan Live',
                                                     presetFontSizes: [
-                                                      Get.width / 32
+                                                      screenWidth / 32
                                                     ],
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                  width: Get.width / 50,
+                                                  width: screenWidth / 50,
                                                 ),
                                                 ElevatedButton(
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                     backgroundColor:
-                                                        Color(0xFF048C7C),
+                                                        const Color(0xFF048C7C),
                                                     foregroundColor:
                                                         Colors.white,
                                                     maximumSize:
-                                                        Size(Get.width / 3, 40),
+                                                        Size(screenWidth / 3, 40),
                                                     shape: RoundedRectangleBorder(
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(
-                                                                    Get.width /
+                                                                    screenWidth /
                                                                         80)),
                                                   ),
                                                   onPressed: () async {
@@ -218,7 +220,7 @@ class SedangLiveWidget extends StatelessWidget {
                                                   child: AutoSizeText(
                                                     'Tonton Live',
                                                     presetFontSizes: [
-                                                      Get.width / 30
+                                                      screenWidth / 30
                                                     ],
                                                   ),
                                                 ),
@@ -238,10 +240,10 @@ class SedangLiveWidget extends StatelessWidget {
                             Stack(
                               children: [
                                 Container(
-                                  width: Get.width / 5,
-                                  margin: EdgeInsets.all(Get.width / 40),
+                                  width: screenWidth / 5,
+                                  margin: EdgeInsets.all(screenWidth / 40),
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(7),
                                       ),
                                       image: DecorationImage(
@@ -249,11 +251,10 @@ class SedangLiveWidget extends StatelessWidget {
                                           image: CachedNetworkImageProvider(
                                             item.image,
                                           ))),
-                                  // child: ,
                                 ),
                                 Positioned(
-                                    top: Get.width / 30,
-                                    left: Get.width / 30,
+                                    top: screenWidth / 30,
+                                    left: screenWidth / 30,
                                     child: SvgPicture.asset(
                                         "assets/icons/live2.svg")),
                               ],
@@ -261,9 +262,9 @@ class SedangLiveWidget extends StatelessWidget {
                             Expanded(
                                 child: Container(
                               padding: EdgeInsets.only(
-                                  top: Get.width / 40,
-                                  right: Get.width / 40,
-                                  bottom: Get.width / 40),
+                                  top: screenWidth / 40,
+                                  right: screenWidth / 40,
+                                  bottom: screenWidth / 40),
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -271,24 +272,24 @@ class SedangLiveWidget extends StatelessWidget {
                                       item.masjid,
                                       maxLines: 2,
                                       presetFontSizes: [
-                                        Get.width / 35,
-                                        Get.width / 40,
-                                        Get.width / 50
+                                        screenWidth / 35,
+                                        screenWidth / 40,
+                                        screenWidth / 50
                                       ],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     AutoSizeText(
                                       item.title,
                                       maxLines: 1,
-                                      presetFontSizes: [Get.width / 40],
+                                      presetFontSizes: [screenWidth / 40],
                                     ),
                                     AutoSizeText(
                                       item.subtittle,
                                       maxLines: 1,
-                                      presetFontSizes: [Get.width / 45],
-                                      style: TextStyle(
+                                      presetFontSizes: [screenWidth / 45],
+                                      style: const TextStyle(
                                           fontStyle: FontStyle.italic),
                                     )
                                   ]),

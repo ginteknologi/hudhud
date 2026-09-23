@@ -1,0 +1,22 @@
+name = "marbot-api"
+main = "src/index.ts"
+compatibility_date = "2024-04-05"
+
+[vars]
+ENVIRONMENT = "production"
+
+# Cloudflare D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "masjid-db"
+database_id = "your-d1-database-id-here"
+
+# Cloudflare R2 Storage binding
+[[r2_buckets]]
+binding = "MEDIA_BUCKET"
+bucket_name = "masjid-media"
+preview_bucket_name = "masjid-media-preview"
+
+# CORS & Routing
+[observability]
+enabled = true

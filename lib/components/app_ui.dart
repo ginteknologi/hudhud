@@ -1,46 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:masjid_app/components/button/buttonvariant.dart';
 import 'package:masjid_app/theme.dart';
 import 'package:masjid_app/fonts.dart';
 
 class AppUi {
   static SizedBox loading({
+    required BuildContext context,
     String title = 'Mohon tunggu',
-    required RxBool noConnection,
+    bool noConnection = false,
     required void Function() onReload,
   }) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return SizedBox(
-      width: Get.width,
+      width: screenWidth,
       child: Padding(
         padding: const EdgeInsets.symmetric(
             vertical: 10, horizontal: AppVariables.appPadding),
-        child: Obx(() => Column(
-              children: [
-                if (noConnection.isFalse)
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: CircularProgressIndicator(),
-                  ),
-                if (title.isNotEmpty)
-                  Text(
-                    noConnection.isTrue ? 'Tidak ada koneksi' : title,
-                    textAlign: TextAlign.center,
-                    style: FontListV2.subtitle(context: Get.context!),
-                  ),
-                if (noConnection.isTrue)
-                  ButtonVariant(
-                    onPressed: () => onReload(),
-                    shadow: false,
-                    isInverted: true,
-                    border: 0,
-                    height: 40,
-                    radius: 10,
-                    label: 'Muat Ulang',
-                    textStyle: FontListV2.subtitle(context: Get.context!),
-                  ),
-              ],
-            )),
+        child: Column(
+          children: [
+            if (!noConnection)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: CircularProgressIndicator(),
+              ),
+            if (title.isNotEmpty)
+              Text(
+                noConnection ? 'Tidak ada koneksi' : title,
+                textAlign: TextAlign.center,
+                style: FontListV2.subtitle(context: context),
+              ),
+            if (noConnection)
+              ButtonVariant(
+                onPressed: onReload,
+                shadow: false,
+                isInverted: true,
+                border: 0,
+                height: 40,
+                radius: 10,
+                label: 'Muat Ulang',
+                textStyle: FontListV2.subtitle(context: context),
+              ),
+          ],
+        ),
       ),
     );
   }

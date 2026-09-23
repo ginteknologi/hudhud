@@ -1,47 +1,50 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/doa/doa_controller.dart';
-import 'package:masjid_app/routes/doa/index.dart';
+import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/models/doa_models.dart';
+import 'package:masjid_app/providers/doa_providers.dart';
 
-class DoaPage extends StatelessWidget {
+class DoaPage extends ConsumerWidget {
   const DoaPage({super.key});
 
-  SafeArea layout(BuildContext context, DoaController ctrl) {
+  SafeArea layout(BuildContext context, List<DoaCategoryModel> list) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 21),
+                padding: const EdgeInsets.symmetric(horizontal: 21),
                 child: ListView.builder(
                   physics: const ClampingScrollPhysics(),
-                  itemCount: ctrl.list.length,
+                  itemCount: list.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     // Datum model = filteredEvents[index];
                     return FadeInUp(
                       child: ListItemUiWidget(
-                        id: ctrl.list[index].id,
-                        title: ctrl.list[index].name,
+                        id: list[index].id,
+                        title: list[index].nama,
                         onTap: () {
-                          Get.toNamed('${RoutesDoa.root}/${ctrl.list[index].id}');
+                          context.push(AppRoutes.doaDetail
+                              .replaceFirst(':id', list[index].id.toString()));
                         },
-                        titleStyle: context.textTheme.titleMedium?.copyWith(
+                        titleStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold, color: Colors.black),
-                        // subTitle: ctrl.list[index]['subtitle'],
-                        subtitleStyle: context.textTheme.bodySmall?.copyWith(
+                        // subTitle: list[index]['subtitle'],
+                        subtitleStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w300, color: Colors.black),
                         hasRightContent: true,
                         showIcon: IconPosition.both,
                         // iconLeft: SvgPicture.asset(
-                        //     ctrl.list[index]['icon'],
+                        //     list[index]['icon'],
                         //     height: 35,
                         //     width: 35),
-                        iconRight: Icon(Icons.chevron_right_rounded),
+                        iconRight: const Icon(Icons.chevron_right_rounded),
                       ),
                     );
                   },
@@ -51,14 +54,18 @@ class DoaPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(DoaController());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final doaAsync = ref.watch(doaCategoriesProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? const Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
+      body: doaAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, __) => layout(context, const []),
+        data: (list) => layout(context, list),
+      ),
     );
   }
 }

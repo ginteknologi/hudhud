@@ -1,26 +1,52 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/outlinebutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_sedekah.dart';
+import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/pages/sedekah/detail/component/donatur_tab.dart';
 import 'package:masjid_app/pages/sedekah/detail/component/laporan_tab.dart';
-import 'package:masjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
-import 'package:masjid_app/routes/sedekah/index.dart';
+import 'package:masjid_app/providers/sedekah_provider.dart';
 import 'package:masjid_app/theme.dart';
 
-class DetailSedekahPage extends StatelessWidget {
+class DetailSedekahPage extends ConsumerStatefulWidget {
   const DetailSedekahPage({super.key});
 
-  NestedScrollView layout(DetailSedekahController ctrl, BuildContext context) {
-    if (kDebugMode) {
-      debugPrint((ctrl.detail['sedekahs'] != []).toString());
-    }
+  @override
+  ConsumerState<DetailSedekahPage> createState() => _DetailSedekahPageState();
+}
+
+class _DetailSedekahPageState extends ConsumerState<DetailSedekahPage>
+    with SingleTickerProviderStateMixin {
+  final List<Tab> tabDetailSedekah = <Tab>[
+    const Tab(
+      text: 'Donatur',
+    ),
+    const Tab(text: 'Laporan'),
+  ];
+
+  late TabController tabController;
+  late ScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(vsync: this, length: tabDetailSedekah.length);
+    scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  NestedScrollView layout(
+      Map<String, dynamic> detail, String id, BuildContext context) {
     return NestedScrollView(
-        controller: ctrl.scrollController,
+        controller: scrollController,
         headerSliverBuilder: (context, value) {
           return [
             SliverToBoxAdapter(
@@ -31,9 +57,9 @@ class DetailSedekahPage extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(ctrl.detail['image'],
+                    child: Image.network(detail['image'],
                       height: 146,
-                      width: Get.width,
+                      width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -43,7 +69,7 @@ class DetailSedekahPage extends StatelessWidget {
                       Flexible(
                           flex: 1,
                           // child: Text(ctrl.detail['judul'],
-                          child: Text(ctrl.detail['judul'],
+                          child: Text(detail['judul'],
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                     .textTheme
@@ -60,7 +86,7 @@ class DetailSedekahPage extends StatelessWidget {
                     children: [
                       Flexible(
                           flex: 1,
-                          child: Text(ctrl.detail['subjudul'],
+                          child: Text(detail['subjudul'],
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -76,7 +102,7 @@ class DetailSedekahPage extends StatelessWidget {
                     children: [
                       Flexible(
                           flex: 1,
-                          child: Text(ctrl.detail['isi'],
+                          child: Text(detail['isi'],
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -93,7 +119,7 @@ class DetailSedekahPage extends StatelessWidget {
                       Flexible(
                         flex: 1,
                         child: LinearProgressIndicator(
-                          value: ctrl.detail['lineprogress'],
+                          value: detail['lineprogress'],
                           minHeight: 10,
                           backgroundColor: const Color(0xFF92E3A9),
                           borderRadius: BorderRadius.circular(10),
@@ -104,7 +130,7 @@ class DetailSedekahPage extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
-                      Text('${ctrl.detail['persentase']}%',
+                      Text('${detail['persentase']}%',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                             fontSize:
@@ -130,7 +156,7 @@ class DetailSedekahPage extends StatelessWidget {
                                       .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w500)),
-                          Text(priceFormat.format(ctrl.detail['total']),
+                          Text(priceFormat.format(detail['total']),
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -149,7 +175,7 @@ class DetailSedekahPage extends StatelessWidget {
                                       .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w500)),
-                          Text(priceFormat.format(ctrl.detail['dana_kebutuhan']),
+                          Text(priceFormat.format(detail['dana_kebutuhan']),
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -168,7 +194,7 @@ class DetailSedekahPage extends StatelessWidget {
                                       .labelMedium
                                       ?.fontSize,
                                   fontWeight: FontWeight.w500)),
-                          Text(ctrl.detail['deadline'] != null ? "${ctrl.detail['deadline']} Hari" : '∞',
+                          Text(detail['deadline'] != null ? "${detail['deadline']} Hari" : '∞',
                               style: TextStyle(
                                   fontSize: Theme.of(context)
                                       .textTheme
@@ -183,20 +209,21 @@ class DetailSedekahPage extends StatelessWidget {
                     height: 20,
                   ),
                   SizedBox(
-                    width: Get.width,
+                    width: MediaQuery.of(context).size.width,
                     child: Row(children: [
                       Flexible(
                         flex: 1,
                         child: ButtonElevated(
                           title: 'Sedekah Sekarang',
-                          width: Get.width,
+                          width: MediaQuery.of(context).size.width,
                           bgcolor: Theme.of(context).primaryColor,
                           height: 45,
                           color: Colors.white,
                           radius: 5,
                           onPressed: () {
-                            Get.toNamed('${RoutesSedekah.root}/${Get.parameters['id']}/transaksi',
-                                arguments: {"first": 'First data'});
+                            context.push(
+                                '${AppRoutes.sedekah}/$id/transaksi',
+                                extra: {"first": 'First data'});
                           },
                         ),
                       ),
@@ -229,34 +256,34 @@ class DetailSedekahPage extends StatelessWidget {
                           top: BorderSide(width: 1, color: Colors.black54))),
                   child: TabBar(
                       labelColor: Theme.of(context).primaryColor,
-                      labelStyle: context.textTheme.bodySmall?.copyWith(
+                      labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                       indicatorColor: const Color.fromRGBO(4, 2, 46, 1),
                       unselectedLabelColor: Colors.grey,
-                      controller: ctrl.tabController,
-                      tabs: ctrl.tabDetailSedekah),
+                      controller: tabController,
+                      tabs: tabDetailSedekah),
                 ),
               ),
             ),
           ];
         },
         body: TabBarView(
-          controller: ctrl.tabController,
+          controller: tabController,
           children: [
             Padding(
                 padding: const EdgeInsets.only(left: 21, right: 21),
-                child: ctrl.detail['sedekahs'].length > 0 ? const DonaturTab() : 
+                child: detail['sedekahs'].length > 0 ? DonaturTab(listDonatur: detail['sedekahs']) :
                   const Align(
                     alignment: Alignment.center,
                     child: Text('Belum ada Donatur'),
-                  )                
+                  )
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 21, right: 21),
                 child: Align(
                   alignment: Alignment.center,
-                  child: ctrl.detail['penyalur_campaigns'].length > 0 ? const LaporanTab() : const Text('Belum ada laporan dari DKM')
+                  child: detail['penyalur_campaigns'].length > 0 ? LaporanTab(listPenyaluran: detail['penyalur_campaigns']) : const Text('Belum ada laporan dari DKM')
                   // Text("Belum Ada Laporan dari DKM")
                   ,
                 )),
@@ -264,35 +291,19 @@ class DetailSedekahPage extends StatelessWidget {
         ));
   }
 
-  ListView getList(ctrl, context) {
-    return ListView.builder(
-      physics: const ClampingScrollPhysics(),
-      itemCount: 5,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        // Datum model = filteredEvents[index];
-        return FadeInUp(
-          child: ListItemSedekahWidget(
-            id: 1,
-            title: 'Sedekah $index',
-            dueDay: 20,
-            targetPrice: 5000000,
-            totalPrice: 1000000,
-            image: 'assets/icons/image-item1.png',
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(DetailSedekahController());
+    final id = GoRouterState.of(context).pathParameters['id'] ?? '';
+    final detailAsync = ref.watch(campaignDetailProvider(id));
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Detail Sedekah", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
+      body: detailAsync.when(
+          data: (detail) => layout(detail, id, context),
+          loading: () => CircularProgressIndicator(),
+          error: (error, stack) => layout(<String, dynamic>{}, id, context)),
     );
   }
 }

@@ -1,26 +1,31 @@
-import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/models/bookmarkData.dart';
+import 'package:masjid_app/core/storage/preferences_service.dart';
+import 'package:masjid_app/models/bookmark_data.dart';
 
 class BookmarkStorage {
   final String storageName;
   BookmarkStorage(this.storageName);
-  final box = GetStorage();
 
-  void saveBookmark(bookmarkData bookmark) {
-    box.write('${storageName}_namaSurat', bookmark.namaSurat);
-    box.write('${storageName}_surat', bookmark.surat);
-    box.write('${storageName}_ayat', bookmark.ayat);
-    box.write('${storageName}_totalAyat', bookmark.totalAyat);
-    box.write('${storageName}_index', bookmark.index);
+  void saveBookmark(BookmarkData bookmark) {
+    PreferencesService.setString('${storageName}_namaSurat', bookmark.namaSurat);
+    PreferencesService.setString('${storageName}_surat', bookmark.surat.toString());
+    PreferencesService.setString('${storageName}_ayat', bookmark.ayat.toString());
+    PreferencesService.setString('${storageName}_totalAyat', bookmark.totalAyat.toString());
+    PreferencesService.setString('${storageName}_index', bookmark.index.toString());
   }
 
-  bookmarkData getBookmark() {
-    return bookmarkData(
-      namaSurat: box.read('${storageName}_namaSurat') ?? '',
-      surat: box.read('${storageName}_surat') ?? 0,
-      ayat: box.read('${storageName}_ayat') ?? 0,
-      totalAyat: box.read('${storageName}_totalAyat') ?? 0,
-      index: box.read('${storageName}_index') ?? 0,
+  BookmarkData getBookmark() {
+    final namaSurat = PreferencesService.getString('${storageName}_namaSurat') ?? '';
+    final suratStr = PreferencesService.getString('${storageName}_surat');
+    final ayatStr = PreferencesService.getString('${storageName}_ayat');
+    final totalAyatStr = PreferencesService.getString('${storageName}_totalAyat');
+    final indexStr = PreferencesService.getString('${storageName}_index');
+
+    return BookmarkData(
+      namaSurat: namaSurat,
+      surat: int.tryParse(suratStr ?? '') ?? 0,
+      ayat: int.tryParse(ayatStr ?? '') ?? 0,
+      totalAyat: int.tryParse(totalAyatStr ?? '') ?? 0,
+      index: int.tryParse(indexStr ?? '') ?? 0,
     );
   }
 }

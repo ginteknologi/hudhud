@@ -23,7 +23,6 @@ class HalamanQuranController extends GetxController
   var bookmarked = false.obs;
 
   var txtController = TextEditingController();
-  late AnimationController animateController;
   var searchController = TextEditingController();
   TextEditingController inputFilter = TextEditingController();
   var selectedJuz = true.obs;

@@ -2,6 +2,16 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://maven.google.com")
+        }
+    }
+    configurations.all {
+        resolutionStrategy {
+            eachDependency {
+                // ensure latest compatible dependencies
+            }
+        }
     }
 }
 
