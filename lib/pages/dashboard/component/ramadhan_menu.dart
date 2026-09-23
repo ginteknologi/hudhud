@@ -80,7 +80,7 @@ class RamadhanMenuWidget extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(
-            child: SvgPicture.asset('assets/icons/buka_puasa.svg'),
+            child: SvgPicture.asset('assets/icons/buka.svg'),
           ),
           Expanded(
             child: SizedBox(

@@ -73,19 +73,26 @@ class CustomCardItem extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         clipBehavior: Clip.antiAlias,
-                        child: network
-                            ? Image.network(
-                                imgPath!,
+                        child: (imgPath == null || imgPath!.isEmpty)
+                            ? Image.asset(
+                                'assets/icons/app_icon.png',
                                 height: height,
                                 width: cardWidth,
                                 fit: BoxFit.cover,
                               )
-                            : Image.asset(
-                                imgPath ?? 'assets/icons/doa.jpg',
-                                height: height,
-                                width: cardWidth,
-                                fit: BoxFit.cover,
-                              ),
+                            : network
+                                ? Image.network(
+                                    imgPath!,
+                                    height: height,
+                                    width: cardWidth,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    imgPath!,
+                                    height: height,
+                                    width: cardWidth,
+                                    fit: BoxFit.cover,
+                                  ),
                       ),
                     ),
                     Align(
