@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_service.dart';
@@ -13,7 +14,7 @@ class PaymentTransaksiController extends GetxController {
   RxString inputPembayaran = "".obs;
   TextEditingController nomorInput = TextEditingController();
 
-  getData() async {
+  Future<void> getData() async {
     // final result = await SedekahService().getList();
     // list.value = result['data'];
     dataBillProduct.value = dataStore.read('inputDataPembayaran');
@@ -21,7 +22,7 @@ class PaymentTransaksiController extends GetxController {
     isLoading.value = false;
   }
 
-  procceedPayment(id) async {
+  Future<Map<String, Object>> procceedPayment(id) async {
     isLoading.value = true;
     var status = {"code": 400, "message": "Mohon cek kembali koneksi anda."};
     try {
@@ -32,7 +33,9 @@ class PaymentTransaksiController extends GetxController {
         Get.offAllNamed('${RoutesSedekah.root}/$id/transaksi/status');
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
     isLoading.value = false;
     return status;    

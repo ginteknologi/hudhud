@@ -12,7 +12,7 @@ class ButtonText extends StatelessWidget {
   final EdgeInsetsGeometry margin;
   final VoidCallback onPressed;
   const ButtonText(
-      {Key? key,
+      {super.key,
       required this.text,
       this.color = AppColors.appPrimary,
       this.size = 15,
@@ -23,8 +23,7 @@ class ButtonText extends StatelessWidget {
         top: 5,
         bottom: 5,
       ),
-      required this.onPressed})
-      : super(key: key);
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +37,7 @@ class ButtonText extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          primary: color,
-          shape: RoundedRectangleBorder(
+          foregroundColor: color, shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
           ),
         ),

@@ -6,7 +6,7 @@ import 'package:masjid_app/controllers/dashboard_controller.dart';
 class KajianLivePage extends StatelessWidget {
   const KajianLivePage({super.key});
 
-  layout(DashboardController ctrl, BuildContext context) {
+  SafeArea layout(DashboardController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -22,7 +22,7 @@ class KajianLivePage extends StatelessWidget {
     final ctrl = Get.put(DashboardController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Sedekah", context: context, elevation: 0),
       body: layout(ctrl, context),

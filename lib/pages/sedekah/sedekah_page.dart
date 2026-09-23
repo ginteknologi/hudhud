@@ -11,7 +11,7 @@ import 'package:masjid_app/pages/sedekah/sedekah_controller.dart';
 class SedekahPage extends StatelessWidget {
   const SedekahPage({super.key});
 
-  layout(SedekahController ctrl, BuildContext context) {
+  SafeArea layout(SedekahController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -98,7 +98,7 @@ class SedekahPage extends StatelessWidget {
                           ),
                           Expanded(
                             flex: 1,
-                            child: Container(
+                            child: SizedBox(
                               width: double.infinity,
                               child: ButtonElevated(
                                 title: 'Sedekah!',
@@ -171,7 +171,7 @@ class SedekahPage extends StatelessWidget {
                 ))));
   }
 
-  getList(ctrl, context) {
+  ListView getList(ctrl, context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: ctrl.list.length,
@@ -199,7 +199,7 @@ class SedekahPage extends StatelessWidget {
     final ctrl = Get.put(SedekahController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Sedekah", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value

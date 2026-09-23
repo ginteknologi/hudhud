@@ -6,8 +6,9 @@ import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:masjid_app/theme.dart';
 
 class ListItemSedekahWidget extends StatelessWidget {
-  ListItemSedekahWidget(
-      {required this.id,
+  const ListItemSedekahWidget(
+      {super.key,
+      required this.id,
       this.kategori,
       this.title,
       this.dueDay = 0,
@@ -17,15 +18,15 @@ class ListItemSedekahWidget extends StatelessWidget {
       this.persentase = 0,
       this.image});
 
-  int id;
-  String? kategori;
-  String? title;
-  int? targetPrice;
-  int? totalPrice;
-  int? dueDay;
-  String? image;
-  double? lineProgress;
-  int? persentase;
+  final int id;
+  final String? kategori;
+  final String? title;
+  final int? targetPrice;
+  final int? totalPrice;
+  final int? dueDay;
+  final String? image;
+  final double? lineProgress;
+  final int? persentase;
 
   @override
   Widget build(BuildContext context) {

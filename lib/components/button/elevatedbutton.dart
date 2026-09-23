@@ -23,7 +23,7 @@ class ButtonElevated extends StatelessWidget {
   final bool shadow;
   final VoidCallback onPressed;
   const ButtonElevated(
-      {Key? key,
+      {super.key,
       required this.title,
       this.color = AppColors.textPrimary,
       this.bgcolor = AppColors.primary,
@@ -44,13 +44,12 @@ class ButtonElevated extends StatelessWidget {
       this.iconLeft = const Icon(FlutterRemix.user_line),
       this.iconRight = const Icon(FlutterRemix.user_line),
       this.justify = false,
-      this.nearLeft = false})
-      : super(key: key);
+      this.nearLeft = false});
 
   @override
   Widget build(BuildContext context) {
-    var _bgcolor = disabled ? bgcolor.withAlpha(200) : bgcolor;
-    var _color = disabled ? color.withAlpha(200) : color;
+    var bgColor = disabled ? bgcolor.withAlpha(200) : bgcolor;
+    var fgColor = disabled ? color.withAlpha(200) : color;
     return Container(
       margin: margin,
       height: height,
@@ -68,10 +67,8 @@ class ButtonElevated extends StatelessWidget {
       child: ElevatedButton(
         onPressed: disabled ? () {} : onPressed,
         style: ElevatedButton.styleFrom(
-          onPrimary: _color,
-          elevation: 0,
+          foregroundColor: fgColor, backgroundColor: bgColor, elevation: 0,
           shadowColor: Colors.transparent,
-          primary: _bgcolor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
           ),
@@ -103,8 +100,8 @@ class ButtonElevated extends StatelessWidget {
                             nearLeft ? Alignment.centerLeft : Alignment.center,
                         child: Text(
                           title,
-                          style: Theme.of(context).textTheme.button!.copyWith(
-                                color: color,
+                          style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                color: fgColor,
                                 fontSize: size,
                               ),
                         ),

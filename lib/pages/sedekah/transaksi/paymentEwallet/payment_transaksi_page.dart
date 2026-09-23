@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_controller.dart';
 import 'package:masjid_app/theme.dart';
@@ -9,7 +9,7 @@ import 'package:masjid_app/theme.dart';
 class PaymentTransaksiSedekahPage extends StatelessWidget {
   const PaymentTransaksiSedekahPage({super.key});
 
-  layout(PaymentTransaksiController ctrl, BuildContext context) {
+  SafeArea layout(PaymentTransaksiController ctrl, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -135,7 +135,7 @@ class PaymentTransaksiSedekahPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(PaymentTransaksiController());
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Metode Pembayaran", context: context, elevation: 0),
         body: Obx(() => ctrl.isLoading.value ? CircularProgressIndicator() : layout(ctrl, context)),

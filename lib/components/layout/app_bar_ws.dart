@@ -118,7 +118,7 @@ class AppBarWSWidget {
           child: Center(
             child: stepForm != null
                 ? Text(
-                    stepForm != null ? "$stepForm/2" : "",
+                    "$stepForm/2",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,

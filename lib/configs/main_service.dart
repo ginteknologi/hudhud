@@ -3,7 +3,6 @@ import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:masjid_app/configs/remote_data.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class MainService extends GetConnect {
   final authStore = GetStorage();
@@ -42,40 +41,84 @@ class GoogleAuthClient extends http.BaseClient {
   }
 }
 
-class GoogleLogin {
-  googleSignIn() async {
-    try {
-      var status = {
-        "code": 400,
-        "message": "Mohon cek kembali koneksi anda.",
-        "data": {}
-      };
-      GoogleSignIn google = GoogleSignIn.standard(
-          scopes: ['email', "https://www.googleapis.com/auth/userinfo.profile"]);
-      await google.signIn().then((account) async {
-        if (account != null) {
-          var auth = await google.currentUser?.authHeaders;
-          var userLogin = {
-            "id": account.id,
-            "name": account.displayName,
-            "email": account.email,
-            "photo": account.photoUrl,
-            "bearer": auth?['Authorization'],
-          };
-          status = {"code": 200, "message": "Login berhasil.", "data": userLogin};
-        }
-      });
-      return status;
-    } catch (e) {
-      print('<<<<<<<<<<Start Google SignIn>>>>>>>>>>');
-      print(e);
-      print('<<<<<<<<<<End Google SignIn>>>>>>>>>>');
-    }
-  }
+// class GoogleLogin {
+//   Future<Map<String, dynamic>> googleSignIn() async {
+//     try {
+//       final account = await GoogleSignIn.instance.authenticate();
 
-  googleSignOut() async {
-    var status = {"code": 200, "message": "Anda berhasil keluar."};
-    await GoogleSignIn().disconnect();
-    return status;
-  }
-}
+//       final idToken = account.authentication.idToken;
+//       final headers = await account.authorizationClient.authorizationHeaders(
+//         <String>['email', 'https://www.googleapis.com/auth/userinfo.profile'],
+//         promptIfNecessary: true,
+//       );
+
+//       return {
+//         "code": 200,
+//         "message": "Login berhasil.",
+//         "data": {
+//           "id": account.id,
+//           "name": account.displayName,
+//           "email": account.email,
+//           "photo": account.photoUrl,
+//           "idToken": idToken,
+//           "authHeaders": headers,
+//           "bearer": headers?['Authorization'],
+//         }
+//       };
+//     } on GoogleSignInException catch (e) {
+//       return {"code": 500, "message": e.message ?? 'Login gagal', "data": {}};
+//     }
+//   }
+
+//   Future<Map<String, dynamic>> googleSignOut() async {
+//     await GoogleSignIn.instance.signOut();
+//     return {"code": 200, "message": "Anda berhasil keluar."};
+//   }
+
+//   Future<Map<String, dynamic>> googleDisconnect() async {
+//     await GoogleSignIn.instance.disconnect();
+//     return {"code": 200, "message": "Akses Google dicabut."};
+//   }
+// }
+
+// extension on GoogleSignInException {
+//   get message => null;
+// }
+
+// class GoogleLogin {
+//   googleSignIn() async {
+//     try {
+//       var status = {
+//         "code": 400,
+//         "message": "Mohon cek kembali koneksi anda.",
+//         "data": {}
+//       };
+//       GoogleSignIn google = GoogleSignIn.standard(
+//           scopes: ['email', "https://www.googleapis.com/auth/userinfo.profile"]);
+//       await google.signIn().then((account) async {
+//         if (account != null) {
+//           var auth = await google.currentUser?.authHeaders;
+//           var userLogin = {
+//             "id": account.id,
+//             "name": account.displayName,
+//             "email": account.email,
+//             "photo": account.photoUrl,
+//             "bearer": auth?['Authorization'],
+//           };
+//           status = {"code": 200, "message": "Login berhasil.", "data": userLogin};
+//         }
+//       });
+//       return status;
+//     } catch (e) {
+//       print('<<<<<<<<<<Start Google SignIn>>>>>>>>>>');
+//       print(e);
+//       print('<<<<<<<<<<End Google SignIn>>>>>>>>>>');
+//     }
+//   }
+
+//   googleSignOut() async {
+//     var status = {"code": 200, "message": "Anda berhasil keluar."};
+//     await GoogleSignIn().disconnect();
+//     return status;
+//   }
+// }

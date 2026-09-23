@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/models/artikelData.dart';
+import 'package:masjid_app/models/artikel_data.dart';
 import 'package:masjid_app/pages/artikel/artikel_service.dart';
 
 class ArtikelController extends GetxController {
@@ -9,7 +10,7 @@ class ArtikelController extends GetxController {
   List listCategoryFilter = [].obs;
   late List<RxBool> listCategoryFilterSelected;
 
-  getData() async {
+  Future<void> getData() async {
     try {
       final result = await ArtikelService().getListArtikel();
       for (var element in result['data']) {
@@ -17,11 +18,15 @@ class ArtikelController extends GetxController {
             id: element['id'],
             judul: element['judul'],
             image: element['image'],
+            categoryArtikel: element['category_artikel'],
+            publishDate: element['publish_date'],
             updatedAt: element['updatedAt']));
       }
       isLoadingList.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 

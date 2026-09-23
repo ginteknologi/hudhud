@@ -1,9 +1,10 @@
 {
-    "workbench.colorCustomizations": {
-        "[Default Dark+]": {
-            "activityBar.background": "#333333",
-            "activityBar.foreground": "#f3f3f3"
-        }
-    },
-    "cmake.sourceDirectory": "/Users/gin/PROJECT/masjid/apps/linux"
+  "workbench.colorCustomizations": {
+    "[Default Dark+]": {
+      "activityBar.background": "#333333",
+      "activityBar.foreground": "#f3f3f3"
+    }
+  },
+  "cmake.sourceDirectory": "/Users/gin/PROJECT/masjid/apps/linux",
+  "dart.flutterSdkPath": ".fvm/versions/stable"
 }

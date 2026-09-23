@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
@@ -24,78 +25,63 @@ class HomeService extends GetConnect {
   //   } else {
   //     final json = jsonDecode(response.body);
   //     json['code'] = response.statusCode;
-      
+
   //     return json;
   //   }
   // }
-  Future getMuadzin() async {
-    final response = await http.get(
-        Uri.parse("${RemoteData.api}/kajian/muadzin/list"),
-        headers: <String, String>{
-          'Authorization': "Bearer ${authStore.read('jwt')}",
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-        print(response);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      return json;
-    } else if (response.statusCode == 401) {
-      // RemoteData.authError();
-    } else {
-      final json = jsonDecode(response.body);
-      json['code'] = response.statusCode;
-      
-      return json;
-    }
-  }
 
-  Future cekToken(token) async {
+  Future<Map<String, dynamic>> cekToken(String token) async {
     final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
     var api = '${RemoteData.api}/fcm?token=$token&user=${dataUser['id']}';
     final response = await http.get(Uri.parse(api));
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
-      return jsonDecode(jsonEncode(json));
+      return <String, dynamic>{};
     }
   }
 
-  Future setToken(token) => cekToken(token).then((hasilcek) async {
-    try {
-    final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
-    if (hasilcek['data'].length > 0) {
-      var api = '${RemoteData.api}/fcm/${hasilcek['data'][0]['id']}';
-      final response = await http.put(
-        Uri.parse(api),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'user': dataUser['id'],
-          'token': token,
-        }),
-      );
-      return response;
-    } else {
-      var api = '${RemoteData.api}/fcm';
-      final response = await http.post(
-        Uri.parse(api),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'user': dataUser['id'],
-          'token': token,
-        }),
-      );
-      print('<<<<<<<<<response>>>>>>>>>');
-      return response;
-    }
-    } catch (e) {
-      print("<<<<<<Error SetToken Service>>>>>>");
-      print(e);
-    }
-  });
-    
+  Future<http.Response?> setToken(String token) =>
+      cekToken(token).then((hasilCek) async {
+        try {
+          final dataUser = authStore.read('userLogin') as Map<String, dynamic>;
+          if (hasilCek['data'] != null &&
+              (hasilCek['data'] as List).isNotEmpty) {
+            final api = '${RemoteData.api}/fcm/${hasilCek['data'][0]['id']}';
+            final response = await http.put(
+              Uri.parse(api),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, dynamic>{
+                'user': dataUser['id'],
+                'token': token,
+              }),
+            );
+            return response;
+          } else {
+            final api = '${RemoteData.api}/fcm';
+            final response = await http.post(
+              Uri.parse(api),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, dynamic>{
+                'user': dataUser['id'],
+                'token': token,
+              }),
+            );
+            if (kDebugMode) {
+              debugPrint('<<<<<<<<<response>>>>>>>>>');
+            }
+            return response;
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint("<<<<<<Error SetToken Service>>>>>>");
+            debugPrint(e.toString());
+          }
+          return null;
+        }
+      });
 }

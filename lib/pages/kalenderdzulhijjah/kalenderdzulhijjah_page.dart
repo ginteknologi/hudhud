@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/controllers/Kalenderdzulhijjah_controller.dart';
 
 class KalenderdzulhijjahPage extends StatelessWidget {
@@ -14,7 +14,9 @@ class KalenderdzulhijjahPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF27B8A8),
+        foregroundColor: Colors.white,
         title: Text('Jadwal Imsakiyah'),
+        centerTitle: true,
         // systemOverlayStyle: SystemUiOverlayStyle(
         //   statusBarColor: Colors.red,
         //   statusBarIconBrightness: Brightness.dark,
@@ -46,7 +48,7 @@ class KalenderdzulhijjahPage extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "${ctrl.tahunBulan.value}",
+                          ctrl.tahunBulan.value,
                           style: TextStyle(
                               color: Colors.white, fontSize: Get.width / 28),
                         ),
@@ -96,19 +98,17 @@ class KalenderdzulhijjahPage extends StatelessWidget {
       ),
       children: values
           .map(
-            (value) => Container(
-              child: TableCell(
-                child: Container(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                      border: Border(
-                    bottom: BorderSide(color: Colors.black12, width: 1),
-                  )),
-                  child: Text(
-                    value,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: Get.width / 38),
-                  ),
+            (value) => TableCell(
+              child: Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                    border: Border(
+                  bottom: BorderSide(color: Colors.black12, width: 1),
+                )),
+                child: Text(
+                  value,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: Get.width / 38),
                 ),
               ),
             ),
@@ -117,7 +117,7 @@ class KalenderdzulhijjahPage extends StatelessWidget {
     );
   }
 
-  _buildTableHR(List<String> values) {
+  TableRow _buildTableHR(List<String> values) {
     return TableRow(
       decoration: BoxDecoration(
           color: Color(0xFF814D03),

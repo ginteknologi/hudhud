@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
@@ -20,7 +19,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class StatusTransaksiSedekahPage extends StatelessWidget {
   const StatusTransaksiSedekahPage({super.key});
 
-  layout(StatusSedekahController ctrl, BuildContext context) {
+  SafeArea layout(StatusSedekahController ctrl, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -30,7 +29,9 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
   }
 
   Widget getCurrentLayout(StatusSedekahController ctrl, BuildContext context) {
-    print('<<<<<<<<<<>>>>>>>>>>');
+    if (kDebugMode) {
+      debugPrint('<<<<<<<<<<>>>>>>>>>>');
+    }
     if (ctrl.dataPayment['metode'] == 'va') {
       return layoutVa(ctrl, context);
     } else {
@@ -38,8 +39,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
     }
   }
 
-  layoutVa(StatusSedekahController ctrl, BuildContext context) {
-    var dataInvoice = jsonDecode(ctrl.dataInvoice['detail']['paymentSelect']);
+  Column layoutVa(StatusSedekahController ctrl, BuildContext context) {
     return Column(
       children: [
         Card(
@@ -184,7 +184,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
     );
   }
 
-  layoutEwallet(StatusSedekahController ctrl, BuildContext context) {
+  Stack layoutEwallet(StatusSedekahController ctrl, BuildContext context) {
     return Stack(alignment: Alignment.topCenter, children: [
       Positioned(
         child: Card(
@@ -297,7 +297,7 @@ class StatusTransaksiSedekahPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(StatusSedekahController());
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Menunggu Pembayaran", context: context, elevation: 0),
       body: Obx(() =>

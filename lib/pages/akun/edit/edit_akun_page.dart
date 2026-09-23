@@ -1,15 +1,14 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/pages/akun/edit/edit_akun_controller.dart';
-import 'package:masjid_app/routes/home/index.dart';
 
 class EditAkunPage extends StatelessWidget {
   const EditAkunPage({super.key});
 
-  layout(BuildContext context, EditAkunController ctrl) {
+  SafeArea layout(BuildContext context, EditAkunController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -27,46 +26,47 @@ class EditAkunPage extends StatelessWidget {
                                 Stack(
                                   children: [
                                     Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.white, width: 4),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              offset: Offset(0, 4),
-                                              color: Colors.black.withOpacity(
-                                                0.3,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.white, width: 4),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                offset: Offset(0, 4),
+                                                color: Colors.black
+                                                    .withValues(alpha: 0.3),
+                                                blurRadius: 3,
                                               ),
-                                              blurRadius: 3,
-                                            ),
-                                          ],
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(70))),
-                                      child: Obx(() => ctrl.inputFoto.value.length < 1 && !ctrl.isNewfile.value ?
-                                      CircleAvatar(
-                                        radius: 70,
-                                        backgroundImage: AssetImage("assets/icons/app_icon.png")
-                                      ) 
-                                      : !ctrl.isNewfile.value ? CircleAvatar(
-                                        radius: 70,
-                                        backgroundImage: NetworkImage(ctrl.inputFoto.value),
-                                      ) 
-                                      :
-                                      CircleAvatar(
-                                        radius: 70,
-                                        backgroundImage: FileImage(ctrl.newfile!),
-                                      )
-                                      ),
-                                    ),
+                                            ],
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(70))),
+                                        child: InkWell(
+                                          onTap: () {
+                                            ctrl.pilihFile();
+                                          },
+                                          child: Obx(() => ctrl.inputFoto.value.isEmpty &&
+                                                  !ctrl.isNewfile.value
+                                              ? CircleAvatar(
+                                                  radius: 70,
+                                                  backgroundImage: AssetImage(
+                                                      "assets/icons/app_icon.png"))
+                                              : !ctrl.isNewfile.value
+                                                  ? CircleAvatar(
+                                                      radius: 70,
+                                                      backgroundImage:
+                                                          NetworkImage(ctrl
+                                                              .inputFoto.value),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: 70,
+                                                      backgroundImage:
+                                                          FileImage(
+                                                              ctrl.newfile!),
+                                                    )),
+                                        )),
                                     Positioned(
                                       bottom: 1,
                                       right: 1,
                                       child: Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: Icon(
-                                              Icons.add_a_photo_outlined,
-                                              color: Colors.black),
-                                        ),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 3,
@@ -78,6 +78,12 @@ class EditAkunPage extends StatelessWidget {
                                             ),
                                           ),
                                           color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Icon(
+                                              Icons.add_a_photo_outlined,
+                                              color: Colors.black),
                                         ),
                                       ),
                                     ),
@@ -96,7 +102,7 @@ class EditAkunPage extends StatelessWidget {
                           label: "Nama",
                           labelStyle: Theme.of(context).textTheme.bodySmall,
                           margin: EdgeInsets.symmetric(vertical: 5),
-                          placeholder: "Do'a Anda",
+                          placeholder: "Nama Anda",
                           placeholderStyle:
                               Theme.of(context).textTheme.bodySmall,
                           inputPadding: const EdgeInsets.all(15),
@@ -149,14 +155,14 @@ class EditAkunPage extends StatelessWidget {
     final ctrl = Get.put(EditAkunController());
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Profile > Edit Profile", context: context, elevation: 0),
         body: layout(context, ctrl),
         persistentFooterButtons: [
           Padding(
             padding: const EdgeInsets.only(left: 21, right: 21),
-            child: Container(
+            child: SizedBox(
               width: Get.width,
               child: ButtonElevated(
                 title: 'Simpan',
@@ -166,7 +172,7 @@ class EditAkunPage extends StatelessWidget {
                 color: Colors.white,
                 radius: 5,
                 onPressed: () {
-                  Get.toNamed(RoutesHome.root);
+                  ctrl.simpan();
                 },
               ),
             ),

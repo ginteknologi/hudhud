@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:html/parser.dart';
 import 'package:masjid_app/pages/doa/doa_service.dart';
-import 'package:masjid_app/models/doaData.dart';
+import 'package:masjid_app/models/doa_data.dart';
 
 class ContentDoaController extends GetxController {
   var isLoadingList = true.obs;
@@ -12,44 +13,62 @@ class ContentDoaController extends GetxController {
     updatedAt: '',
   ));
   var share = "".obs;
-  // var list = {}.obs;
-
   var txtController = TextEditingController();
-  
+
   String _convertHtmlToText(String htmlString) {
-    var document = parse(htmlString);
+    final document = parse(htmlString);
     return parse(document.body!.text).documentElement!.text;
   }
-  getData() async {
-    try {
-      final result = await DoaService().getDetail();
-      // list.value = result['data'];
-        list.value = DoaData(
-            id: result['data']['id'],
-            judul: result['data']['judul'],
-            isi:result['data']['isi'],
-            arabic:result['data']['arabic'],
-            transliteration:result['data']['transliteration'],
-            translations:result['data']['translations'],
-            updatedAt: result['data']['updatedAt']);
-      String judul = result['data']['judul'] != null ? result['data']['judul'] + '\n\n':'';
-      String arabic = result['data']['arabic'] != null ? result['data']['arabic'] + '\n\n':'';
-      String transliteration = result['data']['transliteration'] != null ? _convertHtmlToText(result['data']['transliteration']) + '\n\n':'';
-      String translations = result['data']['translations'] != null ? _convertHtmlToText(result['data']['translations']) + '\n\n':'';
-      String isi = result['data']['isi'] != null ? _convertHtmlToText(result['data']['isi']) + '\n\n' : '';
 
-      String link = 'Dibagikan dari aplikasi\n Marbot App';
-      share.value = '$judul $arabic $transliteration $translations $isi $link';
+  Future<void> getData() async {
+    try {
+      isLoadingList.value = true;
+      final result = await DoaService().getDetail();
+
+      if (result != null && result['data'] != null) {
+        final data = result['data'] as Map<String, dynamic>;
+
+        list.value = DoaData(
+          id: data['id'],
+          judul: data['judul'],
+          isi: data['isi'],
+          arabic: data['arabic'],
+          transliteration: data['transliteration'],
+          translations: data['translations'],
+          updatedAt: data['updatedAt'],
+        );
+
+        final String judul =
+            data['judul'] != null ? '${data['judul']}\n\n' : '';
+        final String arabic =
+            data['arabic'] != null ? '${data['arabic']}\n\n' : '';
+        final String transliteration = data['transliteration'] != null
+            ? '${_convertHtmlToText(data['transliteration'])}\n\n'
+            : '';
+        final String translations = data['translations'] != null
+            ? '${_convertHtmlToText(data['translations'])}\n\n'
+            : '';
+        final String isi =
+            data['isi'] != null ? '${_convertHtmlToText(data['isi'])}\n\n' : '';
+
+        const String link = 'Dibagikan dari aplikasi\n Marbot App';
+        share.value =
+            '$judul $arabic $transliteration $translations $isi $link';
+      }
+
       isLoadingList.value = false;
     } catch (e) {
-      print('<<error controller getcontent doa>>');
-      print(e);
+      isLoadingList.value = false;
+      if (kDebugMode) {
+        debugPrint('<<error controller getcontent doa>>');
+        debugPrint(e.toString());
+      }
     }
   }
 
   @override
-  void onInit() async {
-    await getData();
+  void onInit() {
+    getData();
     super.onInit();
   }
 }

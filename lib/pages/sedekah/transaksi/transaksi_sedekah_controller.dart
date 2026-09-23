@@ -34,7 +34,7 @@ class TransactionSedekahController extends GetxController {
   TextEditingController inputPesan = TextEditingController();
   final inputKey = GlobalKey<FormState>();
 
-  loadStorage() {
+  void loadStorage() {
     try {
       isLogin.value = dataStore.read('isLogin');
     } catch (e) {
@@ -47,7 +47,7 @@ class TransactionSedekahController extends GetxController {
     }
   }
 
-  setSedekah(nominal) async {
+  Future<void> setSedekah(nominal) async {
     inputNominal.text = nominal;
   }
 
@@ -57,12 +57,12 @@ class TransactionSedekahController extends GetxController {
     isLoadingList.value = false;
   }
 
-  goToMetode(String id) {
+  void goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }
 
-  getDenom() async {
+  Future<List<dynamic>> getDenom() async {
     denom = [
       {"id": 1, "label": "Rp. 10.000", "value": "10000"},
       {"id": 2, "label": "Rp. 50.000", "value": "50000"},
@@ -72,7 +72,7 @@ class TransactionSedekahController extends GetxController {
     return denom;
   }
 
-  postInput() {
+  Map<String, Object> postInput() {
     var status = {
       "code": 400,
       "message": "Mohon untuk di cek kembali data anda."

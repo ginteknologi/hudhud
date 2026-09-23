@@ -6,16 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:masjid_app/components/button/buttonvariant.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 // import 'package:masjid_app/components/input/InputDropdown.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/ruangan/booking/booking_ruangan_controller.dart';
-import 'package:masjid_app/routes/home/index.dart';
-import 'package:simple_moment/simple_moment.dart';
 class BookingRuanganPage extends StatelessWidget {
   const BookingRuanganPage({super.key});
 
-  layout(BookingRuanganController ctrl, BuildContext context) {
+  SafeArea layout(BookingRuanganController ctrl, BuildContext context) {
     return SafeArea(
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 21),
@@ -52,7 +50,9 @@ class BookingRuanganPage extends StatelessWidget {
                           onChanged: (newValue) {
                             data['onChanged'];
                           },
-                          validator: (String? newValue) {},
+                          validator: (String? newValue) {
+                            return null;
+                          },
                         );
                       }
                       if (data['type'] == 'datepicker') {
@@ -164,7 +164,7 @@ class BookingRuanganPage extends StatelessWidget {
     final ctrl = Get.put(BookingRuanganController());
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Ruangan > List Jadwal > Booking Ruangan",
             context: context,

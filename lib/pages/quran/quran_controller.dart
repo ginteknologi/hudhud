@@ -8,7 +8,7 @@ class QuranController extends GetxController {
 
   var txtController = TextEditingController();
 
-  getData() async {
+  Future<void> getData() async {
     final result = await QuranService().getList('all');
     list.value = result['data'];
     isLoadingList.value = false;

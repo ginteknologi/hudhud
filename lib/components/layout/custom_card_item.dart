@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomCardItem extends StatelessWidget {
-  CustomCardItem(
+  const CustomCardItem(
       {super.key,
       this.imgPath,
       this.chipText,
@@ -27,22 +26,22 @@ class CustomCardItem extends StatelessWidget {
           fontSize: 9),
       this.isFullWidth = false});
 
-  String? imgPath;
-  CrossAxisAlignment positionChip;
-  String? chipText;
-  TextStyle? chipTextStyle;
-  Color chipColor;
-  String? title;
-  String? subtitle;
-  String? size;
-  String? link;
-  String? linkRoute;
+  final String? imgPath;
+  final CrossAxisAlignment positionChip;
+  final String? chipText;
+  final TextStyle? chipTextStyle;
+  final Color chipColor;
+  final String? title;
+  final String? subtitle;
+  final String? size;
+  final String? link;
+  final String? linkRoute;
   final String? kategori;
-  double? width;
-  double? height;
-  bool isFullWidth;
-  bool network;
-  bool islink;
+  final double? width;
+  final double? height;
+  final bool isFullWidth;
+  final bool network;
+  final bool islink;
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +56,11 @@ class CustomCardItem extends StatelessWidget {
                 if (islink) {
                   final Uri url = Uri.parse(link!);
                   if (!await launchUrl(url)) {
-                    print('Tidak dapat membuka link YouTube.');
+                    debugPrint('Tidak dapat membuka link YouTube.');
                   }
                 }
                 if (linkRoute != null) {
-                  print(linkRoute);
+                  debugPrint(linkRoute);
                   Get.toNamed(linkRoute!);
                 }
                 //Get.toNamed(AppRoutes.detailEventScreen);
@@ -79,8 +78,7 @@ class CustomCardItem extends StatelessWidget {
                         clipBehavior: Clip.antiAlias,
                         child: network
                             ? Image.network(
-                                imgPath ??
-                                    'https://masjidannimah.id/wp-admin/admin-ajax.php?action=imgedit-preview&_ajax_nonce=682b18d276&postid=2013&rand=30724',
+                                imgPath!,
                                 height: height,
                                 width: isFullWidth == true ? Get.width : 151,
                                 fit: BoxFit.cover,
@@ -100,52 +98,54 @@ class CustomCardItem extends StatelessWidget {
                         crossAxisAlignment: positionChip,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          chipText != null ? 
-                          Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              margin: positionChip == CrossAxisAlignment.end
-                                  ? const EdgeInsets.only(right: 5, top: 10)
-                                  : const EdgeInsets.only(left: 5, top: 10),
-                              decoration: BoxDecoration(
-                                color: chipColor,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(7),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 3),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // Visibility(
-                                    //     visible: size == 'small',
-                                    //     child: Container(
-                                    //         margin:
-                                    //             const EdgeInsets.only(right: 5),
-                                    //         child: SvgPicture.asset(
-                                    //             'assets/icons/live.svg',
-                                    //             height: 10,
-                                    //             width: 10))),
-                                    Text('$chipText',
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: chipTextStyle
-                                        // TextStyle(
-                                        //     color: Colors.white,
-                                        //     fontWeight: FontWeight.bold,
-                                        //     fontStyle: size == 'small'
-                                        //         ? FontStyle.italic
-                                        //         : FontStyle.normal,
-                                        //     fontSize: chipSize
-                                        // ),
-                                        )
-                                    
-                                  ],
-                                ),
-                              )) : Container(),
+                          chipText != null
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  margin: positionChip == CrossAxisAlignment.end
+                                      ? const EdgeInsets.only(right: 5, top: 10)
+                                      : const EdgeInsets.only(left: 5, top: 10),
+                                  decoration: BoxDecoration(
+                                    color: chipColor,
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(7),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 3),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        // Visibility(
+                                        //     visible: size == 'small',
+                                        //     child: Container(
+                                        //         margin:
+                                        //             const EdgeInsets.only(right: 5),
+                                        //         child: SvgPicture.asset(
+                                        //             'assets/icons/live.svg',
+                                        //             height: 10,
+                                        //             width: 10))),
+                                        Text('$chipText',
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.start,
+                                            style: chipTextStyle
+                                            // TextStyle(
+                                            //     color: Colors.white,
+                                            //     fontWeight: FontWeight.bold,
+                                            //     fontStyle: size == 'small'
+                                            //         ? FontStyle.italic
+                                            //         : FontStyle.normal,
+                                            //     fontSize: chipSize
+                                            // ),
+                                            )
+                                      ],
+                                    ),
+                                  ))
+                              : Container(),
                           Container(
                             width: isFullWidth == true ? Get.width : 151,
                             clipBehavior: Clip.antiAlias,
@@ -157,12 +157,12 @@ class CustomCardItem extends StatelessWidget {
                                   end: Alignment.bottomCenter,
                                   colors: [
                                     // Colors.transparent,
-                                    Colors.black.withOpacity(0.0),
-                                    Colors.black.withOpacity(0.3),
-                                    Colors.black.withOpacity(0.5),
-                                    Colors.black.withOpacity(0.7)
+                                    Colors.black.withValues(alpha: 0.0),
+                                    Colors.black.withValues(alpha: 0.3),
+                                    Colors.black.withValues(alpha: 0.5),
+                                    Colors.black.withValues(alpha: 0.7)
                                   ]),
-                              // color: Colors.black.withOpacity(0.5),
+                              // color: Colors.black.withValues(alpha: 0.5),
                               borderRadius: const BorderRadius.only(
                                   bottomLeft: Radius.circular(7),
                                   bottomRight: Radius.circular(7)),

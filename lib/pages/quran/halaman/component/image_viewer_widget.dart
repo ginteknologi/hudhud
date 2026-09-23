@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,22 +13,21 @@ class EasyImageViewPager extends StatefulWidget {
 
   /// Create new instance, using the [imageProviders] to populate the [PageView]
   const EasyImageViewPager(
-      {Key? key,
+      {super.key,
       required this.imageProviders,
       required this.idxInitial,
       // required this.search,
-      required this.onTap})
-      : super(key: key);
+      required this.onTap});
 
   @override
-  _EasyImageViewPagerState createState() => _EasyImageViewPagerState();
+  EasyImageViewPagerState createState() => EasyImageViewPagerState();
 }
 
-class _EasyImageViewPagerState extends State<EasyImageViewPager> {
+class EasyImageViewPagerState extends State<EasyImageViewPager> {
   final dataStore = GetStorage();
   late PageController _pageController =
       PageController(initialPage: widget.idxInitial - 1);
-  bool _pagingEnabled = true;
+  final bool _pagingEnabled = true;
 
   @override
   void initState() {
@@ -58,7 +58,9 @@ Widget build(BuildContext context) {
 onPageChanged: (index) {
     ctrl.surahSaatIni.value = widget.imageProviders[index]['surat'];
     ctrl.halSaatIni.value = widget.imageProviders[index]['hal'].toString();
-  print('asdssad');
+  if (kDebugMode) {
+    debugPrint('asdssad');
+  }
 },
     reverse: true,
     physics: _pagingEnabled
@@ -70,8 +72,12 @@ onPageChanged: (index) {
       final image = widget.imageProviders[index]['file'];
       dataStore.write('indonesiaLastRead', widget.imageProviders[index]);
       // gctrl.indonesiaLastRead = widget.imageProviders[index];
-      print('<<<<<<<wei>>>>>>>');
-      print(widget.imageProviders[index]);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<wei>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(widget.imageProviders[index].toString());
+      }
       return EasyImageView(
         imageSource: "server",
         imageProvider: image,
@@ -106,20 +112,20 @@ class EasyImageView extends StatefulWidget {
 
   /// Create a new instance
   const EasyImageView({
-    Key? key,
+    super.key,
     required this.imageProvider,
     required this.imageSource,
     this.minScale = 1.0,
     this.maxScale = 5.0,
     this.onScaleChanged,
-  }) : super(key: key);
+  });
 
   @override
-  _EasyImageViewState createState() => _EasyImageViewState();
+  EasyImageViewState createState() => EasyImageViewState();
 }
 
-class _EasyImageViewState extends State<EasyImageView> {
-  late TransformationController _transformationController =
+class EasyImageViewState extends State<EasyImageView> {
+  late final TransformationController _transformationController =
       TransformationController();
 
   @override
@@ -139,7 +145,7 @@ class _EasyImageViewState extends State<EasyImageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).orientation != Orientation.portrait
             ? double.infinity

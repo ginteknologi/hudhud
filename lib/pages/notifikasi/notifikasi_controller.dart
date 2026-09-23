@@ -1,15 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_service.dart';
-import 'package:masjid_app/routes/notifikasi/index.dart';
 
 class NotifikasiController extends GetxController {
   var isLoadingList = true.obs;
   var list = [].obs;
 
-  getData() async {
+  Future<void> getData() async {
+    try {
     final result = await NotifikasiService().getList();
-    list.value = result['data'];
+    if (result != null) {
+      list.value = result['data'];
+    }
     isLoadingList.value = false;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
+    }
   }
   
   @override

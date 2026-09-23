@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -7,97 +8,151 @@ import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
 import 'package:masjid_app/components/layout/custom_card_item.dart';
-import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/models/artikelData.dart';
-import 'package:masjid_app/models/kajianData.dart';
-import 'package:masjid_app/models/kontenSosmed.dart';
-import 'package:masjid_app/pages/dashboard/component/countDown.dart';
-import 'package:masjid_app/pages/dashboard/component/ramadhanMenu.dart';
-import 'package:masjid_app/pages/dashboard/component/waktusolat.dart';
+import 'package:masjid_app/models/artikel_data.dart';
+import 'package:masjid_app/models/kajian_data.dart';
+import 'package:masjid_app/pages/dashboard/component/count_down.dart';
+import 'package:masjid_app/pages/dashboard/component/ramadhan_menu.dart';
+import 'package:masjid_app/pages/dashboard/component/sedang_live.dart';
+import 'package:masjid_app/pages/dashboard/component/waktu_solat.dart';
 import 'package:masjid_app/controllers/dashboard_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/notifikasi/index.dart';
-import 'package:masjid_app/routes/quran/index.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart' as refresh;
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:simple_moment/simple_moment.dart';
+import 'package:masjid_app/routes/kajian/index.dart';
 
 class DashboardPage extends StatelessWidget {
   final DashboardController ctrl = Get.find();
   final MainController gctrl = Get.find<MainController>();
-  DashboardPage({Key? key}) : super(key: key);
+  DashboardPage({super.key});
 
-  layout(BuildContext context) {
-    return SafeArea(
-        top: false,
-        child: Obx(() {
-          return Container(
-              height: Get.height,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF189A8C), Colors.white, Colors.white]),
-              ),
-              child: Padding(
-                  padding: EdgeInsets.only(
-                      left: Get.width / 30,
-                      right: Get.width / 30,
-                      top: Get.height / 20),
-                  child: SingleChildScrollView(
-                      physics: const ClampingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          header(context),
-                          const WaktuSolat(),
-                          getGridMenu(ctrl),
-                          SizedBox(
-                            height: Get.width / 30,
-                          ),
-                          CountDown_Widget(),
-                          SizedBox(
-                            height: Get.width / 30,
-                          ),
-                          RamadhanMenuWidget(),
-                          SizedBox(
-                            height: Get.width / 30,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator(
-                                'Kajian Live', 'Lihat Semua', context, ctrl),
-                          ),
-                          Skeletonizer(
-                            ignoreContainers: false,
-                            enabled: ctrl.isLoadingKajianLive.value,
-                            child: getListItem(ctrl, true),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: getSeparator('Kajian Tafsir Al-Quran',
-                                'Lihat Semua', context, ctrl),
-                          ),
-                          Skeletonizer(
-                            ignoreContainers: false,
-                            enabled: ctrl.isLoadingKajianLive.value,
-                            child: getListItemKajian(ctrl),
-                          ),
-                          Container(
-                            child: getSeparator('Terbaru', '', context, ctrl),
-                          ),
-                          Skeletonizer(
-                            ignoreContainers: false,
-                            enabled: ctrl.isLoadingArtikel.value,
-                            child: News(context, ctrl),
-                          ),
-                          SizedBox(
-                            height: Get.height / 30,
-                          )
-                        ],
-                      ))));
-        }));
+  Obx layout(BuildContext context) {
+    return Obx(() {
+      return Container(
+          padding: EdgeInsets.only(top: Get.height / 20),
+          height: Get.height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF189A8C), Colors.white, Colors.white]),
+          ),
+          child: refresh.SmartRefresher(
+            enablePullDown: true,
+            controller: ctrl.refreshController,
+            onLoading: () async {
+              await ctrl.getDataSedangLive();
+              await ctrl.getSliderKajianLive();
+              await ctrl.getSliderKajianTafsir();
+              await ctrl.getDataArtikel();
+              await ctrl.getMenuHome();
+              await ctrl.getSliderDoaDashboard();
+              ctrl.refreshController.loadComplete();
+            },
+            onRefresh: () async {
+              ctrl.refreshController.refreshCompleted();
+            },
+            child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: header(context),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: WaktuSolat(),
+                    ),
+                    Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: Get.width / 30),
+                        child: getGridMenu(ctrl)),
+                    SizedBox(
+                      height: Get.width / 40,
+                    ),
+                    SedangLiveWidget(),
+                    SizedBox(
+                      height: Get.width / 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: CountDownWidget(),
+                    ),
+                    SizedBox(
+                      height: Get.width / 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: RamadhanMenuWidget(),
+                    ),
+                    SizedBox(
+                      height: Get.width / 30,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: getSeparator(
+                          'Sahabat Masjid', 'Lihat Semua', context, ctrl),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Get.width / 30),
+                      child: Skeletonizer(
+                        ignoreContainers: false,
+                        enabled: ctrl.isLoadingDoaDashboard.value,
+                        child: getListItem(ctrl),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: getSeparator(
+                          'Riwayat Kajian Live', 'Lihat Semua', context, ctrl),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Get.width / 30),
+                      child: Skeletonizer(
+                        ignoreContainers: false,
+                        enabled: ctrl.isLoadingKajianLive.value,
+                        child: getListItemKajianLive(ctrl),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      margin: const EdgeInsets.only(top: 10),
+                      child: getSeparator(
+                          'Kajian Tafsir Quran', 'Lihat Semua', context, ctrl),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Get.width / 30),
+                      child: Skeletonizer(
+                        ignoreContainers: false,
+                        enabled: ctrl.isLoadingKajianTafsir.value,
+                        child: getListItemKajian(ctrl),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: getSeparator('Terbaru', '', context, ctrl),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width / 30),
+                      child: Skeletonizer(
+                        ignoreContainers: false,
+                        enabled: ctrl.isLoadingArtikel.value,
+                        child: news(context, ctrl),
+                      ),
+                    ),
+                    SizedBox(
+                      height: Get.height / 30,
+                    )
+                  ],
+                )),
+          ));
+    });
   }
 
   Row header(BuildContext context) {
@@ -126,7 +181,7 @@ class DashboardPage extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 0),
-                    child: AutoSizeText(gctrl.userLogin['name'].toString(),
+                    child: AutoSizeText(gctrl.userLogin.value.nama.toString(),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -143,7 +198,7 @@ class DashboardPage extends StatelessWidget {
                         showPopup(context, dialogTerkini(context), 200);
                       },
                       borderRadius: BorderRadius.circular(20),
-                      splashColor: Colors.green.withOpacity(0.5),
+                      splashColor: Colors.green.withValues(alpha: 0.5),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
@@ -190,21 +245,14 @@ class DashboardPage extends StatelessWidget {
                     Get.toNamed(RoutesAkun.root);
                   },
                   borderRadius: BorderRadius.circular(20),
-                  splashColor: Colors.green.withOpacity(0.5),
+                  splashColor: Colors.green.withValues(alpha: 0.5),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: gctrl.userLogin['photo'] == null ||
-                              gctrl.userLogin['photo'] == ""
-                          ? Image.asset(
-                              "assets/icons/app_icon.png",
-                              height: 35,
-                              width: 35,
-                            )
-                          : Image.network(
-                              gctrl.userLogin['photo'],
-                              height: 35,
-                              width: 35,
-                            )
+                      child: Image.network(
+                        gctrl.userLogin.value.photo,
+                        height: 35,
+                        width: 35,
+                      )
                       // Image.network(
                       //   "https://picsum.photos/50",
                       //   height: 35,
@@ -218,7 +266,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  News(BuildContext context, DashboardController ctrl) {
+  ListView news(BuildContext context, DashboardController ctrl) {
     return ListView.builder(
         primary: false,
         itemCount: ctrl.listArtikel.length,
@@ -235,14 +283,20 @@ class DashboardPage extends StatelessWidget {
                 size: "medium",
                 positionChip: CrossAxisAlignment.start,
                 chipColor: Theme.of(context).primaryColor,
-                chipText: "Umum",
+                chipText: item.categoryArtikel?['name'],
                 chipTextStyle: TextStyle(
                     fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
                     fontWeight: FontWeight.normal,
                     color: Colors.white),
                 title: item.judul,
-                subtitle: Moment.parse(item.updatedAt)
-                    .format("dd MMMM yyyy", localeOverride: 'id'),
+                subtitle: () {
+                  try {
+                    return Moment.parse(item.publishDate)
+                        .format("dd MMMM yyyy", localeOverride: 'id');
+                  } catch (e) {
+                    return item.publishDate;
+                  }
+                }(),
                 imgPath: item.image,
                 linkRoute: '/artikel/${item.id}',
               ),
@@ -254,7 +308,7 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  getGridMenu(DashboardController ctrl) {
+  Padding getGridMenu(DashboardController ctrl) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0),
       child: GridView.builder(
@@ -268,14 +322,9 @@ class DashboardPage extends StatelessWidget {
           return Material(
               color: Colors.transparent,
               child: InkWell(
-                  onTap: () {
-                    if (ctrl.listMenuHome[index]['urlNav'] != '' &&
-                        ctrl.listMenuHome[index]['urlNav'] != null) {
-                      Get.toNamed(ctrl.listMenuHome[index]['urlNav']);
-                    }
-                  },
+                  onTap: ctrl.listMenuHome[index]['onTap']! as void Function(),
                   borderRadius: BorderRadius.circular(20),
-                  splashColor: Colors.green.withOpacity(0.5),
+                  splashColor: Colors.green.withValues(alpha: 0.5),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
@@ -310,7 +359,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getSeparator(String nama, final String? sub, BuildContext context,
+  Material getSeparator(String nama, final String? sub, BuildContext context,
       DashboardController ctrl) {
     return Material(
       color: Colors.transparent,
@@ -331,12 +380,23 @@ class DashboardPage extends StatelessWidget {
                 highlightColor: Colors.transparent,
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 onTap: () async {
-                  if (nama == 'Kajian Live') {
-                    await ctrl.getKajianLive();
+                  if (nama == 'Sahabat Masjid') {
+                    Get.toNamed(RoutesKajian.root, arguments: {
+                      'judul': 'Sahabat masjid',
+                      'type': 'doa_ramadhan'
+                    });
+                  } else if (nama == 'Riwayat Kajian Live') {
+                    Get.toNamed(RoutesKajian.root, arguments: {
+                      'judul': 'Riwayat Kajian Live',
+                      'type': 'live'
+                    });
                   } else {
-                    await ctrl.getKajianTafsir();
+                    Get.toNamed(RoutesKajian.root, arguments: {
+                      'judul': 'Kajian Tafsir Al-Quran',
+                      'type': 'tafsir'
+                    });
                   }
-                  showSheet(ctrl, nama, context, true);
+                  // showSheet(ctrl, nama, context, true);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8),
@@ -361,16 +421,20 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getListItem(DashboardController ctrl, flag) {
+  SizedBox getListItem(DashboardController ctrl) {
+    if (kDebugMode) {
+      debugPrint("ctrl.isLoadingKajianTafsir ${ctrl.isLoadingKajianTafsir}");
+      debugPrint("ctrl.isLoadingKajianTafsir ${ctrl.listDoaSlider.length}");
+    }
     return SizedBox(
       height: 151,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: ctrl.listKontenSosmed.length,
+        itemCount: ctrl.listDoaSlider.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
-          final SosmedData item = ctrl.listKontenSosmed[index];
+          final KajianData item = ctrl.listDoaSlider[index];
           return CustomCardItem(
             title: item.judul ?? '',
             subtitle: '',
@@ -384,7 +448,38 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  getListItemKajian(DashboardController ctrl) {
+  Obx getListItemKajianLive(DashboardController ctrl) {
+    return Obx(() {
+      return SizedBox(
+        height: 151,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          itemCount: ctrl.listKajianLiveSlider.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 10),
+          itemBuilder: (context, index) {
+            final KajianData item = ctrl.listKajianLiveSlider[index];
+            return CustomCardItem(
+              title: '${item.judul}',
+              subtitle: '${item.subjudul}',
+              kategori: '${item.kategori}',
+              imgPath: item.image,
+              islink: true,
+              link: item.link,
+              network: true,
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  Obx getListItemKajian(DashboardController ctrl) {
+    if (kDebugMode) {
+      debugPrint("ctrl.isLoadingKajianTafsir ${ctrl.isLoadingKajianTafsir}");
+      debugPrint(
+          "ctrl.listKajianSlider.length ${ctrl.listKajianSlider.length}");
+    }
     return Obx(() {
       return SizedBox(
         height: 151,
@@ -399,9 +494,9 @@ class DashboardPage extends StatelessWidget {
               title: '${item.judul}',
               subtitle: '${item.subjudul}',
               kategori: '${item.kategori}',
-              imgPath: '${item.image}',
+              imgPath: item.image,
               islink: true,
-              link: '${item.link}',
+              link: item.link,
               network: true,
             );
           },
@@ -410,224 +505,105 @@ class DashboardPage extends StatelessWidget {
     });
   }
 
-  getButtonCard(DashboardController ctrl, BuildContext context) {
-    return Card(
-        elevation: 0,
-        color: const Color(0xFFD9BA62),
-        margin: const EdgeInsets.only(top: 10),
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7),
-          //set border radius more than 50% of height and width to make circle
-        ),
-        child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-                borderRadius: BorderRadius.circular(7),
-                onTap: () {
-                  if (ctrl.lastRead['ayatNumber'] > 0) {
-                    Get.toNamed(
-                        '${RoutesQuran.detail.replaceAll(':id', ctrl.lastRead['ayatNumber'].toString())}?nama_surah=${ctrl.lastRead['suratName']}');
-                    // Get.toNamed(AppRoutes.detailEventScreen);
-                  }
-                },
-                child: SizedBox(
-                    width: Get.width,
-                    height: 65,
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.symmetric(horizontal: 20),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Flexible(
-                                flex: 1,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                        'assets/icons/quran_yellow.svg',
-                                        height: 35,
-                                        width: 35),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text("Terakhir Baca",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall
-                                                    ?.fontSize,
-                                                color: Colors.black)),
-                                        Text(
-                                          ctrl.lastRead['ayatNumber'] > 0
-                                              ? '${ctrl.lastRead['suratName']} : ${ctrl.lastRead['ayatNumber']}'
-                                              : 'Belum baca',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.fontSize,
-                                              color: Colors.black),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )),
-                            const Icon(
-                              Icons.chevron_right_rounded,
-                              color: Colors.black,
-                            )
-                          ]),
-                    )))));
-  }
+  // void showSheet(
+  //     DashboardController ctrl, nama, BuildContext context, bool flag) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: flag,
+  //       useSafeArea: flag,
+  //       showDragHandle: false,
+  //       shape: const RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.vertical(
+  //           top: Radius.circular(20.0),
+  //         ),
+  //       ),
+  //       builder: (BuildContext bc) {
+  //         return !flag
+  //             ? CustomModalBottomSheet(
+  //                 typeSheet: TypeBottomSheet.typeGridSheet,
+  //                 dataGrid: ctrl.listAllMenu,
+  //               )
+  //             : CustomModalBottomSheet(
+  //                 typeSheet: TypeBottomSheet.typeFullscreenSheet,
+  //                 content: [
+  //                   SizedBox(
+  //                     height: 30,
+  //                     child: Text(
+  //                       nama,
+  //                       style: context.textTheme.titleMedium?.copyWith(
+  //                           fontWeight: FontWeight.bold, color: Colors.black),
+  //                     ),
+  //                   ),
+  //                   Obx(() {
+  //                     if (ctrl.isLoadingKajianTafsir.isTrue) {
+  //                       return Container(
+  //                           height: Get.height / 1.2,
+  //                           child: Center(child: CircularProgressIndicator()));
+  //                     }
+  //                     return SizedBox(
+  //                         height: MediaQuery.of(context).size.height -
+  //                             kBottomNavigationBarHeight -
+  //                             kToolbarHeight,
+  //                         child: ListView.builder(
+  //                           physics: const ClampingScrollPhysics(),
+  //                           itemCount: ctrl.listKajianSlider.length,
+  //                           shrinkWrap: true,
+  //                           itemBuilder: (context, index) {
+  //                             var item = ctrl.listKajianSlider[index];
+  //                             return ListItemUiWidget(
+  //                               onTap: () async {
+  //                                 final Uri url = Uri.parse(item['link']);
+  //                                 if (!await launchUrl(url)) {
+  //                                   print('Tidak dapat membuka link YouTube.');
+  //                                 }
+  //                               },
+  //                               minHeight: 70,
+  //                               vjustify: false,
+  //                               widthContent:
+  //                                   MediaQuery.of(context).size.width - 130,
+  //                               id: item['id'],
+  //                               title: item['judul'],
+  //                               showIcon: IconPosition.left,
+  //                               iconLeft: Stack(
+  //                                 children: [
+  //                                   ClipRRect(
+  //                                     borderRadius: BorderRadius.circular(7),
+  //                                     child: Image.network(
+  //                                       item['image'],
+  //                                       width: 65,
+  //                                       height: 65,
+  //                                       fit: BoxFit.cover,
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                               titleStyle: context.textTheme.labelMedium
+  //                                   ?.copyWith(
+  //                                       fontWeight: FontWeight.bold,
+  //                                       color: Colors.black),
+  //                               subTitle: item['subjudul'],
+  //                               subtitleStyle: context.textTheme.labelMedium
+  //                                   ?.copyWith(
+  //                                       fontWeight: FontWeight.w100,
+  //                                       color: Colors.black),
+  //                               footerText: Moment.parse(item['updatedAt'])
+  //                                   .format("dd MMMM yyyy",
+  //                                       localeOverride: 'id'),
+  //                               footerTextStyle: context.textTheme.labelSmall
+  //                                   ?.copyWith(
+  //                                       letterSpacing: 0,
+  //                                       fontWeight: FontWeight.w100,
+  //                                       color: Colors.black),
+  //                             );
+  //                           },
+  //                         ));
+  //                   })
+  //                 ],
+  //               );
+  //       });
+  // }
 
-  void showSheet(
-      DashboardController ctrl, nama, BuildContext context, bool flag) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: flag,
-        useSafeArea: flag,
-        showDragHandle: false,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20.0),
-          ),
-        ),
-        builder: (BuildContext bc) {
-          return !flag
-              ? CustomModalBottomSheet(
-                  typeSheet: TypeBottomSheet.typeGridSheet,
-                  dataGrid: ctrl.listAllMenu,
-                )
-              : CustomModalBottomSheet(
-                  typeSheet: TypeBottomSheet.typeFullscreenSheet,
-                  content: [
-                    SizedBox(
-                      height: 30,
-                      child: Text(
-                        nama,
-                        style: context.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                    ),
-                    Obx(() {
-                      if (ctrl.isLoadingKajian.isTrue) {
-                        return Container(
-                            height: Get.height / 1.2,
-                            child: Center(child: CircularProgressIndicator()));
-                      }
-                      return SizedBox(
-                          height: MediaQuery.of(context).size.height -
-                              kBottomNavigationBarHeight -
-                              kToolbarHeight,
-                          child: ListView.builder(
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: ctrl.listKajian.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              var item = ctrl.listKajian[index];
-                              return ListItemUiWidget(
-                                onTap: () async {
-                                  final Uri url = Uri.parse(item['link']);
-                                  if (!await launchUrl(url)) {
-                                    print('Tidak dapat membuka link YouTube.');
-                                  }
-                                },
-                                minHeight: 70,
-                                vjustify: false,
-                                widthContent:
-                                    MediaQuery.of(context).size.width - 130,
-                                id: item['id'],
-                                title: item['judul'],
-                                showIcon: IconPosition.left,
-                                iconLeft: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(7),
-                                      child: Image.network(
-                                        item['image'],
-                                        width: 65,
-                                        height: 65,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    // Positioned(
-                                    //     top: 2,
-                                    //     right: 2,
-                                    //     child: Container(
-                                    //       padding: const EdgeInsets.all(3),
-                                    //       constraints: BoxConstraints.loose(
-                                    //           Size.infinite),
-                                    //       decoration: const BoxDecoration(
-                                    //           color: Colors.red,
-                                    //           borderRadius: BorderRadius.all(
-                                    //               Radius.circular(20))),
-                                    //       child: Row(
-                                    //         mainAxisSize: MainAxisSize.min,
-                                    //         crossAxisAlignment:
-                                    //             CrossAxisAlignment.center,
-                                    //         mainAxisAlignment:
-                                    //             MainAxisAlignment.center,
-                                    //         children: [
-                                    //           Container(
-                                    //               margin: const EdgeInsets.only(
-                                    //                   right: 5),
-                                    //               child: SvgPicture.asset(
-                                    //                   'assets/icons/live.svg',
-                                    //                   height: 6,
-                                    //                   width: 6)),
-                                    //           const Text('Live',
-                                    //               overflow:
-                                    //                   TextOverflow.ellipsis,
-                                    //               textAlign: TextAlign.start,
-                                    //               style: TextStyle(
-                                    //                   color: Colors.white,
-                                    //                   fontWeight:
-                                    //                       FontWeight.bold,
-                                    //                   fontStyle:
-                                    //                       FontStyle.italic,
-                                    //                   fontSize: 5)),
-                                    //         ],
-                                    //       ),
-                                    //     ))
-                                  ],
-                                ),
-                                titleStyle: context.textTheme.labelMedium
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                subTitle: item['subjudul'],
-                                subtitleStyle: context.textTheme.labelMedium
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w100,
-                                        color: Colors.black),
-                                footerText: Moment.parse(item['updatedAt'])
-                                    .format("dd MMMM yyyy",
-                                        localeOverride: 'id'),
-                                footerTextStyle: context.textTheme.labelSmall
-                                    ?.copyWith(
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w100,
-                                        color: Colors.black),
-                              );
-                            },
-                          ));
-                    })
-                  ],
-                );
-        });
-  }
-
-  void showPopup(context, Widget? content, double? height) {
+  void showPopup(BuildContext context, Widget? content, double? height) {
     showDialog(
         context: context,
         builder: (BuildContext bc) {
@@ -671,7 +647,7 @@ class DashboardPage extends StatelessWidget {
         });
   }
 
-  dialogTerkini(BuildContext context) {
+  Column dialogTerkini(BuildContext context) {
     return Column(
       children: [
         Text(
@@ -705,7 +681,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  dialogCari(DashboardController ctrl, gctrl, BuildContext context, bc) {
+  Column dialogCari(DashboardController ctrl, gctrl, BuildContext context, bc) {
     return Column(
       children: [
         Text(
@@ -742,7 +718,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  dialogKota(BuildContext context, DashboardController ctrl) {
+  Column dialogKota(BuildContext context, DashboardController ctrl) {
     return Column(
       children: [
         Row(
@@ -802,23 +778,6 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  // void showPopupInfaq(ctrl, context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext bc) {
-  //         return Dialog(
-  //           elevation: 0,
-  //           backgroundColor: const Color(0xFFDADADA),
-  //           shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(7.0)),
-  //           child: Container(
-  //               padding: const EdgeInsets.all(10),
-  //               height: 400,
-  //               child: Text("testss")),
-  //         );
-  //       });
-  // }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -827,7 +786,7 @@ class DashboardPage extends StatelessWidget {
         statusBarColor: Colors.transparent));
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Colors.white,
         extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
         body: layout(context));

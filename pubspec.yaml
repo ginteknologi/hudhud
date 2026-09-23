@@ -16,10 +16,10 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.0.12+14
+version: 0.1.5+33
 
 environment:
-  sdk: ">=3.1.1 <4.0.0"
+  sdk: ">=3.2.3 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -36,49 +36,51 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.6
   get_storage: ^2.1.1
-  in_app_update: ^4.2.2
+  in_app_update: ^5.0.0
   intl: ^0.18.1
-  firebase_core: ^2.15.1
-  firebase_messaging: ^14.6.7
-  flutter_local_notifications: ^16.1.0
-  permission_handler: ^11.0.0
+  firebase_core: ^4.2.0
+  firebase_messaging: ^16.0.3
+  flutter_local_notifications: ^18.0.1
+  permission_handler: ^13.0.2
   open_filex: ^4.3.2
-  google_fonts: ^6.0.0
-  fluttertoast: ^8.2.4
-  language_builder: ^0.1.2
+  google_fonts: 4.0.4
+  fluttertoast: ^10.0.0
   easy_localization: ^3.0.3
   flutter_svg: ^2.0.7
   flutter_remix: ^0.0.3
-  introduction_screen: ^3.1.12
+  introduction_screen: ^5.0.1
   auto_size_text: ^3.0.0
   table_calendar: ^3.0.9
   simple_moment: 1.1.1
-  # Animation
-  animate_do: 3.1.2
+  animate_do: ^5.1.0
   ffi: ^2.1.0
-  just_audio: ^0.9.35
+  just_audio: ^0.10.5
   flutter_masked_text2: ^0.9.1
-  google_sign_in: ^6.1.5
-  flutter_qiblah: ^2.2.0
-  geolocator: ^9.0.2
+  google_sign_in: ^7.2.0
+  flutter_qiblah: ^3.1.0+1
+  geolocator: ^14.0.2
   url_launcher: ^6.2.1
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
   flutter_html: ^3.0.0-beta.2
-  photo_view: ^0.14.0
-  flutter_background_service: ^5.0.4
-  device_info_plus: ^9.1.1
-  audioplayers: ^5.2.1
-  geocoding: ^2.1.1
+  flutter_widget_from_html: ^0.17.1
+  photo_view: ^0.15.0
+  device_info_plus: ^12.2.0
+  geocoding: ^5.0.0
   image_picker: ^1.0.4
   hijri: ^3.0.0
   cached_network_image: ^3.3.1
-  share_plus: ^7.2.2
+  share_plus: ^12.0.1
   html: ^0.15.4
   scrollable_positioned_list: ^0.3.8
-  skeletonizer: ^1.0.1
+  skeletonizer: ^3.0.0
   autocomplete_textfield: 2.0.1
+  minio_new: ^1.0.2
   path_provider: ^2.1.2
-
+  adhan: ^2.0.0+1
+  http: any
+  infinite_scroll_pagination: ^5.1.1
+  package_info_plus: ^9.0.0
+  pull_to_refresh: ^2.0.0
 dependency_overrides:
   intl: any
 
@@ -86,17 +88,17 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/icons/app_icon.png"
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^6.0.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

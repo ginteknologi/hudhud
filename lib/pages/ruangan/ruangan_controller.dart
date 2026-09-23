@@ -8,13 +8,13 @@ class RuanganController extends GetxController {
 
   Rx<DateTime> selectedDay = DateTime.now().obs;
 
-  getData() async {
+  Future<void> getData() async {
     final result = await RuanganService().getList();
     list.value = result['data'];
     isLoadingList.value = false;
   }
 
-  getListKegiatan() async {
+  Future<List<dynamic>> getListKegiatan() async {
     listKegiatan = [
       {
         "id": 1,

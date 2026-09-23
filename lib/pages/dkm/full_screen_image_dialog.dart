@@ -5,7 +5,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 class FullScreenImageDialog extends StatelessWidget {
   final String imagePath;
 
-  FullScreenImageDialog({required this.imagePath});
+  const FullScreenImageDialog({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class FullScreenImageDialog extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pop(); // Tutup dialog ketika layar disentuh
         },
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: PhotoViewGallery.builder(

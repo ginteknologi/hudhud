@@ -3,7 +3,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/InputDropdown.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/ruangan/jadwal/jadwal_ruangan_controller.dart';
@@ -19,7 +18,7 @@ class JadwalRuanganPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = Get.put(JadwalRuanganController());
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Ruangan > List Jadwal", context: context, elevation: 0),
         body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
@@ -44,7 +43,7 @@ class JadwalRuanganPage extends StatelessWidget {
         ]);
   }
 
-  layout(JadwalRuanganController ctrl, BuildContext context) {
+  SafeArea layout(JadwalRuanganController ctrl, BuildContext context) {
     return SafeArea(
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 21),
@@ -118,7 +117,7 @@ class JadwalRuanganPage extends StatelessWidget {
                   const Divider(
                     color: Colors.black26,
                   ),
-                  ctrl.list.length > 0 ? ListView.builder(
+                  ctrl.list.isNotEmpty ? ListView.builder(
                     physics: const ClampingScrollPhysics(),
                     itemCount: ctrl.list.length,
                     shrinkWrap: true,
@@ -161,7 +160,7 @@ class JadwalRuanganPage extends StatelessWidget {
                                               color:
                                                   Theme.of(context).primaryColor),
                                     ),
-                                    Text('${int.parse(ctrl.list[index]['jam_mulai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_mulai'].split(':')[1])} - ' + '${int.parse(ctrl.list[index]['jam_selesai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_selesai'].split(':')[1])}',
+                                    Text('${int.parse(ctrl.list[index]['jam_mulai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_mulai'].split(':')[1])} - ' '${int.parse(ctrl.list[index]['jam_selesai'].split(':')[0])}:${int.parse(ctrl.list[index]['jam_selesai'].split(':')[1])}',
                                         style: context.textTheme.labelSmall
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,

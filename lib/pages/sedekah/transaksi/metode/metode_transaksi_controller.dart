@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/routes/sedekah/index.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,24 +13,28 @@ class MetodeTransaksiController extends GetxController {
   RxString inputTypeBayar = "".obs;
   var dataMetodeBayar = {}.obs;
 
-  getData() async {
+  Future<void> getData() async {
     final result = await TransaksiSedekahServices().getData();
     dataBillProduct.value = result['data'];
     isLoading.value = false;
   }
 
-  goToMetode(String id) {
+  void goToMetode(String id) {
     // print(RoutesSedekah.detail, id: id);
-    print(id);
+    if (kDebugMode) {
+      debugPrint(id.toString());
+    }
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/metode');
   }
 
-  goToNextPage(String id) {
+  void goToNextPage(String id) {
     final idData = Get.parameters['id'];
     var dataBayar = dataStore.read('inputDataPembayaran');
     dataBayar['idPayment'] = id;
     dataBayar['dataMetodeBayar'] = dataMetodeBayar;
-    print(inputTypeBayar.value);
+    if (kDebugMode) {
+      debugPrint(inputTypeBayar.value.toString());
+    }
     if (inputTypeBayar.value.toString() == 'va') {
       dataBayar['metode'] = inputTypeBayar.value;
       procceedPayment(idData);
@@ -39,7 +44,7 @@ class MetodeTransaksiController extends GetxController {
     }
   }
 
-  procceedPayment(id) async {
+  Future<Map<String, Object>> procceedPayment(id) async {
     isLoading.value = true;
     var status = {"code": 400, "message": "Mohon cek kembali koneksi anda."};
     try {
@@ -50,13 +55,15 @@ class MetodeTransaksiController extends GetxController {
         Get.offAllNamed('${RoutesSedekah.root}/$id/transaksi/status');
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
     isLoading.value = false;
     return status;
   }
 
-  goToEwallet(id) {
+  void goToEwallet(id) {
     Get.toNamed('${RoutesSedekah.root}/$id/transaksi/payment');
   }
 

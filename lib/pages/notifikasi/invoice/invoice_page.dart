@@ -9,7 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 class InvoiceNotifikasiPage extends StatelessWidget {
   const InvoiceNotifikasiPage({super.key});
 
-  layout(BuildContext context, InvoiceController ctrl) {
+  SafeArea layout(BuildContext context, InvoiceController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -64,7 +64,8 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            Text(ctrl.status_invoice,
+                                            Text(
+                                              ctrl.statusInvoice,
                                               style: context
                                                   .textTheme.titleMedium
                                                   ?.copyWith(
@@ -106,7 +107,8 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                                 fontWeight: FontWeight.normal,
                                               ),
                                             ),
-                                            Text(ctrl.list['data_sedekah']['name'],
+                                            Text(
+                                              ctrl.list['data_sedekah']['name'],
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -125,7 +127,9 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                                 fontWeight: FontWeight.normal,
                                               ),
                                             ),
-                                            Text(ctrl.list['paymentSelect']['name'],
+                                            Text(
+                                              ctrl.list['paymentSelect']
+                                                  ['name'],
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -145,7 +149,8 @@ class InvoiceNotifikasiPage extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              priceFormat.format(ctrl.list['nominal']),
+                                              priceFormat
+                                                  .format(ctrl.list['nominal']),
                                               style: context.textTheme.bodySmall
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -179,10 +184,12 @@ class InvoiceNotifikasiPage extends StatelessWidget {
     final ctrl = Get.put(InvoiceController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? Center(child: CircularProgressIndicator()) : layout(context, ctrl)),
+      body: Obx(() => ctrl.isLoadingList.value
+          ? Center(child: CircularProgressIndicator())
+          : layout(context, ctrl)),
     );
   }
 }

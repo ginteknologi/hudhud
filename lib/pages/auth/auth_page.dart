@@ -1,8 +1,8 @@
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/outlinebutton.dart';
 import 'package:masjid_app/pages/auth/auth_controller.dart';
+import 'package:masjid_app/routes/home/index.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -38,10 +38,12 @@ class AuthPage extends StatelessWidget {
           ),
           Align(
               alignment: Alignment.center,
-              child: Image.asset(
+              child: 
+              Image.asset(
                 'assets/img/new-logo.png',
                 width: 256,
-              )),
+              )
+              ),
           // child: SvgPicture.asset(
           // 'assets/img/new-logo.png',
           // width: 170,
@@ -57,11 +59,12 @@ class AuthPage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: ButtonOutline(
               onPressed: () {
-                ctrl.loginGuest();
+                Get.offAllNamed(RoutesHome.root);
+                // ctrl.loginGuest();
               },
               radius: 40,
-              showIcon: "left",
-              title: "Guest Login",
+              // showIcon: "left",
+              title: "Lewati",
               width: 250,
               shadow: false,
             ),
@@ -87,9 +90,9 @@ class AuthPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       extendBodyBehindAppBar: false,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,  
       body: layout(ctrl, context),
     );
   }

@@ -9,20 +9,23 @@ class InvoiceController extends GetxController {
   List listNotif = [].obs;
   final id = Get.parameters['invoice'];
   var dataUser = {};
-  var status_invoice = '';
-  getData() async {
+  String statusInvoice = '';
+  Future<void> getData() async {
     final result = await NotifikasiService().getDetailInvoice(id);
-    list.value = result['data'];
-    if (result['data']['status'] == 'paid') {
-      status_invoice  =  'Lunas';
-    }else if(result['data']['status'] == 'unpaid'){
-      status_invoice  =  'Menunggu Pembayaran';
-    }else{
-      status_invoice  =  'Dibatalkan';
+    if (result != null) {
+      list.value = result['data'];
+      if (result['data']['status'] == 'paid') {
+        statusInvoice = 'Lunas';
+      } else if (result['data']['status'] == 'unpaid') {
+        statusInvoice = 'Menunggu Pembayaran';
+      } else {
+        statusInvoice = 'Dibatalkan';
+      }
+      dataUser = authStore.read('userLogin');
     }
-    dataUser = authStore.read('userLogin');
     isLoadingList.value = false;
   }
+
   @override
   void onInit() {
     getData();

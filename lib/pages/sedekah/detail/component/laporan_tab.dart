@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/sedekah/detail/detailsedekah_controller.dart';
-import 'package:masjid_app/theme.dart';
 
 class LaporanTab extends StatelessWidget {
   const LaporanTab({super.key});
 
-  layout(DetailSedekahController ctrl, BuildContext context) {
+  SingleChildScrollView layout(DetailSedekahController ctrl, BuildContext context) {
     return SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
@@ -140,7 +139,7 @@ class LaporanTab extends StatelessWidget {
             ]));
   }
 
-  getList(DetailSedekahController ctrl, BuildContext context) {
+  ListView getList(DetailSedekahController ctrl, BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: ctrl.listPenyaluran.length,
@@ -181,7 +180,7 @@ class LaporanTab extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '${DateFormat('dd MMMM yyyy').format(DateTime.parse(ctrl.listPenyaluran[index]['tanggal']))}',
+                              DateFormat('dd MMMM yyyy').format(DateTime.parse(ctrl.listPenyaluran[index]['tanggal'])),
                               style: context.textTheme.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Theme.of(context).primaryColor),
@@ -315,7 +314,7 @@ class LaporanTab extends StatelessWidget {
                     child: Container(
                       width: 15.0,
                       height: 15.0,
-                      decoration: new BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Theme.of(context).primaryColor,
                         shape: BoxShape.circle,
                       ),

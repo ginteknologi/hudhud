@@ -7,8 +7,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masjid_app/firebase_options.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+// import 'package:flutter_background_service/flutter_background_service.dart';
+// import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 // import 'package:simple_moment/simple_moment.dart';
 
 final authStore = GetStorage();
@@ -18,7 +18,9 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print('Handling a background message ${message.messageId}');
+  if (kDebugMode) {
+    debugPrint('Handling a background message ${message.messageId}');
+  }
 }
 
 void onDidReceiveNotificationResponse(
@@ -33,100 +35,82 @@ void onDidReceiveNotificationResponse(
   }
 }
 
-Future<void> Scheduling() async {
-  try {
-  final service = FlutterBackgroundService();
-  await service.configure(
-    iosConfiguration: IosConfiguration(), 
-    androidConfiguration: AndroidConfiguration(
-      onStart: onStartPlay, 
-      isForegroundMode: false
-    )
-  );
-  await service.startService();
-    
-  } catch (e) {
-    print(e);
-  }
-}
+// Future<void> Scheduling() async {
+//   try {
+//     final service = FlutterBackgroundService();
+//     await service.configure(
+//         iosConfiguration: IosConfiguration(),
+//         androidConfiguration:
+//             AndroidConfiguration(onStart: onStartPlay, isForegroundMode: true));
+//     await service.startService();
+//   } catch (e) {
+//     print(e);
+//   }
+// }
 
-@pragma('vm:entry-point')
-final FlutterLocalNotificationsPlugin notiFPlugin = FlutterLocalNotificationsPlugin();
-void onStartPlay(ServiceInstance service) async {
-  if (service is AndroidServiceInstance) {
-    service.on('setAsForeground').listen((event) {
-      service.setAsForegroundService();
-    });
+// @pragma('vm:entry-point')
+// final FlutterLocalNotificationsPlugin notiFPlugin =
+//     FlutterLocalNotificationsPlugin();
+// void onStartPlay(ServiceInstance service) async {
+//   if (service is AndroidServiceInstance) {
+//     service.on('setAsForeground').listen((event) {
+//       service.setAsForegroundService();
+//     });
 
-    service.on('setAsBackground').listen((event) {
-      service.setAsBackgroundService();
-    });
-  }
-  service.on('stopService').listen((event) {
-    service.stopSelf();
-  });
+//     service.on('setAsBackground').listen((event) {
+//       service.setAsBackgroundService();
+//     });
+//   }
+//   service.on('stopService').listen((event) {
+//     service.stopSelf();
+//   });
 
-  Timer.periodic(const Duration(seconds: 60), (timer) async{ 
-    print('checking adzan');
-    if(service is AndroidServiceInstance){
-        var timeleft = DateTime.now();
-        int hourminutes = int.parse("${timeleft.hour}${timeleft.minute}");
-        var sholatSaatIni;
-        if (authStore.read('waktusolat') != null) {
-          for (var element in authStore.read('waktusolat')) {
-            if (element['active']) {
-              sholatSaatIni = element;
-            }
-          }
-          String resultString = sholatSaatIni['waktu'].replaceAll(':', '');
-          print(sholatSaatIni);
-          if (hourminutes == int.parse(resultString)) {
-              notiFPlugin.show(
-                  DateTime.now().microsecond + DateTime.now().minute,
-                  'Adzan',
-                  'Waktunya Sholat ${sholatSaatIni['label']}',
-                  NotificationDetails(
-                    android: AndroidNotificationDetails(
-                      'adzan_notification',
-                      'Adzan Notif',
-                      channelDescription: 'channel adzan notif',
-                      importance: Importance.max,
-                      priority: Priority.high,
-                      playSound: true,
-                      sound: RawResourceAndroidNotificationSound('adzan'),
-                      enableVibration: false,
-                      audioAttributesUsage: AudioAttributesUsage.alarm,
-                      actions: <AndroidNotificationAction>[
-                        AndroidNotificationAction(
-                          'adzan_notification',
-                          'Tutup Adzan',
-                          // icon: DrawableResourceAndroidBitmap('@mipmap/ic_largeIcon'),
-                          showsUserInterface: false,
-                          // By default, Android plugin will dismiss the notification when the
-                          // user tapped on a action (this mimics the behavior on iOS).
-                          cancelNotification: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-          }
-        }
+// Timer.periodic(const Duration(seconds: 1200), (timer) async {
+//   print('checking adzan');
+//   if (service is AndroidServiceInstance) {
+//     print('checking adzan 2');
+//     notiFPlugin.show(
+//       DateTime.now().microsecond + DateTime.now().minute,
+//       'Adzan',
+//       'Waktunya Sholat',
+//       NotificationDetails(
+//         android: AndroidNotificationDetails(
+//           'adzan_notification',
+//           'Adzan Notif',
+//           channelDescription: 'channel adzan notif',
+//           importance: Importance.max,
+//           priority: Priority.high,
+//           autoCancel: false,
+//           playSound: true,
+//           sound: RawResourceAndroidNotificationSound('adzan'),
+//           enableVibration: false,
+//           audioAttributesUsage: AudioAttributesUsage.media,
+//           actions: <AndroidNotificationAction>[
+//             AndroidNotificationAction(
+//               'adzan_notification',
+//               'Tutup Adzan',
+//               // icon: DrawableResourceAndroidBitmap('@mipmap/ic_largeIcon'),
+//               showsUserInterface: false,
+//               // By default, Android plugin will dismiss the notification when the
+//               // user tapped on a action (this mimics the behavior on iOS).
+//               cancelNotification: true,
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
 
-      if(await service.isForegroundService()){
-        service.setForegroundNotificationInfo(
-          title: 'PushNotif', 
-          content: 'updates at ${DateTime.now()}'
-        );
-      }
-    }
-  });    
-}
+//     if (await service.isForegroundService()) {
+//       service.setForegroundNotificationInfo(
+//           title: 'PushNotif', content: 'updates at ${DateTime.now()}');
+//     }
+//   }
+// });
+// }
 
 class SetupFirebase {
-  static get onDidReceiveLocalNotification => null;
-
-  static sendnotif({
+  // static get onDidReceiveLocalNotification => null;
+  static void sendnotif({
     required String title,
     required String pesan,
     dynamic payload,
@@ -155,40 +139,65 @@ class SetupFirebase {
   }
 
   static Future initFirebase() async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+    if (Firebase.apps.isEmpty) {
+      try {
+        await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform);
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint("Firebase already initialized: $e");
+        }
+      }
+    }
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
     if (!kIsWeb) {
       channel = const AndroidNotificationChannel(
-          'high_importance_channel', // id
-          'High Importance Notifications', // title
-          description:
-              'This channel is used for important notifications.', // description
-          importance: Importance.high,
-          playSound: true);
+        'high_importance_channel',
+        'High Importance Notifications',
+        description: 'This channel is used for important notifications.',
+        importance: Importance.high,
+        playSound: true,
+      );
 
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
       const AndroidInitializationSettings initializationSettingsAndroid =
           AndroidInitializationSettings('@mipmap/ic_launcher');
-      final DarwinInitializationSettings initializationSettingsIOS =
+
+      const DarwinInitializationSettings initializationSettingsIOS =
           DarwinInitializationSettings(
-              requestSoundPermission: false,
-              requestBadgePermission: false,
-              requestAlertPermission: false,
-              onDidReceiveLocalNotification: onDidReceiveLocalNotification
-              );
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+      );
+
       const DarwinInitializationSettings initializationSettingsMacOS =
-          DarwinInitializationSettings();
+          DarwinInitializationSettings(
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+      );
 
       final InitializationSettings initializationSettings =
           InitializationSettings(
-              android: initializationSettingsAndroid,
-              iOS: initializationSettingsIOS,
-              macOS: initializationSettingsMacOS
-              );
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+        macOS: initializationSettingsMacOS,
+      );
 
-      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+        // onDidReceiveBackgroundNotificationResponse: yourBgHandler, // opsional
+      );
+
+      // Buat notification channel Android (WAJIB untuk Android 8+)
+      final androidPlugin =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+      await androidPlugin?.createNotificationChannel(channel);
+
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
         alert: true,
@@ -198,31 +207,37 @@ class SetupFirebase {
     }
 
     messaging = FirebaseMessaging.instance;
+    await messaging.subscribeToTopic("all");
+
     messaging.getToken().then((value) async {
       authStore.write('fcmtoken', value);
-      print('token firebase: ${value!}');
+      debugPrint('token firebase: $value');
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
+      final notification = message.notification;
+      final android = message.notification?.android;
       final String jsonString = jsonEncode(message.data);
+
       if (notification != null && android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: '@mipmap/ic_launcher',
-              ),
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: '@mipmap/ic_launcher',
+              importance: Importance.high,
+              priority: Priority.high,
+              playSound: true,
             ),
-            payload: jsonString);
+          ),
+          payload: jsonString,
+        );
       }
     });
-    // await Scheduling();
   }
 }

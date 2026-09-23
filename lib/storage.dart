@@ -2,7 +2,7 @@ import 'package:get_storage/get_storage.dart';
 
 class AppStorage {
   final authStore = GetStorage();
-  get(id) {
+  Map<String, dynamic> get(id) {
     try {
       var result = authStore.read(id);
       if (result == null) {
@@ -24,7 +24,7 @@ class AppStorage {
     }
   }
 
-  write(id, data) {
+  Map<String, Object> write(id, data) {
     authStore.write(id, data);
     var json = {
       "code": 200,
@@ -34,7 +34,7 @@ class AppStorage {
     return json;
   }
 
-  remove(id) {
+  Map<String, Object> remove(id) {
     authStore.remove(id);
     var json = {
       "code": 200,

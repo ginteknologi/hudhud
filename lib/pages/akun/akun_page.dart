@@ -2,18 +2,17 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/configs/main_controller.dart';
-import 'package:masjid_app/pages/akun/akun_controller.dart';
-import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
+import 'package:masjid_app/models/menu_bottom_data.dart';
+import 'package:masjid_app/controllers/home_controller.dart';
 import 'package:masjid_app/routes/akun/index.dart';
 import 'package:masjid_app/routes/home/index.dart';
 
 class AkunPage extends StatelessWidget {
   const AkunPage({super.key});
 
-  layout(BuildContext context, HomeController hctrl, MainController gctrl) {
+  SafeArea layout(BuildContext context, HomeController hctrl, MainController gctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -31,34 +30,33 @@ class AkunPage extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.topCenter,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(90),
-                                    child: gctrl.userLogin['photo'] == null || gctrl.userLogin['photo'] == "" ? Image.asset(
-                                      "assets/icons/app_icon.png",
-                                      height: 110,
-                                      width: 110,
-                                      fit: BoxFit.cover,
-                                    ) 
-                                    :
-                                    Image.network(
-                                      gctrl.userLogin['photo'],
-                                      height: 110,
-                                      width: 110,
-                                      fit: BoxFit.cover,
-                                    ) 
-                                  ),
+                                      borderRadius: BorderRadius.circular(90),
+                                      child: gctrl.userLogin.value.id == 0
+                                          ? Image.asset(
+                                              "assets/icons/app_icon.png",
+                                              height: 110,
+                                              width: 110,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.network(
+                                              gctrl.userLogin.value.photo,
+                                              height: 110,
+                                              width: 110,
+                                              fit: BoxFit.cover,
+                                            )),
                                 ),
                                 SizedBox(
                                   height: 20,
                                 ),
                                 Text(
-                                  gctrl.userLogin['name'],
+                                  gctrl.userLogin.value.nama,
                                   textAlign: TextAlign.center,
                                   style: context.textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  gctrl.userLogin['email'],
+                                  gctrl.userLogin.value.email,
                                   textAlign: TextAlign.center,
                                   style: context.textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.normal,
@@ -139,15 +137,14 @@ class AkunPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(AkunController());
+    // final ctrl = Get.put(AkunController());
     final gctrl = Get.find<MainController>();
     final hctrl = Get.find<HomeController>();
-
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Profile", context: context, elevation: 0),
-      body: layout(context, hctrl, gctrl),
+      body: Obx(() => layout(context, hctrl, gctrl)),
     );
   }
 }

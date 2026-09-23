@@ -1,10 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/pages/doa/content/doa_content_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:share_plus/share_plus.dart';
@@ -12,7 +10,7 @@ import 'package:share_plus/share_plus.dart';
 class ContentDoaPage extends StatelessWidget {
   const ContentDoaPage({super.key});
 
-  layout(ContentDoaController ctrl, BuildContext context) {
+  SafeArea layout(ContentDoaController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -34,7 +32,7 @@ class ContentDoaPage extends StatelessWidget {
                                     child: InkWell(
                                         highlightColor: Colors.transparent,
                                         splashColor:
-                                            Colors.green.withOpacity(0.5),
+                                            Colors.green.withValues(alpha: 0.5),
                                         child: Card(
                                           elevation: 0,
                                           color: Colors.white,
@@ -107,13 +105,19 @@ class ContentDoaPage extends StatelessWidget {
                                                                     .centerRight,
                                                                 child:
                                                                     AutoSizeText(
-                                                                  ctrl.list.value.arabic!,
+                                                                  ctrl
+                                                                      .list
+                                                                      .value
+                                                                      .arabic!,
                                                                   textAlign:
-                                                                      TextAlign.start,
-                                                                  style: context.textTheme.titleSmall
+                                                                      TextAlign
+                                                                          .start,
+                                                                  style: context
+                                                                      .textTheme
+                                                                      .titleSmall
                                                                       ?.copyWith(
-                                                                          fontWeight: FontWeight
-                                                                              .bold),
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
                                                                   maxLines: 2,
                                                                 ))
                                                             : Container(),
@@ -271,7 +275,7 @@ class ContentDoaPage extends StatelessWidget {
                                         ),
                                       ),
                                       Flexible(
-                                        child: Container(
+                                        child: SizedBox(
                                           width: double.infinity,
                                           child: ButtonElevated(
                                             title: 'Bagikan',
@@ -295,9 +299,13 @@ class ContentDoaPage extends StatelessWidget {
                                             ),
                                             onPressed: () {
                                               // Gunakan plugin share_plus untuk berbagi teks artikel
-                                              Share.share(ctrl.share.value,
+                                              SharePlus.instance.share(
+                                                ShareParams(
+                                                  text: ctrl.share.value,
                                                   subject:
-                                                      ctrl.list.value.judul);
+                                                      ctrl.list.value.judul,
+                                                ),
+                                              );
                                             },
                                           ),
                                         ),
@@ -316,7 +324,7 @@ class ContentDoaPage extends StatelessWidget {
     final ctrl = Get.put(ContentDoaController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a > Do'a Harian > Detail", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value

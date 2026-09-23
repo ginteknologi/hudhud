@@ -8,9 +8,9 @@ import 'package:masjid_app/pages/hadits/content/content_hadits_controller.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ContentHaditsPage extends StatelessWidget {
-  ContentHaditsPage({super.key});
+  const ContentHaditsPage({super.key});
 
-  layout(ContentHaditsController ctrl, BuildContext context) {
+  SafeArea layout(ContentHaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -31,7 +31,7 @@ class ContentHaditsPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            'Hadits No.1',
+                            'Hadits No. ${ctrl.list.isNotEmpty ? ctrl.list[ctrl.currentIndex.value].noHdt : "-"}',
                             style: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -46,24 +46,75 @@ class ContentHaditsPage extends StatelessWidget {
                             children: [
                               SvgPicture.asset("assets/icons/book_mark.svg",
                                   height: 20, width: 20),
+                              SizedBox(width: 10),
                               SizedBox(
-                                width: 10,
-                              ),
-                              AutoSizeText(
-                                ctrl.arguments['content'].Kitab_Indonesia,
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black,
+                                width: MediaQuery.of(context).size.width *
+                                    0.6, // Batasi lebar maksimal
+                                child: Text(
+                                  ctrl.arguments['content'].kitabIndonesia,
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black,
+                                  ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  maxLines: 2, // Agar tetap rapi
                                 ),
-                              )
+                              ),
                             ],
-                          )
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width *
+                                    0.6, // Batasi lebar maksimal
+                                child: Text(
+                                  ctrl.arguments['babIndonesia'] ?? "",
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black,
+                                  ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  maxLines: 2, // Agar tetap rapi
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Obx(() => ElevatedButton(
+                                    onPressed: ctrl.currentIndex.value > 0
+                                        ? () => ctrl.previousHadits()
+                                        : null,
+                                    child: Text("Previous"),
+                                  )),
+                              Obx(() => ElevatedButton(
+                                    onPressed: ctrl.currentIndex.value <
+                                            ctrl.list.length - 1
+                                        ? () => ctrl.nextHadits()
+                                        : null,
+                                    child: Text("Next"),
+                                  )),
+                            ],
+                          ),
                         ],
                       ),
                       InkWell(
                         onTap: () {
-                          Share.share("${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content'].Kitab_Indonesia}\n\n${ctrl.list[0].Isi_Arab}\n\n${ctrl.list[0].Isi_Indonesia} \n\n Dibagikan dari aplikasi\n\n Marbot App",
-                              subject: ctrl.arguments['detail']['longNama']);
+                          if (ctrl.list.isEmpty) return;
+                          final hadits = ctrl.list[ctrl.currentIndex.value];
+                          SharePlus.instance.share(ShareParams(
+                              text:
+                                  "${ctrl.arguments['detail']['longNama']}\n\n${ctrl.arguments['content'].kitabIndonesia}\n\n${hadits.isiArab}\n\n${hadits.isiIndonesia} \n\n Dibagikan dari aplikasi\n\n Marbot App",
+                              subject: ctrl.arguments['detail']['longNama']));
                         },
                         child: Icon(
                           Icons.share,
@@ -87,22 +138,30 @@ class ContentHaditsPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 21),
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           height: 300,
-                          child: Text(
-                            ctrl.list[0].Isi_Arab,
-                            textAlign: TextAlign.center,
-                          ),
+                          child: Obx(() => Text(
+                                ctrl.list.isNotEmpty
+                                    ? ctrl.list[ctrl.currentIndex.value].isiArab
+                                    : "Tidak ada data",
+                                textAlign: TextAlign.center,
+                              )),
                         ),
-                        AutoSizeText(
-                          ctrl.list[0].Isi_Indonesia,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 10,
-                            color: Colors.black,
-                          ),
-                          softWrap: true,
+                        SizedBox(
+                          height: 20,
                         ),
+                        Obx(() => AutoSizeText(
+                              ctrl.list.isNotEmpty
+                                  ? ctrl
+                                      .list[ctrl.currentIndex.value].isiIndonesia
+                                  : "Tidak ada data",
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 10,
+                                color: Colors.black,
+                              ),
+                              softWrap: true,
+                            )),
                       ],
                     )),
               ],

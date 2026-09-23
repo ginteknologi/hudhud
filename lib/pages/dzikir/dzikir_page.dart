@@ -10,7 +10,7 @@ import 'package:masjid_app/pages/dzikir/dzikir_controller.dart';
 class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
   const DzikirPage({super.key});
 
-  layout(DzikirController ctrl, BuildContext context) {
+  SafeArea layout(DzikirController ctrl, BuildContext context) {
     return SafeArea(
         child: Obx(() => Container(
             decoration: BoxDecoration(
@@ -25,7 +25,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                 : screenPagi(ctrl, context))));
   }
 
-  screenPetang(DzikirController ctrl, BuildContext context) {
+  Stack screenPetang(DzikirController ctrl, BuildContext context) {
     return Stack(children: [
       Container(
         height: 240,
@@ -133,7 +133,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                 hasFooter: true,
                                 usingDivider: false,
                                 footerContent: [
-                                  Container(
+                                  SizedBox(
                                     width: Get.width - 62,
                                     child: Column(
                                         crossAxisAlignment:
@@ -211,7 +211,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
     ]);
   }
 
-  screenPagi(DzikirController ctrl, BuildContext context) {
+  Stack screenPagi(DzikirController ctrl, BuildContext context) {
     return Stack(children: [
       Container(
         height: 240,
@@ -319,7 +319,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
                                 hasFooter: true,
                                 usingDivider: false,
                                 footerContent: [
-                                  Container(
+                                  SizedBox(
                                     width: Get.width - 62,
                                     child: Column(
                                         crossAxisAlignment:
@@ -402,7 +402,7 @@ class DzikirPage extends StatelessWidget implements PreferredSizeWidget {
     final ctrl = Get.put(DzikirController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(55.0), // here the desired height
           child: Obx(() => AppBarWSWidget.getAppbarWidget(

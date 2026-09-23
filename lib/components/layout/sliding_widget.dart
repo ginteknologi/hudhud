@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 class SlidingWidget extends StatelessWidget {
-  SlidingWidget({
+  const SlidingWidget({
+    super.key,
     this.child,
     required this.controller,
     required this.visible,
@@ -12,8 +13,8 @@ class SlidingWidget extends StatelessWidget {
   final Widget? child;
   final AnimationController controller;
   final bool visible;
-  Offset? from;
-  Offset? to;
+  final Offset? from;
+  final Offset? to;
 
   @override
   Widget build(BuildContext context) {

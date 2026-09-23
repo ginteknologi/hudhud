@@ -1,22 +1,13 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/button/buttonvariant.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/layout/custom_bottom_bar.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/akun/akun_controller.dart';
 import 'package:masjid_app/pages/sedekah/transaksi/instruksi/instruksi_controller.dart';
-import 'package:masjid_app/routes/akun/index.dart';
-import 'package:masjid_app/routes/auth/index.dart';
-import 'package:masjid_app/routes/home/index.dart';
 
 class InstruksiPage extends StatelessWidget {
   const InstruksiPage({super.key});
 
-  layout(BuildContext context, InstruksiController ctrl) {
+  SafeArea layout(BuildContext context, InstruksiController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -181,7 +172,7 @@ class InstruksiPage extends StatelessWidget {
     final ctrl = Get.put(InstruksiController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Instruksi Pembayaran", context: context, elevation: 0),
       body: layout(context, ctrl),

@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/models/bookmarkData.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_service.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/routes/quran/index.dart';
 import 'package:masjid_app/storage/bookmarkStorage.dart';
 
@@ -32,13 +35,15 @@ class AlquranController extends GetxController {
   var ayatSaatIni = 'Belum dibookmark'.obs;
   var listMenu = [].obs;
 
-  getData() async {
+  Future<void> getData() async {
     try {
       final result = await AlquranService().getRandom();
       list.value = result['data'];
       isLoadingRandom.value = false;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -104,5 +109,12 @@ class AlquranController extends GetxController {
         'icon': 'assets/icons/pengaturan.png'
       }
     ];
+<<<<<<< HEAD
+=======
+    if (kDebugMode) {
+      debugPrint("listMenu.length");
+    }
+    super.onInit();
+>>>>>>> origin/update
   }
 }

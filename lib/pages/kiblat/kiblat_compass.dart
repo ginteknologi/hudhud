@@ -9,7 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_error.dart';
 
 class KiblatCompass extends StatefulWidget {
-  const KiblatCompass({Key? key}) : super(key: key);
+  const KiblatCompass({super.key});
 
   @override
   State<KiblatCompass> createState() => _KiblatCompassState();
@@ -19,7 +19,7 @@ class _KiblatCompassState extends State<KiblatCompass> {
   final _locationStreamController =
       StreamController<LocationStatus>.broadcast();
 
-  get stream => _locationStreamController.stream;
+  Stream<LocationStatus> get stream => _locationStreamController.stream;
 
   @override
   void initState() {
@@ -102,7 +102,7 @@ class QiblahCompassWidget extends StatelessWidget {
     alignment: Alignment.center,
   );  
   
-  QiblahCompassWidget({Key? key}) : super(key: key);
+  QiblahCompassWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,22 +1,39 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/models/bookmarkData.dart';
+import 'package:masjid_app/models/bookmark_data.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_controller.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:masjid_app/routes/quran/index.dart';
 import 'package:share_plus/share_plus.dart';
 
 class AlquranPage extends StatelessWidget {
+// class AlquranPage extends StatefulWidget {
+//   const AlquranPage({Key? key}) : super(key: key);
+
+//   @override
+//   State<AlquranPage> createState() => AlquranPageState();
+// }
+
+// class AlquranPageState extends State<AlquranPage> {
   final ctrl = Get.put(AlquranController());
   final gctrl = Get.find<MainController>();
-  AlquranPage({Key? key}) : super(key: key);
 
-  layout(BuildContext context) {
+  AlquranPage({super.key});
+  // AlquranPage({Key? key}) : super(key: key);
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Call your function here
+  //   WidgetsBinding.instance
+  //       .addPostFrameCallback((_) => showPopupAlquran(ctrl, context, 'siang'));
+  // }
+
+  SafeArea layout(BuildContext context) {
     return SafeArea(
       top: false,
       child: SingleChildScrollView(
@@ -94,8 +111,8 @@ class AlquranPage extends StatelessWidget {
     );
   }
 
-  tilawahMenu(BuildContext context,
-      {title, route, required bookmarkData history}) {
+  Container tilawahMenu(BuildContext context,
+      {title, route, required BookmarkData history}) {
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFF048C7C),
@@ -124,7 +141,7 @@ class AlquranPage extends StatelessWidget {
           ),
           subtitle: Text(
             history.totalAyat == 0
-                ? "${history.namaSurat}"
+                ? history.namaSurat
                 : "${history.namaSurat} (${history.ayat}:${history.totalAyat})",
             style: TextStyle(
               fontSize: Get.width * 0.03,
@@ -135,7 +152,7 @@ class AlquranPage extends StatelessWidget {
     );
   }
 
-  getGridMenu(AlquranController ctrl) {
+  Padding getGridMenu(AlquranController ctrl) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 0),
       child: GridView.builder(
@@ -263,7 +280,7 @@ class AlquranPage extends StatelessWidget {
     );
   }
 
-  showPopup(AlquranController ctrl, context, Widget? content, double? height) {
+  void showPopup(AlquranController ctrl, context, Widget? content, double? height) {
     showDialog(
         context: context,
         builder: (BuildContext bc) {
@@ -383,6 +400,120 @@ class AlquranPage extends StatelessWidget {
           );
         });
   }
+  // =========
+
+  // showPopupAlquran(AlquranController ctrl, context, flag) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext bc) {
+  //         return Dialog(
+  //           elevation: 0,
+  //           backgroundColor: Colors.white,
+  //           shape:
+  //               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+  //           child: Obx(() {
+  //             if (!ctrl.isLoadingRandom.isTrue) {
+  //               return const Center(child: CircularProgressIndicator());
+  //             }
+  //             var url = 'assets/img/subuh_alert.png';
+  //             if (flag == 'siang') {
+  //               url = 'assets/img/siang_alert.png';
+  //             } else if (flag == 'petang') {
+  //               url = 'assets/img/petang_alert.png';
+  //             }
+  //             return Container(
+  //                 child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               crossAxisAlignment: CrossAxisAlignment.stretch,
+  //               children: [
+  //                 Container(
+  //                     padding: const EdgeInsets.all(10),
+  //                     decoration: BoxDecoration(
+  //                         image: DecorationImage(
+  //                             image: AssetImage(url), fit: BoxFit.fill),
+  //                         borderRadius: BorderRadius.only(
+  //                             topLeft: Radius.circular(10),
+  //                             topRight: Radius.circular(10))),
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Align(
+  //                           alignment: Alignment.centerLeft,
+  //                           child: InkWell(
+  //                             onTap: () {
+  //                               Get.back();
+  //                             },
+  //                             child: Icon(
+  //                               Icons.close,
+  //                               color: Colors.white,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         SizedBox(
+  //                           height: 40,
+  //                         ),
+  //                         Align(
+  //                             alignment: Alignment.centerLeft,
+  //                             child: AutoSizeText(
+  //                               'Al-Baqarah - 10',
+  //                               textAlign: TextAlign.center,
+  //                               maxLines: 2,
+  //                               style: TextStyle(
+  //                                   fontSize: Theme.of(context)
+  //                                       .textTheme
+  //                                       .labelLarge
+  //                                       ?.fontSize,
+  //                                   height: 1.1,
+  //                                   color: Colors.white,
+  //                                   fontWeight: FontWeight.w500),
+  //                             )),
+  //                       ],
+  //                     )),
+  //                 const SizedBox(
+  //                   height: 20,
+  //                 ),
+  //                 Padding(
+  //                     padding: EdgeInsets.symmetric(horizontal: 10),
+  //                     child: AutoSizeText(
+  //                         "Ini Ayat Alquran Lorem ipsum dolor sit amet consectetur. Enim velit sodales neque rhoncus gravida elit justo. Sed vitae libero ipsum dignissim erat.",
+  //                         overflow: TextOverflow.ellipsis,
+  //                         textAlign: TextAlign.end,
+  //                         maxLines: 4,
+  //                         style: TextStyle(
+  //                             fontFamily: GoogleFonts.amiriQuran().fontFamily,
+  //                             color: Colors.black,
+  //                             fontWeight: FontWeight.w900))),
+  //                 SizedBox(
+  //                   height: 15,
+  //                 ),
+  //                 Divider(
+  //                   height: 2,
+  //                 ),
+  //                 SizedBox(
+  //                   height: 15,
+  //                 ),
+  //                 Padding(
+  //                     padding: EdgeInsets.symmetric(horizontal: 10),
+  //                     child: AutoSizeText(
+  //                         "Ini terjemahan nya Lorem ipsum dolor sit amet consectetur. Enim velit sodales neque rhoncus gravida elit justo. Sed vitae libero ipsum dignissim erat.",
+  //                         textAlign: TextAlign.justify,
+  //                         style: TextStyle(
+  //                             fontSize: Theme.of(context)
+  //                                 .textTheme
+  //                                 .labelMedium
+  //                                 ?.fontSize,
+  //                             fontStyle: FontStyle.italic,
+  //                             color: Colors.black,
+  //                             fontWeight: FontWeight.w300))),
+  //                 SizedBox(
+  //                   height: 30,
+  //                 ),
+  //               ],
+  //             ));
+  //           }),
+  //         );
+  //       });
+  // }
 
   @override
   Widget build(BuildContext context) {

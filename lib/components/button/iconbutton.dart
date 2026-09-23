@@ -14,7 +14,7 @@ class ButtonIcon extends StatelessWidget {
   final double? width;
   final bool rounded;
   const ButtonIcon({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.icon,
     this.color = AppColors.appPrimary,
@@ -25,7 +25,7 @@ class ButtonIcon extends StatelessWidget {
     this.width,
     this.height,
     this.rounded = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

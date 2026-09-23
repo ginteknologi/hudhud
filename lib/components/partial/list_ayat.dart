@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,34 +5,33 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
 class ListAyatWidget extends StatelessWidget {
-  ListAyatWidget({
-    super.key,
-    required this.id,
-    this.nomor,
-    this.ayat,
-    this.descEN,
-    this.descIDN,
-    this.audioFile,
-    this.onTap,
-    this.activeColor,
-    required this.bookmarked
-  });
+  ListAyatWidget(
+      {super.key,
+      required this.id,
+      this.nomor,
+      this.ayat,
+      this.descEN,
+      this.descIDN,
+      this.audioFile,
+      this.onTap,
+      this.activeColor,
+      required this.bookmarked});
 
-  int id;
-  String? nomor;
-  String? ayat;
-  String? descEN;
-  String? descIDN;
-  String? audioFile;
-  bool bookmarked;
-  VoidCallback? onTap;
-  RxBool onplay = false.obs;
-  AudioPlayer audioPlayer = AudioPlayer();
-  Duration? audioPosition;
-  Color? activeColor;
+  final int id;
+  final String? nomor;
+  final String? ayat;
+  final String? descEN;
+  final String? descIDN;
+  final String? audioFile;
+  final bool bookmarked;
+  final VoidCallback? onTap;
+  final RxBool onplay = false.obs;
+  final AudioPlayer audioPlayer = AudioPlayer();
+  final Color? activeColor;
 
   @override
   Widget build(BuildContext context) {
+    Duration? audioPosition;
     return Column(children: [
       Container(
           width: Get.width,
@@ -53,23 +51,26 @@ class ListAyatWidget extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       // Baris pertama
-                      Container(
+                      SizedBox(
                         height: 42,
                         width: 42,
                         child: Stack(
                           children: <Widget>[
                             InkWell(
-                                    onTap: onTap,
-                                    child: SvgPicture.asset( bookmarked ? 'assets/icons/active_bookmark.svg' : 'assets/icons/bookmark.svg',
-                                      alignment: Alignment.center,
-                                      width: 28,
-                                      height: 28,
-                                    ),
-                                  ),
+                              onTap: onTap,
+                              child: SvgPicture.asset(
+                                bookmarked
+                                    ? 'assets/icons/active_bookmark.svg'
+                                    : 'assets/icons/bookmark.svg',
+                                alignment: Alignment.center,
+                                width: 28,
+                                height: 28,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         height: 42,
                         width: 42,
                         child: Stack(
@@ -94,7 +95,7 @@ class ListAyatWidget extends StatelessWidget {
                         ),
                       ),
                       // Baris kedua
-                      Container(
+                      SizedBox(
                         height: 42,
                         width: 42,
                         child: Stack(
@@ -102,50 +103,48 @@ class ListAyatWidget extends StatelessWidget {
                             Positioned.fill(
                               child: Center(
                                 child: InkWell(
-                                    onTap: () async { 
-                                      if (audioPlayer.position == null) {
-                                        print("clicked play position null");
-                                        await audioPlayer.setUrl(audioFile!);
-                                        await audioPlayer.play();
-                                        onplay.value = true;
-                                      } else if (onplay.value) {
-                                        print("clicked pause");
+                                    onTap: () async {
+                                      if (onplay.value) {
+                                        debugPrint("clicked pause");
                                         audioPosition = audioPlayer.position;
                                         await audioPlayer.pause();
                                         onplay.value = false;
                                       } else {
-                                        print("clicked play");
+                                        debugPrint("clicked play");
                                         if (audioPosition != null) {
-                                          await audioPlayer.seek(audioPosition!);
+                                          await audioPlayer
+                                              .seek(audioPosition!);
                                         } else {
                                           await audioPlayer.setUrl(audioFile!);
                                         }
                                         await audioPlayer.play();
                                         onplay.value = true;
 
-                                        audioPlayer.playerStateStream.listen((PlayerState state) {
-                                          if (state.processingState == ProcessingState.completed) {
+                                        audioPlayer.playerStateStream
+                                            .listen((PlayerState state) {
+                                          if (state.processingState ==
+                                              ProcessingState.completed) {
                                             // File selesai diputar
-                                            print("Selesai");
+                                            debugPrint("Selesai");
                                             audioPosition = null;
                                             onplay.value = false;
                                           }
                                         });
                                       }
                                     },
-                                    child: Obx(() => onplay.value
-                                        ? Icon(
-                                            Icons.pause_rounded,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          )
-                                        : Icon(
-                                            Icons.play_arrow_rounded,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                    )
-                                  ),
+                                    child: Obx(
+                                      () => onplay.value
+                                          ? Icon(
+                                              Icons.pause_rounded,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            )
+                                          : Icon(
+                                              Icons.play_arrow_rounded,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                    )),
                               ),
                             ),
                           ],

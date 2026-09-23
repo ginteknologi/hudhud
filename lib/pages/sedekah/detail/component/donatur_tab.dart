@@ -10,7 +10,7 @@ class DonaturTab extends StatelessWidget {
   const DonaturTab({super.key});
   
 
-  layout(DetailSedekahController ctrl, BuildContext context) {
+  Column layout(DetailSedekahController ctrl, BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,

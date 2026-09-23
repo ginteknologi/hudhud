@@ -7,9 +7,9 @@ import 'package:masjid_app/pages/hadits/bab/bab_hadits_controller.dart';
 import 'package:masjid_app/routes/hadits/index.dart';
 
 class BabHaditsPage extends StatelessWidget {
-  BabHaditsPage({super.key});
+  const BabHaditsPage({super.key});
 
-  layout(BabHaditsController ctrl, BuildContext context) {
+  SafeArea layout(BabHaditsController ctrl, BuildContext context) {
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -72,7 +72,6 @@ class BabHaditsPage extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            
                             SizedBox(
                               width: 20,
                             ),
@@ -81,7 +80,7 @@ class BabHaditsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ctrl.arguments['content'].Kitab_Indonesia,
+                                  ctrl.arguments['content'].kitabIndonesia,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -97,7 +96,7 @@ class BabHaditsPage extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  'Bab ' + ctrl.arguments['content'].ID_Kitab.toString(),
+                                  'Bab ${ctrl.arguments['content'].idKitab}',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       height: 1,
@@ -130,10 +129,15 @@ class BabHaditsPage extends StatelessWidget {
                       // Datum model = filteredEvents[index];
                       return FadeInUp(
                         child: ListItemUiWidget(
-                          id: ctrl.list[index].ID_Bab,
-                          title: ctrl.list[index].Bab_Indonesia,
+                          id: ctrl.list[index].idBab,
+                          title: ctrl.list[index].babIndonesia,
                           onTap: () {
-                            Get.toNamed(RoutesHadits.content, arguments: {'content': ctrl.arguments['content'], 'detail': ctrl.arguments['detail'], 'bab': ctrl.list[index]});
+                            Get.toNamed(RoutesHadits.content, arguments: {
+                              'content': ctrl.arguments['content'],
+                              'detail': ctrl.arguments['detail'],
+                              'bab': ctrl.list[index],
+                              'babIndonesia': ctrl.list[index].babIndonesia
+                            });
                           },
                           titleStyle: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold, color: Colors.black),
@@ -147,7 +151,7 @@ class BabHaditsPage extends StatelessWidget {
                                 Container(
                                   width: 42.0,
                                   height: 42.0,
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                     color: Color.fromARGB(103, 19, 112, 101),
                                     shape: BoxShape.circle,
                                   ),
@@ -158,7 +162,7 @@ class BabHaditsPage extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          ctrl.list[index].ID_Bab.toString(),
+                                          ctrl.list[index].idBab.toString(),
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: Theme.of(context)

@@ -1,21 +1,19 @@
 import 'package:animate_do/animate_do.dart';
 // import 'package:easy_localization/easy_localization.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 // import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/doa/detail/detail_doa_controller.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:masjid_app/routes/doa/index.dart';
 
 class DetailDoaPage extends StatelessWidget {
   const DetailDoaPage({super.key});
 
-  layout(DetailDoaController ctrl, BuildContext context) {
+  SafeArea layout(DetailDoaController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -156,7 +154,7 @@ class DetailDoaPage extends StatelessWidget {
     final ctrl = Get.put(DetailDoaController());
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBarWSWidget.getAppbarWidget(
             title: "Do'a > Do'a Harian", context: context, elevation: 0),
         body: layout(ctrl, context));

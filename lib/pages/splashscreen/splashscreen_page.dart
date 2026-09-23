@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/pages/splashscreen/splashscreen_controller.dart';
 
 class SplashscreenPage extends StatelessWidget {
   const SplashscreenPage({super.key});
-  layout(BuildContext context) {
+  SizedBox layout(BuildContext context) {
     return SizedBox(
         width: Get.width,
         child: Container(
@@ -102,7 +101,7 @@ class SplashscreenPage extends StatelessWidget {
     Get.put(SplashscreenController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       extendBodyBehindAppBar: true,
       body: layout(context),
     );

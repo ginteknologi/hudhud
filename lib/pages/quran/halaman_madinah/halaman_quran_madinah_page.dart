@@ -2,10 +2,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/controllers/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman_madinah/component/image_viewer_widget.dart';
 import 'package:masjid_app/pages/quran/halaman_madinah/halaman_quran_madinah_controller.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
@@ -20,7 +20,7 @@ class HalamanQuranMadinahPage extends StatefulWidget {
 
 class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
     with SingleTickerProviderStateMixin {
-  layout(HalamanQuranMadinahController ctrl, BuildContext context,
+  SafeArea layout(HalamanQuranMadinahController ctrl, BuildContext context,
       HomeController ctrlHome) {
     return SafeArea(
         child: Obx(() => ctrl.isLoadingList.value
@@ -55,8 +55,6 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                   ],
                 ))));
   }
-
-  late final AnimationController _controller;
 
   void showPopup(
     HalamanQuranMadinahController ctrl,
@@ -172,7 +170,9 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                                   subtitleStyle: TextStyle(fontSize: 2),
                                   onTap: () async {
                                     await ctrl.goToData(item);
-                                    Navigator.pop(context);
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
                                   },
                                   titleStyle: context.textTheme.titleMedium
                                       ?.copyWith(
@@ -188,7 +188,7 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
         });
   }
 
-  showDialogFilter(HalamanQuranMadinahController ctrl, flag) {
+  void showDialogFilter(HalamanQuranMadinahController ctrl, flag) {
     Get.defaultDialog(
       backgroundColor: Colors.transparent,
       barrierDismissible: true,
@@ -229,7 +229,7 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
               ],
             ),
           ),
-          Obx(() => ctrl.loadingFilter == true
+          Obx(() => ctrl.loadingFilter.value == true
               ? Text("data")
               : Container(
                   width: Get.width - 25,
@@ -304,7 +304,7 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                       ),
                       ctrl.isMax.value != true
                           ? Container()
-                          : Container(
+                          : SizedBox(
                               width: Get.width - 25,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -395,21 +395,18 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 400),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     final ctrl = Get.put(HalamanQuranMadinahController());
     final hctrl = Get.find<HomeController>();
-    return WillPopScope(
-        onWillPop: () async {
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, dynamic result) {
+          if (didPop) return;
           // Logika yang dijalankan saat tombol kembali ditekan
           Get.back(result: 'refresh');
-          return false; // Kembalikan false agar tidak melakukan pop secara otomatis
         },
         child: Scaffold(
             backgroundColor: Color(0xFFF5F5F5),
@@ -478,7 +475,7 @@ class _HalamanQuranMadinahPageState extends State<HalamanQuranMadinahPage>
                           showDialogFilter(ctrl, true);
                         },
                         borderRadius: BorderRadius.circular(20),
-                        splashColor: Colors.green.withOpacity(0.5),
+                        splashColor: Colors.green.withValues(alpha: 0.5),
                         child: const Icon(
                           Icons.tune_rounded,
                           color: Colors.white,

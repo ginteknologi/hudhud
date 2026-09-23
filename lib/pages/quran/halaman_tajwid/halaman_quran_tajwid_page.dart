@@ -2,10 +2,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/pages/home/home_controller.dart';
+import 'package:masjid_app/controllers/home_controller.dart';
 import 'package:masjid_app/pages/quran/halaman_tajwid/component/image_viewer_widget.dart';
 import 'package:masjid_app/pages/quran/halaman_tajwid/halaman_quran_tajwid_controller.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
@@ -19,7 +19,7 @@ class HalamanQuranTajwidPage extends StatefulWidget {
 
 class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
     with SingleTickerProviderStateMixin {
-  layout(HalamanQuranTajwidController ctrl, BuildContext context,
+  SafeArea layout(HalamanQuranTajwidController ctrl, BuildContext context,
       HomeController ctrlHome) {
     return SafeArea(
         child: Obx(() => ctrl.isLoadingList.value
@@ -54,8 +54,6 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                   ],
                 ))));
   }
-
-  late final AnimationController _controller;
 
   void showPopup(
     HalamanQuranTajwidController ctrl,
@@ -171,7 +169,9 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                                   subtitleStyle: TextStyle(fontSize: 2),
                                   onTap: () async {
                                     await ctrl.goToData(item);
-                                    Navigator.pop(context);
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
                                   },
                                   titleStyle: context.textTheme.titleMedium
                                       ?.copyWith(
@@ -187,7 +187,7 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
         });
   }
 
-  showDialogFilter(HalamanQuranTajwidController ctrl, flag) {
+  void showDialogFilter(HalamanQuranTajwidController ctrl, flag) {
     Get.defaultDialog(
       backgroundColor: Colors.transparent,
       barrierDismissible: true,
@@ -228,7 +228,7 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
               ],
             ),
           ),
-          Obx(() => ctrl.loadingFilter == true
+          Obx(() => ctrl.loadingFilter.value == true
               ? Text("data")
               : Container(
                   width: Get.width - 25,
@@ -303,7 +303,7 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                       ),
                       ctrl.isMax.value != true
                           ? Container()
-                          : Container(
+                          : SizedBox(
                               width: Get.width - 25,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -394,10 +394,6 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 400),
-    );
   }
 
   @override
@@ -477,7 +473,7 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                           showDialogFilter(ctrl, true);
                         },
                         borderRadius: BorderRadius.circular(20),
-                        splashColor: Colors.green.withOpacity(0.5),
+                        splashColor: Colors.green.withValues(alpha: 0.5),
                         child: const Icon(
                           Icons.tune_rounded,
                           color: Colors.white,
@@ -485,8 +481,6 @@ class _HalamanQuranTajwidPageState extends State<HalamanQuranTajwidPage>
                       ),
                     ))
               ],
-            )
-            ));
-    
+            )));
   }
 }

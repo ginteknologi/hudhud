@@ -8,7 +8,7 @@ class PagesHome {
   static var pages = [
     GetPage(
       name: RoutesHome.root,
-      page: () => const HomePage(),
+      page: () => HomePage(),
       binding: HomeBinding(),
       maintainState: true,
     ),

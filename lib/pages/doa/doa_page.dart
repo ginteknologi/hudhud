@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/layout/app_bar_ws.dart';
@@ -10,7 +9,7 @@ import 'package:masjid_app/routes/doa/index.dart';
 class DoaPage extends StatelessWidget {
   const DoaPage({super.key});
 
-  layout(BuildContext context, DoaController ctrl) {
+  SafeArea layout(BuildContext context, DoaController ctrl) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -56,7 +55,7 @@ class DoaPage extends StatelessWidget {
     final ctrl = Get.put(DoaController());
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Do'a", context: context, elevation: 0),
       body: Obx(() => ctrl.isLoadingList.value ? const Center(child: CircularProgressIndicator()) : layout(context, ctrl)),

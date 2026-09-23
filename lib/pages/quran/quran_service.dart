@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
@@ -28,8 +29,12 @@ class QuranService extends GetConnect {
       return json;
     }
     } catch (e) {
-      print('<<<<<<<<<<<<erorr quran service>>>>>>>>>>>>');
-      print(e);
+      if (kDebugMode) {
+        debugPrint('<<<<<<<<<<<<erorr quran service>>>>>>>>>>>>');
+      }
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
   Future getDetail(id) async {

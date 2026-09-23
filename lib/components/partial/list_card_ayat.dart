@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'package:flutter/foundation.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,21 +20,21 @@ class ListCardAyatWidget extends StatelessWidget {
       this.activeColor,
       required this.bookmarked});
 
-  int id;
-  String? nomor;
-  String? ayat;
-  String? descEN;
-  String? descIDN;
-  String? audioFile;
-  bool bookmarked;
-  VoidCallback? onTap;
-  RxBool onplay = false.obs;
-  AudioPlayer audioPlayer = AudioPlayer();
-  Duration? audioPosition;
-  Color? activeColor;
+  final int id;
+  final String? nomor;
+  final String? ayat;
+  final String? descEN;
+  final String? descIDN;
+  final String? audioFile;
+  final bool bookmarked;
+  final VoidCallback? onTap;
+  final RxBool onplay = false.obs;
+  final AudioPlayer audioPlayer = AudioPlayer();
+  final Color? activeColor;
 
   @override
   Widget build(BuildContext context) {
+    Duration? audioPosition;
     return Obx(() => Card(
           elevation: 3,
           color: activeColor ?? Colors.white,
@@ -64,7 +65,7 @@ class ListCardAyatWidget extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                             height: 42,
                             width: 42,
                             child: Stack(
@@ -75,23 +76,21 @@ class ListCardAyatWidget extends StatelessWidget {
                                   width: 42,
                                   height: 42,
                                 ),
-                                Container(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            nomor!,
-                                            style: context.textTheme.bodySmall
-                                                ?.copyWith(
-                                              fontWeight: FontWeight.normal,
-                                            ),
+                                Column(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          nomor!,
+                                          style: context.textTheme.bodySmall
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.normal,
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
@@ -102,7 +101,10 @@ class ListCardAyatWidget extends StatelessWidget {
                                 children: [
                                   InkWell(
                                     onTap: onTap,
-                                    child: SvgPicture.asset( bookmarked ? 'assets/icons/active_bookmark.svg' : 'assets/icons/bookmark.svg',
+                                    child: SvgPicture.asset(
+                                      bookmarked
+                                          ? 'assets/icons/active_bookmark.svg'
+                                          : 'assets/icons/bookmark.svg',
                                       alignment: Alignment.center,
                                       width: 28,
                                       height: 28,
@@ -114,17 +116,24 @@ class ListCardAyatWidget extends StatelessWidget {
                                   InkWell(
                                     onTap: () {
                                       if (audioPlayer.position == null) {
-                                        print("clicked play position null");
+                                        if (kDebugMode) {
+                                          debugPrint(
+                                              "clicked play position null");
+                                        }
                                         audioPlayer.setUrl(audioFile!);
                                         audioPlayer.play();
                                         onplay.value = true;
                                       } else if (onplay.value) {
-                                        print("clicked pause");
+                                        if (kDebugMode) {
+                                          debugPrint("clicked pause");
+                                        }
                                         audioPosition = audioPlayer.position;
                                         audioPlayer.pause();
                                         onplay.value = false;
                                       } else {
-                                        print("clicked play");
+                                        if (kDebugMode) {
+                                          debugPrint("clicked play");
+                                        }
                                         if (audioPosition != null) {
                                           audioPlayer.seek(audioPosition!);
                                         } else {
@@ -138,7 +147,9 @@ class ListCardAyatWidget extends StatelessWidget {
                                           if (state.processingState ==
                                               ProcessingState.completed) {
                                             // File selesai diputar
-                                            print("Selesai");
+                                            if (kDebugMode) {
+                                              debugPrint("Selesai");
+                                            }
                                             audioPosition = null;
                                             onplay.value = false;
                                           }

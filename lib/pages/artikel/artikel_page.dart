@@ -6,73 +6,30 @@ import 'package:masjid_app/components/layout/app_bar_ws.dart';
 import 'package:masjid_app/components/partial/list_card_ui.dart';
 import 'package:masjid_app/pages/artikel/artikel_controller.dart';
 import 'package:masjid_app/routes/artikel/index.dart';
-class ArtikelPage extends StatelessWidget {
-  const ArtikelPage({super.key});
 
-  layout(ArtikelController ctrl, BuildContext context) {
+class ArtikelPage extends StatelessWidget {
+  final ArtikelController ctrl = Get.put(ArtikelController());
+  ArtikelPage({super.key});
+
+  SafeArea layout(ArtikelController ctrl, BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Padding(
                 padding: const EdgeInsets.only(left: 21, right: 21),
                 child: Column(children: [
-                  SizedBox(
-                    height: 20,
-                  ),
                   // getListCategory(ctrl),
                   // SizedBox(
                   //   height: 10,
                   // ),
-                  getListArtikel(ctrl, context)
+                  getListArtikel(ctrl, context),
+                  SizedBox(
+                    height: 20,
+                  )
                 ]))));
   }
 
-  // getListCategory(ArtikelController ctrl) {
-  //   return Container(
-  //     height: 40,
-  //     constraints: BoxConstraints.loose(Size.infinite),
-  //     child: ListView.separated(
-  //       // padding: EdgeInsets.only(left: 24, right: 24),
-  //       scrollDirection: Axis.horizontal,
-  //       physics: const BouncingScrollPhysics(),
-  //       itemCount: ctrl.listCategoryFilter.length,
-  //       separatorBuilder: (context, index) => const SizedBox(width: 10),
-  //       itemBuilder: (context, index) {
-  //         return Obx(() => ChoiceChip(
-  //               shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(10),
-  //                   side: const BorderSide(width: 1, color: Colors.black12)),
-  //               selected: ctrl.listCategoryFilterSelected[index].value,
-  //               label: Text(
-  //                 ctrl.listCategoryFilter[index]['n e'],
-  //                 style: TextStyle(
-  //                     fontSize:
-  //                         Theme.of(context).textTheme.labelMedium?.fontSize,
-  //                     color: ctrl.listCategoryFilterSelected[index].value
-  //                         ? Colors.white
-  //                         : Colors.black),
-  //               ),
-  //               labelPadding: EdgeInsets.symmetric(horizontal: 10),
-  //               labelStyle: TextStyle(
-  //                   color: Colors.grey[300], fontWeight: FontWeight.w500),
-  //               backgroundColor: Colors.transparent,
-  //               pressElevation: 1,
-  //               selectedColor: Theme.of(context).primaryColor,
-  //               padding: EdgeInsets.all(8),
-  //               onSelected: (selected) {
-  //                 for (RxBool b in ctrl.listCategoryFilterSelected) {
-  //                   if (b.isTrue) b.value = false;
-  //                 }
-  //                 ctrl.listCategoryFilterSelected[index].value =
-  //                     !ctrl.listCategoryFilterSelected[index].value;
-  //               },
-  //             ));
-  //       },
-  //     ),
-  //   );
-  // }
-
-  getListArtikel(ArtikelController ctrl, BuildContext context) {
+  ListView getListArtikel(ArtikelController ctrl, BuildContext context) {
     return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: ctrl.listArtikels.length,
@@ -96,11 +53,15 @@ class ArtikelPage extends StatelessWidget {
             subtitleStyle: context.textTheme.labelMedium
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
             onTap: () {
-              Get.toNamed('${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
+              Get.toNamed(
+                  '${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
             },
             hasFooter: true,
             footerContent: [
-              Text(DateFormat('dd MMMM yyyy HH:mm').format(DateTime.parse(ctrl.listArtikels[index].updatedAt).add(Duration(hours: 7))),
+              Text(
+                  DateFormat('dd MMMM yyyy HH:mm').format(
+                      DateTime.parse(ctrl.listArtikels[index].publishDate)
+                          .add(Duration(hours: 7))),
                   textAlign: TextAlign.start,
                   style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w300,
@@ -121,7 +82,7 @@ class ArtikelPage extends StatelessWidget {
                   //     style: context.textTheme.labelMedium?.copyWith(
                   //         fontWeight: FontWeight.w300, color: Colors.white)),
                 ],
-              )
+              ),
             ],
           ),
         );
@@ -131,13 +92,13 @@ class ArtikelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.put(ArtikelController());
-
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBarWSWidget.getAppbarWidget(
           title: "Artikel / Informasi", context: context, elevation: 0),
-      body: Obx(() => ctrl.isLoadingList.value ? CircularProgressIndicator() : layout(ctrl, context)),
+      body: Obx(() => ctrl.isLoadingList.value
+          ? Center(child: CircularProgressIndicator())
+          : layout(ctrl, context)),
     );
   }
 }

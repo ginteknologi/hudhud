@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:masjid_app/pages/quran/listAyat/detail/detail_quran_page.dart';
-import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
+import 'package:masjid_app/pages/quran/list_ayat/detail/detail_quran_page.dart';
+import 'package:masjid_app/pages/quran/list_ayat/list_ayat_quran_page.dart';
 import 'package:masjid_app/pages/quran/pengaturan/alquran_pengaturan_page.dart';
 import 'package:masjid_app/pages/quran/quran_page.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';

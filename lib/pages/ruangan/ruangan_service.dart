@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
@@ -48,7 +49,9 @@ class RuanganService extends GetConnect {
     }
   }
  Future postData(input) async {
-  print(input['']);
+  if (kDebugMode) {
+    debugPrint(input[''].toString());
+  }
     var api = '${RemoteData.api}/ruangan/booking';
     final response = await http.post(
       Uri.parse(api),

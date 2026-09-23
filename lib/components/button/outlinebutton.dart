@@ -13,9 +13,9 @@ class ButtonOutline extends StatelessWidget {
   final bool selected;
   final String showIcon;
   final bool iconOnly;
-  final iconLeft;
+  final Widget iconLeft;
   final bool vertical;
-  final iconRight;
+  final Widget iconRight;
   final double letterSpacing;
   final double textGap;
   final double textHeight;
@@ -30,7 +30,7 @@ class ButtonOutline extends StatelessWidget {
   final bool disabled;
   final VoidCallback onPressed;
   const ButtonOutline({
-    Key? key,
+    super.key,
     this.title = 'Label',
     this.color = AppColors.appPrimary,
     this.bgcolor = AppColors.textPrimary,
@@ -59,21 +59,20 @@ class ButtonOutline extends StatelessWidget {
     this.iconLeft = const Icon(FlutterRemix.user_line),
     this.iconRight = const Icon(FlutterRemix.user_line),
     this.justify = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    var _bgcolor = disabled ? bgcolor.withOpacity(.5) : bgcolor;
-    var _color = disabled ? color.withOpacity(.5) : color;
+    var bgColor = disabled ? bgcolor.withValues(alpha: .5) : bgcolor;
+    var fgColor = disabled ? color.withValues(alpha: .5) : color;
     final ButtonStyle buttonStyle = OutlinedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      primary: inverted ? _bgcolor : _color,
-      backgroundColor: inverted ? _color : _bgcolor,
+      foregroundColor: inverted ? bgColor : fgColor, padding: EdgeInsets.symmetric(horizontal: 10),
+      backgroundColor: inverted ? fgColor : bgColor,
       side: BorderSide(
           color: border > 0
               ? inverted
-                  ? _bgcolor
-                  : _color
+                  ? bgColor
+                  : fgColor
               : Colors.transparent,
           width: border),
       shape: RoundedRectangleBorder(
@@ -107,8 +106,8 @@ class ButtonOutline extends StatelessWidget {
                       Text(
                         title,
                         textAlign: textAlign,
-                        style: Theme.of(context).textTheme.button!.copyWith(
-                              color: inverted ? _bgcolor : _color,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: inverted ? bgColor : fgColor,
                               fontSize: size,
                               letterSpacing: letterSpacing,
                               height: textHeight,
@@ -142,8 +141,8 @@ class ButtonOutline extends StatelessWidget {
                         Container(width: textGap),
                       Text(
                         title,
-                        style: Theme.of(context).textTheme.button!.copyWith(
-                              color: inverted ? _bgcolor : _color,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: inverted ? bgColor : fgColor,
                               fontSize: size,
                               letterSpacing: letterSpacing,
                               height: textHeight,
@@ -168,16 +167,16 @@ class ButtonOutline extends StatelessWidget {
       decoration: BoxDecoration(
         color: disabled
             ? inverted
-                ? _color
-                : _bgcolor
+                ? fgColor
+                : bgColor
             : Colors.transparent,
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(
             color: disabled
                 ? border > 0
                     ? inverted
-                        ? _bgcolor
-                        : _color
+                        ? bgColor
+                        : fgColor
                     : Colors.transparent
                 : Colors.transparent,
             width: border),

@@ -7,12 +7,12 @@ class PagesArtikel {
   static var pages = [
     GetPage(
       name: RoutesArtikel.root,
-      page: () => const ArtikelPage(),
+      page: () => ArtikelPage(),
       transition: Transition.cupertino,
     ),
     GetPage(
       name: RoutesArtikel.detail,
-      page: () => const DetailArtikelPage(),
+      page: () => DetailArtikelPage(),
       transition: Transition.cupertino,
     ),
   ];

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:masjid_app/components/button/iconbutton.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/pages/akun/riwayat/riwayat_service.dart';
 class RiwayatController extends GetxController {
   var dataUser = {};
@@ -13,11 +13,11 @@ class RiwayatController extends GetxController {
   TextEditingController inputLink = TextEditingController();
   var txtController = TextEditingController();
 
-  goToDetail(param) {
+  void goToDetail( Map<String, dynamic> param) {
     _showPopup();
   }
 
-  getRiwayats() async {
+  Future<void> getRiwayats() async {
     final result = await RiwayatService().getList();
     listRiwayat.value = result['data']['history'];
     totalSedekah = result['data']['total_sedekah'];

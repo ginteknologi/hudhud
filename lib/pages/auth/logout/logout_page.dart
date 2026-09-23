@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/button/outlinebutton.dart';
 import 'package:masjid_app/pages/auth/auth_controller.dart';
 import 'package:masjid_app/routes/auth/index.dart';
 
@@ -96,7 +95,7 @@ class LogOutPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       extendBodyBehindAppBar: false,
       resizeToAvoidBottomInset: false,
       body: layout(ctrl, context),

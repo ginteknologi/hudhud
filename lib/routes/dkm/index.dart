@@ -5,7 +5,7 @@ class PagesDkm {
   static var pages = [
     GetPage(
       name: RoutesDkm.root,
-      page: () => const DkmPage(),
+      page: () => DkmPage(),
       transition: Transition.cupertino,
     ),
   ];

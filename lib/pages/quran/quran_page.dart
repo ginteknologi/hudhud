@@ -1,20 +1,20 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:masjid_app/components/input/InputText.dart';
+import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
-import 'package:masjid_app/pages/quran/listAyat/listAyat_quran_page.dart';
+import 'package:masjid_app/pages/quran/list_ayat/list_ayat_quran_page.dart';
 import 'package:masjid_app/pages/quran/quran_controller.dart';
-import 'package:masjid_app/theme.dart';
 
 class QuranPage extends StatelessWidget {
   final TypeViewQuran typeView;
-  QuranPage({super.key, required this.typeView});
+  const QuranPage({super.key, required this.typeView});
 
-  layout(QuranController ctrl, BuildContext context) {
+  SafeArea layout(QuranController ctrl, BuildContext context) {
     return SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -165,7 +165,7 @@ class QuranPage extends StatelessWidget {
                                             ['translation']['id'],
                                         hasRightContent: true,
                                         showIcon: IconPosition.left,
-                                        iconLeft: Container(
+                                        iconLeft: SizedBox(
                                           height: 42,
                                           width: 42,
                                           child: Stack(
@@ -230,14 +230,14 @@ class QuranPage extends StatelessWidget {
   }
 
   Widget getCurrentWidget(TypeViewQuran type, QuranController ctrl) {
-    print(TypeViewQuran.perayat);
+    if (kDebugMode) {
+      debugPrint(TypeViewQuran.perayat.toString());
+    }
     switch (type) {
       case TypeViewQuran.perayat:
-        return  ListAyatQuranPage();
+        return ListAyatQuranPage();
       case TypeViewQuran.perhalaman:
         return const HalamanQuranPage();
-      default:
-        return  ListAyatQuranPage();
     }
   }
 

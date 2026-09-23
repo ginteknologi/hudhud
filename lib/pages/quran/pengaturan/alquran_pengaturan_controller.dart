@@ -1,11 +1,12 @@
 import "dart:io";
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masjid_app/configs/main_controller.dart';
+import 'package:masjid_app/controllers/main_controller.dart';
 import 'package:flutter/services.dart';
 
 class AlquranPengaturanController extends GetxController {
@@ -23,24 +24,33 @@ class AlquranPengaturanController extends GetxController {
 
   void downloadFile(String type) async {
     try {
-      print(paused.value);
+      if (kDebugMode) {
+        debugPrint(paused.value.toString());
+      }
       String jsonString = '';
       download.value = true;
       if (type == 'halaman') {
-        jsonString = await rootBundle.loadString('assets/img/quran/quran-page.json');
+        jsonString =
+            await rootBundle.loadString('assets/img/quran/quran-page.json');
       } else if (type == 'madinah') {
-        jsonString = await rootBundle.loadString('assets/img/quran/quran-page-madinah.json');
+        jsonString = await rootBundle
+            .loadString('assets/img/quran/quran-page-madinah.json');
       } else {
-        jsonString = await rootBundle.loadString('assets/img/quran/quran-page-tajwid.json');
+        jsonString = await rootBundle
+            .loadString('assets/img/quran/quran-page-tajwid.json');
       }
       final listSurah = json.decode(jsonString);
       String dir = (await getApplicationDocumentsDirectory()).path;
       String filePath = '$dir/quran/$type';
-      print(filePath);
+      if (kDebugMode) {
+        debugPrint(filePath.toString());
+      }
       Directory directory = Directory(filePath);
       bool exists = await directory.exists();
       if (exists) {
-        print('Folder ada');
+        if (kDebugMode) {
+          debugPrint('Folder ada');
+        }
       } else {
         directory.create(recursive: true);
       }
@@ -56,21 +66,31 @@ class AlquranPengaturanController extends GetxController {
         var element = listSurah[i];
         var response = await http.get(Uri.parse(element['file']));
         var bytes = response.bodyBytes;
-        File file = File(filePath + '/' + element['hal'].toString() + '.jpg');
+        File file = File('$filePath/${element['hal']}.jpg');
         await file.writeAsBytes(bytes);
         totalTerDownload++;
         progresDownload.value = (totalTerDownload / listSurah.length);
         persenDownload.value = (progresDownload * 100).toInt();
-        print(progresDownload);
-        print(persenDownload);
+        if (kDebugMode) {
+          debugPrint(progresDownload.toString());
+        }
+        if (kDebugMode) {
+          debugPrint(persenDownload.toString());
+        }
         if (i == listSurah.length - 1) {
           download.value = false;
-          print(download);
+          if (kDebugMode) {
+            debugPrint(download.toString());
+          }
         }
       }
-      print(listSurah);
+      if (kDebugMode) {
+        debugPrint(listSurah.toString());
+      }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -88,8 +108,5 @@ class AlquranPengaturanController extends GetxController {
   void cancelDownload() {
     cancelled.value = true;
   }
-  @override
-  void onInit() async {
-    super.onInit();
-  }
+
 }

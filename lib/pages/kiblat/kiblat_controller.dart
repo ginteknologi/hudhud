@@ -9,20 +9,16 @@ class KiblatController extends GetxController {
   var list = {}.obs;
   var index = 0.obs;
 
-  getData() async {
+  Future<void> getData() async {
     // final result = await SedekahService().getList(page: 0, limit: 10);
     var result = {"data": []};
     list.value = result;
     isLoadingList.value = false;
   }
 
-  goToLogin() async {
+  Future<void> goToLogin() async {
     log('data:');
     Get.offAllNamed(RoutesAuth.root);
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 }

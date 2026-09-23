@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,7 @@ class BookingRuanganController extends GetxController {
 
   var formInput = [].obs;
 
-  getForm() async {
+  Future<List<dynamic>> getForm() async {
     return formInput.value = [
       {
         "type": "datepicker",
@@ -81,11 +82,13 @@ class BookingRuanganController extends GetxController {
     ];
   }
 
-  proceedBooking() async {
+  Future<Map<String, Object>> proceedBooking() async {
     isLoadingList.value = true;
     var status = {"code": 400, "message": "Mohon cek kembali koneksi anda."};
     try {
-      print(inputTanggal.value);
+      if (kDebugMode) {
+        debugPrint(inputTanggal.value.toString());
+      }
       var input = {
         "tanggal":inputTanggal.value,
         "jam_mulai":jamMulai.value,
@@ -110,7 +113,9 @@ class BookingRuanganController extends GetxController {
         Get.back();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
     isLoadingList.value = false;
     return status;    
