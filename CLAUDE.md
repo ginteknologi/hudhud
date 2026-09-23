@@ -37,7 +37,7 @@ Pages are `lib/pages/<feature>/`; `<feature>_controller.dart` / `_service.dart` 
 - `ApiClient` — Dio wrapper (`get`/`post`, optional `queryParameters` and `fromJson`), bearer token from `PreferencesService.token`. Returns `ApiResponse<T>`; throws the `AppException` hierarchy.
 - `ApiEndpoints` — every path as a `static const String`; `baseUrl` is `String.fromEnvironment('API_BASE_URL', defaultValue: 'https://api.masjidannimah.id/api/v1')`, so an override goes on the run/build command, not in source.
 - Endpoint families: `/quran/{surah,juz,random-surah}`, `/doa/{list,category,detail,dzikir}`, `/hadits/{detail,bab}`, `/artikel`, `/kajian/{list,slider,muadzin,kaji-live}`, `/campaign`, `/live`, `/event`, `/ruangan/booking`, `/notif`, `/transaksi/*`, `/profile`, `/fcm`, `/dkm`, `/waktusolat`.
-- Long-lived exception: `lib/configs/remote_data.dart` (LAN dev IP) is only used by dead legacy services now — nothing live reads it.
+- The old LAN-dev-IP switch (`lib/configs/remote_data.dart`) was deleted with the rest of the GetX layer.
 
 ### Storage (`lib/core/storage/preferences_service.dart`)
 `shared_preferences` behind one static facade. Keys: `is_login`, `user_data` (user JSON), `jwt_token`, `fcm_token`, `onboarding_completed`, `last_read_ayat`, `last_read_halaman`, plus generic `getString`/`setString`/`remove` for per-feature transient values (sedekah payment flow keys `inputDataPembayaran`, `dataInvoice`). `clearAuth()` on logout.
@@ -54,16 +54,9 @@ Android side needs the manifest permissions already present: `FOREGROUND_SERVICE
 - Use `Theme.of(context).textTheme` — `context.textTheme` was a GetX extension and no longer resolves.
 - Assets are pre-declared per folder in `pubspec.yaml` — a new asset folder must be added there.
 
-## Legacy leftovers (dead on disk — delete, then drop the deps)
+## Migration history (done — don't reintroduce GetX)
 
-The GetX → Riverpod/GoRouter migration is complete for all reachable code (`fvm flutter analyze lib` = 0 errors, live graph imports neither `package:get/` nor `package:get_storage/`). What is left are ~107 unreachable files that still import GetX and therefore keep `get:` / `get_storage:` in `pubspec.yaml`:
-
-- `lib/routes/**` (whole dir, incl. `isLogin_middleware.dart` — router now lives in `lib/core/router/`)
-- `lib/bindings/**`, `lib/controllers/**`, `lib/service/**`, `lib/configs/{main_service,remote_data}.dart`, `lib/models/listayat_data.dart`
-- per-feature `*_controller.dart` / `*_service.dart` under `lib/pages/**`
-- dead pages: `lib/pages/quote/`, `lib/pages/kajian/`, `lib/pages/test/`, `lib/pages/alarm_solat/`, the old Quran readers (`lib/pages/quran/{halaman,halaman_madinah,halaman_tajwid,list_ayat,pengaturan}/`, `quran_page.dart`, `quran_controller.dart`, `quran_service.dart`), `lib/pages/dashboard/component/{waktu_solat,kajian_live_page}.dart`, `lib/pages/auth/logout/`, `lib/pages/splashscreen/splashscreen_controller.dart`, `lib/pages/sedekah/detail/detailsedekah_page copy.dart`
-
-After deleting them: remove `get:` (pubspec:41) and `get_storage:` (pubspec:42), then `fvm flutter pub get` and re-run analyze.
+The GetX → Riverpod/GoRouter migration is complete and the legacy code is gone: `lib/routes/**`, `lib/bindings/**`, `lib/controllers/**`, `lib/service/**`, `lib/configs/{main_service,remote_data}.dart`, `lib/models/listayat_data.dart`, every `*_controller.dart`/`*_service.dart` under `lib/pages/**`, the old Quran readers, and the dead quote/kajian/test/alarm_solat/logout pages were all deleted, and `get:`/`get_storage:` are out of `pubspec.yaml` (commits `ff52346`, `25d1b9e` on branch `migrasi-getx-ke-riverpod`). Only `lib/pages/quran/new_quran/` remains of the Quran feature; `lib/configs/remote_data.dart` is gone, so `ApiEndpoints.baseUrl` (or `--dart-define=API_BASE_URL=...`) is the single backend switch.
 
 ## Gotchas
 
@@ -73,4 +66,4 @@ After deleting them: remove `get:` (pubspec:41) and `get_storage:` (pubspec:42),
 - Hardcoded Minio access/secret keys live in `lib/providers/akun_provider.dart` (copied from the old edit-akun controller) for the avatar upload — worth moving out of source, but it is the current contract.
 - `main.dart` calls `InAppUpdate.performImmediateUpdate()` unconditionally on Android at startup.
 - Flutter 3.13.6 predates `WidgetState`, `MaterialState` deprecations, and current `just_audio`/`geolocator` major versions — expect the pinned versions in `pubspec.lock` and don't upgrade casually.
-- `lib/pages/dkm/dkm_page.dart` still has one inert tap (the old `/quote` route was never re-registered); `QuotePage` is dead code awaiting deletion.
+- `lib/pages/dkm/dkm_page.dart:193` has one inert tap — the old `/quote` page was deleted with the GetX layer and no replacement route exists (`TODO(migrasi)` in the file).
