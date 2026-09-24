@@ -14,7 +14,6 @@ import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/providers/app_settings_provider.dart';
 import 'package:masjid_app/providers/jadwal_shalat_provider.dart';
 import 'package:masjid_app/theme.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +22,9 @@ Future<void> main() async {
   await initializeDateFormatting('id_ID', null);
 
   try {
-    await [
-      Permission.notification,
-      Permission.location,
-    ].request();
+    // Izin lokasi & notifikasi sengaja tidak diminta di sini. Keduanya baru
+    // diminta saat user menekan tombolnya: lokasi di DashboardHeader, notifikasi
+    // saat mengaktifkan adzan di Pengaturan Umum.
     await SetupFirebase.initFirebase();
   } catch (e) {
     debugPrint('Firebase init error: $e');
@@ -35,7 +33,8 @@ Future<void> main() async {
   if (!kIsWeb && kReleaseMode && Platform.isAndroid) {
     try {
       InAppUpdate.checkForUpdate().then((updateInfo) async {
-        if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        if (updateInfo.updateAvailability ==
+            UpdateAvailability.updateAvailable) {
           try {
             await InAppUpdate.performImmediateUpdate();
             Fluttertoast.showToast(

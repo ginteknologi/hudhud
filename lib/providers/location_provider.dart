@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Dipakai kalau user belum pernah mengambil lokasi GPS — server menghitung
 /// jadwal sholat memakai koordinat masjid.
@@ -85,9 +86,14 @@ class LocationNotifier extends StateNotifier<SavedLocation> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        return 'Izin lokasi belum aktif — buka Pengaturan Aplikasi';
+      if (permission == LocationPermission.deniedForever) {
+        // Dialog izin tidak bisa muncul lagi, jadi user langsung diarahkan ke
+        // layar pengaturan aplikasi.
+        await openAppSettings();
+        return 'Izin lokasi diblokir — aktifkan lewat pengaturan sistem';
+      }
+      if (permission == LocationPermission.denied) {
+        return 'Izin lokasi dibutuhkan untuk menyesuaikan waktu sholat';
       }
 
       final position = await _resolvePosition();
