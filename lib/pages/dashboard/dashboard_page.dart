@@ -1,241 +1,236 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:masjid_app/components/button/iconbutton.dart';
-import 'package:masjid_app/components/layout/custom_card_item.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/models/artikel_model.dart';
 import 'package:masjid_app/models/doa_models.dart';
 import 'package:masjid_app/models/kajian_model.dart';
 import 'package:masjid_app/pages/dashboard/component/count_down.dart';
+import 'package:masjid_app/pages/dashboard/component/dashboard_header.dart';
+import 'package:masjid_app/pages/dashboard/component/dashboard_menu_grid.dart';
 import 'package:masjid_app/pages/dashboard/component/prayer_times_card.dart';
+import 'package:masjid_app/pages/dashboard/component/quick_quran_card.dart';
 import 'package:masjid_app/pages/dashboard/component/ramadhan_menu.dart';
 import 'package:masjid_app/pages/dashboard/component/sedang_live.dart';
 import 'package:masjid_app/providers/artikel_provider.dart';
-import 'package:masjid_app/providers/auth_provider.dart';
 import 'package:masjid_app/providers/dashboard_data_providers.dart';
 import 'package:masjid_app/providers/doa_providers.dart';
-import 'package:masjid_app/providers/home_nav_provider.dart';
 import 'package:masjid_app/providers/jadwal_shalat_provider.dart';
 import 'package:masjid_app/providers/kajian_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DashboardPage extends ConsumerWidget {
+class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.dark,
-      statusBarColor: Colors.transparent,
-    ));
+  ConsumerState<DashboardPage> createState() => _DashboardPageState();
+}
 
-    final user = ref.watch(authNotifierProvider).valueOrNull;
+class _DashboardPageState extends ConsumerState<DashboardPage> {
+  final ScrollController _scrollController = ScrollController();
+  bool _isScrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final scrolled = _scrollController.hasClients && _scrollController.offset > 50;
+    if (scrolled != _isScrolled) {
+      setState(() {
+        _isScrolled = scrolled;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  String _cleanText(String text) {
+    if (text.isEmpty) return '';
+    return text
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' ')
+        .replaceAll(RegExp(r'</?p>', caseSensitive: false), ' ')
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&apos;', "'")
+        .replaceAll('&#39;', "'")
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
+
+  String _formatDate(String dateStr) {
+    if (dateStr.isEmpty) return '';
+    try {
+      final dateTime = DateTime.tryParse(dateStr);
+      if (dateTime != null) {
+        return DateFormat('d MMMM yyyy', 'id_ID').format(dateTime);
+      }
+    } catch (_) {}
+    return dateStr;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    final overlayStyle = SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: _isScrolled ? Brightness.dark : Brightness.light,
+      statusBarBrightness: _isScrolled ? Brightness.light : Brightness.dark,
+    );
+
     final sedangLiveAsync = ref.watch(sedangLiveListProvider);
     final kajianLiveAsync = ref.watch(kajianLiveListProvider);
     final kajianSliderAsync = ref.watch(kajianSliderProvider('tafsir'));
     final artikelAsync = ref.watch(artikelTerbaruProvider);
     final doaAsync = ref.watch(doaListProvider(const DoaListParams(categoryId: '1')));
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        padding: EdgeInsets.only(top: screenHeight / 20),
-        height: screenHeight,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF189A8C), Colors.white, Colors.white],
-          ),
-        ),
-        child: RefreshIndicator(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlayStyle,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF8FAF9),
+        body: RefreshIndicator(
+          color: const Color(0xFF048C7C),
+          backgroundColor: Colors.white,
           onRefresh: () async {
             ref.invalidate(jadwalShalatProvider);
             ref.invalidate(sedangLiveListProvider);
             ref.invalidate(kajianLiveListProvider);
             ref.invalidate(kajianSliderProvider('tafsir'));
             ref.invalidate(artikelTerbaruProvider);
+            ref.invalidate(doaListProvider(const DoaListParams(categoryId: '1')));
           },
           child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Header Profil & Lokasi
+                // 1. Header Profil & Lokasi Islami Elegan
+                const DashboardHeader(),
+
+                // Konten Utama Beranda
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user?.name ?? 'Pengguna Tamu',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Row(
-                            children: [
-                              Icon(Icons.location_pin, size: 12, color: Color(0xFFFFECB7)),
-                              SizedBox(width: 4),
-                              Text(
-                                'Masjid An-Ni’mah Cibubur',
-                                style: TextStyle(color: Color(0xFFFFECB7), fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ],
+                      // 2. Kartu Waktu Shalat Realtime
+                      const PrayerTimesCard(),
+
+                      // 3. Kartu Cepat "Lanjutkan Tilawah" Al-Qur'an (Minimalis)
+                      const QuickQuranCard(),
+
+                      // 4. Grid 10 Layanan Masjid & Ibadah
+                      const DashboardMenuGrid(),
+
+                      // 5. Sedang Live (Jika ada data)
+                      SedangLiveWidget(
+                        listSedangLive: sedangLiveAsync.valueOrNull ?? [],
                       ),
-                      Row(
-                        children: [
-                          ButtonIcon(
-                            onTap: () {},
-                            bgcolor: Colors.transparent,
-                            icon: const Icon(
-                              Icons.notifications_none_rounded,
-                              size: 30,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          InkWell(
-                            onTap: () => context.push(AppRoutes.profile),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: (user?.photo.isNotEmpty ?? false)
-                                  ? Image.network(
-                                      user!.photo,
-                                      height: 35,
-                                      width: 35,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => Image.asset(
-                                        'assets/icons/app_icon.png',
-                                        height: 35,
-                                        width: 35,
-                                      ),
-                                    )
-                                  : Image.asset(
-                                      'assets/icons/app_icon.png',
-                                      height: 35,
-                                      width: 35,
-                                    ),
-                            ),
-                          ),
-                        ],
+
+                      // 6. Countdown Ramadhan / Event Khusus
+                      const SizedBox(height: 14),
+                      const CountDownWidget(),
+
+                      // 7. Menu Imsakiyah & Penanggalan Ramadhan
+                      const SizedBox(height: 14),
+                      const RamadhanMenuWidget(),
+
+                      const SizedBox(height: 22),
+
+                      // 8. Doa Pilihan (Kartu Inspirasi Doa Harian)
+                      _buildSeparator(
+                        'Doa Pilihan',
+                        'Lihat Semua',
+                        context,
+                        () => context.push(AppRoutes.doa),
                       ),
+                      const SizedBox(height: 10),
+                      Skeletonizer(
+                        enabled: doaAsync.isLoading,
+                        child: _buildDoaSlider(doaAsync.valueOrNull ?? [], context),
+                      ),
+
+                      const SizedBox(height: 22),
+
+                      // 9. Riwayat Kajian Live (Video Card Interaktif)
+                      _buildSeparator(
+                        'Riwayat Kajian Live',
+                        'Lihat Semua',
+                        context,
+                        () {},
+                      ),
+                      const SizedBox(height: 10),
+                      Skeletonizer(
+                        enabled: kajianLiveAsync.isLoading,
+                        child: _buildKajianSlider(
+                          kajianLiveAsync.valueOrNull ?? [],
+                          tag: 'Kajian Live',
+                          badgeColor: const Color(0xFFE53935),
+                          context: context,
+                        ),
+                      ),
+
+                      const SizedBox(height: 22),
+
+                      // 10. Kajian Tafsir Quran (Video Card Interaktif)
+                      _buildSeparator(
+                        'Kajian Tafsir Quran',
+                        'Lihat Semua',
+                        context,
+                        () {},
+                      ),
+                      const SizedBox(height: 10),
+                      Skeletonizer(
+                        enabled: kajianSliderAsync.isLoading,
+                        child: _buildKajianSlider(
+                          kajianSliderAsync.valueOrNull ?? [],
+                          tag: 'Tafsir Qur’an',
+                          badgeColor: const Color(0xFF048C7C),
+                          context: context,
+                        ),
+                      ),
+
+                      const SizedBox(height: 22),
+
+                      // 11. Artikel Terbaru (Featured & Compact Magazine Style)
+                      _buildSeparator(
+                        'Artikel Terbaru',
+                        'Lihat Semua',
+                        context,
+                        () => context.push(AppRoutes.artikel),
+                      ),
+                      const SizedBox(height: 10),
+                      Skeletonizer(
+                        enabled: artikelAsync.isLoading,
+                        child: _buildArtikelList(
+                          artikelAsync.valueOrNull ?? [],
+                          context,
+                        ),
+                      ),
+
+                      const SizedBox(height: 36),
                     ],
                   ),
                 ),
-
-                // Kartu Waktu Shalat Realtime Riverpod
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: const PrayerTimesCard(),
-                ),
-
-                // Grid Menu Dashboard
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: _buildGridMenu(context, ref),
-                ),
-
-                SizedBox(height: screenWidth / 40),
-
-                // Sedang Live
-                SedangLiveWidget(listSedangLive: sedangLiveAsync.valueOrNull ?? []),
-
-                SizedBox(height: screenWidth / 30),
-
-                // CountDown Ramadhan
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: const CountDownWidget(),
-                ),
-
-                SizedBox(height: screenWidth / 30),
-
-                // Ramadhan Menu
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: const RamadhanMenuWidget(),
-                ),
-
-                SizedBox(height: screenWidth / 30),
-
-                // Doa Sahabat Masjid
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: _buildSeparator('Doa Pilihan', 'Lihat Semua', context, () {
-                    context.push(AppRoutes.doa);
-                  }),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: screenWidth / 30),
-                  child: Skeletonizer(
-                    enabled: doaAsync.isLoading,
-                    child: _buildDoaSlider(doaAsync.valueOrNull ?? [], context),
-                  ),
-                ),
-
-                // Riwayat Kajian Live
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: _buildSeparator('Riwayat Kajian Live', 'Lihat Semua', context, () {}),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: screenWidth / 30),
-                  child: Skeletonizer(
-                    enabled: kajianLiveAsync.isLoading,
-                    child: _buildKajianSlider(kajianLiveAsync.valueOrNull ?? []),
-                  ),
-                ),
-
-                // Kajian Tafsir Quran
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  margin: const EdgeInsets.only(top: 10),
-                  child: _buildSeparator('Kajian Tafsir Quran', 'Lihat Semua', context, () {}),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: screenWidth / 30),
-                  child: Skeletonizer(
-                    enabled: kajianSliderAsync.isLoading,
-                    child: _buildKajianSlider(kajianSliderAsync.valueOrNull ?? []),
-                  ),
-                ),
-
-                // Artikel Terbaru
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: _buildSeparator('Artikel Terbaru', '', context, () {}),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 30),
-                  child: Skeletonizer(
-                    enabled: artikelAsync.isLoading,
-                    child: _buildArtikelList(artikelAsync.valueOrNull ?? [], context),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight / 30),
               ],
             ),
           ),
@@ -244,149 +239,48 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildGridMenu(BuildContext context, WidgetRef ref) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final menus = [
-      {
-        'label': 'Al Quran',
-        'icon': 'assets/icons/newQuran.svg',
-        'onTap': () {
-          ref.read(homeBottomNavIndexProvider.notifier).state = 1;
-        },
-      },
-      {
-        'label': 'Kiblat',
-        'icon': 'assets/icons/kiblat.svg',
-        'onTap': () => context.push(AppRoutes.kiblat),
-      },
-      {
-        'label': "Do'a",
-        'icon': 'assets/icons/doa.svg',
-        'onTap': () => context.push(AppRoutes.doa),
-      },
-      {
-        'label': 'Hadits',
-        'icon': 'assets/icons/hadits.svg',
-        'onTap': () => context.push(AppRoutes.hadits),
-      },
-      {
-        'label': 'Dzikir',
-        'icon': 'assets/icons/dzikir_pagi_petang.svg',
-        'onTap': () => context.push(AppRoutes.dzikir),
-      },
-      {
-        'label': 'Sedekah',
-        'icon': 'assets/icons/sedekah.svg',
-        'onTap': () => context.push(AppRoutes.sedekah),
-      },
-      {
-        'label': 'Ruangan',
-        'icon': 'assets/icons/ruangan.svg',
-        'onTap': () => context.push(AppRoutes.ruangan),
-      },
-      {
-        'label': 'Muazin',
-        'icon': 'assets/icons/sahabat_muadzin.png',
-        'isPng': true,
-        'onTap': () {
-          ref.read(homeBottomNavIndexProvider.notifier).state = 2;
-        },
-      },
-      {
-        'label': 'Marbot',
-        'icon': 'assets/icons/dkm.png',
-        'isPng': true,
-        'onTap': () {
-          ref.read(homeBottomNavIndexProvider.notifier).state = 3;
-        },
-      },
-      {
-        'label': 'Instagram',
-        'icon': 'assets/icons/insta2.svg',
-        'onTap': () async {
-          final url = Uri.parse('https://www.instagram.com/marbot.aplikasi/');
-          if (!await launchUrl(url)) {
-            Fluttertoast.showToast(msg: 'Tidak dapat membuka Instagram');
-          }
-        },
-      },
-    ];
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: menus.length,
-      padding: const EdgeInsets.only(top: 15),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
-        childAspectRatio: 0.82,
-      ),
-      itemBuilder: (context, index) {
-        final item = menus[index];
-        final isPng = item['isPng'] == true;
-
-        return Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: item['onTap'] as void Function()?,
-            borderRadius: BorderRadius.circular(20),
-            splashColor: Colors.green.withValues(alpha: 0.5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                isPng
-                    ? Image.asset(item['icon'] as String, height: screenWidth / 7.2, width: screenWidth / 7.2)
-                    : SvgPicture.asset(item['icon'] as String, height: screenWidth / 7.2, width: screenWidth / 7.2),
-                const SizedBox(height: 5),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth / 50),
-                    child: AutoSizeText(
-                      '${item["label"]}',
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      presetFontSizes: [screenWidth / 38],
-                      style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.labelMedium?.fontSize,
-                        height: 1.1,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSeparator(String title, String? sub, BuildContext context, VoidCallback onTap) {
+  Widget _buildSeparator(
+    String title,
+    String? sub,
+    BuildContext context,
+    VoidCallback onTap,
+  ) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-              fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
-            ),
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF137065),
+            fontSize: 16,
+            letterSpacing: 0.1,
           ),
         ),
         if (sub != null && sub.isNotEmpty)
           InkWell(
             onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Text(
-                sub,
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
-                ),
+            borderRadius: BorderRadius.circular(12),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Lihat Semua',
+                    style: TextStyle(
+                      color: Color(0xFF048C7C),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(width: 3),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 11,
+                    color: Color(0xFF048C7C),
+                  ),
+                ],
               ),
             ),
           ),
@@ -394,94 +288,625 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
+  /// Slider Doa bergaya Kartu Inspirasi / Quote Card Islami
   Widget _buildDoaSlider(List<DoaItemModel> list, BuildContext context) {
     return SizedBox(
-      height: 151,
+      height: 142,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
         itemCount: list.isEmpty ? 3 : list.length,
         itemBuilder: (context, index) {
           final item = list.isNotEmpty ? list[index] : null;
-          return Container(
-            margin: const EdgeInsets.only(right: 12),
-            child: CustomCardItem(
-              title: item?.judul ?? 'Doa',
-              subtitle: item?.arti ?? '',
-              height: 140,
-              width: 200,
-              chipText: 'Doa',
-            ),
-          );
-        },
-      ),
-    );
-  }
 
-  Widget _buildKajianSlider(List<KajianModel> list) {
-    return SizedBox(
-      height: 151,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: list.isEmpty ? 3 : list.length,
-        itemBuilder: (context, index) {
-          final item = list.isNotEmpty ? list[index] : null;
           return Container(
+            width: 230,
             margin: const EdgeInsets.only(right: 12),
-            child: CustomCardItem(
-              title: item?.judul ?? 'Kajian',
-              subtitle: item?.subjudul ?? '',
-              imgPath: item?.image ?? '',
-              network: (item?.image.isNotEmpty ?? false),
-              link: item?.link,
-              islink: (item?.link.isNotEmpty ?? false),
-              height: 140,
-              width: 200,
-              chipText: 'Kajian',
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white,
+                  Color(0xFFF5FAF8),
+                ],
+              ),
+              border: Border.all(
+                color: const Color(0xFFDCECE7),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF048C7C).withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildArtikelList(List<ArtikelModel> list, BuildContext context) {
-    return Column(
-      children: list.map((item) {
-        return Card(
-          elevation: 1,
-          margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(12),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: item.thumbnail.isNotEmpty
-                  ? Image.network(
-                      item.thumbnail,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Image.asset(
-                        'assets/icons/app_icon.png',
-                        width: 60,
-                        height: 60,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () => context.push(AppRoutes.doa),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Header Kartu Doa
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEAF5F2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.auto_stories_rounded,
+                              size: 15,
+                              color: Color(0xFF048C7C),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF9D576).withValues(alpha: 0.25),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text(
+                              'Doa Pilihan',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF9E780A),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  : Image.asset('assets/icons/app_icon.png', width: 60, height: 60),
+
+                      // Konten Judul & Makna Doa
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _cleanText(item?.judul ?? 'Doa Harian'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: Color(0xFF137065),
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            item?.arti.isNotEmpty == true
+                                ? _cleanText(item!.arti)
+                                : 'Doa harian untuk ketenangan hati dan keberkahan hidup.',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.black87,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // Footer Aksi
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            item?.riwayat.isNotEmpty == true
+                                ? _cleanText(item!.riwayat)
+                                : 'Shahih',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Color(0xFF048C7C),
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          const Row(
+                            children: [
+                              Text(
+                                'Baca',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF048C7C),
+                                ),
+                              ),
+                              SizedBox(width: 2),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 9,
+                                color: Color(0xFF048C7C),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            title: Text(
-              item.judul,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+          );
+        },
+      ),
+    );
+  }
+
+  /// Slider Kajian dengan Video Thumbnail & Play Button
+  Widget _buildKajianSlider(
+    List<KajianModel> list, {
+    required String tag,
+    required Color badgeColor,
+    required BuildContext context,
+  }) {
+    return SizedBox(
+      height: 140,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: list.isEmpty ? 3 : list.length,
+        itemBuilder: (context, index) {
+          final item = list.isNotEmpty ? list[index] : null;
+
+          return Container(
+            width: 215,
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFFE2EBE8),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF048C7C).withValues(alpha: 0.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
-            subtitle: Text(
-              item.createdAt,
-              style: const TextStyle(color: Color(0xFF048C7C)),
+            clipBehavior: Clip.antiAlias,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  if (item?.link.isNotEmpty == true) {
+                    final uri = Uri.tryParse(item!.link);
+                    if (uri != null) {
+                      await launchUrl(uri);
+                    }
+                  }
+                },
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Gambar Thumbnail Kajian
+                    if (item?.image.isNotEmpty == true)
+                      CachedNetworkImage(
+                        imageUrl: item!.image,
+                        fit: BoxFit.cover,
+                        errorWidget: (_, __, ___) => _buildFallbackKajianImage(),
+                      )
+                    else
+                      _buildFallbackKajianImage(),
+
+                    // Gradient Overlay untuk Keterbacaan Teks
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.25),
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.85),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Badge di Pojok Kiri Atas
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: badgeColor,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          tag,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Play Button di Tengah Thumbnail
+                    Center(
+                      child: Container(
+                        height: 36,
+                        width: 36,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.45),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.7),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.play_arrow_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+
+                    // Judul Kajian di Bawah
+                    Positioned(
+                      left: 10,
+                      right: 10,
+                      bottom: 10,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            item?.judul ?? 'Kajian Masjid',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            item?.ustadz.isNotEmpty == true
+                                ? item!.ustadz
+                                : (item?.subjudul ?? 'Masjid An-Ni’mah'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Color(0xFFF9D576),
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFallbackKajianImage() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF0D6357),
+            Color(0xFF1E8D7F),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Opacity(
+          opacity: 0.25,
+          child: Image.asset(
+            'assets/icons/app_icon.png',
+            height: 60,
+            width: 60,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// List Artikel bergaya Majalah Islami (1 Featured + Compact List)
+  Widget _buildArtikelList(List<ArtikelModel> list, BuildContext context) {
+    if (list.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFE2EBE8)),
+        ),
+        child: const Center(
+          child: Text(
+            'Belum ada artikel terbaru',
+            style: TextStyle(color: Colors.black54, fontSize: 12),
+          ),
+        ),
+      );
+    }
+
+    final featured = list.first;
+    final otherArticles = list.skip(1).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // 1. Featured Article Card (Artikel Pilihan Paling Baru)
+        Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: const Color(0xFFE2EBE8),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF048C7C).withValues(alpha: 0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                context.push(
+                  AppRoutes.artikelDetail.replaceAll(':id', featured.id.toString()),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Cover Image Featured
+                  SizedBox(
+                    height: 125,
+                    width: double.infinity,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        if (featured.thumbnail.isNotEmpty)
+                          CachedNetworkImage(
+                            imageUrl: featured.thumbnail,
+                            fit: BoxFit.cover,
+                            errorWidget: (_, __, ___) => _buildFallbackKajianImage(),
+                          )
+                        else
+                          _buildFallbackKajianImage(),
+                        Positioned(
+                          top: 10,
+                          left: 10,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3.5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF048C7C),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text(
+                              'Artikel Utama',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Title & Meta Featured
+                  Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _cleanText(featured.judul),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Color(0xFF137065),
+                            height: 1.3,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.calendar_today_rounded,
+                                  size: 12,
+                                  color: Color(0xFF048C7C),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _formatDate(featured.createdAt),
+                                  style: const TextStyle(
+                                    color: Color(0xFF048C7C),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Row(
+                              children: [
+                                Text(
+                                  'Baca Selengkapnya',
+                                  style: TextStyle(
+                                    color: Color(0xFF048C7C),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(width: 3),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 10,
+                                  color: Color(0xFF048C7C),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        );
-      }).toList(),
+        ),
+
+        // 2. Artikel Lainnya (Compact Style)
+        ...otherArticles.map((item) {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFFE2EBE8),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF048C7C).withValues(alpha: 0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {
+                  context.push(
+                    AppRoutes.artikelDetail.replaceAll(':id', item.id.toString()),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: item.thumbnail.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: item.thumbnail,
+                                width: 68,
+                                height: 68,
+                                fit: BoxFit.cover,
+                                errorWidget: (_, __, ___) => Image.asset(
+                                  'assets/icons/app_icon.png',
+                                  width: 68,
+                                  height: 68,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Image.asset(
+                                'assets/icons/app_icon.png',
+                                width: 68,
+                                height: 68,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _cleanText(item.judul),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: Color(0xFF2C3E50),
+                                height: 1.3,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.access_time_rounded,
+                                  size: 12,
+                                  color: Color(0xFF048C7C),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _formatDate(item.createdAt),
+                                  style: const TextStyle(
+                                    color: Color(0xFF048C7C),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ],
     );
   }
 }

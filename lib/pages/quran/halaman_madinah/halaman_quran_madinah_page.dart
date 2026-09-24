@@ -51,6 +51,16 @@ class _HalamanQuranMadinahPageState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final queryPage = int.tryParse(GoRouterState.of(context).uri.queryParameters['page'] ?? '');
+    if (queryPage != null && queryPage > 0) {
+      lastReadHal = queryPage;
+      halSaatIni = queryPage.toString();
+    }
+  }
+
+  @override
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setPreferredOrientations([
@@ -728,6 +738,87 @@ class _HalamanQuranMadinahPageState
                             ),
                           ))
                     ],
+                  )
+                : null,
+            bottomNavigationBar: _isNavbarVisible
+                ? Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF048C7C),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, -2),
+                        ),
+                      ],
+                    ),
+                    child: SafeArea(
+                      top: false,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.arrow_back_ios_rounded,
+                                color: Colors.white, size: 18),
+                            tooltip: "Halaman Sebelumnya",
+                            onPressed: () {
+                              final current = int.tryParse(halSaatIni) ?? 1;
+                              if (current > 1) {
+                                _goToHal((current - 1).toString(), listSurah);
+                              }
+                            },
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    activeTrackColor: Colors.white,
+                                    inactiveTrackColor: Colors.white30,
+                                    thumbColor: Colors.white,
+                                    overlayColor: Colors.white24,
+                                    thumbShape: const RoundSliderThumbShape(
+                                        enabledThumbRadius: 6),
+                                    trackHeight: 3,
+                                  ),
+                                  child: Slider(
+                                    value: (int.tryParse(halSaatIni) ?? 1)
+                                        .toDouble()
+                                        .clamp(1.0, 604.0),
+                                    min: 1.0,
+                                    max: 604.0,
+                                    onChanged: (val) {
+                                      final target = val.round().toString();
+                                      _goToHal(target, listSurah);
+                                    },
+                                  ),
+                                ),
+                                Text(
+                                  "Halaman $halSaatIni dari 604",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.arrow_forward_ios_rounded,
+                                color: Colors.white, size: 18),
+                            tooltip: "Halaman Berikutnya",
+                            onPressed: () {
+                              final current = int.tryParse(halSaatIni) ?? 1;
+                              if (current < 604) {
+                                _goToHal((current + 1).toString(), listSurah);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   )
                 : null));
   }

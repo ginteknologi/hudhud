@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,167 +16,191 @@ class RamadhanMenuWidget extends ConsumerWidget {
     final subuhStr = jadwal?.subuh ?? '--:--';
     final maghribStr = jadwal?.maghrib ?? '--:--';
 
-    return Row(
-      children: [
-        _buildTanggal(context),
-        _buildImsak(context, subuhStr),
-        _buildBuka(context, maghribStr),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: const Color(0xFFE2EBE8),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF048C7C).withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Row(
+        children: [
+          _buildTanggal(context),
+          const SizedBox(width: 8),
+          _buildImsak(context, subuhStr),
+          const SizedBox(width: 8),
+          _buildBuka(context, maghribStr),
+        ],
+      ),
     );
   }
 
   Widget _buildImsak(BuildContext context, String time) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Expanded(
-      child: Row(
-        children: [
-          Expanded(
-            child: SvgPicture.asset('assets/icons/imsak.svg'),
-          ),
-          Expanded(
-            child: SizedBox(
-              height: screenHeight / 15,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAF9),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE8EFEA)),
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              'assets/icons/imsak.svg',
+              height: 28,
+              width: 28,
+            ),
+            const SizedBox(width: 6),
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AutoSizeText(
+                  Text(
                     'Imsak',
                     maxLines: 1,
-                    presetFontSizes: [screenWidth / 35],
                     style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      color: Colors.black,
+                      color: Colors.black54,
+                      fontSize: 10,
                     ),
                   ),
-                  AutoSizeText(
+                  Text(
                     time,
                     maxLines: 1,
-                    presetFontSizes: [screenWidth / 30],
                     style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF048C7C),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildBuka(BuildContext context, String time) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Expanded(
-      child: Row(
-        children: [
-          Expanded(
-            child: SvgPicture.asset('assets/icons/buka.svg'),
-          ),
-          Expanded(
-            child: SizedBox(
-              height: screenHeight / 15,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAF9),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE8EFEA)),
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              'assets/icons/buka.svg',
+              height: 28,
+              width: 28,
+            ),
+            const SizedBox(width: 6),
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AutoSizeText(
+                  Text(
                     'Buka',
                     maxLines: 1,
-                    presetFontSizes: [screenWidth / 35],
                     style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      color: Colors.black,
+                      color: Colors.black54,
+                      fontSize: 10,
                     ),
                   ),
-                  AutoSizeText(
+                  Text(
                     time,
                     maxLines: 1,
-                    presetFontSizes: [screenWidth / 30],
                     style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF048C7C),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTanggal(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     final hijri = HijriCalendar.now();
 
     return Expanded(
       child: Container(
-        height: screenHeight / 15,
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth / 50,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(screenWidth / 50)),
-          border: Border.all(
-            width: 0.5,
-            color: const Color(0xFFD9BD63),
-          ),
+          borderRadius: BorderRadius.circular(12),
           gradient: const LinearGradient(
-            begin: Alignment(0, 1),
-            end: Alignment(-1, 0),
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              Color.fromRGBO(177, 116, 62, 1),
-              Color.fromRGBO(215, 163, 92, 1)
+              Color(0xFF0D6357),
+              Color(0xFF1E8D7F),
             ],
           ),
         ),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: AutoSizeText(
-                  '${hijri.hDay}',
-                  textAlign: TextAlign.center,
-                  presetFontSizes: [screenWidth / 15],
-                  style: const TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '${hijri.hDay}',
+              style: const TextStyle(
+                color: Color(0xFFF9D576),
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(width: screenWidth / 50),
-              Expanded(
-                flex: 2,
-                child: AutoSizeText(
-                  '${hijri.longMonthName} ${hijri.hYear} H',
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  presetFontSizes: [screenWidth / 35],
-                  style: TextStyle(
-                    color: const Color.fromRGBO(255, 255, 255, 1),
-                    fontFamily: GoogleFonts.poppins().fontFamily,
-                    fontWeight: FontWeight.normal,
-                    height: 1.3,
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    hijri.longMonthName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
+                  Text(
+                    '${hijri.hYear} H',
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 9,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

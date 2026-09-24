@@ -9,7 +9,7 @@ ENVIRONMENT = "production"
 [[d1_databases]]
 binding = "DB"
 database_name = "masjid-db"
-database_id = "your-d1-database-id-here"
+database_id = "9fb2b051-2093-46af-b63a-b50580a28e2d"
 
 # Cloudflare R2 Storage binding
 [[r2_buckets]]

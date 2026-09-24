@@ -1,4 +1,5 @@
--- Cloudflare D1 SQLite Schema for Masjid An-Ni'mah (Marbot)
+-- Cloudflare D1 SQLite Schema for Masjid An-Ni'mah (Marbot Backend)
+-- Comprehensive schema for full mobile API compatibility
 
 -- 1. Users & Auth
 CREATE TABLE IF NOT EXISTS users (
@@ -87,36 +88,74 @@ CREATE TABLE IF NOT EXISTS dzikir (
     waktu TEXT DEFAULT 'solat' -- pagi, petang, solat
 );
 
--- 6. Hadits
-CREATE TABLE IF NOT EXISTS hadits_bab (
+-- 6. Hadits (9 Imam & Arbain)
+CREATE TABLE IF NOT EXISTS had_imam (
+    imamId INTEGER PRIMARY KEY,
+    imamSorting INTEGER DEFAULT 0,
+    hadits INTEGER DEFAULT 0,
+    longNama TEXT NOT NULL,
+    namaTabel TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS hadits_arbain (
+    NoHdt INTEGER PRIMARY KEY,
+    ID_Bab INTEGER,
+    ID_Kitab INTEGER DEFAULT 1,
+    Kitab_Indonesia TEXT DEFAULT 'Arba''in An-Nawawiyah',
+    Isi_Arab TEXT NOT NULL,
+    Isi_Indonesia TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS hadits_kitab (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nama TEXT NOT NULL,
+    namaTabel TEXT NOT NULL,
+    ID_Kitab INTEGER NOT NULL,
+    Kitab_Indonesia TEXT NOT NULL,
+    Kitab_Arab TEXT,
     total_hadits INTEGER DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS hadits_detail (
+CREATE TABLE IF NOT EXISTS hadits_bab (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    bab_id INTEGER NOT NULL,
-    nomor INTEGER NOT NULL,
-    judul TEXT NOT NULL,
-    arab TEXT NOT NULL,
-    arti TEXT NOT NULL,
-    FOREIGN KEY(bab_id) REFERENCES hadits_bab(id) ON DELETE CASCADE
+    namaTabel TEXT NOT NULL,
+    ID_Kitab INTEGER NOT NULL,
+    ID_Bab INTEGER NOT NULL,
+    Bab_Indonesia TEXT NOT NULL,
+    Bab_Arab TEXT
 );
 
--- 7. Artikel & Berita
+CREATE TABLE IF NOT EXISTS hadits_konten (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    namaTabel TEXT NOT NULL,
+    NoHdt INTEGER NOT NULL,
+    ID_Kitab INTEGER,
+    ID_Bab INTEGER,
+    Isi_Arab TEXT NOT NULL,
+    Isi_Indonesia TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_hadits_konten ON hadits_konten(namaTabel, ID_Kitab, ID_Bab);
+
+-- 7. Kategori & Artikel Berita
+CREATE TABLE IF NOT EXISTS artikel_kategori (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE
+);
+
 CREATE TABLE IF NOT EXISTS artikel (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    kategori_id INTEGER,
     judul TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
     konten TEXT NOT NULL,
     thumbnail TEXT,
-    penulis TEXT DEFAULT 'DKM An-Ni’mah',
+    penulis TEXT DEFAULT 'DKM An-Ni''mah',
     dibaca INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(kategori_id) REFERENCES artikel_kategori(id) ON DELETE SET NULL
 );
 
--- 8. Jadwal Kajian & Video
+-- 8. Jadwal Kajian & Video Streaming
 CREATE TABLE IF NOT EXISTS kajian (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     judul TEXT NOT NULL,
@@ -129,7 +168,7 @@ CREATE TABLE IF NOT EXISTS kajian (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 9. Sedekah & Infaq (Fintech)
+-- 9. Sedekah & Transaksi Donasi
 CREATE TABLE IF NOT EXISTS campaign_sedekah (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     judul TEXT NOT NULL,
@@ -140,6 +179,14 @@ CREATE TABLE IF NOT EXISTS campaign_sedekah (
     status TEXT DEFAULT 'aktif', -- 'aktif', 'selesai'
     end_date DATE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS penyalur_campaign (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama TEXT NOT NULL,
+    deskripsi TEXT,
+    logo TEXT,
+    kontak TEXT
 );
 
 CREATE TABLE IF NOT EXISTS transaksi_sedekah (
@@ -155,6 +202,8 @@ CREATE TABLE IF NOT EXISTS transaksi_sedekah (
     metode_pembayaran TEXT NOT NULL,
     status TEXT DEFAULT 'pending', -- 'pending', 'paid', 'expired', 'failed'
     payment_url TEXT,
+    va_number TEXT,
+    qr_string TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(campaign_id) REFERENCES campaign_sedekah(id) ON DELETE SET NULL
 );
@@ -182,7 +231,7 @@ CREATE TABLE IF NOT EXISTS booking_ruangan (
     FOREIGN KEY(ruangan_id) REFERENCES ruangan(id) ON DELETE CASCADE
 );
 
--- 11. DKM & Notifikasi
+-- 11. DKM, Sosial Media & Komunikasi
 CREATE TABLE IF NOT EXISTS dkm (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nama TEXT NOT NULL,
@@ -191,10 +240,36 @@ CREATE TABLE IF NOT EXISTS dkm (
     urutan INTEGER DEFAULT 0
 );
 
+CREATE TABLE IF NOT EXISTS sosmed (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama TEXT NOT NULL,
+    type TEXT NOT NULL, -- youtube, instagram, facebook, whatsapp, website
+    icon TEXT,
+    link TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS notifikasi (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     judul TEXT NOT NULL,
     pesan TEXT NOT NULL,
     tipe TEXT DEFAULT 'info',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS kartu_ucapan (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    judul TEXT NOT NULL,
+    ucapan TEXT NOT NULL,
+    background_image TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS event (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    judul TEXT NOT NULL,
+    deskripsi TEXT,
+    tanggal_event DATETIME NOT NULL,
+    banner TEXT,
+    lokasi TEXT DEFAULT 'Masjid An-Ni''mah Cibubur',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

@@ -139,15 +139,20 @@ class ButtonOutline extends StatelessWidget {
                         ),
                       if (showIcon == 'left' || showIcon == 'both')
                         Container(width: textGap),
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: inverted ? bgColor : fgColor,
-                              fontSize: size,
-                              letterSpacing: letterSpacing,
-                              height: textHeight,
-                              fontWeight: fontWeight,
-                            ),
+                      Flexible(
+                        child: Text(
+                          title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          textAlign: textAlign,
+                          style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                color: inverted ? bgColor : fgColor,
+                                fontSize: size,
+                                letterSpacing: letterSpacing,
+                                height: textHeight,
+                                fontWeight: fontWeight,
+                              ),
+                        ),
                       ),
                       if (showIcon == 'right' || showIcon == 'both')
                         Container(width: textGap),

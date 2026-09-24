@@ -1,30 +1,30 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:masjid_app/main.dart';
+import 'package:masjid_app/providers/quran_ui_settings_provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  group('QuranUiSettings Unit Tests', () {
+    test('Default settings are correct', () {
+      final settings = QuranUiSettings();
+      expect(settings.arabicFontSize, 24.0);
+      expect(settings.translationFontSize, 13.5);
+      expect(settings.showLatin, true);
+      expect(settings.showTranslation, true);
+      expect(settings.selectedQori, 'ar.alafasy');
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('copyWith updates fields properly', () {
+      final settings = QuranUiSettings();
+      final updated = settings.copyWith(
+        arabicFontSize: 32.0,
+        showLatin: false,
+        selectedQori: 'ar.sudais',
+      );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(updated.arabicFontSize, 32.0);
+      expect(updated.translationFontSize, 13.5);
+      expect(updated.showLatin, false);
+      expect(updated.showTranslation, true);
+      expect(updated.selectedQori, 'ar.sudais');
+    });
   });
 }
