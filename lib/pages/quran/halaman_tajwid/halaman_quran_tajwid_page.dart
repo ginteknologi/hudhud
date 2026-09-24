@@ -227,6 +227,8 @@ class _HalamanQuranTajwidPageState
 
   Widget _buildSelectedAyahBar(BuildContext context) {
     final ayah = _selectedAyah!;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final isBottom = _isAyahAtBottom(ayah);
 
     // Ambil data detail ayat langsung dari endpoint /quran/surah/:id (format list AyatModel)
@@ -263,205 +265,237 @@ class _HalamanQuranTajwidPageState
             width: 1.2,
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Baris Judul & Badge
-            Row(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF048C7C).withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.menu_book_rounded,
-                        size: 14,
-                        color: Color(0xFF048C7C),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'QS. $surahTitle : Ayat ${ayah.ayahNumber}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: Color(0xFF048C7C),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    'Hal. $halSaatIni',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade700,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      _selectedAyah = null;
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.close_rounded,
-                      size: 18,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Teks Arab Ayat & Terjemahan dari Endpoint
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: isLoadingAyah
-                  ? const SizedBox(
-                      height: 48,
-                      child: Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Color(0xFF048C7C),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Baris Judul & Badge
+              Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          textArab.isNotEmpty
-                              ? textArab
-                              : (surahAsync.hasError
-                                  ? 'Gagal memuat teks ayat'
-                                  : 'Teks ayat tidak tersedia'),
-                          textAlign: TextAlign.right,
-                          textDirection: TextDirection.rtl,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E293B),
-                            height: 1.9,
-                          ),
-                        ),
-                        if (translation.isNotEmpty) ...[
-                          const SizedBox(height: 6),
-                          Text(
-                            translation,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                              fontStyle: FontStyle.italic,
-                              height: 1.3,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF048C7C).withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.menu_book_rounded,
+                                  size: 14,
+                                  color: Color(0xFF048C7C),
+                                ),
+                                const SizedBox(width: 5),
+                                Flexible(
+                                  child: Text(
+                                    'QS. $surahTitle : ${ayah.ayahNumber}',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      color: Color(0xFF048C7C),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            'Hal. $halSaatIni',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-            ),
-            const SizedBox(height: 12),
-            // Tombol Aksi
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF048C7C),
-                      side: BorderSide(
-                        color: const Color(0xFF048C7C).withOpacity(0.4),
+                  ),
+                  const SizedBox(width: 8),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedAyah = null;
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.12),
+                        shape: BoxShape.circle,
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      child: const Icon(
+                        Icons.close_rounded,
+                        size: 18,
+                        color: Colors.black54,
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
-                    onPressed: () {
-                      final textToCopy =
-                          textArab.isNotEmpty ? textArab : ayah.arabicText;
-                      if (textToCopy.isEmpty) return;
-                      Clipboard.setData(ClipboardData(text: textToCopy));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              'Ayat ${ayah.ayahNumber} disalin ke clipboard'),
-                          duration: const Duration(seconds: 2),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Teks Arab Ayat & Terjemahan dari Endpoint
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: isLoadingAyah
+                    ? const SizedBox(
+                        height: 48,
+                        child: Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xFF048C7C),
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                    icon: const Icon(Icons.copy_rounded, size: 16),
-                    label: const Text(
-                      'Salin',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF048C7C),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            textArab.isNotEmpty
+                                ? textArab
+                                : (surahAsync.hasError
+                                    ? 'Gagal memuat teks ayat'
+                                    : 'Teks ayat tidak tersedia'),
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                            maxLines: isLandscape ? 6 : 4,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E293B),
+                              height: 1.8,
+                            ),
+                          ),
+                          if (translation.isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              translation,
+                              maxLines: isLandscape ? 4 : 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade600,
+                                fontStyle: FontStyle.italic,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                    ),
-                    onPressed: () {
-                      _bookmarkAyah(ayah, surahTitle: surahTitle);
-                    },
-                    icon: const Icon(Icons.bookmark_add_rounded, size: 16),
-                    label: const Text(
-                      'Tandai Bacaan',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              // Tombol Aksi
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFF048C7C),
+                        side: BorderSide(
+                          color: const Color(0xFF048C7C).withOpacity(0.4),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 9),
+                      ),
+                      onPressed: () {
+                        final textToCopy =
+                            textArab.isNotEmpty ? textArab : ayah.arabicText;
+                        if (textToCopy.isEmpty) return;
+                        Clipboard.setData(ClipboardData(text: textToCopy));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'Ayat ${ayah.ayahNumber} disalin ke clipboard'),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.copy_rounded, size: 15),
+                      label: const Text(
+                        'Salin',
+                        style: TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF048C7C),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 9),
+                      ),
+                      onPressed: () {
+                        _bookmarkAyah(ayah, surahTitle: surahTitle);
+                      },
+                      icon: const Icon(Icons.bookmark_add_rounded, size: 15),
+                      label: const Text(
+                        'Tandai',
+                        style: TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+
+    if (isLandscape) {
+      final cardWidth =
+          (MediaQuery.of(context).size.width / 3).clamp(280.0, 440.0);
+      return Positioned(
+        right: 16,
+        top: 16,
+        bottom: 16,
+        width: cardWidth,
+        child: FadeInRight(
+          duration: const Duration(milliseconds: 250),
+          child: card,
+        ),
+      );
+    }
 
     return Positioned(
       left: 16,
@@ -921,6 +955,7 @@ class _HalamanQuranTajwidPageState
                         child: const Icon(Icons.arrow_back_rounded)),
                     backgroundColor: const Color(0xFF048C7C),
                     elevation: 0,
+                    titleSpacing: 0,
                     title: Align(
                       alignment: Alignment.centerLeft,
                       child: Material(
@@ -929,35 +964,41 @@ class _HalamanQuranTajwidPageState
                           splashColor: Colors.white30,
                           onTap: () => {showModal(listSurah, context)},
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Column(
+                              Flexible(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(surahSaatIni,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.fontSize,
-                                            letterSpacing: 0.5,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                    Text("Halaman $halSaatIni",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 10,
-                                            letterSpacing: 0.5,
-                                            color: Colors.white)),
-                                  ]),
-                              const SizedBox(
-                                width: 5,
+                                    Text(
+                                      surahSaatIni,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        letterSpacing: 0.5,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Halaman $halSaatIni",
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        letterSpacing: 0.5,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              const SizedBox(width: 4),
                               const Icon(
                                 Icons.expand_more_rounded,
                                 color: Colors.white,
+                                size: 20,
                               ),
                             ],
                           ),

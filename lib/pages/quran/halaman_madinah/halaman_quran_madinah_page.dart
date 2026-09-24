@@ -633,6 +633,7 @@ class _HalamanQuranMadinahPageState
                         child: const Icon(Icons.arrow_back_rounded)),
                     backgroundColor: Color(0xFF048C7C),
                     elevation: 0,
+                    titleSpacing: 0,
                     title: Align(
                       alignment: Alignment.centerLeft,
                       child: Material(
@@ -641,35 +642,41 @@ class _HalamanQuranMadinahPageState
                           splashColor: Colors.white30,
                           onTap: () => {showModal(listSurah, context)},
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Column(
+                              Flexible(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(surahSaatIni,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.fontSize,
-                                            letterSpacing: 0.5,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                    Text("Halaman $halSaatIni",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            letterSpacing: 0.5,
-                                            color: Colors.white)),
-                                  ]),
-                              SizedBox(
-                                width: 5,
+                                    Text(
+                                      surahSaatIni,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        letterSpacing: 0.5,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Halaman $halSaatIni",
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        letterSpacing: 0.5,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Icon(
+                              const SizedBox(width: 4),
+                              const Icon(
                                 Icons.expand_more_rounded,
                                 color: Colors.white,
+                                size: 20,
                               ),
                             ],
                           ),
