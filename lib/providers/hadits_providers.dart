@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:masjid_app/core/network/api_endpoints.dart';
 import 'package:masjid_app/models/hadist_data.dart';
 import 'package:masjid_app/providers/api_providers.dart';
+import 'package:masjid_app/storage/hadits_bookmark_storage.dart';
 
 // Provider untuk daftar kitab hadits (GET /hadits)
 // Map mentah dipakai apa adanya: UI butuh key longNama, hadits, namaTabel.
@@ -151,4 +152,40 @@ final haditsContentProvider =
   } catch (e) {
     return [];
   }
+});
+
+// Notifier & Provider untuk Terakhir Dibaca / Bookmark Hadits (dengan kemampuan toggle / unchecklist)
+class HaditsBookmarkNotifier extends StateNotifier<HaditsBookmarkData?> {
+  HaditsBookmarkNotifier() : super(HaditsBookmarkStorage.getBookmark());
+
+  void saveBookmark(HaditsBookmarkData data) {
+    HaditsBookmarkStorage.saveBookmark(data);
+    state = data;
+  }
+
+  void clearBookmark() {
+    HaditsBookmarkStorage.clear();
+    state = null;
+  }
+
+  /// Toggle bookmark: jika hadits yang sama sudah ditandai, maka unchecklist / clear.
+  /// Mengembalikan true jika ditandai, false jika dihapus / di-unchecklist.
+  bool toggleBookmark(HaditsBookmarkData data) {
+    if (state != null && state!.namaTabel == data.namaTabel && state!.noHdt == data.noHdt) {
+      clearBookmark();
+      return false;
+    } else {
+      saveBookmark(data);
+      return true;
+    }
+  }
+
+  void refresh() {
+    state = HaditsBookmarkStorage.getBookmark();
+  }
+}
+
+final haditsBookmarkProvider =
+    StateNotifierProvider<HaditsBookmarkNotifier, HaditsBookmarkData?>((ref) {
+  return HaditsBookmarkNotifier();
 });
