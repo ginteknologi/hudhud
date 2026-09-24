@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
@@ -41,6 +42,7 @@ class _HalamanQuranMadinahPageState
   int lastReadHal = 1;
   String _search = '';
   Map<String, dynamic>? _currentPage;
+  bool _isNavbarVisible = true;
 
   @override
   void initState() {
@@ -50,9 +52,24 @@ class _HalamanQuranMadinahPageState
 
   @override
   void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     searchController.dispose();
     inputFilter.dispose();
     super.dispose();
+  }
+
+  void _toggleNavbar() {
+    setState(() {
+      _isNavbarVisible = !_isNavbarVisible;
+    });
+    if (_isNavbarVisible) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    }
   }
 
   /// Pengganti `HalamanQuranController.onInit()`: baca posisi terakhir baca.
@@ -143,6 +160,20 @@ class _HalamanQuranMadinahPageState
     _setPageFromItem(matches.first);
   }
 
+  void _toggleOrientation() {
+    final orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    }
+  }
+
   SafeArea layout(List<Map<String, dynamic>> listSurah, bool isLoadingList,
       BuildContext context) {
     return SafeArea(
@@ -158,8 +189,9 @@ class _HalamanQuranMadinahPageState
                         Flexible(
                             child: EasyImageViewPager(
                                 onTap: (int index) {
-                                  showPopup(listSurah, context);
+                                  _toggleNavbar();
                                 },
+                                onDoubleTap: _toggleOrientation,
                                 idxInitial: toSurat > 0 ? toSurat : lastReadHal,
                                 lastReadKey: _lastReadKey,
                                 onPageChanged: (int index) {
@@ -571,6 +603,10 @@ class _HalamanQuranMadinahPageState
     return PopScope(
         canPop: false,
         onPopInvokedWithResult: (bool didPop, dynamic result) {
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitUp,
+          ]);
           if (didPop) {
             return; // kalau sudah di-pop, tidak perlu lakukan apa-apa lagi
           }
@@ -582,76 +618,110 @@ class _HalamanQuranMadinahPageState
             extendBodyBehindAppBar: false,
             resizeToAvoidBottomInset: false,
             body: layout(listSurah, isLoadingList, context),
-            appBar: AppBar(
-              iconTheme: IconThemeData(color: Colors.white),
-              leading: GestureDetector(
-                  onTap: () {
-                    context.pop('refresh');
-                  },
-                  child: const Icon(Icons.arrow_back_rounded)),
-              backgroundColor: Color(0xFF048C7C),
-              elevation: 0,
-              title: Align(
-                alignment: Alignment.centerLeft,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    splashColor: Colors.white30,
-                    onTap: () => {showModal(listSurah, context)},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
+            appBar: _isNavbarVisible
+                ? AppBar(
+                    iconTheme: IconThemeData(color: Colors.white),
+                    leading: GestureDetector(
+                        onTap: () {
+                          SystemChrome.setEnabledSystemUIMode(
+                              SystemUiMode.edgeToEdge);
+                          SystemChrome.setPreferredOrientations([
+                            DeviceOrientation.portraitUp,
+                          ]);
+                          context.pop('refresh');
+                        },
+                        child: const Icon(Icons.arrow_back_rounded)),
+                    backgroundColor: Color(0xFF048C7C),
+                    elevation: 0,
+                    title: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: Colors.white30,
+                          onTap: () => {showModal(listSurah, context)},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(surahSaatIni,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium
-                                          ?.fontSize,
-                                      letterSpacing: 0.5,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                              Text("Halaman $halSaatIni",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      letterSpacing: 0.5,
-                                      color: Colors.white)),
-                            ]),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Icon(
-                          Icons.expand_more_rounded,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              actions: [
-                Material(
-                    color: Colors.transparent,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 21),
-                      child: InkWell(
-                        onTap: () {
-                          showDialogFilter(listSurah, context);
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        splashColor: Colors.green.withValues(alpha: 0.5),
-                        child: const Icon(
-                          Icons.tune_rounded,
-                          color: Colors.white,
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(surahSaatIni,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.fontSize,
+                                            letterSpacing: 0.5,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)),
+                                    Text("Halaman $halSaatIni",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            letterSpacing: 0.5,
+                                            color: Colors.white)),
+                                  ]),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Icon(
+                                Icons.expand_more_rounded,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ))
-              ],
-            )));
+                    ),
+                    actions: [
+                      IconButton(
+                        icon: Icon(
+                          bookmarked
+                              ? Icons.bookmark_rounded
+                              : Icons.bookmark_border_rounded,
+                          color: Colors.white,
+                        ),
+                        tooltip: 'Tandai Halaman',
+                        onPressed: () {
+                          setState(() {
+                            bookmarked = !bookmarked;
+                          });
+                          final page = _currentPage;
+                          if (page != null) _saveBookmark(page);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(bookmarked
+                                  ? 'Halaman $halSaatIni ditandai'
+                                  : 'Tanda halaman $halSaatIni dihapus'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                      ),
+                      Material(
+                          color: Colors.transparent,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 12),
+                            child: InkWell(
+                              onTap: () {
+                                showDialogFilter(listSurah, context);
+                              },
+                              borderRadius: BorderRadius.circular(20),
+                              splashColor: Colors.green.withValues(alpha: 0.5),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.tune_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ))
+                    ],
+                  )
+                : null));
   }
 }

@@ -1293,6 +1293,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  quran:
+    dependency: transitive
+    description:
+      name: quran
+      sha256: afee7c882130da65ad3fe225e0f43b958029ebf8f2ddf9d99414e82d8598fcfc
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
+  quran_pages_with_ayah_detector:
+    dependency: "direct main"
+    description:
+      name: quran_pages_with_ayah_detector
+      sha256: "4e690db8478e67cff8166ae34376da86bd2ff6ecddb71aa3781824506294fde5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.2"
   record_use:
     dependency: transitive
     description:
@@ -1810,6 +1826,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
+  yaml_edit:
+    dependency: transitive
+    description:
+      name: yaml_edit
+      sha256: "07c9e63ba42519745182b88ca12264a7ba2484d8239958778dfe4d44fe760488"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.4"
 sdks:
   dart: ">=3.11.0 <4.0.0"
   flutter: ">=3.41.0"

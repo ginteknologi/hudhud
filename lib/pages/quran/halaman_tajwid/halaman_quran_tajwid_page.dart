@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
@@ -11,8 +12,12 @@ import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
 import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
+import 'package:masjid_app/models/quran_models.dart';
 import 'package:masjid_app/pages/quran/halaman_tajwid/component/image_viewer_widget.dart';
+import 'package:masjid_app/pages/quran/halaman_tajwid/model/tajwid_ayah_data.dart';
+import 'package:masjid_app/providers/quran_ayat_providers.dart';
 import 'package:masjid_app/providers/quran_page_providers.dart';
+import 'package:masjid_app/providers/quran_provider.dart';
 import 'package:masjid_app/storage/bookmarkStorage.dart';
 
 class HalamanQuranTajwidPage extends ConsumerStatefulWidget {
@@ -41,6 +46,8 @@ class _HalamanQuranTajwidPageState
   int lastReadHal = 1;
   String _search = '';
   Map<String, dynamic>? _currentPage;
+  AyahCoordinate? _selectedAyah;
+  bool _isNavbarVisible = true;
 
   @override
   void initState() {
@@ -50,9 +57,24 @@ class _HalamanQuranTajwidPageState
 
   @override
   void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     searchController.dispose();
     inputFilter.dispose();
     super.dispose();
+  }
+
+  void _toggleNavbar() {
+    setState(() {
+      _isNavbarVisible = !_isNavbarVisible;
+    });
+    if (_isNavbarVisible) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    }
   }
 
   /// Pengganti `HalamanQuranController.onInit()`: baca posisi terakhir baca.
@@ -85,6 +107,7 @@ class _HalamanQuranTajwidPageState
       if (!mounted) return;
       setState(() {
         _currentPage = item;
+        _selectedAyah = null;
         surahSaatIni = item['surat'].toString();
         halSaatIni = item['hal'].toString();
       });
@@ -143,6 +166,20 @@ class _HalamanQuranTajwidPageState
     _setPageFromItem(matches.first);
   }
 
+  void _toggleOrientation() {
+    final orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    }
+  }
+
   SafeArea layout(List<Map<String, dynamic>> listSurah, bool isLoadingList,
       BuildContext context) {
     return SafeArea(
@@ -152,13 +189,19 @@ class _HalamanQuranTajwidPageState
                 constraints: BoxConstraints.loose(Size.infinite),
                 child: Stack(
                   children: [
-                    GestureDetector(
-                        child: Column(
+                    Column(
                       children: [
                         Flexible(
                             child: EasyImageViewPager(
                                 onTap: (int index) {
-                                  showPopup(listSurah, context);
+                                  _toggleNavbar();
+                                },
+                                onDoubleTap: _toggleOrientation,
+                                selectedAyah: _selectedAyah,
+                                onAyahSelected: (ayah) {
+                                  setState(() {
+                                    _selectedAyah = ayah;
+                                  });
                                 },
                                 idxInitial: toSurat > 0 ? toSurat : lastReadHal,
                                 lastReadKey: _lastReadKey,
@@ -167,9 +210,287 @@ class _HalamanQuranTajwidPageState
                                 },
                                 imageProviders: listSurah)),
                       ],
-                    ))
+                    ),
+                    if (_selectedAyah != null) _buildSelectedAyahBar(context),
                   ],
                 )));
+  }
+
+  bool _isAyahAtBottom(AyahCoordinate ayah) {
+    if (ayah.boundingBox.isEmpty) return false;
+    final ymin = ayah.boundingBox[0];
+    final ymax = ayah.boundingBox[2];
+    final midY = (ymin + ymax) / 2.0;
+    // Skala 0..1000: jika posisi vertikal > 480, ayat berada di paruh bawah layar
+    return midY > 480;
+  }
+
+  Widget _buildSelectedAyahBar(BuildContext context) {
+    final ayah = _selectedAyah!;
+    final isBottom = _isAyahAtBottom(ayah);
+
+    // Ambil data detail ayat langsung dari endpoint /quran/surah/:id (format list AyatModel)
+    final surahAsync = ref.watch(surahDetailProvider(ayah.surahNumber));
+    final ayats = surahAsync.valueOrNull;
+    AyatModel? targetAyat;
+    if (ayats != null) {
+      for (final a in ayats) {
+        if (a.ayat == ayah.ayahNumber) {
+          targetAyat = a;
+          break;
+        }
+      }
+    }
+
+    final surahTitle = ayah.surahName;
+    final textArab = (targetAyat != null && targetAyat.arab.isNotEmpty)
+        ? targetAyat.arab
+        : (ayah.arabicText.isNotEmpty ? ayah.arabicText : '');
+    final translation = targetAyat?.arti ?? '';
+    final isLoadingAyah = surahAsync.isLoading && textArab.isEmpty;
+
+    final card = Material(
+      elevation: 10,
+      shadowColor: Colors.black.withOpacity(0.2),
+      borderRadius: BorderRadius.circular(18),
+      color: Colors.white,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: const Color(0xFF048C7C).withOpacity(0.2),
+            width: 1.2,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Baris Judul & Badge
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF048C7C).withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.menu_book_rounded,
+                        size: 14,
+                        color: Color(0xFF048C7C),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'QS. $surahTitle : Ayat ${ayah.ayahNumber}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Color(0xFF048C7C),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    'Hal. $halSaatIni',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _selectedAyah = null;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      size: 18,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Teks Arab Ayat & Terjemahan dari Endpoint
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: isLoadingAyah
+                  ? const SizedBox(
+                      height: 48,
+                      child: Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Color(0xFF048C7C),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          textArab.isNotEmpty
+                              ? textArab
+                              : (surahAsync.hasError
+                                  ? 'Gagal memuat teks ayat'
+                                  : 'Teks ayat tidak tersedia'),
+                          textAlign: TextAlign.right,
+                          textDirection: TextDirection.rtl,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                            height: 1.9,
+                          ),
+                        ),
+                        if (translation.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            translation,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,
+                              fontStyle: FontStyle.italic,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+            ),
+            const SizedBox(height: 12),
+            // Tombol Aksi
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF048C7C),
+                      side: BorderSide(
+                        color: const Color(0xFF048C7C).withOpacity(0.4),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    onPressed: () {
+                      final textToCopy =
+                          textArab.isNotEmpty ? textArab : ayah.arabicText;
+                      if (textToCopy.isEmpty) return;
+                      Clipboard.setData(ClipboardData(text: textToCopy));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Ayat ${ayah.ayahNumber} disalin ke clipboard'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.copy_rounded, size: 16),
+                    label: const Text(
+                      'Salin',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF048C7C),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    onPressed: () {
+                      _bookmarkAyah(ayah, surahTitle: surahTitle);
+                    },
+                    icon: const Icon(Icons.bookmark_add_rounded, size: 16),
+                    label: const Text(
+                      'Tandai Bacaan',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return Positioned(
+      left: 16,
+      right: 16,
+      top: isBottom ? 16 : null,
+      bottom: isBottom ? null : 16,
+      child: isBottom
+          ? FadeInDown(duration: const Duration(milliseconds: 250), child: card)
+          : FadeInUp(duration: const Duration(milliseconds: 250), child: card),
+    );
+  }
+
+  void _bookmarkAyah(AyahCoordinate ayah, {String? surahTitle}) {
+    final finalSurahName =
+        (surahTitle != null && surahTitle.isNotEmpty) ? surahTitle : ayah.surahName;
+    _bookmarkStorage.saveBookmark(BookmarkData(
+      namaSurat: finalSurahName,
+      surat: ayah.surahNumber,
+      ayat: ayah.ayahNumber,
+      totalAyat: 0,
+      index: int.tryParse(halSaatIni) ?? 1,
+    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            'Tandai terakhir baca: QS. $finalSurahName ayat ${ayah.ayahNumber}'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   void showPopup(List<Map<String, dynamic>> listSurah, BuildContext context) {
@@ -571,87 +892,124 @@ class _HalamanQuranTajwidPageState
     return PopScope(
         canPop: false,
         onPopInvokedWithResult: (bool didPop, dynamic result) {
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitUp,
+          ]);
           if (didPop) {
-            return; // kalau sudah di-pop, tidak perlu lakukan apa-apa lagi
+            return;
           }
-          // Logika yang dijalankan saat tombol kembali ditekan
           context.pop('refresh');
         },
         child: Scaffold(
-            backgroundColor: Color(0xFFF5F5F5),
+            backgroundColor: const Color(0xFFF5F5F5),
             extendBodyBehindAppBar: false,
             resizeToAvoidBottomInset: false,
             body: layout(listSurah, isLoadingList, context),
-            appBar: AppBar(
-              iconTheme: IconThemeData(color: Colors.white),
-              leading: GestureDetector(
-                  onTap: () {
-                    context.pop('refresh');
-                  },
-                  child: const Icon(Icons.arrow_back_rounded)),
-              backgroundColor: Color(0xFF048C7C),
-              elevation: 0,
-              title: Align(
-                alignment: Alignment.centerLeft,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    splashColor: Colors.white30,
-                    onTap: () => {showModal(listSurah, context)},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
+            appBar: _isNavbarVisible
+                ? AppBar(
+                    iconTheme: const IconThemeData(color: Colors.white),
+                    leading: GestureDetector(
+                        onTap: () {
+                          SystemChrome.setEnabledSystemUIMode(
+                              SystemUiMode.edgeToEdge);
+                          SystemChrome.setPreferredOrientations([
+                            DeviceOrientation.portraitUp,
+                          ]);
+                          context.pop('refresh');
+                        },
+                        child: const Icon(Icons.arrow_back_rounded)),
+                    backgroundColor: const Color(0xFF048C7C),
+                    elevation: 0,
+                    title: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: Colors.white30,
+                          onTap: () => {showModal(listSurah, context)},
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(surahSaatIni,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium
-                                          ?.fontSize,
-                                      letterSpacing: 0.5,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                              Text("Halaman $halSaatIni",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      letterSpacing: 0.5,
-                                      color: Colors.white)),
-                            ]),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Icon(
-                          Icons.expand_more_rounded,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              actions: [
-                Material(
-                    color: Colors.transparent,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 21),
-                      child: InkWell(
-                        onTap: () {
-                          showDialogFilter(listSurah, context);
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        splashColor: Colors.green.withValues(alpha: 0.5),
-                        child: const Icon(
-                          Icons.tune_rounded,
-                          color: Colors.white,
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(surahSaatIni,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.fontSize,
+                                            letterSpacing: 0.5,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)),
+                                    Text("Halaman $halSaatIni",
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontSize: 10,
+                                            letterSpacing: 0.5,
+                                            color: Colors.white)),
+                                  ]),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Icon(
+                                Icons.expand_more_rounded,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ))
-              ],
-            )));
+                    ),
+                    actions: [
+                      IconButton(
+                        icon: Icon(
+                          bookmarked
+                              ? Icons.bookmark_rounded
+                              : Icons.bookmark_border_rounded,
+                          color: Colors.white,
+                        ),
+                        tooltip: 'Tandai Halaman',
+                        onPressed: () {
+                          setState(() {
+                            bookmarked = !bookmarked;
+                          });
+                          final page = _currentPage;
+                          if (page != null) _saveBookmark(page);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(bookmarked
+                                  ? 'Halaman $halSaatIni ditandai'
+                                  : 'Tanda halaman $halSaatIni dihapus'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                      ),
+                      Material(
+                          color: Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: InkWell(
+                              onTap: () {
+                                showDialogFilter(listSurah, context);
+                              },
+                              borderRadius: BorderRadius.circular(20),
+                              splashColor: Colors.green.withValues(alpha: 0.5),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.tune_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ))
+                    ],
+                  )
+                : null));
   }
 }

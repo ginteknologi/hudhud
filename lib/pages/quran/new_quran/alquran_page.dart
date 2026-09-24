@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,6 +31,9 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     _loadBookmarks();
   }
 
@@ -44,6 +48,9 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
   // each tile just pushes its route — same as the pre-migration Get.toNamed(route).
   Future<void> _openReader(String route, {bool bookmarks = false}) async {
     await context.push(bookmarks ? '$route?bookmarks=true' : route);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     if (mounted) {
       setState(_loadBookmarks);
     }
@@ -211,7 +218,6 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
               // Header Al-Quran
               Container(
                 width: screenWidth,
-                height: screenHeight / 3.2,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
@@ -223,36 +229,35 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
                     colors: [Color(0xFF137065), Color(0xFF4CB4A7)],
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Yuk mulai tilawah Quran !',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'Bacalah kalian Al-Quran, karena ia akan datang pada hari kiamat kelak sebagai pemberi syafa’at.',
-                                style: TextStyle(color: Colors.white70, fontSize: 12),
-                              ),
-                            ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Yuk mulai tilawah Quran !',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                           ),
-                        ),
-                        Image.asset(
-                          'assets/img/quran_banner.png',
-                          width: screenWidth / 3.2,
-                        ),
-                      ],
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Bacalah kalian Al-Quran, karena ia akan datang pada hari kiamat kelak sebagai pemberi syafa’at.',
+                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Image.asset(
+                      'assets/img/quran_banner.png',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.contain,
                     ),
                   ],
                 ),

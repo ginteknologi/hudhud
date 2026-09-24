@@ -18,6 +18,7 @@ class EasyImageViewPager extends StatefulWidget {
   /// langsung dari viewer.
   final void Function(int index) onPageChanged;
   final Function(int) onTap;
+  final VoidCallback? onDoubleTap;
 
   /// Create new instance, using the [imageProviders] to populate the [PageView]
   const EasyImageViewPager(
@@ -26,7 +27,8 @@ class EasyImageViewPager extends StatefulWidget {
       required this.idxInitial,
       required this.lastReadKey,
       required this.onPageChanged,
-      required this.onTap});
+      required this.onTap,
+      this.onDoubleTap});
 
   @override
   EasyImageViewPagerState createState() => EasyImageViewPagerState();
@@ -83,9 +85,14 @@ class EasyImageViewPagerState extends State<EasyImageViewPager> {
       controller: _pageController,
       itemBuilder: (context, index) {
         final image = widget.imageProviders[index]['file'] as String;
-        return EasyImageView(
-          imageSource: "server",
-          imageProvider: image,
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => widget.onTap(index),
+          onDoubleTap: widget.onDoubleTap,
+          child: EasyImageView(
+            imageSource: "server",
+            imageProvider: image,
+          ),
         );
       },
     );
@@ -129,88 +136,120 @@ class EasyImageViewState extends State<EasyImageView> {
 
   @override
   void dispose() {
-    final zoomFactor = 30.0;
-    final xTranslate = 100.0;
-    final yTranslate = 100.0;
-    _transformationController.value.setEntry(0, 0, zoomFactor);
-    _transformationController.value.setEntry(1, 1, zoomFactor);
-    _transformationController.value.setEntry(2, 2, zoomFactor);
-    _transformationController.value.setEntry(0, 3, -xTranslate);
-    _transformationController.value.setEntry(1, 3, -yTranslate);
     _transformationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-    return SizedBox(
-        width: size.width,
-        height: !isPortrait ? double.infinity : size.height,
-        child: InteractiveViewer(
-          constrained: false,
-          transformationController: _transformationController,
-          minScale: widget.minScale,
-          maxScale: widget.maxScale,
-          child: Stack(
-            children: [
-              widget.imageSource == "server"
-                  ? CachedNetworkImage(
-                      imageUrl: widget.imageProvider,
-                      width: size.width,
-                      height:
-                          isPortrait ? size.height - (size.height * 0.1) : null,
-                      fit: BoxFit.fitWidth,
-                      placeholder: (BuildContext context, String url) {
-                        // Penempatan custom placeholder
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [CircularProgressIndicator()],
-                        );
-                      },
-                      errorWidget: (context, url, error) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.error_outline,
-                                  color: Colors.red,
-                                  size: 40,
-                                ),
-                                Text(
-                                  "image tidak bisa dibaca",
-                                  style: TextStyle(fontSize: 11),
-                                )
-                              ],
-                            ),
-                            Text("Ada masalah pada jaringan anda")
-                          ],
-                        );
-                      },
-                    )
-                  : Image.asset(
-                      widget.imageProvider,
-                      width: size.width,
-                      height:
-                          isPortrait ? size.height - (size.height * 0.1) : null,
-                      fit: BoxFit.fitWidth,
-                    )
-            ],
-          ),
-          onInteractionEnd: (scaleEndDetails) {
-            double scale = _transformationController.value.getMaxScaleOnAxis();
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
-            if (widget.onScaleChanged != null) {
-              widget.onScaleChanged!(scale);
-            }
-          },
-        ));
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: InteractiveViewer(
+            transformationController: _transformationController,
+            minScale: widget.minScale,
+            maxScale: widget.maxScale,
+            onInteractionEnd: (scaleEndDetails) {
+              double scale = _transformationController.value.getMaxScaleOnAxis();
+              if (widget.onScaleChanged != null) {
+                widget.onScaleChanged!(scale);
+              }
+            },
+            child: isLandscape
+                ? SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: SizedBox(
+                      width: constraints.maxWidth,
+                      child: widget.imageSource == "server"
+                          ? CachedNetworkImage(
+                              imageUrl: widget.imageProvider,
+                              width: constraints.maxWidth,
+                              fit: BoxFit.fitWidth,
+                              placeholder: (BuildContext context, String url) {
+                                return const SizedBox(
+                                  height: 300,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
+                              errorWidget: (context, url, error) {
+                                return const SizedBox(
+                                  height: 200,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.error_outline,
+                                            color: Colors.red, size: 40),
+                                        SizedBox(height: 8),
+                                        Text("Gambar tidak bisa dibaca",
+                                            style: TextStyle(fontSize: 11)),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : Image.asset(
+                              widget.imageProvider,
+                              width: constraints.maxWidth,
+                              fit: BoxFit.fitWidth,
+                            ),
+                    ),
+                  )
+                : SizedBox(
+                    width: constraints.maxWidth,
+                    height: constraints.maxHeight,
+                    child: widget.imageSource == "server"
+                        ? CachedNetworkImage(
+                            imageUrl: widget.imageProvider,
+                            width: constraints.maxWidth,
+                            height: constraints.maxHeight,
+                            fit: BoxFit.contain,
+                            placeholder: (BuildContext context, String url) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                            errorWidget: (context, url, error) {
+                              return const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red,
+                                    size: 40,
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    "Gambar tidak bisa dibaca",
+                                    style: TextStyle(fontSize: 11),
+                                  ),
+                                  Text(
+                                    "Ada masalah pada jaringan Anda",
+                                    style: TextStyle(
+                                        fontSize: 11, color: Colors.grey),
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        : Image.asset(
+                            widget.imageProvider,
+                            width: constraints.maxWidth,
+                            height: constraints.maxHeight,
+                            fit: BoxFit.contain,
+                          ),
+                  ),
+          ),
+        );
+      },
+    );
   }
 }

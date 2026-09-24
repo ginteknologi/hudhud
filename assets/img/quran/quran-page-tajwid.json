@@ -3,43 +3,613 @@
     "id": 1,
     "surat": "Al-Fatihah",
     "hal": 1,
-    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/001.webp"
+    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/001.webp",
+    "ayahs": [
+      {
+        "surah": 1,
+        "ayah": 1,
+        "bounding_box": [288, 237, 334, 752],
+        "marker_box": [290, 239, 325, 290],
+        "highlight_boxes": [
+          [288, 237, 334, 752]
+        ]
+      },
+      {
+        "surah": 1,
+        "ayah": 2,
+        "bounding_box": [350, 329, 399, 804],
+        "marker_box": [353, 329, 390, 379],
+        "highlight_boxes": [
+          [350, 329, 399, 804]
+        ]
+      },
+      {
+        "surah": 1,
+        "ayah": 3,
+        "bounding_box": [356, 189, 458, 800],
+        "marker_box": [417, 571, 454, 622],
+        "highlight_boxes": [
+          [350, 189, 400, 335],
+          [408, 565, 460, 804]
+        ]
+      },
+      {
+        "surah": 1,
+        "ayah": 4,
+        "bounding_box": [409, 196, 465, 563],
+        "marker_box": [417, 199, 453, 250],
+        "highlight_boxes": [
+          [409, 196, 465, 563]
+        ]
+      },
+      {
+        "surah": 1,
+        "ayah": 5,
+        "bounding_box": [474, 197, 526, 808],
+        "marker_box": [482, 199, 518, 250],
+        "highlight_boxes": [
+          [474, 197, 526, 808]
+        ]
+      },
+      {
+        "surah": 1,
+        "ayah": 6,
+        "bounding_box": [541, 310, 592, 809],
+        "marker_box": [544, 311, 581, 361],
+        "highlight_boxes": [
+          [541, 310, 592, 809]
+        ]
+      },
+      {
+        "surah": 1,
+        "ayah": 7,
+        "bounding_box": [542, 189, 712, 804],
+        "marker_box": [667, 276, 703, 327],
+        "highlight_boxes": [
+          [541, 189, 595, 315],
+          [600, 189, 655, 809],
+          [660, 276, 712, 809]
+        ]
+      }
+    ]
   },
   {
     "id": 2,
     "surat": "Al-Baqarah",
     "hal": 2,
-    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/002.webp"
+    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/002.webp","ayahs": [
+  {
+    "surah": 2,
+    "ayah": 1,
+    "bounding_box": [346, 674, 396, 804],
+    "marker_box": [350, 676, 389, 728],
+    "highlight_boxes": [
+      [346, 674, 396, 804]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 2,
+    "bounding_box": [345, 194, 461, 673],
+    "marker_box": [414, 563, 452, 614],
+    "highlight_boxes": [
+      [345, 194, 397, 673],
+      [409, 619, 461, 808]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 3,
+    "bounding_box": [408, 198, 521, 552],
+    "marker_box": [474, 199, 517, 251],
+    "highlight_boxes": [
+      [408, 203, 458, 552],
+      [471, 255, 521, 808]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 4,
+    "bounding_box": [531, 194, 649, 807],
+    "marker_box": [600, 365, 638, 417],
+    "highlight_boxes": [
+      [531, 194, 584, 807],
+      [594, 420, 646, 807]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 5,
+    "bounding_box": [599, 195, 712, 363],
+    "marker_box": [663, 199, 701, 251],
+    "highlight_boxes": [
+      [599, 195, 646, 363],
+      [657, 254, 712, 808]
+    ]
+  }
+]
   },
   {
     "id": 3,
     "surat": "Al-Baqarah",
     "hal": 3,
-    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/003.webp"
+    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/003.webp","ayahs": [
+  {
+    "surah": 2,
+    "ayah": 6,
+    "bounding_box": [50, 42, 161, 929],
+    "marker_box": [112, 705, 156, 765],
+    "highlight_boxes": [
+      [50, 42, 107, 929],
+      [110, 705, 161, 930]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 7,
+    "bounding_box": [111, 41, 222, 706],
+    "marker_box": [170, 238, 217, 298],
+    "highlight_boxes": [
+      [112, 42, 162, 702],
+      [170, 239, 221, 930]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 8,
+    "bounding_box": [174, 43, 281, 927],
+    "marker_box": [232, 44, 277, 103],
+    "highlight_boxes": [
+      [174, 41, 222, 237],
+      [231, 45, 281, 927]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 9,
+    "bounding_box": [292, 38, 405, 929],
+    "marker_box": [355, 652, 399, 712],
+    "highlight_boxes": [
+      [292, 39, 342, 929],
+      [352, 652, 405, 929]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 10,
+    "bounding_box": [353, 39, 465, 930],
+    "marker_box": [414, 274, 461, 334],
+    "highlight_boxes": [
+      [353, 40, 407, 649],
+      [414, 275, 465, 930]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 11,
+    "bounding_box": [421, 39, 526, 927],
+    "marker_box": [477, 106, 521, 164],
+    "highlight_boxes": [
+      [421, 39, 470, 275],
+      [474, 107, 526, 927]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 12,
+    "bounding_box": [477, 39, 588, 930],
+    "marker_box": [540, 200, 584, 258],
+    "highlight_boxes": [
+      [477, 39, 523, 107],
+      [538, 200, 587, 930]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 13,
+    "bounding_box": [542, 40, 706, 931],
+    "marker_box": [662, 191, 704, 250],
+    "highlight_boxes": [
+      [543, 40, 588, 200],
+      [594, 41, 646, 930],
+      [659, 191, 707, 931]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 14,
+    "bounding_box": [662, 38, 827, 930],
+    "marker_box": [777, 434, 822, 494],
+    "highlight_boxes": [
+      [662, 40, 712, 191],
+      [716, 40, 771, 930],
+      [773, 434, 828, 930]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 15,
+    "bounding_box": [774, 40, 891, 929],
+    "marker_box": [844, 512, 888, 571],
+    "highlight_boxes": [
+      [774, 40, 836, 434],
+      [842, 513, 892, 930]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 16,
+    "bounding_box": [842, 42, 955, 930],
+    "marker_box": [907, 43, 951, 102],
+    "highlight_boxes": [
+      [842, 42, 892, 512],
+      [905, 43, 955, 930]
+    ]
+  }
+]
   },
   {
     "id": 4,
     "surat": "Al-Baqarah",
     "hal": 4,
-    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/004.webp"
+    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/004.webp","ayahs": [
+  {
+    "surah": 2,
+    "ayah": 17,
+    "bounding_box": [50, 68, 161, 959],
+    "marker_box": [112, 137, 157, 197],
+    "highlight_boxes": [
+      [50, 68, 105, 959],
+      [112, 137, 161, 959]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 18,
+    "bounding_box": [110, 68, 222, 960],
+    "marker_box": [174, 483, 218, 544],
+    "highlight_boxes": [
+      [110, 68, 163, 142],
+      [173, 484, 222, 960]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 19,
+    "bounding_box": [174, 69, 344, 959],
+    "marker_box": [294, 349, 339, 410],
+    "highlight_boxes": [
+      [174, 69, 221, 486],
+      [232, 69, 283, 959],
+      [293, 350, 344, 959]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 20,
+    "bounding_box": [296, 68, 526, 957],
+    "marker_box": [478, 718, 521, 778],
+    "highlight_boxes": [
+      [296, 68, 342, 347],
+      [351, 68, 407, 957],
+      [414, 68, 467, 956],
+      [475, 718, 526, 956]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 21,
+    "bounding_box": [474, 70, 588, 958],
+    "marker_box": [538, 350, 584, 410],
+    "highlight_boxes": [
+      [474, 70, 527, 713],
+      [537, 352, 588, 958]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 22,
+    "bounding_box": [539, 68, 768, 957], "marker_box": [719, 749, 764, 808],
+    "highlight_boxes": [
+      [539, 75, 592, 349],
+      [599, 68, 649, 957],
+      [661, 70, 710, 957],
+      [719, 749, 768, 955]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 23,
+    "bounding_box": [722, 69, 888, 957],
+    "marker_box": [843, 593, 887, 652],
+    "highlight_boxes": [
+      [722, 68, 769, 745],
+      [779, 68, 831, 958],
+      [843, 595, 888, 957]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 24,
+    "bounding_box": [840, 71, 956, 959],
+    "marker_box": [906, 70, 949, 130],
+    "highlight_boxes": [
+      [840, 71, 894, 594],
+      [904, 71, 956, 959]
+    ]
+  }
+]
   },
   {
     "id": 5,
     "surat": "Al-Baqarah",
     "hal": 5,
-    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/005.webp"
+    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/005.webp",
+
+    "ayahs": [
+  {
+    "surah": 2,
+    "ayah": 25,
+    "bounding_box": [50, 42, 281, 929],
+    "marker_box": [232, 43, 277, 102],
+    "highlight_boxes": [
+      [50, 42, 102, 929],
+      [110, 43, 161, 930],
+      [172, 42, 222, 929],
+      [232, 43, 281, 928]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 26,
+    "bounding_box": [296, 39, 584, 931],
+    "marker_box": [538, 479, 582, 538],
+    "highlight_boxes": [
+      [296, 40, 344, 929],
+      [351, 48, 404, 928],
+      [414, 40, 467, 929],
+      [475, 41, 526, 929],
+      [538, 480, 584, 930]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 27,
+    "bounding_box": [539, 41, 706, 928],
+    "marker_box": [662, 46, 706, 106],
+    "highlight_boxes": [
+      [539, 41, 586, 473],
+      [599, 40, 649, 928],
+      [660, 46, 709, 928]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 28,
+    "bounding_box": [719, 41, 831, 928],
+    "marker_box": [780, 109, 824, 169],
+    "highlight_boxes": [
+      [719, 41, 772, 928],
+      [780, 110, 832, 927]
+    ]
+  },
+  {
+    "surah": 2,
+    "ayah": 29,
+    "bounding_box": [782, 41, 957, 931],
+    "marker_box": [905, 41, 951, 102],
+    "highlight_boxes": [
+      [782, 41, 832, 108],
+      [841, 41, 895, 930],
+      [902, 42, 957, 931]
+    ]
+  }
+]
   },
   {
     "id": 6,
     "surat": "Al-Baqarah",
     "hal": 6,
-    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/006.webp"
+    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/006.webp",
+  "ayahs": [
+    {
+      "surah": 2,
+      "ayah": 30,
+      "bounding_box": [50, 71, 283, 959],
+      "marker_box": [235, 887, 277, 946],
+      "highlight_boxes": [
+        [50, 71, 103, 958],
+        [109, 73, 163, 959],
+        [169, 71, 225, 959],
+        [231, 74, 283, 946]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 31,
+      "bounding_box": [294, 69, 347, 957],
+      "marker_box": [295, 156, 337, 215],
+      "highlight_boxes": [
+        [294, 69, 347, 957]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 32,
+      "bounding_box": [356, 68, 467, 957],
+      "marker_box": [415, 897, 458, 956],
+      "highlight_boxes": [
+        [356, 68, 408, 957],
+        [415, 71, 467, 954]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 33,
+      "bounding_box": [478, 69, 588, 959],
+      "marker_box": [538, 502, 581, 562],
+      "highlight_boxes": [
+        [478, 69, 530, 959],
+        [538, 70, 588, 955]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 34,
+      "bounding_box": [599, 69, 707, 959],
+      "marker_box": [660, 893, 701, 952],
+      "highlight_boxes": [
+        [599, 73, 649, 958],
+        [660, 71, 707, 952]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 35,
+      "bounding_box": [720, 72, 770, 959],
+      "marker_box": [721, 72, 762, 131],
+      "highlight_boxes": [
+        [720, 72, 770, 959]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 36,
+      "bounding_box": [780, 71, 893, 956],
+      "marker_box": [843, 72, 885, 131],
+      "highlight_boxes": [
+        [780, 72, 831, 956],
+        [843, 72, 893, 956]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 37,
+      "bounding_box": [905, 72, 957, 957],
+      "marker_box": [905, 71, 948, 130],
+      "highlight_boxes": [
+        [905, 72, 957, 957]
+      ]
+    }
+  ]
   },
   {
     "id": 7,
     "surat": "Al-Baqarah",
     "hal": 7,
-    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/007.webp"
+    "file": "https://nos.wjv-1.neo.id/marbot/quran/tajwid-indonesia/007.webp",
+      "ayahs": [
+    {
+      "surah": 2,
+      "ayah": 38,
+      "bounding_box": [50, 42, 161, 929],
+      "marker_box": [112, 252, 154, 309],
+      "highlight_boxes": [
+        [50, 42, 103, 927],
+        [112, 252, 161, 929]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 39,
+      "bounding_box": [111, 40, 222, 927],
+      "marker_box": [174, 40, 217, 98],
+      "highlight_boxes": [
+        [111, 40, 161, 246],
+        [172, 40, 222, 927]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 40,
+      "bounding_box": [232, 40, 342, 928],
+      "marker_box": [294, 357, 337, 417],
+      "highlight_boxes": [
+        [232, 40, 283, 928],
+        [294, 357, 342, 927]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 41,
+      "bounding_box": [294, 40, 464, 930],
+      "marker_box": [415, 489, 460, 547],
+      "highlight_boxes": [
+        [294, 40, 343, 353],
+        [353, 40, 405, 930],
+        [414, 490, 464, 930]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 42,
+      "bounding_box": [414, 38, 526, 927],
+      "marker_box": [477, 396, 523, 457],
+      "highlight_boxes": [
+        [414, 38, 468, 484],
+        [476, 396, 526, 927]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 43,
+      "bounding_box": [474, 38, 584, 928],
+      "marker_box": [538, 447, 582, 507],
+      "highlight_boxes": [
+        [474, 38, 528, 392],
+        [537, 447, 584, 928]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 44,
+      "bounding_box": [534, 40, 646, 930],
+      "marker_box": [599, 41, 642, 99],
+      "highlight_boxes": [
+        [534, 40, 588, 442],
+        [597, 41, 646, 930]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 45,
+      "bounding_box": [657, 40, 768, 927],
+      "marker_box": [719, 866, 764, 926],
+      "highlight_boxes": [
+        [657, 47, 709, 928],
+        [719, 40, 768, 927]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 46,
+      "bounding_box": [719, 41, 770, 861],
+      "marker_box": [719, 41, 764, 100],
+      "highlight_boxes": [
+        [719, 41, 770, 861]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 47,
+      "bounding_box": [780, 42, 888, 931],
+      "marker_box": [841, 692, 885, 752],
+      "highlight_boxes": [
+        [780, 42, 836, 928],
+        [841, 692, 888, 931]
+      ]
+    },
+    {
+      "surah": 2,
+      "ayah": 48,
+      "bounding_box": [841, 38, 954, 930],
+      "marker_box": [905, 38, 948, 99],
+      "highlight_boxes": [
+        [841, 38, 893, 688],
+        [904, 38, 954, 930]
+      ]
+    }
+  ]
   },
   {
     "id": 8,
