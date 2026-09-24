@@ -37,6 +37,10 @@ class AyatModel {
   final int ayat;
   final String arab;
   final String latin;
+
+  /// Teks aksara Arab versi Madinah — field `madinah` dari API
+  /// (dipakai pembaca per-ayat, dulu `ListAyatData.madinah`).
+  final String madinah;
   final String arti;
   final String audioUrl;
   final bool isBookmarked;
@@ -46,6 +50,7 @@ class AyatModel {
     required this.ayat,
     required this.arab,
     this.latin = '',
+    this.madinah = '',
     required this.arti,
     this.audioUrl = '',
     this.isBookmarked = false,
@@ -71,6 +76,7 @@ class AyatModel {
       ayat: json['ayat'] is int ? json['ayat'] as int : int.tryParse(json['ayat']?.toString() ?? '1') ?? 1,
       arab: json['arab'] as String? ?? '',
       latin: json['latin_karakter'] as String? ?? json['latin'] as String? ?? '',
+      madinah: json['madinah'] as String? ?? '',
       arti: artiText,
       audioUrl: audio,
       isBookmarked: isBookmarked,
@@ -83,6 +89,7 @@ class AyatModel {
       ayat: ayat,
       arab: arab,
       latin: latin,
+      madinah: madinah,
       arti: arti,
       audioUrl: audioUrl,
       isBookmarked: isBookmarked ?? this.isBookmarked,

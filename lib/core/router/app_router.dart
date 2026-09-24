@@ -23,7 +23,13 @@ import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_page.dart';
 import 'package:masjid_app/pages/notifikasi/invoice/invoice_page.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_page.dart';
 import 'package:masjid_app/pages/onboarding/onboard_page.dart';
+import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
+import 'package:masjid_app/pages/quran/halaman_madinah/halaman_quran_madinah_page.dart';
+import 'package:masjid_app/pages/quran/halaman_tajwid/halaman_quran_tajwid_page.dart';
+import 'package:masjid_app/pages/quran/list_ayat/detail/detail_quran_page.dart';
+import 'package:masjid_app/pages/quran/list_ayat/list_ayat_quran_page.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
+import 'package:masjid_app/pages/quran/pengaturan/alquran_pengaturan_page.dart';
 import 'package:masjid_app/pages/ruangan/booking/booking_ruangan_page.dart';
 import 'package:masjid_app/pages/ruangan/jadwal/jadwal_ruangan_page.dart';
 import 'package:masjid_app/pages/ruangan/ruangan_page.dart';
@@ -42,6 +48,15 @@ class AppRoutes {
   static const String auth = '/auth';
   static const String home = '/';
   static const String quran = '/quran';
+  // Al-Qur'an readers. Query params mirror the legacy GetX routes:
+  //   /quran/perayat?id=1&nama_surah=Al-Fatihah&bookmarks=true
+  //   /quran/detail/:id?nama_surah=Al-Fatihah
+  static const String quranPerAyat = '/quran/perayat';
+  static const String quranDetailAyat = '/quran/detail/:id';
+  static const String quranPage = '/quran/perpage';
+  static const String quranPageMadinah = '/quran/perpage/madinah';
+  static const String quranPageTajwid = '/quran/perpage/tajwid';
+  static const String quranPengaturan = '/quran/pengaturan';
   static const String doa = '/doa';
   static const String doaDetail = '/doa/:id';
   static const String doaContent = '/doa/:id/:content';
@@ -119,6 +134,30 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.quran,
         builder: (context, state) => AlquranPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.quranPerAyat,
+        builder: (context, state) => const ListAyatQuranPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.quranDetailAyat,
+        builder: (context, state) => const DetailAyatQuranPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.quranPageMadinah,
+        builder: (context, state) => const HalamanQuranMadinahPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.quranPageTajwid,
+        builder: (context, state) => const HalamanQuranTajwidPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.quranPage,
+        builder: (context, state) => const HalamanQuranPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.quranPengaturan,
+        builder: (context, state) => const AlquranPengaturanPage(),
       ),
       GoRoute(
         path: AppRoutes.doa,

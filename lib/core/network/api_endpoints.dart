@@ -3,7 +3,7 @@ class ApiEndpoints {
   // Default to local/dev or Cloudflare Worker domain via compile-time environment variable
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://api.masjidannimah.id/api/v1',
+    defaultValue: 'http://103.150.93.120:7777/api/v1',
   );
 
   static const String mediaBaseUrl = String.fromEnvironment(
@@ -25,6 +25,7 @@ class ApiEndpoints {
   static const String quranSurah = '/quran/surah';
   static const String quranDetail = '/quran/surah'; // + /:id
   static const String quranRandom = '/quran/random-surah';
+  static const String quranJuz = '/quran/juz'; // + /:id — mushaf page images
 
   // Doa & Dzikir
   static const String doaCategory = '/doa/category';

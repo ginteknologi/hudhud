@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
 import 'package:masjid_app/providers/quran_provider.dart';
 import 'package:masjid_app/storage/bookmarkStorage.dart';
@@ -38,92 +40,13 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
     _tajwidBookmark = _tajwidStorage.getBookmark();
   }
 
-  void _showSurahListBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.85,
-          minChildSize: 0.5,
-          maxChildSize: 0.95,
-          expand: false,
-          builder: (context, scrollController) {
-            return Consumer(
-              builder: (context, ref, _) {
-                final surahAsync = ref.watch(surahListProvider(''));
-                return Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 12, bottom: 8),
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Text(
-                        'Daftar Surah',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Expanded(
-                      child: surahAsync.when(
-                        data: (surahs) {
-                          if (surahs.isEmpty) {
-                            return const Center(child: Text('Tidak ada surah ditemukan'));
-                          }
-                          return ListView.separated(
-                            controller: scrollController,
-                            itemCount: surahs.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
-                            itemBuilder: (context, index) {
-                              final s = surahs[index];
-                              return ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: const Color(0xFFE6F4F2),
-                                  child: Text(
-                                    '${s.id}',
-                                    style: const TextStyle(
-                                      color: Color(0xFF048C7C),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                title: Text(s.nama, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                subtitle: Text('${s.arti} • ${s.jumlahAyat} ayat'),
-                                trailing: Text(
-                                  s.asma,
-                                  style: TextStyle(
-                                    fontFamily: GoogleFonts.amiriQuran().fontFamily,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (err, _) => Center(child: Text('Gagal memuat surah: $err')),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        );
-      },
-    );
+  // The readers are self-contained (tabbed mushaf + their own surah picker), so
+  // each tile just pushes its route — same as the pre-migration Get.toNamed(route).
+  Future<void> _openReader(String route, {bool bookmarks = false}) async {
+    await context.push(bookmarks ? '$route?bookmarks=true' : route);
+    if (mounted) {
+      setState(_loadBookmarks);
+    }
   }
 
   void _showRandomAyatDialog(BuildContext context) {
@@ -248,22 +171,22 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
       {
         'title': 'Per Ayat',
         'icon': 'assets/icons/perayat.png',
-        'onTap': () => _showSurahListBottomSheet(context),
+        'onTap': () => _openReader(AppRoutes.quranPerAyat),
       },
       {
         'title': 'Indonesia',
         'icon': 'assets/icons/indonesia.png',
-        'onTap': () => _showSurahListBottomSheet(context),
+        'onTap': () => _openReader(AppRoutes.quranPage),
       },
       {
         'title': 'Madinah',
         'icon': 'assets/icons/madinah.png',
-        'onTap': () => _showSurahListBottomSheet(context),
+        'onTap': () => _openReader(AppRoutes.quranPageMadinah),
       },
       {
         'title': 'Tajwid Indonesia',
         'icon': 'assets/icons/tajwid.png',
-        'onTap': () => _showSurahListBottomSheet(context),
+        'onTap': () => _openReader(AppRoutes.quranPageTajwid),
       },
       {
         'title': 'Ayat Kejutan',
@@ -273,7 +196,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
       {
         'title': 'Pengaturan',
         'icon': 'assets/icons/pengaturan.png',
-        'onTap': () {},
+        'onTap': () => _openReader(AppRoutes.quranPengaturan),
       },
     ];
 
@@ -402,25 +325,25 @@ class _AlquranPageState extends ConsumerState<AlquranPage> {
                     _buildBookmarkTile(
                       title: 'Tilawah Perayat',
                       bookmark: _ayatBookmark,
-                      onTap: () => _showSurahListBottomSheet(context),
+                      onTap: () => _openReader(AppRoutes.quranPerAyat, bookmarks: true),
                     ),
                     const SizedBox(height: 8),
                     _buildBookmarkTile(
                       title: 'Tilawah Indonesia',
                       bookmark: _indonesiaBookmark,
-                      onTap: () => _showSurahListBottomSheet(context),
+                      onTap: () => _openReader(AppRoutes.quranPage, bookmarks: true),
                     ),
                     const SizedBox(height: 8),
                     _buildBookmarkTile(
                       title: 'Tilawah Tajwid Indonesia',
                       bookmark: _tajwidBookmark,
-                      onTap: () => _showSurahListBottomSheet(context),
+                      onTap: () => _openReader(AppRoutes.quranPageTajwid, bookmarks: true),
                     ),
                     const SizedBox(height: 8),
                     _buildBookmarkTile(
                       title: 'Tilawah Madinah',
                       bookmark: _madinahBookmark,
-                      onTap: () => _showSurahListBottomSheet(context),
+                      onTap: () => _openReader(AppRoutes.quranPageMadinah, bookmarks: true),
                     ),
                     const SizedBox(height: 30),
                   ],

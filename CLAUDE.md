@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`masjid_app` (dir name `marbot`) — mosque app for Masjid An-Ni'mah. Riverpod + GoRouter + Firebase, Indonesian-only UI. Flutter **3.13.6** via FVM (`.fvm/fvm_config.json`) — much older than `../HabitFarm` and `../kkapps`; never copy dependency versions across those projects, and never invoke a global Flutter SDK here.
+`masjid_app` (dir name `marbot`) — mosque app for Masjid An-Ni'mah. Riverpod + GoRouter + Firebase, Indonesian-only UI. Flutter via FVM (`.fvm/fvm_config.json`, `.fvmrc`) — **ALWAYS use FVM (`fvm flutter ...`, `fvm dart ...`)**; never invoke a global Flutter SDK directly here.
 
 Dart package name is `masjid_app`, so every import is `package:masjid_app/...` regardless of directory name. Android `applicationId`/`namespace`: `com.example.masjid_app` (`android/app/build.gradle.kts:9,21`).
 
@@ -56,7 +56,7 @@ Android side needs the manifest permissions already present: `FOREGROUND_SERVICE
 
 ## Migration history (done — don't reintroduce GetX)
 
-The GetX → Riverpod/GoRouter migration is complete and the legacy code is gone: `lib/routes/**`, `lib/bindings/**`, `lib/controllers/**`, `lib/service/**`, `lib/configs/{main_service,remote_data}.dart`, `lib/models/listayat_data.dart`, every `*_controller.dart`/`*_service.dart` under `lib/pages/**`, the old Quran readers, and the dead quote/kajian/test/alarm_solat/logout pages were all deleted, and `get:`/`get_storage:` are out of `pubspec.yaml` (commits `ff52346`, `25d1b9e` on branch `migrasi-getx-ke-riverpod`). Only `lib/pages/quran/new_quran/` remains of the Quran feature; `lib/configs/remote_data.dart` is gone, so `ApiEndpoints.baseUrl` (or `--dart-define=API_BASE_URL=...`) is the single backend switch.
+The GetX → Riverpod/GoRouter migration is complete and the legacy code is gone: `lib/routes/**`, `lib/bindings/**`, `lib/controllers/**`, `lib/service/**`, `lib/configs/{main_service,remote_data}.dart`, `lib/models/listayat_data.dart`, every `*_controller.dart`/`*_service.dart` under `lib/pages/**`, and the dead quote/kajian/test/alarm_solat/logout pages were all deleted, and `get:`/`get_storage:` are out of `pubspec.yaml` (commits `ff52346`, `25d1b9e` on branch `migrasi-getx-ke-riverpod`). Seluruh pembaca Al-Qur'an (Per Ayat `lib/pages/quran/list_ayat/`, Mushaf Indonesia `lib/pages/quran/halaman/`, Mushaf Madinah `lib/pages/quran/halaman_madinah/`, Mushaf Tajwid `lib/pages/quran/halaman_tajwid/`, dan Pengaturan `lib/pages/quran/pengaturan/`) telah sepenuhnya di-restore dan di-port ke Riverpod + GoRouter tanpa GetX/GetStorage; `ApiEndpoints.baseUrl` (or `--dart-define=API_BASE_URL=...`) is the single backend switch.
 
 ## Gotchas
 
