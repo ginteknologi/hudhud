@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:masjid_app/core/network/api_endpoints.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
-import 'package:masjid_app/models/sosmed_data.dart';
 import 'package:masjid_app/models/user_model.dart';
 import 'package:masjid_app/providers/api_providers.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
@@ -47,26 +46,8 @@ final riwayatSedekahProvider = FutureProvider<RiwayatSedekah>((ref) async {
   }
 });
 
-/// Kontak / sosial media DKM.
-final dkmKontakProvider = FutureProvider<List<SosmedData>>((ref) async {
-  final apiClient = ref.watch(apiClientProvider);
-  try {
-    final response = await apiClient.get<List<SosmedData>>(
-      ApiEndpoints.dkm,
-      fromJson: (json) {
-        if (json is List) {
-          return json
-              .map((item) => SosmedData.fromJson(Map<String, dynamic>.from(item as Map)))
-              .toList();
-        }
-        return <SosmedData>[];
-      },
-    );
-    return response.data ?? [];
-  } catch (e) {
-    return [];
-  }
-});
+/// Kontak / sosial media resmi sekarang di-hardcode di
+/// `lib/pages/dkm/dkm_page.dart` (kOfficialSocials) — tidak lagi dari server.
 
 final appVersionProvider = FutureProvider<String>((ref) async {
   try {

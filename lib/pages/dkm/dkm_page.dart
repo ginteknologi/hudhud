@@ -1,402 +1,341 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
-import 'package:masjid_app/configs/file_setup.dart';
-import 'package:masjid_app/models/kajian_model.dart';
-import 'package:masjid_app/models/sosmed_data.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:masjid_app/components/partial/settings_tile.dart';
+import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/providers/akun_provider.dart';
-import 'package:masjid_app/providers/kajian_provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart' as refresh;
+import 'package:masjid_app/providers/auth_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DkmPage extends ConsumerStatefulWidget {
+/// Kontak resmi masjid — sengaja di-hardcode, tidak lagi diambil dari server.
+/// Ganti nilai `link` di sini kalau akun resmi berubah.
+const List<Map<String, String>> kOfficialSocials = [
+  {
+    'label': 'Instagram',
+    'icon': 'assets/icons/insta2.svg',
+    'link': 'https://www.instagram.com/marbot.aplikasi/',
+  },
+  {
+    'label': 'YouTube',
+    'icon': 'assets/icons/youtube-solid.svg',
+    'link': 'https://www.youtube.com/@marbot.aplikasi',
+  },
+  {
+    'label': 'TikTok',
+    'icon': 'assets/icons/tiktok-solid.svg',
+    'link': 'https://www.tiktok.com/@marbot.aplikasi',
+  },
+  {
+    'label': 'Facebook',
+    'icon': 'assets/icons/fb-solid.svg',
+    'link': 'https://www.facebook.com/marbot.aplikasi',
+  },
+  {
+    'label': 'WhatsApp',
+    'icon': 'assets/icons/wa-solid.svg',
+    'link': 'https://wa.me/6281234567890',
+  },
+];
+
+class DkmPage extends ConsumerWidget {
   const DkmPage({super.key});
 
-  @override
-  ConsumerState<DkmPage> createState() => _DkmPageState();
-}
-
-class _DkmPageState extends ConsumerState<DkmPage> {
-  final refreshController = refresh.RefreshController(initialRefresh: false);
-
-  static final List<KajianModel> _placeholderQuotes = [
-    KajianModel(
-        id: 1,
-        judul: 'judul',
-        subjudul: 'subjudul',
-        image: 'https://dummyimage.com/600x400/000/fff',
-        link: 'link'),
-    KajianModel(
-        id: 1,
-        judul: 'judul',
-        subjudul: 'subjudul',
-        image: 'https://dummyimage.com/600x400/000/fff',
-        link: 'link'),
-    KajianModel(
-        id: 1,
-        judul: 'judul',
-        subjudul: 'subjudul',
-        image: 'https://dummyimage.com/600x400/000/fff',
-        link: 'link'),
-  ];
-
-  @override
-  void dispose() {
-    refreshController.dispose();
-    super.dispose();
+  Future<void> _openLink(BuildContext context, String link) async {
+    final url = Uri.parse(link);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication) &&
+        context.mounted) {
+      Fluttertoast.showToast(msg: 'Tidak dapat membuka tautan');
+    }
   }
 
-  Future<void> _share(KajianModel item) async {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authNotifierProvider).valueOrNull;
+    final version = ref.watch(appVersionProvider).valueOrNull ?? '0.0.0';
+    final isLoggedIn = user != null;
 
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) => Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(screenWidth / 50),
-        ),
+    return Scaffold(
+      backgroundColor: kTilePageBg,
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                item.judul,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: screenWidth / 25),
-              ),
-            ),
-            Container(
-              width: screenWidth / 1.4,
-              height: screenHeight / 4.5,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(screenWidth / 50),
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(item.image),
-                    fit: BoxFit.fitWidth,
-                  )),
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFF92E3A9),
-                foregroundColor: Colors.black,
-              ),
-              onPressed: () async {
-                final result = await downloadAndSaveFile(
-                  url: item.image,
-                  pathsave: '/quote',
-                );
-                final resultShare = await SharePlus.instance.share(
-                  ShareParams(
-                    files: [XFile(result)],
-                    text: '#Dikirim dari Marbot app https://s.id/downloadmarbotapp',
+            _header(context, user?.name ?? 'Tamu', user?.email ?? '',
+                user?.photo ?? ''),
+            const SizedBox(height: 22),
+            const SettingsSectionTitle('Pengaturan'),
+            SettingsCard(
+              child: Column(
+                children: [
+                  SettingsTapRow(
+                    icon: Icons.tune_rounded,
+                    title: 'Pengaturan Umum',
+                    subtitle: 'Notifikasi adzan, izin, dan baterai',
+                    onTap: () => context.push(AppRoutes.pengaturanUmum),
                   ),
-                );
-
-                if (resultShare.status == ShareResultStatus.success) {
-                  Fluttertoast.showToast(msg: "Berhasil dishare");
-                }
-                if (dialogContext.mounted) {
-                  Navigator.of(dialogContext).pop();
-                }
-              },
-              child: const Text('Share Sekarang'),
+                  const Divider(height: 1, color: kTileBorder),
+                  SettingsTapRow(
+                    icon: Icons.menu_book_rounded,
+                    title: 'Pengaturan Al-Qur\'an',
+                    subtitle: 'Ukuran teks, terjemahan, dan qori murottal',
+                    onTap: () => context.push(AppRoutes.quranPengaturan),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 22),
+            const SettingsSectionTitle('Akun'),
+            SettingsCard(
+              child: Column(
+                children: [
+                  SettingsTapRow(
+                    icon: Icons.person_outline_rounded,
+                    title: 'Edit Profil',
+                    subtitle: isLoggedIn
+                        ? 'Ubah nama, nomor telepon, dan foto'
+                        : 'Masuk untuk mengubah profil',
+                    onTap: () => context.push(
+                      isLoggedIn ? AppRoutes.profileEdit : AppRoutes.auth,
+                    ),
+                  ),
+                  const Divider(height: 1, color: kTileBorder),
+                  SettingsTapRow(
+                    icon: Icons.history_rounded,
+                    title: 'Riwayat Sedekah',
+                    onTap: () => context.push(
+                      isLoggedIn ? AppRoutes.profileRiwayat : AppRoutes.auth,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 22),
+            const SettingsSectionTitle('Ikuti Kami'),
+            SettingsCard(
+              child: SettingsSocialRow(
+                items: kOfficialSocials,
+                onTap: (item) => _openLink(context, item['link']!),
+              ),
+            ),
+            const SizedBox(height: 22),
+            const SettingsSectionTitle('Tentang Aplikasi'),
+            SettingsCard(
+              child: Column(
+                children: [
+                  SettingsTapRow(
+                    icon: Icons.share_rounded,
+                    title: 'Bagikan Aplikasi',
+                    onTap: () => SharePlus.instance.share(
+                      ShareParams(
+                        text:
+                            'Marbot App - aplikasi Masjid An-Ni\'mah\nhttps://s.id/downloadmarbotapp',
+                      ),
+                    ),
+                  ),
+                  const Divider(height: 1, color: kTileBorder),
+                  SettingsTapRow(
+                    icon: Icons.info_outline_rounded,
+                    title: 'Versi Aplikasi',
+                    trailingText: version,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 22),
+            if (isLoggedIn)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      await ref.read(authNotifierProvider.notifier).logout();
+                      if (context.mounted) context.go(AppRoutes.auth);
+                    },
+                    icon: const Icon(Icons.logout_rounded, size: 18),
+                    label: const Text('Keluar'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFFD9534F),
+                      side: const BorderSide(color: Color(0xFFF2C9C7)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            const SizedBox(height: 30),
+            Center(
+              child: Text(
+                'Marbot App version $version',
+                style: const TextStyle(fontSize: 11, color: kTileTextMuted),
+              ),
+            ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
     );
   }
 
-  refresh.SmartRefresher layout(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final kontakAsync = ref.watch(dkmKontakProvider);
-    final version = ref.watch(appVersionProvider).valueOrNull ?? '0.0.0';
+  Widget _header(
+    BuildContext context,
+    String name,
+    String email,
+    String photo,
+  ) {
+    final topPadding = MediaQuery.of(context).padding.top;
 
-    return refresh.SmartRefresher(
-      enablePullDown: true,
-      controller: refreshController,
-      onLoading: () async {
-        ref.invalidate(kajianSliderProvider('quotes'));
-        ref.invalidate(dkmKontakProvider);
-        await ref.read(kajianSliderProvider('quotes').future);
-        await ref.read(dkmKontakProvider.future);
-        refreshController.loadComplete();
-      },
-      onRefresh: () async {
-        refreshController.refreshCompleted();
-      },
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            Container(
-              width: screenWidth,
-              height: screenWidth / 2,
-              constraints: BoxConstraints.loose(Size.infinite),
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15)),
-                  image: DecorationImage(
-                      image: AssetImage("assets/img/bg_dkm.png"),
-                      fit: BoxFit.fill)),
-              child: Padding(
-                padding: EdgeInsets.only(left: 25, right: 25, bottom: 25),
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        top: topPadding + 18,
+        left: 18,
+        right: 18,
+        bottom: 20,
+      ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF032621),
+            Color(0xFF063E36),
+            Color(0xFF0D6357),
+          ],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(18),
+          bottomRight: Radius.circular(18),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Marbot',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.location_on_rounded, size: 12, color: kTileGold),
+              const SizedBox(width: 3),
+              Text(
+                'Masjid An-Ni’mah Cibubur',
+                style: TextStyle(
+                  color: const Color(0xFFFFECB7).withValues(alpha: 0.95),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(1.5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: kTileGold, width: 1.2),
+                ),
+                child: ClipOval(
+                  child: photo.isNotEmpty
+                      ? Image.network(
+                          photo,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _defaultAvatar(),
+                        )
+                      : _defaultAvatar(),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      "assets/img/new-logo-text.png",
-                      fit: BoxFit.contain,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: AutoSizeText(
-                            "Di bawah Naungan Allah, kita bersatu dalam keimanan di Masjid, tempat keberkahan dan ketenangan merajut jalinan kasih dan do'a.",
-                            maxLines: 4,
-                            presetFontSizes: [screenWidth / 35],
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    letterSpacing: 0.5,
-                                    color: Colors.white)),
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
-                    )
+                    ),
+                    Text(
+                      email.isEmpty ? 'guest@annimah.id' : email,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            GestureDetector(
-              onTap: () {
-                // TODO(migrasi): route '/quote' (QuotePage) belum terdaftar di
-                // GoRouter; halaman tersebut masih memakai GetX.
-              },
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth / 20),
-                  child: Text(
-                    "Lihat Semua",
-                    style: TextStyle(
-                        color: Colors.black87, fontSize: screenWidth / 30),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            getListCategory(context),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30,
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => context.push(AppRoutes.profile),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
                     ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Kontak Kami",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black38)),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    kontakAsync.isLoading
-                        ? SizedBox(
-                            height: 30,
-                          )
-                        : ListView.builder(
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: kontakAsync.valueOrNull?.length ?? 0,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final SosmedData item =
-                                  kontakAsync.valueOrNull![index];
-                              return ListItemUiWidget(
-                                id: item.id,
-                                title: item.nama,
-                                widthContent:
-                                    MediaQuery.of(context).size.width * 0.7,
-                                showIcon: IconPosition.left,
-                                // iconLeft: SvgPicture.network(item.icon,
-                                //     height: 30, width: 30),
-                                iconLeft: Image.network(item.icon,
-                                    height: 40, width: 40),
-                                titleStyle: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                category: item.type,
-                                onTap: () async {
-                                  final Uri url = Uri.parse(item.link);
-                                  if (!await launchUrl(url)) {
-                                    // print('Tidak dapat membuka link');
-                                    Fluttertoast.showToast(
-                                      msg: "Tidak dapat membuka link",
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Align(
-                        //   alignment: Alignment.center,
-                        //   child: Text(
-                        //     "Marbot Apps Supporting Formasi Satu",
-                        //     style: context.textTheme.bodySmall?.copyWith(
-                        //         fontWeight: FontWeight.bold,
-                        //         color: Colors.black),
-                        //   ),
-                        // ),
-                        // Image.asset(
-                        //   "assets/img/formasi-satu.png",
-                        //   // height: 85,
-                        //   width: 180,
-                        //   alignment: Alignment.centerLeft,
-                        // ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Marbot App version $version",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                    fontSize: screenWidth / 35,
-                                    color: Colors.black),
+                        Text(
+                          'Profil',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(
-                          height: 25,
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          size: 16,
+                          color: Colors.white,
                         ),
                       ],
                     ),
-                    // ListView.builder(
-                    //   physics: const ClampingScrollPhysics(),
-                    //   itemCount: ctrl.listKontakv2.length,
-                    //   shrinkWrap: true,
-                    //   itemBuilder: (context, index) {
-                    //     // Datum model = filteredEvents[index];
-                    //     return FadeInUp(
-                    //       child: ListItemUiWidget(
-                    //         id: ctrl.listKontakv2[index]['id'],
-                    //         title: ctrl.listKontakv2[index]['title'],
-                    //         widthContent:
-                    //             MediaQuery.of(context).size.width * 0.7,
-                    //         showIcon: IconPosition.left,
-                    //         iconLeft: SvgPicture.asset(
-                    //             ctrl.listKontakv2[index]['icon'],
-                    //             height: 30,
-                    //             width: 30),
-                    //         titleStyle: context.textTheme.bodySmall
-                    //             ?.copyWith(
-                    //                 fontWeight: FontWeight.bold,
-                    //                 color: Colors.black),
-                    //         category: ctrl.listKontakv2[index]['category'],
-                    //         onTap: () async {
-                    //           final Uri url = Uri.parse(
-                    //               ctrl.listKontakv2[index]['link']);
-                    //           if (!await launchUrl(url)) {
-                    //             print('Tidak dapat membuka link.');
-                    //           }
-                    //         },
-                    //         // subtitleStyle: context.textTheme.bodySmall
-                    //         //     ?.copyWith(
-                    //         //         fontWeight: FontWeight.normal,
-                    //         //         color: Colors.black),
-                    //       ),
-                    //     );
-                    //   },
-                    // )
-                  ],
-                ))
-          ],
-        ),
-      ),
-    );
-  }
-
-  Container getListCategory(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final sliderAsync = ref.watch(kajianSliderProvider('quotes'));
-    final listQuotes = sliderAsync.valueOrNull ?? _placeholderQuotes;
-
-    return Container(
-      height: screenHeight / 4.5,
-      margin: const EdgeInsets.only(left: 15),
-      child: Skeletonizer(
-        ignoreContainers: false,
-        enabled: sliderAsync.isLoading,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          itemCount: listQuotes.length,
-          separatorBuilder: (context, index) => const SizedBox(width: 5),
-          itemBuilder: (context, index) {
-            final KajianModel item = listQuotes[index];
-            return GestureDetector(
-              onTap: () {
-                _share(item);
-              },
-              child: Container(
-                width: screenWidth / 1.4,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(screenWidth / 50),
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(item.image),
-                      fit: BoxFit.fitWidth,
-                    )),
+                  ),
+                ),
               ),
-            );
-          },
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: layout(context),
-    );
-  }
+  Widget _defaultAvatar() => Container(
+        width: 48,
+        height: 48,
+        color: const Color(0xFFEAF5F2),
+        child: const Icon(Icons.person_rounded, color: kTileAccent, size: 26),
+      );
 }

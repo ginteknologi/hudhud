@@ -10,6 +10,7 @@ import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/pages/doa/content/doa_content_page.dart';
 import 'package:masjid_app/pages/doa/detail/detail_doa_page.dart';
 import 'package:masjid_app/pages/doa/doa_page.dart';
+import 'package:masjid_app/pages/pengaturan/pengaturan_umum_page.dart';
 import 'package:masjid_app/pages/dzikir/dzikir_page.dart';
 import 'package:masjid_app/pages/hadits/bab/bab_hadits_page.dart';
 import 'package:masjid_app/pages/hadits/content/content_hadits_page.dart';
@@ -88,6 +89,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String profileEdit = '/akun/edit';
   static const String profileRiwayat = '/akun/riwayat';
+  static const String pengaturanUmum = '/pengaturan/umum';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -274,6 +276,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const AkunPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.pengaturanUmum,
+        builder: (context, state) => const PengaturanUmumPage(),
       ),
       GoRoute(
         path: AppRoutes.profileEdit,

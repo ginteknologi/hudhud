@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:masjid_app/components/partial/settings_tile.dart';
 import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/pages/dkm/dkm_page.dart' show kOfficialSocials;
+import 'package:masjid_app/providers/akun_provider.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
-import 'package:masjid_app/providers/home_nav_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AkunPage extends ConsumerWidget {
   const AkunPage({super.key});
@@ -17,117 +18,200 @@ class AkunPage extends ConsumerWidget {
     final userName = user?.name ?? 'Pengguna Tamu';
     final userEmail = user?.email ?? 'guest@annimah.id';
     final userPhoto = user?.photo ?? '';
-    final screenWidth = MediaQuery.of(context).size.width;
+    final version = ref.watch(appVersionProvider).valueOrNull ?? '0.0.0';
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBarWSWidget.getAppbarWidget(
-        title: 'Profile',
-        context: context,
-        elevation: 0,
-      ),
+      backgroundColor: kTilePageBg,
       body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 21),
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(90),
-                            child: userPhoto.isNotEmpty
-                                ? Image.network(
-                                    userPhoto,
-                                    height: 110,
-                                    width: 110,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => Image.asset(
-                                      'assets/icons/app_icon.png',
-                                      height: 110,
-                                      width: 110,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : Image.asset(
-                                    'assets/icons/app_icon.png',
-                                    height: 110,
-                                    width: 110,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          userName,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        Text(
-                          userEmail,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.normal,
-                              ),
-                        ),
-                      ],
+        top: false,
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _header(context, userName, userEmail, userPhoto),
+              const SizedBox(height: 22),
+              const SettingsSectionTitle('Akun'),
+              SettingsCard(
+                child: Column(
+                  children: [
+                    SettingsTapRow(
+                      icon: Icons.edit_outlined,
+                      title: 'Edit Profil',
+                      subtitle: 'Ubah nama, nomor telepon, dan foto',
+                      onTap: () => context.push(AppRoutes.profileEdit),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  ListItemUiWidget(
-                    id: 1,
-                    title: 'Tentang Kami',
-                    titleStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                    showIcon: IconPosition.left,
-                    iconLeft: Icon(
-                      Icons.info_rounded,
-                      color: Theme.of(context).primaryColor,
-                      size: 30,
+                    const Divider(height: 1, color: kTileBorder),
+                    SettingsTapRow(
+                      icon: Icons.history_rounded,
+                      title: 'Riwayat Sedekah',
+                      onTap: () => context.push(AppRoutes.profileRiwayat),
                     ),
-                    onTap: () {
-                      ref.read(homeBottomNavIndexProvider.notifier).state = 3;
-                      context.go(AppRoutes.home);
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 6,
-                  ),
-                  ButtonElevated(
-                    title: 'Keluar',
-                    iconLeft: const Icon(Icons.logout_rounded),
-                    showIcon: 'left',
-                    nearLeft: true,
-                    width: screenWidth,
-                    bgcolor: Theme.of(context).primaryColor,
-                    height: 45,
-                    color: Colors.white,
-                    radius: 7,
+                  ],
+                ),
+              ),
+              const SizedBox(height: 22),
+              const SettingsSectionTitle('Ikuti Kami'),
+              SettingsCard(
+                child: SettingsSocialRow(
+                  items: kOfficialSocials,
+                  onTap: (item) async {
+                    final url = Uri.parse(item['link']!);
+                    if (!await launchUrl(
+                      url,
+                      mode: LaunchMode.externalApplication,
+                    ) &&
+                        context.mounted) {
+                      Fluttertoast.showToast(msg: 'Tidak dapat membuka tautan');
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 22),
+              const SettingsSectionTitle('Tentang'),
+              SettingsCard(
+                child: SettingsTapRow(
+                  icon: Icons.info_outline_rounded,
+                  title: 'Versi Aplikasi',
+                  trailingText: version,
+                ),
+              ),
+              const SizedBox(height: 28),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
                     onPressed: () async {
                       await ref.read(authNotifierProvider.notifier).logout();
-                      if (context.mounted) {
-                        context.go(AppRoutes.auth);
-                      }
+                      if (context.mounted) context.go(AppRoutes.auth);
                     },
+                    icon: const Icon(Icons.logout_rounded, size: 18),
+                    label: const Text('Keluar'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFFD9534F),
+                      side: const BorderSide(color: Color(0xFFF2C9C7)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
                   ),
-                ],
+                ),
               ),
-            ),
+              const SizedBox(height: 40),
+            ],
           ),
         ),
       ),
     );
   }
+
+  Widget _header(
+    BuildContext context,
+    String name,
+    String email,
+    String photo,
+  ) {
+    final topPadding = MediaQuery.of(context).padding.top;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        top: topPadding + 10,
+        left: 18,
+        right: 18,
+        bottom: 24,
+      ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF032621),
+            Color(0xFF063E36),
+            Color(0xFF0D6357),
+          ],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(18),
+          bottomRight: Radius.circular(18),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              SettingsHeaderButton(
+                icon: Icons.arrow_back_rounded,
+                onTap: () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go(AppRoutes.home);
+                  }
+                },
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Profil',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: kTileGold, width: 1.4),
+            ),
+            child: ClipOval(
+              child: photo.isNotEmpty
+                  ? Image.network(
+                      photo,
+                      width: 84,
+                      height: 84,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _defaultAvatar(),
+                    )
+                  : _defaultAvatar(),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            name,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            email,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _defaultAvatar() => Container(
+        width: 84,
+        height: 84,
+        color: const Color(0xFFEAF5F2),
+        child: const Icon(Icons.person_rounded, color: kTileAccent, size: 44),
+      );
 }

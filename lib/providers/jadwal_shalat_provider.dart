@@ -3,13 +3,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:masjid_app/core/network/api_endpoints.dart';
 import 'package:masjid_app/models/jadwal_shalat_model.dart';
 import 'package:masjid_app/providers/api_providers.dart';
+import 'package:masjid_app/providers/location_provider.dart';
 
 final jadwalShalatProvider = FutureProvider<JadwalShalatModel>((ref) async {
   final apiClient = ref.watch(apiClientProvider);
+
+  // Server memakai koordinat masjid kalau parameter ini kosong. Hanya koordinat
+  // yang di-watch — perubahan nama/loading tidak perlu request ulang.
+  final coords = ref.watch(
+    locationProvider.select((l) => (l.latitude, l.longitude)),
+  );
+
   try {
     final response = await apiClient.get<JadwalShalatModel>(
       ApiEndpoints.waktuSolat,
-      fromJson: (json) => JadwalShalatModel.fromJson(json as Map<String, dynamic>),
+      queryParameters: coords.$1 == null || coords.$2 == null
+          ? null
+          : {'latitude': coords.$1, 'longitude': coords.$2},
+      fromJson: (json) =>
+          JadwalShalatModel.fromJson(json as Map<String, dynamic>),
     );
     return response.data ?? JadwalShalatModel.fromJson({});
   } catch (e) {
@@ -33,7 +45,8 @@ class NextShalatInfo {
 }
 
 // Countdown timer provider that emits every second with autoDispose
-final prayerCountdownProvider = StreamProvider.autoDispose<NextShalatInfo?>((ref) async* {
+final prayerCountdownProvider =
+    StreamProvider.autoDispose<NextShalatInfo?>((ref) async* {
   final jadwalAsync = ref.watch(jadwalShalatProvider);
 
   final jadwal = jadwalAsync.valueOrNull;
@@ -55,7 +68,8 @@ final prayerCountdownProvider = StreamProvider.autoDispose<NextShalatInfo?>((ref
       final hour = int.tryParse(parts[0]) ?? 0;
       final minute = int.tryParse(parts[1]) ?? 0;
 
-      final prayerTimeToday = DateTime(now.year, now.month, now.day, hour, minute);
+      final prayerTimeToday =
+          DateTime(now.year, now.month, now.day, hour, minute);
       if (prayerTimeToday.isAfter(now)) {
         targetItem = item;
         targetDateTime = prayerTimeToday;

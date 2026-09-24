@@ -8,8 +8,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:masjid_app/configs/firebase_message_setup.dart';
+import 'package:masjid_app/core/notifications/adzan_scheduler.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
+import 'package:masjid_app/providers/app_settings_provider.dart';
+import 'package:masjid_app/providers/jadwal_shalat_provider.dart';
 import 'package:masjid_app/theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -66,6 +69,18 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+
+    // Pasang ulang jadwal notifikasi adzan setiap app dibuka, dan setiap kali
+    // jadwal sholat dari server berubah.
+    ref.listen(jadwalShalatProvider, (previous, next) {
+      final jadwal = next.valueOrNull;
+      if (jadwal != null) {
+        AdzanScheduler.sync(
+          jadwal: jadwal,
+          settings: ref.read(appSettingsProvider),
+        );
+      }
+    });
 
     return MaterialApp.router(
       routerConfig: router,

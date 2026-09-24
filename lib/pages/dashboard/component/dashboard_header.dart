@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
+import 'package:masjid_app/providers/location_provider.dart';
 
 class DashboardHeader extends ConsumerWidget {
   const DashboardHeader({super.key});
 
+  /// Ambil posisi GPS; kalau gagal tampilkan alasannya ke user.
+  Future<void> _detectLocation(BuildContext context, WidgetRef ref) async {
+    final error = await ref.read(locationProvider.notifier).detect();
+    if (error != null && context.mounted) {
+      Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG);
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authNotifierProvider).valueOrNull;
+    final location = ref.watch(locationProvider);
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Container(
@@ -81,24 +92,52 @@ class DashboardHeader extends ConsumerWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.location_on_rounded,
-                      size: 11,
-                      color: Color(0xFFF9D576),
-                    ),
+                    if (location.loading)
+                      const SizedBox(
+                        width: 11,
+                        height: 11,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1.6,
+                          color: Color(0xFFF9D576),
+                        ),
+                      )
+                    else
+                      const Icon(
+                        Icons.location_on_rounded,
+                        size: 11,
+                        color: Color(0xFFF9D576),
+                      ),
                     const SizedBox(width: 3),
                     Flexible(
                       child: Text(
-                        'Masjid An-Ni’mah Cibubur',
+                        location.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: const Color(0xFFFFECB7).withValues(alpha: 0.95),
+                          color:
+                              const Color(0xFFFFECB7).withValues(alpha: 0.95),
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
+                    const SizedBox(width: 5),
+                    _HeaderIconButton(
+                      icon: Icons.my_location_rounded,
+                      tooltip: 'Pakai lokasi GPS saya',
+                      onTap: location.loading
+                          ? null
+                          : () => _detectLocation(context, ref),
+                    ),
+                    if (location.isGps) ...[
+                      const SizedBox(width: 4),
+                      _HeaderIconButton(
+                        icon: Icons.mosque_rounded,
+                        tooltip: 'Kembali ke lokasi masjid',
+                        onTap: () =>
+                            ref.read(locationProvider.notifier).reset(),
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -172,6 +211,39 @@ class DashboardHeader extends ConsumerWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Tombol bundar kecil untuk baris lokasi di header.
+class _HeaderIconButton extends StatelessWidget {
+  const _HeaderIconButton({
+    required this.icon,
+    required this.tooltip,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.white.withValues(alpha: 0.16),
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+          child: SizedBox(
+            width: 22,
+            height: 22,
+            child: Icon(icon, size: 13, color: Colors.white),
+          ),
+        ),
       ),
     );
   }

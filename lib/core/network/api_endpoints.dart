@@ -57,8 +57,7 @@ class ApiEndpoints {
   // Fasilitas & Ruangan
   static const String bookingRuangan = '/ruangan/booking';
 
-  // DKM, Notif & Events
-  static const String dkm = '/dkm';
+  // Notif & Events
   static const String notif = '/notif';
   static const String event = '/event';
 }
