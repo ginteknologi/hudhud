@@ -39,9 +39,9 @@ class DoaItemModel {
     return DoaItemModel(
       id: json['id'] is int ? json['id'] as int : int.tryParse(json['id']?.toString() ?? '1') ?? 1,
       judul: json['judul'] as String? ?? json['title'] as String? ?? '',
-      arab: json['arab'] as String? ?? json['arabic'] as String? ?? '',
-      latin: json['latin'] as String? ?? '',
-      arti: json['arti'] as String? ?? json['translation'] as String? ?? '',
+      arab: json['arab'] as String? ?? json['arabic'] as String? ?? json['teks_arab'] as String? ?? '',
+      latin: json['latin'] as String? ?? json['transliteration'] as String? ?? json['teks_latin'] as String? ?? '',
+      arti: json['arti'] as String? ?? json['translation'] as String? ?? json['translations'] as String? ?? json['terjemahan'] as String? ?? json['isi'] as String? ?? '',
       riwayat: json['riwayat'] as String? ?? json['source'] as String? ?? '',
     );
   }

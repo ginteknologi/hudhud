@@ -3,6 +3,7 @@ import 'package:html/parser.dart';
 import 'package:masjid_app/core/network/api_endpoints.dart';
 import 'package:masjid_app/models/doa_data.dart';
 import 'package:masjid_app/models/doa_models.dart';
+import 'package:masjid_app/models/pagination_state.dart';
 import 'package:masjid_app/providers/api_providers.dart';
 
 // Provider untuk kategori doa
@@ -67,6 +68,152 @@ final doaListProvider = FutureProvider.family<List<DoaItemModel>, DoaListParams>
   }
 });
 
+// ============================================================
+// Infinite Loading Notifier & Provider untuk Doa
+// ============================================================
+
+class DoaInfiniteNotifier extends StateNotifier<PaginationState<DoaItemModel>> {
+  final Ref ref;
+  final DoaListParams params;
+  static const int _limit = 15;
+
+  DoaInfiniteNotifier(this.ref, this.params)
+      : super(const PaginationState<DoaItemModel>(isLoading: true)) {
+    loadFirstPage();
+  }
+
+  Future<void> loadFirstPage() async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    final apiClient = ref.read(apiClientProvider);
+
+    try {
+      final queryParams = <String, dynamic>{
+        'page': 1,
+        'limit': _limit,
+      };
+      if (params.query.isNotEmpty) {
+        queryParams['search'] = params.query;
+      }
+
+      final response = await apiClient.get<List<DoaItemModel>>(
+        '${ApiEndpoints.doaList}/${params.categoryId}',
+        queryParameters: queryParams,
+        fromJson: (json) {
+          if (json is List) {
+            return json.map((item) {
+              final map = Map<String, dynamic>.from(item as Map);
+              map['arti'] ??= map['isi'];
+              return DoaItemModel.fromJson(map);
+            }).toList();
+          }
+          return [];
+        },
+      );
+
+      final items = response.data ?? [];
+      state = state.copyWith(
+        items: items,
+        page: 1,
+        hasMore: items.length >= _limit,
+        isLoading: false,
+        clearError: true,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'Gagal memuat doa: ${e.toString()}',
+      );
+    }
+  }
+
+  Future<void> loadNextPage() async {
+    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
+
+    state = state.copyWith(isLoadingMore: true);
+    final apiClient = ref.read(apiClientProvider);
+    final nextPage = state.page + 1;
+
+    try {
+      final queryParams = <String, dynamic>{
+        'page': nextPage,
+        'limit': _limit,
+      };
+      if (params.query.isNotEmpty) {
+        queryParams['search'] = params.query;
+      }
+
+      final response = await apiClient.get<List<DoaItemModel>>(
+        '${ApiEndpoints.doaList}/${params.categoryId}',
+        queryParameters: queryParams,
+        fromJson: (json) {
+          if (json is List) {
+            return json.map((item) {
+              final map = Map<String, dynamic>.from(item as Map);
+              map['arti'] ??= map['isi'];
+              return DoaItemModel.fromJson(map);
+            }).toList();
+          }
+          return [];
+        },
+      );
+
+      final newItems = response.data ?? [];
+      state = state.copyWith(
+        items: [...state.items, ...newItems],
+        page: nextPage,
+        hasMore: newItems.length >= _limit,
+        isLoadingMore: false,
+      );
+    } catch (e) {
+      state = state.copyWith(isLoadingMore: false);
+    }
+  }
+
+  Future<void> refresh() async {
+    final apiClient = ref.read(apiClientProvider);
+    try {
+      final queryParams = <String, dynamic>{
+        'page': 1,
+        'limit': _limit,
+      };
+      if (params.query.isNotEmpty) {
+        queryParams['search'] = params.query;
+      }
+
+      final response = await apiClient.get<List<DoaItemModel>>(
+        '${ApiEndpoints.doaList}/${params.categoryId}',
+        queryParameters: queryParams,
+        fromJson: (json) {
+          if (json is List) {
+            return json.map((item) {
+              final map = Map<String, dynamic>.from(item as Map);
+              map['arti'] ??= map['isi'];
+              return DoaItemModel.fromJson(map);
+            }).toList();
+          }
+          return [];
+        },
+      );
+
+      final items = response.data ?? [];
+      state = state.copyWith(
+        items: items,
+        page: 1,
+        hasMore: items.length >= _limit,
+        isLoading: false,
+        clearError: true,
+      );
+    } catch (e) {
+      // keep existing items
+    }
+  }
+}
+
+final doaInfiniteProvider = StateNotifierProvider.family<
+    DoaInfiniteNotifier, PaginationState<DoaItemModel>, DoaListParams>((ref, params) {
+  return DoaInfiniteNotifier(ref, params);
+});
+
 // Provider detail doa berdasarkan id konten (field html: arabic, transliteration, dll)
 final doaDetailProvider = FutureProvider.family<DoaData?, String>((ref, id) async {
   final apiClient = ref.watch(apiClientProvider);
@@ -75,16 +222,26 @@ final doaDetailProvider = FutureProvider.family<DoaData?, String>((ref, id) asyn
       '${ApiEndpoints.doaDetail}/$id',
       fromJson: (json) {
         final map = json as Map<String, dynamic>;
+        final arab = map['arabic'] as String? ??
+            map['teks_arab'] as String? ??
+            map['arab'] as String?;
+        final latin = map['transliteration'] as String? ??
+            map['teks_latin'] as String? ??
+            map['latin'] as String?;
+        final arti = map['translations'] as String? ??
+            map['terjemahan'] as String? ??
+            map['isi'] as String? ??
+            map['arti'] as String?;
         return DoaData(
           id: map['id'] is int
               ? map['id'] as int
               : int.tryParse('${map['id']}') ?? 1,
           judul: map['judul'] as String? ?? '',
           updatedAt: map['updatedAt'] as String? ?? '',
-          arabic: map['arabic'] as String?,
-          transliteration: map['transliteration'] as String?,
-          translations: map['translations'] as String?,
-          isi: map['isi'] as String?,
+          arabic: arab,
+          transliteration: latin,
+          translations: arti,
+          isi: arti,
           opening: map['opening'] as String?,
         );
       },

@@ -4,18 +4,35 @@ import { apiResponse } from '../helpers/response';
 
 const artikel = new Hono<{ Bindings: Env }>();
 
-// GET /api/v1/artikel
+// GET /api/v1/artikel?page=1&limit=10&kategori=
 artikel.get('/', async (c) => {
+  const page = Math.max(1, parseInt(c.req.query('page') || '1', 10));
+  const limit = Math.min(50, Math.max(1, parseInt(c.req.query('limit') || '10', 10)));
+  const offset = (page - 1) * limit;
+  const kategori = c.req.query('kategori') || c.req.query('cat_id');
+
   try {
-    const { results } = await c.env.DB.prepare(`
+    let countSql = 'SELECT COUNT(*) as total FROM artikel';
+    let dataSql = `
       SELECT a.id, a.judul, a.slug, a.konten as isi, a.konten,
              a.thumbnail as image, a.thumbnail, a.penulis, a.dibaca,
              a.created_at, a.created_at as updatedAt, a.created_at as publish_date,
              k.id as cat_id, k.nama as cat_nama, k.slug as cat_slug
       FROM artikel a
       LEFT JOIN artikel_kategori k ON a.kategori_id = k.id
-      ORDER BY a.id DESC
-    `).all();
+    `;
+    const params: any[] = [];
+    if (kategori) {
+      countSql += ' WHERE a.kategori_id = ?';
+      dataSql += ' WHERE a.kategori_id = ?';
+      params.push(kategori);
+    }
+
+    const countRes: any = await c.env.DB.prepare(countSql).bind(...params).first();
+    const total = countRes?.total || 0;
+
+    dataSql += ' ORDER BY a.id DESC LIMIT ? OFFSET ?';
+    const { results } = await c.env.DB.prepare(dataSql).bind(...params, limit, offset).all();
 
     const formatted = (results || []).map((row: any) => ({
       ...row,
@@ -24,7 +41,12 @@ artikel.get('/', async (c) => {
         : { id: 1, nama: 'Umum', slug: 'umum' },
     }));
 
-    return apiResponse(c, 200, true, 'Success', formatted);
+    return apiResponse(c, 200, true, 'Success', formatted, {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (e: any) {
     return apiResponse(c, 200, true, 'Success', []);
   }

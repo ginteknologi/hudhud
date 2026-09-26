@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/models/doa_models.dart';
+import 'package:masjid_app/models/pagination_state.dart';
 import 'package:masjid_app/providers/doa_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -19,11 +20,33 @@ class DetailDoaPage extends ConsumerStatefulWidget {
 
 class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
   final TextEditingController _searchController = TextEditingController();
+  late final ScrollController _scrollController;
   String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients) {
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final currentScroll = _scrollController.position.pixels;
+      if (currentScroll >= maxScroll - 200) {
+        final categoryId = GoRouterState.of(context).pathParameters['id'] ?? '';
+        final params = DoaListParams(categoryId: categoryId, query: _query);
+        ref.read(doaInfiniteProvider(params).notifier).loadNextPage();
+      }
+    }
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -46,9 +69,8 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
         ? extra['categoryName'].toString()
         : "Kumpulan Do'a";
 
-    final listAsync = ref.watch(
-      doaListProvider(DoaListParams(categoryId: categoryId, query: _query)),
-    );
+    final params = DoaListParams(categoryId: categoryId, query: _query);
+    final state = ref.watch(doaInfiniteProvider(params));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -94,26 +116,63 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
           ),
           centerTitle: false,
         ),
-        body: listAsync.when(
-          data: (list) => _buildBody(context, categoryId, categoryName, list, isLoading: false),
-          loading: () => _buildBody(context, categoryId, categoryName, _dummyDoaList, isLoading: true),
-          error: (err, stack) => _buildError(context, categoryId),
+        body: RefreshIndicator(
+          color: const Color(0xFF048C7C),
+          backgroundColor: Colors.white,
+          onRefresh: () => ref.read(doaInfiniteProvider(params).notifier).refresh(),
+          child: _buildContent(context, categoryId, categoryName, params, state),
         ),
       ),
     );
   }
 
-  Widget _buildBody(
+  Widget _buildContent(
+    BuildContext context,
+    String categoryId,
+    String categoryName,
+    DoaListParams params,
+    PaginationState<DoaItemModel> state,
+  ) {
+    if (state.isLoading && state.items.isEmpty) {
+      return _buildScrollView(
+        context,
+        categoryId,
+        categoryName,
+        _dummyDoaList,
+        isLoading: true,
+        state: state,
+      );
+    }
+
+    if (state.errorMessage != null && state.items.isEmpty) {
+      return _buildError(context, params);
+    }
+
+    return _buildScrollView(
+      context,
+      categoryId,
+      categoryName,
+      state.items,
+      isLoading: false,
+      state: state,
+    );
+  }
+
+  Widget _buildScrollView(
     BuildContext context,
     String categoryId,
     String categoryName,
     List<DoaItemModel> list, {
     required bool isLoading,
+    required PaginationState<DoaItemModel> state,
   }) {
     return Skeletonizer(
       enabled: isLoading,
       child: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
         slivers: [
           // Search & Summary Header
           SliverToBoxAdapter(
@@ -184,7 +243,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                         ),
                       ),
                       Text(
-                        '${list.length} Doa Tersedia',
+                        isLoading ? 'Memuat...' : '${list.length} Doa Dimuat',
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -199,7 +258,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
           ),
 
           // List Items
-          if (list.isEmpty)
+          if (!isLoading && list.isEmpty)
             SliverFillRemaining(
               hasScrollBody: false,
               child: Center(
@@ -241,7 +300,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
             )
           else
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
@@ -252,6 +311,39 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                     );
                   },
                   childCount: list.length,
+                ),
+              ),
+            ),
+
+          // Bottom Loading Indicator (Infinite Scroll feedback)
+          if (state.isLoadingMore)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Center(
+                  child: SizedBox(
+                    width: 26,
+                    height: 26,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Color(0xFF048C7C),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          else if (!state.hasMore && list.isNotEmpty && !isLoading)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 28, top: 8),
+                child: Center(
+                  child: Text(
+                    'Semua doa telah dimuat',
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Colors.black38,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -351,23 +443,31 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 14,
-                      color: Color(0xFF7A8E88),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAF9),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(
+                        Icons.chevron_right_rounded,
+                        color: Color(0xFF048C7C),
+                        size: 18,
+                      ),
                     ),
                   ],
                 ),
 
-                // Arab Snippet
+                // Arabic Snippet (if available)
                 if (item.arab.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAF9),
-                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFFBFDFC),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFEDF5F2)),
                     ),
                     child: Text(
                       item.arab,
@@ -376,16 +476,16 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.amiri(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF2D3748),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF1E293B),
                         height: 1.8,
                       ),
                     ),
                   ),
                 ],
 
-                // Terjemahan / Arti Snippet
+                // Translation preview
                 if (item.arti.isNotEmpty) ...[
                   const SizedBox(height: 10),
                   Text(
@@ -393,7 +493,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
-                      fontSize: 12,
+                      fontSize: 11,
                       color: Colors.black54,
                       height: 1.4,
                     ),
@@ -407,7 +507,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
     );
   }
 
-  Widget _buildError(BuildContext context, String categoryId) {
+  Widget _buildError(BuildContext context, DoaListParams params) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -437,9 +537,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onPressed: () => ref.invalidate(
-                doaListProvider(DoaListParams(categoryId: categoryId, query: _query)),
-              ),
+              onPressed: () => ref.read(doaInfiniteProvider(params).notifier).loadFirstPage(),
               child: Text(
                 'Coba Lagi',
                 style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),

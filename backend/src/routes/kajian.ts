@@ -4,18 +4,45 @@ import { apiResponse } from '../helpers/response';
 
 const kajian = new Hono<{ Bindings: Env }>();
 
-// GET /api/v1/kajian/list
+// GET /api/v1/kajian/list?type=tafsir&page=1&limit=10
 kajian.get('/list', async (c) => {
+  const type = c.req.query('type');
+  const page = Math.max(1, parseInt(c.req.query('page') || '1', 10));
+  const limit = Math.min(50, Math.max(1, parseInt(c.req.query('limit') || '10', 10)));
+  const offset = (page - 1) * limit;
+
   try {
-    const { results } = await c.env.DB.prepare(`
+    let countSql = "SELECT COUNT(*) as total FROM kajian WHERE tipe != 'muadzin'";
+    let dataSql = `
       SELECT id, judul, ustadz, deskripsi as subjudul, deskripsi,
              thumbnail as image, thumbnail, video_link as link, video_link, tipe
       FROM kajian
       WHERE tipe != 'muadzin'
-      ORDER BY id DESC
-    `).all();
+    `;
+    const params: any[] = [];
+    if (type) {
+      countSql = "SELECT COUNT(*) as total FROM kajian WHERE tipe = ?";
+      dataSql = `
+        SELECT id, judul, ustadz, deskripsi as subjudul, deskripsi,
+               thumbnail as image, thumbnail, video_link as link, video_link, tipe
+        FROM kajian
+        WHERE tipe = ?
+      `;
+      params.push(type);
+    }
 
-    return apiResponse(c, 200, true, 'Success', results || []);
+    const countRes: any = await c.env.DB.prepare(countSql).bind(...params).first();
+    const total = countRes?.total || 0;
+
+    dataSql += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+    const { results } = await c.env.DB.prepare(dataSql).bind(...params, limit, offset).all();
+
+    return apiResponse(c, 200, true, 'Success', results || [], {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (e: any) {
     return apiResponse(c, 200, true, 'Success', []);
   }
@@ -90,18 +117,32 @@ kajian.get('/muadzin/list', async (c) => {
   }
 });
 
-// GET /api/v1/kajian/kaji-live/list
+// GET /api/v1/kajian/kaji-live/list?page=1&limit=10
 kajian.get('/kaji-live/list', async (c) => {
+  const page = Math.max(1, parseInt(c.req.query('page') || '1', 10));
+  const limit = Math.min(50, Math.max(1, parseInt(c.req.query('limit') || '10', 10)));
+  const offset = (page - 1) * limit;
+
   try {
+    const countRes: any = await c.env.DB.prepare(
+      "SELECT COUNT(*) as total FROM kajian WHERE tipe = 'live'"
+    ).first();
+    const total = countRes?.total || 0;
+
     const { results } = await c.env.DB.prepare(`
       SELECT id, judul, ustadz, deskripsi as subjudul, deskripsi,
              thumbnail as image, thumbnail, video_link as link, video_link, tipe
       FROM kajian
       WHERE tipe = 'live'
-      ORDER BY id DESC
-    `).all();
+      ORDER BY id DESC LIMIT ? OFFSET ?
+    `).bind(limit, offset).all();
 
-    return apiResponse(c, 200, true, 'Success', results || []);
+    return apiResponse(c, 200, true, 'Success', results || [], {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (e: any) {
     return apiResponse(c, 200, true, 'Success', []);
   }

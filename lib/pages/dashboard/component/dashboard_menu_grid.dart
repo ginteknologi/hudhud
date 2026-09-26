@@ -34,44 +34,34 @@ class DashboardMenuGrid extends ConsumerWidget {
         'onTap': () => context.push(AppRoutes.doa),
       },
       {
+        'label': 'Informasi',
+        'icon': 'assets/icons/informasi.svg',
+        'isPng': false,
+        'onTap': () => context.push(AppRoutes.artikel),
+      },
+      {
         'label': 'Hadits',
         'icon': 'assets/icons/hadits.svg',
         'isPng': false,
         'onTap': () => context.push(AppRoutes.hadits),
       },
       {
-        'label': 'Dzikir',
+        'label': 'Dzikir Pagi Petang',
         'icon': 'assets/icons/dzikir_pagi_petang.svg',
         'isPng': false,
         'onTap': () => context.push(AppRoutes.dzikir),
       },
       {
-        'label': 'Sedekah',
-        'icon': 'assets/icons/sedekah.svg',
+        'label': 'Jadwal Imsakiyah',
+        'icon': 'assets/icons/jadwal_imsak.svg',
         'isPng': false,
-        'onTap': () => context.push(AppRoutes.sedekah),
+        'onTap': () => context.push(AppRoutes.jadwalImsakiah),
       },
       {
-        'label': 'Ruangan',
-        'icon': 'assets/icons/ruangan.svg',
+        'label': 'Cari Masjid',
+        'icon': 'assets/icons/wews.svg',
         'isPng': false,
-        'onTap': () => context.push(AppRoutes.ruangan),
-      },
-      {
-        'label': 'Muazin',
-        'icon': 'assets/icons/sahabat_muadzin.png',
-        'isPng': true,
-        'onTap': () {
-          ref.read(homeBottomNavIndexProvider.notifier).state = 2;
-        },
-      },
-      {
-        'label': 'Marbot',
-        'icon': 'assets/icons/dkm.png',
-        'isPng': true,
-        'onTap': () {
-          ref.read(homeBottomNavIndexProvider.notifier).state = 3;
-        },
+        'onTap': () => context.push(AppRoutes.cariMasjid),
       },
       {
         'label': 'Instagram',
@@ -81,6 +71,17 @@ class DashboardMenuGrid extends ConsumerWidget {
           final url = Uri.parse('https://www.instagram.com/marbot.aplikasi/');
           if (!await launchUrl(url)) {
             Fluttertoast.showToast(msg: 'Tidak dapat membuka Instagram');
+          }
+        },
+      },
+      {
+        'label': 'Youtube',
+        'icon': 'assets/icons/Youtube.svg',
+        'isPng': false,
+        'onTap': () async {
+          final url = Uri.parse('https://www.youtube.com/@MarbotAplikasi');
+          if (!await launchUrl(url)) {
+            Fluttertoast.showToast(msg: 'Tidak dapat membuka Youtube');
           }
         },
       },

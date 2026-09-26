@@ -267,6 +267,7 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
                   arabic: passedDoaItem?.arab,
                   transliteration: passedDoaItem?.latin,
                   translations: passedDoaItem?.arti,
+                  isi: passedDoaItem?.arti,
                 );
             return _buildContent(context, finalData, categoryName, isLoading: false);
           },
@@ -277,9 +278,10 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
                 id: passedDoaItem.id,
                 judul: passedDoaItem.judul,
                 updatedAt: '',
-                arabic: passedDoaItem.arab,
-                transliteration: passedDoaItem.latin,
-                translations: passedDoaItem.arti,
+                arabic: passedDoaItem.arab.isNotEmpty ? passedDoaItem.arab : null,
+                transliteration: passedDoaItem.latin.isNotEmpty ? passedDoaItem.latin : null,
+                translations: passedDoaItem.arti.isNotEmpty ? passedDoaItem.arti : null,
+                isi: passedDoaItem.arti.isNotEmpty ? passedDoaItem.arti : null,
               );
               return _buildContent(context, initialData, categoryName, isLoading: false);
             }
@@ -418,16 +420,20 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(color: const Color(0xFFE5EDE9)),
                             ),
-                            child: Text(
+                            child: HtmlWidget(
                               data.arabic!,
-                              textAlign: TextAlign.right,
-                              textDirection: TextDirection.rtl,
-                              style: GoogleFonts.amiri(
+                              textStyle: GoogleFonts.amiri(
                                 fontSize: _arabicFontSize,
                                 fontWeight: FontWeight.bold,
                                 color: const Color(0xFF1E293B),
                                 height: 2.0,
                               ),
+                              customStylesBuilder: (element) {
+                                return {
+                                  'text-align': 'right',
+                                  'direction': 'rtl',
+                                };
+                              },
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -509,8 +515,38 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
                               textStyle: GoogleFonts.poppins(
                                 fontSize: 13,
                                 color: const Color(0xFF2D3748),
-                                height: 1.5,
+                                height: 1.6,
                               ),
+                              customStylesBuilder: (element) {
+                                if (element.classes.contains('arabic') ||
+                                    element.classes.contains('arabic-quran')) {
+                                  return {
+                                    'font-family': 'Amiri',
+                                    'font-size': '${_arabicFontSize}px',
+                                    'font-weight': 'bold',
+                                    'text-align': 'right',
+                                    'direction': 'rtl',
+                                    'line-height': '2.0',
+                                    'color': '#1E293B',
+                                  };
+                                }
+                                if (element.classes.contains('latin-text')) {
+                                  return {
+                                    'font-style': 'italic',
+                                    'color': '#048C7C',
+                                    'font-size': '12px',
+                                    'margin-bottom': '6px',
+                                  };
+                                }
+                                if (element.classes.contains('text')) {
+                                  return {
+                                    'font-size': '13px',
+                                    'color': '#2D3748',
+                                    'line-height': '1.6',
+                                  };
+                                }
+                                return null;
+                              },
                             ),
                           ),
                         ],

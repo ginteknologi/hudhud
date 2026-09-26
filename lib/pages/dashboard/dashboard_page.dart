@@ -83,6 +83,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     );
 
     final sedangLiveAsync = ref.watch(sedangLiveListProvider);
+    final kajianSahabatAsync = ref.watch(kajianSliderProvider('doa_ramadhan'));
     final kajianLiveAsync = ref.watch(kajianLiveSliderProvider);
     final kajianSliderAsync = ref.watch(kajianSliderProvider('tafsir'));
     final artikelAsync = ref.watch(artikelTerbaruProvider);
@@ -98,6 +99,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
           onRefresh: () async {
             ref.invalidate(jadwalShalatProvider);
             ref.invalidate(sedangLiveListProvider);
+            ref.invalidate(kajianSliderProvider('doa_ramadhan'));
             ref.invalidate(kajianLiveSliderProvider);
             ref.invalidate(kajianSliderProvider('tafsir'));
             ref.invalidate(artikelTerbaruProvider);
@@ -159,7 +161,27 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
                       const SizedBox(height: 22),
 
-                      // 9. Riwayat Kajian Live (Video Card Interaktif)
+                      // 9. Sahabat Masjid (Video Card Interaktif)
+                      _buildSeparator(
+                        'Sahabat Masjid',
+                        'Lihat Semua',
+                        context,
+                        () => context.push(AppRoutes.kajianSahabat),
+                      ),
+                      const SizedBox(height: 10),
+                      Skeletonizer(
+                        enabled: kajianSahabatAsync.isLoading,
+                        child: _buildKajianSlider(
+                          kajianSahabatAsync.valueOrNull ?? [],
+                          tag: 'Sahabat Masjid',
+                          badgeColor: const Color(0xFFE9A23B),
+                          context: context,
+                        ),
+                      ),
+
+                      const SizedBox(height: 22),
+
+                      // 10. Riwayat Kajian Live (Video Card Interaktif)
                       _buildSeparator(
                         'Riwayat Kajian Live',
                         'Lihat Semua',

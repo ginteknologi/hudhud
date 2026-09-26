@@ -19,7 +19,8 @@ import 'package:masjid_app/pages/hadits/detail/detail_hadits_page.dart';
 import 'package:masjid_app/pages/hadits/hadits_page.dart';
 import 'package:masjid_app/pages/hadits/list/hadits_list_page.dart';
 import 'package:masjid_app/pages/home/home_page.dart';
-import 'package:masjid_app/pages/kalenderdzulhijjah/kalenderdzulhijjah_page.dart';
+import 'package:masjid_app/pages/jadwal_imsakiah/jadwal_imsakiah_page.dart';
+import 'package:masjid_app/pages/masjid_terdekat/cari_masjid_page.dart';
 import 'package:masjid_app/pages/kajian/detail/kajian_detail_page.dart';
 import 'package:masjid_app/pages/kajian/kajian_list_page.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_page.dart';
@@ -46,8 +47,8 @@ import 'package:masjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transa
 import 'package:masjid_app/pages/sedekah/transaksi/status/status_sedekah_page.dart';
 import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_page.dart';
 import 'package:masjid_app/pages/splashscreen/splashscreen_page.dart';
+import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
-import 'package:masjid_app/providers/kajian_provider.dart';
 
 class AppRoutes {
   static const String splash = '/splash';
@@ -85,6 +86,7 @@ class AppRoutes {
   static const String ruanganBooking = '/ruangan/booking';
   static const String dkm = '/dkm';
   static const String muazin = '/muazin';
+  static const String kajianSahabat = '/kajian/sahabat';
   static const String kajianLive = '/kajian/live';
   static const String kajianTafsir = '/kajian/tafsir';
   static const String kajianDetail = '/kajian/detail/:id';
@@ -94,7 +96,9 @@ class AppRoutes {
   static const String notifikasiDetail = '/notifikasi/detail/:id';
   static const String notifikasiInvoice = '/notifikasi/detail/invoice/:invoice';
   static const String onboarding = '/onboard';
+  static const String jadwalImsakiah = '/jadwal-imsakiah';
   static const String kalenderDzulhijjah = '/kalenderdzulhijjah';
+  static const String cariMasjid = '/cari-masjid';
   static const String profile = '/profile';
   static const String profileEdit = '/akun/edit';
   static const String profileRiwayat = '/akun/riwayat';
@@ -112,17 +116,30 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isAuthenticated = authState.valueOrNull != null;
       final isSplash = state.matchedLocation == AppRoutes.splash;
       final isAuth = state.matchedLocation == AppRoutes.auth;
+      final isOnboarding = state.matchedLocation == AppRoutes.onboarding;
 
       if (isLoading) return null;
 
-      if (isSplash) {
+      // 1. Splash screen: biarkan SplashscreenPage tampil dulu
+      if (isSplash) return null;
+
+      // 2. Jika user baru dan belum menyelesaikan onboarding
+      final hasCompletedOnboarding = PreferencesService.onboardingCompleted;
+      if (!hasCompletedOnboarding) {
+        return isOnboarding ? null : AppRoutes.onboarding;
+      }
+
+      // 3. Jika sudah menyelesaikan onboarding tapi mencoba buka /onboard
+      if (isOnboarding) {
         return isAuthenticated ? AppRoutes.home : AppRoutes.auth;
       }
 
-      if (!isAuthenticated && !isAuth && !isSplash) {
+      // 4. Jika belum login dan bukan halaman auth
+      if (!isAuthenticated && !isAuth) {
         return AppRoutes.auth;
       }
 
+      // 5. Jika sudah login dan masih di halaman auth
       if (isAuthenticated && isAuth) {
         return AppRoutes.home;
       }
@@ -240,6 +257,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => KiblatPage(),
       ),
       GoRoute(
+        path: AppRoutes.cariMasjid,
+        builder: (context, state) => const CariMasjidPage(),
+      ),
+      GoRoute(
         path: AppRoutes.ruangan,
         builder: (context, state) => const RuanganPage(),
       ),
@@ -260,21 +281,30 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => MuazinPage(),
       ),
       GoRoute(
+        path: AppRoutes.kajianSahabat,
+        builder: (context, state) => const KajianListPage(
+          title: 'Sahabat Masjid',
+          tag: 'Sahabat Masjid',
+          badgeColor: Color(0xFFE9A23B),
+          type: 'doa_ramadhan',
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.kajianLive,
-        builder: (context, state) => KajianListPage(
+        builder: (context, state) => const KajianListPage(
           title: 'Riwayat Kajian Live',
           tag: 'Kajian Live',
-          badgeColor: const Color(0xFFE53935),
-          provider: kajianLiveListProvider,
+          badgeColor: Color(0xFFE53935),
+          type: 'live',
         ),
       ),
       GoRoute(
         path: AppRoutes.kajianTafsir,
-        builder: (context, state) => KajianListPage(
+        builder: (context, state) => const KajianListPage(
           title: 'Kajian Tafsir Quran',
           tag: 'Tafsir Qur’an',
-          badgeColor: const Color(0xFF048C7C),
-          provider: kajianTafsirListProvider,
+          badgeColor: Color(0xFF048C7C),
+          type: 'tafsir',
         ),
       ),
       GoRoute(
@@ -306,8 +336,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => OnboardPage(),
       ),
       GoRoute(
+        path: AppRoutes.jadwalImsakiah,
+        builder: (context, state) => const JadwalImsakiahPage(),
+      ),
+      GoRoute(
         path: AppRoutes.kalenderDzulhijjah,
-        builder: (context, state) => KalenderdzulhijjahPage(),
+        builder: (context, state) => const JadwalImsakiahPage(),
       ),
       GoRoute(
         path: AppRoutes.profile,

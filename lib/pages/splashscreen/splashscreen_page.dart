@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/core/router/app_router.dart';
+
+import 'package:masjid_app/core/storage/preferences_service.dart';
 
 class SplashscreenPage extends StatefulWidget {
   const SplashscreenPage({super.key});
@@ -17,26 +20,32 @@ class _SplashscreenPageState extends State<SplashscreenPage> {
   }
 
   Future<void> _checkRedirect() async {
-    await Future.delayed(const Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 2200));
     if (mounted) {
-      context.go(AppRoutes.home);
+      if (!PreferencesService.onboardingCompleted) {
+        context.go(AppRoutes.onboarding);
+      } else {
+        context.go(AppRoutes.home);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0DA49D),
-      body: SizedBox.expand(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/img/logo-splash.png',
-              width: 160,
-            ),
-          ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Image.asset(
+            'assets/img/new-logo.png',
+            width: 190,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
