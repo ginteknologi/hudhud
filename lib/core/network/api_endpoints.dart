@@ -3,7 +3,8 @@ class ApiEndpoints {
   // Default to local/dev or Cloudflare Worker domain via compile-time environment variable
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://marbot-api.ginteknologi.workers.dev/api/v1',
+    // defaultValue: 'https://marbot-api.ginteknologi.workers.dev/api/v1',
+    defaultValue: 'http://192.168.1.10:8787/api/v1',
   );
 
   static const String mediaBaseUrl = String.fromEnvironment(

@@ -4,11 +4,16 @@
   "description": "Cloudflare Workers + D1 SQL + R2 backend for Masjid An-Ni'mah (Marbot)",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --ip 0.0.0.0 --port 8787",
     "deploy": "wrangler deploy",
     "d1:create": "wrangler d1 create masjid-db",
     "d1:migrate:local": "wrangler d1 execute masjid-db --local --file=./schema.sql",
     "d1:migrate:remote": "wrangler d1 execute masjid-db --remote --file=./schema.sql",
+    "d1:sync": "node tools/sync_d1.mjs --incremental",
+    "d1:sync:full": "node tools/sync_d1.mjs",
+    "d1:import:hadits:v2": "node tools/import_hadits_v2.mjs all",
+    "d1:import:hadits:v2:sql-only": "node tools/import_hadits_v2.mjs all --sql-only",
+    "d1:import:hadits:v2:d1-only": "node tools/import_hadits_v2.mjs all --d1-only",
     "r2:create": "wrangler r2 bucket create masjid-media"
   },
   "dependencies": {

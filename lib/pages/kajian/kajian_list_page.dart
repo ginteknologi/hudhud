@@ -4,29 +4,47 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/core/router/app_router.dart';
-import 'package:masjid_app/models/artikel_data.dart';
-import 'package:masjid_app/pages/artikel/component/artikel_card.dart';
-import 'package:masjid_app/providers/artikel_provider.dart';
+import 'package:masjid_app/models/kajian_model.dart';
+import 'package:masjid_app/pages/kajian/component/kajian_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// Daftar lengkap artikel — dibuka dari tombol "Lihat Semua" di home.
-class ArtikelPage extends ConsumerWidget {
-  const ArtikelPage({super.key});
+/// Daftar lengkap kajian — dipakai dua route:
+///   /kajian/live   → [kajianLiveListProvider]
+///   /kajian/tafsir → [kajianTafsirListProvider]
+class KajianListPage extends ConsumerWidget {
+  const KajianListPage({
+    super.key,
+    required this.title,
+    required this.tag,
+    required this.badgeColor,
+    required this.provider,
+  });
 
-  static final List<ArtikelData> _dummyItems = List.generate(
+  final String title;
+  final String tag;
+  final Color badgeColor;
+  final FutureProvider<List<KajianModel>> provider;
+
+  static final List<KajianModel> _dummyItems = List.generate(
     4,
-    (i) => ArtikelData(
+    (i) => KajianModel(
       id: i + 1,
-      judul: 'Judul artikel sedang dimuat',
+      judul: 'Judul kajian sedang dimuat',
+      ustadz: 'Ustadz',
       image: '',
-      updatedAt: '',
-      publishDate: '',
     ),
   );
 
+  void _openDetail(BuildContext context, KajianModel item) {
+    context.push(
+      AppRoutes.kajianDetail.replaceFirst(':id', '${item.id}'),
+      extra: item,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(artikelListProvider);
+    final async = ref.watch(provider);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -46,13 +64,9 @@ class ArtikelPage extends ConsumerWidget {
     );
   }
 
-  void _openDetail(BuildContext context, ArtikelData item) {
-    context.push(AppRoutes.artikelDetail.replaceFirst(':id', '${item.id}'));
-  }
-
   Widget _buildBody(
     BuildContext context,
-    List<ArtikelData> items, {
+    List<KajianModel> items, {
     required bool isLoading,
   }) {
     return Skeletonizer(
@@ -73,7 +87,7 @@ class ArtikelPage extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: artikelBorder),
+                        border: Border.all(color: const Color(0xFFE2EBE8)),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.04),
@@ -85,7 +99,7 @@ class ArtikelPage extends ConsumerWidget {
                       child: const Icon(
                         Icons.arrow_back_rounded,
                         size: 20,
-                        color: artikelTitle,
+                        color: Color(0xFF137065),
                       ),
                     ),
                   ),
@@ -95,19 +109,19 @@ class ArtikelPage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Artikel / Informasi',
+                          title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
-                            color: artikelTitle,
+                            color: const Color(0xFF137065),
                           ),
                         ),
                         Text(
                           isLoading
-                              ? 'Memuat artikel...'
-                              : '${items.length} artikel tersedia',
+                              ? 'Memuat kajian...'
+                              : '${items.length} kajian tersedia',
                           style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.black54,
@@ -125,22 +139,23 @@ class ArtikelPage extends ConsumerWidget {
           else
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-              sliver: SliverList(
+              sliver: SliverGrid(
+                gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  mainAxisExtent: 140,
+                ),
                 delegate: SliverChildBuilderDelegate(
-                  (context, i) {
-                    final item = items[i];
-                    return ArtikelCard(
-                      judul: item.judul,
-                      image: item.image,
-                      dateLabel: formatArtikelDate(
-                        item.publishDate.isNotEmpty
-                            ? item.publishDate
-                            : item.updatedAt,
-                      ),
-                      featured: i == 0,
-                      onTap: () => _openDetail(context, item),
-                    );
-                  },
+                  (context, i) => KajianCard(
+                    item: items[i],
+                    tag: tag,
+                    badgeColor: badgeColor,
+                    width: null,
+                    height: null,
+                    onTap: () => _openDetail(context, items[i]),
+                  ),
                   childCount: items.length,
                 ),
               ),
@@ -155,10 +170,10 @@ class ArtikelPage extends ConsumerWidget {
       padding: EdgeInsets.symmetric(vertical: 60, horizontal: 24),
       child: Column(
         children: [
-          Icon(Icons.article_outlined, size: 48, color: Colors.black26),
+          Icon(Icons.video_library_outlined, size: 48, color: Colors.black26),
           SizedBox(height: 12),
           Text(
-            'Belum ada artikel',
+            'Belum ada kajian',
             style: TextStyle(fontSize: 13, color: Colors.black54),
           ),
         ],
@@ -173,10 +188,14 @@ class ArtikelPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.cloud_off_rounded, size: 48, color: Colors.black38),
+            const Icon(
+              Icons.cloud_off_rounded,
+              size: 48,
+              color: Colors.black38,
+            ),
             const SizedBox(height: 12),
             Text(
-              'Gagal memuat artikel',
+              'Gagal memuat kajian',
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -186,13 +205,13 @@ class ArtikelPage extends ConsumerWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: artikelTeal,
+                backgroundColor: const Color(0xFF048C7C),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onPressed: () => ref.invalidate(artikelListProvider),
+              onPressed: () => ref.invalidate(provider),
               child: const Text('Coba Lagi'),
             ),
           ],

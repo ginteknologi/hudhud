@@ -88,52 +88,63 @@ CREATE TABLE IF NOT EXISTS dzikir (
     waktu TEXT DEFAULT 'solat' -- pagi, petang, solat
 );
 
--- 6. Hadits (9 Imam & Arbain)
+-- 6. Hadits (v2)
+DROP TABLE IF EXISTS had_imam;
 CREATE TABLE IF NOT EXISTS had_imam (
-    imamId INTEGER PRIMARY KEY,
+    imamId      INTEGER PRIMARY KEY,
     imamSorting INTEGER DEFAULT 0,
-    hadits INTEGER DEFAULT 0,
-    longNama TEXT NOT NULL,
-    namaTabel TEXT NOT NULL UNIQUE
+    hadits      INTEGER DEFAULT 0,     -- total hadits dalam koleksi ini
+    longNama    TEXT    NOT NULL,
+    namaTabel   TEXT    NOT NULL UNIQUE,
+    slug        TEXT    NOT NULL UNIQUE -- slug dari API sumber (misal: 'bukhari', 'abu-dawud')
 );
 
-CREATE TABLE IF NOT EXISTS hadits_arbain (
-    NoHdt INTEGER PRIMARY KEY,
-    ID_Bab INTEGER,
-    ID_Kitab INTEGER DEFAULT 1,
-    Kitab_Indonesia TEXT DEFAULT 'Arba''in An-Nawawiyah',
-    Isi_Arab TEXT NOT NULL,
-    Isi_Indonesia TEXT NOT NULL
-);
+-- Seed data 9 Imam + Arbain
+INSERT OR REPLACE INTO had_imam (imamId, imamSorting, hadits, longNama, namaTabel, slug) VALUES
+  (1,  1, 42,   'Hadits Arba''in An-Nawawiyah', 'arbain',    'arbain'),
+  (2,  2, 6638, 'Shahih Bukhari',               'bukhari',   'bukhari'),
+  (3,  3, 4930, 'Shahih Muslim',                'muslim',    'muslim'),
+  (4,  4, 4419, 'Sunan Abu Daud',               'abudaud',   'abu-dawud'),
+  (5,  5, 3625, 'Sunan At-Tirmidzi',            'tirmidzi',  'tirmidzi'),
+  (6,  6, 5364, 'Sunan An-Nasa''i',             'nasai',     'nasai'),
+  (7,  7, 4285, 'Sunan Ibnu Majah',             'ibnumajah', 'ibnu-majah'),
+  (8,  8, 4305, 'Musnad Ahmad',                 'ahmad',     'ahmad'),
+  (9,  9, 1587, 'Muwaththa'' Malik',            'malik',     'malik'),
+  (10,10, 2949, 'Sunan Ad-Darimi',              'darimi',    'darimi');
 
-CREATE TABLE IF NOT EXISTS hadits_kitab (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    namaTabel TEXT NOT NULL,
-    ID_Kitab INTEGER NOT NULL,
-    Kitab_Indonesia TEXT NOT NULL,
-    Kitab_Arab TEXT,
-    total_hadits INTEGER DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS hadits_bab (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    namaTabel TEXT NOT NULL,
-    ID_Kitab INTEGER NOT NULL,
-    ID_Bab INTEGER NOT NULL,
-    Bab_Indonesia TEXT NOT NULL,
-    Bab_Arab TEXT
-);
-
+-- ============================================================
+-- 2. Konten Hadits — flat, bersih, tanpa kitab/bab artificial
+-- ============================================================
+DROP TABLE IF EXISTS hadits_konten;
 CREATE TABLE IF NOT EXISTS hadits_konten (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    namaTabel TEXT NOT NULL,
-    NoHdt INTEGER NOT NULL,
-    ID_Kitab INTEGER,
-    ID_Bab INTEGER,
-    Isi_Arab TEXT NOT NULL,
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    namaTabel    TEXT    NOT NULL,  -- FK ke had_imam.namaTabel
+    NoHdt        INTEGER NOT NULL,  -- nomor hadits dalam koleksi
+    Isi_Arab     TEXT    NOT NULL,
+    Isi_Indonesia TEXT   NOT NULL
+);
+
+-- Index untuk query cepat: list per imam, get by nomor
+CREATE INDEX IF NOT EXISTS idx_hadits_konten_tabel     ON hadits_konten(namaTabel, NoHdt);
+CREATE INDEX IF NOT EXISTS idx_hadits_konten_pagination ON hadits_konten(namaTabel, id);
+
+-- ============================================================
+-- 3. Arbain — tabel terpisah (struktur berbeda, sumber berbeda)
+-- ============================================================
+DROP TABLE IF EXISTS hadits_arbain;
+CREATE TABLE IF NOT EXISTS hadits_arbain (
+    NoHdt        INTEGER PRIMARY KEY,
+    Isi_Arab     TEXT NOT NULL,
     Isi_Indonesia TEXT NOT NULL
 );
-CREATE INDEX IF NOT EXISTS idx_hadits_konten ON hadits_konten(namaTabel, ID_Kitab, ID_Bab);
+
+-- ============================================================
+-- 4. Tabel lama (hadits_kitab, hadits_bab) — DIHAPUS
+-- Tidak dibutuhkan lagi di v2.
+-- ============================================================
+DROP TABLE IF EXISTS hadits_kitab;
+DROP TABLE IF EXISTS hadits_bab;
+
 
 -- 7. Kategori & Artikel Berita
 CREATE TABLE IF NOT EXISTS artikel_kategori (

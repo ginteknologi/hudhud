@@ -5,7 +5,7 @@ class KajianModel {
   final String subjudul;
   final String image;
   final String link;
-  final String type; // 'slider', 'list', 'live', 'muadzin'
+  final String type; // tafsir / live / muadzin / doa_ramadhan / quotes
 
   KajianModel({
     required this.id,
@@ -25,7 +25,7 @@ class KajianModel {
       subjudul: json['subjudul'] as String? ?? json['description'] as String? ?? '',
       image: json['image'] as String? ?? json['thumbnail'] as String? ?? '',
       link: json['link'] as String? ?? json['url'] as String? ?? '',
-      type: json['type'] as String? ?? 'list',
+      type: json['tipe'] as String? ?? json['type'] as String? ?? 'list',
     );
   }
 }

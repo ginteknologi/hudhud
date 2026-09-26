@@ -1,324 +1,317 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_card_ui.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/configs/file_setup.dart';
 import 'package:masjid_app/core/router/app_router.dart';
-import 'package:masjid_app/models/artikel_data.dart';
+import 'package:masjid_app/pages/artikel/component/artikel_card.dart';
+import 'package:masjid_app/pages/kajian/component/kajian_card.dart';
 import 'package:masjid_app/providers/artikel_provider.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:share_plus/share_plus.dart';
 
 class DetailArtikelPage extends ConsumerWidget {
   const DetailArtikelPage({super.key});
 
-  SafeArea layout(BuildContext context, ArtikelDetailResult result) {
-    final detail = result.detail;
-    final width = MediaQuery.of(context).size.width;
-    return SafeArea(
-        child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / 30),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Card(
-                          elevation: 0,
-                          color: const Color(0xFFF5F5F5),
-                          margin: const EdgeInsets.only(top: 20),
-                          clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            //set border radius more than 50% of height and width to make circle
-                          ),
-                          child: Container(
-                            width: width,
-                            height: 170,
-                            constraints: BoxConstraints.loose(Size.infinite),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(detail.image),
-                                    fit: BoxFit.cover)),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 5),
-                        child: Text(
-                          detail.categoryArtikel?['name'] ?? '',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 12),
-                        ),
-                      ),
-                      AutoSizeText(
-                        detail.judul,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                        maxLines: 4,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                          DateFormat('HH:mm | dd MMMM yyyy').format(
-                              DateTime.parse(detail.updatedAt)
-                                  .add(Duration(hours: 7))),
-                          // '17:40' +
-                          //     "  |  " +
-                          //     '17 Agustus 2023',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0,
-                              color: Colors.black)),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Html(
-                      //   data: (ctrl.detail.value.isi ?? '')
-                      //       .replaceAllMapped(
-                      //           RegExp(r'\n{2,}'), (match) => '\n')
-                      //       .replaceAll('<br><br>', '<br>')
-                      //       .replaceAll('<p></p>', '')
-                      //       .trim(),
-                      //   style: {
-                      //     'body': Style(
-                      //         margin: Margins.zero, padding: HtmlPaddings.zero),
-                      //     'h2': Style(
-                      //         fontSize: FontSize(18.0),
-                      //         fontWeight: FontWeight.bold,
-                      //         margin: Margins.zero),
-                      //     'h3': Style(
-                      //         fontSize: FontSize(18.0),
-                      //         fontWeight: FontWeight.bold,
-                      //         margin: Margins.zero),
-                      //     'p': Style(
-                      //         fontSize: FontSize.medium,
-                      //         margin: Margins.zero,
-                      //         padding: HtmlPaddings.zero,
-                      //         lineHeight: LineHeight(1.2),
-                      //         textAlign: TextAlign.justify),
-                      //     'br': Style(margin: Margins.only(bottom: 0.1)),
-                      //     'b': Style(
-                      //       fontWeight: FontWeight.bold,
-                      //     ),
-                      //     'i': Style(
-                      //       fontStyle: FontStyle.italic,
-                      //     ),
-                      //     'a': Style(
-                      //       color: Colors.blue,
-                      //     ),
-                      //   },
-                      // ),
-                      HtmlWidget(
-                        detail.isi ?? '',
-                        customStylesBuilder: (element) {
-                          if (element.localName == 'p') {
-                            return {
-                              'margin': '0px 0px 2px 0px',
-                              'padding': '0px 0px 0px 0px',
-                              'text-align': 'justify',
-                              'font-size': '14px',
-                            };
-                          }
-                          if (element.localName == 'br') {
-                            return {
-                              'margin': '0px 0px 0px 0px',
-                              'padding': '0px 0px 0px 0px'
-                            };
-                          }
-                          if (element.localName == 'h2' ||
-                              element.localName == 'h3') {
-                            return {'font-size': '18px', 'font-weight': 'bold'};
-                          }
-                          return null;
-                        },
-                        textStyle: TextStyle(fontSize: 14, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Divider(
-                        color: Colors.black38,
-                      ),
-                      Container(
-                        // height: 53,
-                        width: width,
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Container(
-                                padding: const EdgeInsets.only(right: 13.0),
-                                child: AutoSizeText("Yuk ingetin yang lain!",
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge
-                                            ?.fontSize,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: ButtonElevated(
-                                  title: 'Bagikan',
-                                  width: width,
-                                  bgcolor: const Color(0xFF92E3A9),
-                                  height: 35,
-                                  color: Colors.black,
-                                  radius: 5,
-                                  size: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.fontSize,
-                                  showIcon: "right",
-                                  iconRight: Icon(
-                                    Icons.share,
-                                    size: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.fontSize,
-                                  ),
-                                  onPressed: () async {
-                                    final file = await downloadAndSaveFile(
-                                      url: detail.image,
-                                      pathsave: '/artikel',
-                                    );
-                                    final resultshare =
-                                        await SharePlus.instance.share(
-                                      ShareParams(
-                                          files: [XFile(file)],
-                                          text: result.share,
-                                          subject: detail.judul),
-                                    );
-                                    if (resultshare.status ==
-                                        ShareResultStatus.success) {
-                                      Fluttertoast.showToast(
-                                          msg: "Berhasil dishare");
-                                    }
-                                  },
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const Divider(
-                        color: Colors.black38,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Artikel Lainnya",
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                      getListArtikel(result.lainnya, context),
-                      SizedBox(
-                        height: 20,
-                      )
-                    ]))));
-  }
-
-  ListView getListArtikel(List<ArtikelData> listArtikels, BuildContext context) {
-    return ListView.builder(
-      physics: const ClampingScrollPhysics(),
-      itemCount: listArtikels.length,
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        // Datum model = filteredEvents[index];
-        final artikel = listArtikels[index];
-        return FadeInUp(
-          child: ListCardUiWidget(
-            id: artikel.id,
-            title: artikel.judul,
-            position: MainAxisAlignment.end,
-            usingDivider: false,
-            height: 170,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(artikel.image), fit: BoxFit.cover)),
-            titleStyle: Theme.of(context).textTheme.titleSmall
-                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-            marginSeparator: 0,
-            subtitleStyle: Theme.of(context).textTheme.labelMedium
-                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black45),
-            onTap: () {
-              context.push('${AppRoutes.artikel}/${artikel.id}');
-              // Get.offAllNamed(
-              //     '${RoutesArtikel.root}/${ctrl.listArtikels[index].id}');
-            },
-            hasFooter: true,
-            footerContent: [
-              Text(
-                  DateFormat('HH:mm | dd MMMM yyyy').format(
-                      DateTime.parse(artikel.updatedAt)
-                          .add(const Duration(hours: 7))),
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.w300,
-                      letterSpacing: 0,
-                      color: Colors.white)),
-              Row(
-                children: [
-                  // Icon(
-                  //   Icons.remove_red_eye_rounded,
-                  //   color: Colors.white,
-                  //   size: Theme.of(context).textTheme.labelLarge?.fontSize,
-                  // ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  // Text(ctrl.listArtikels[index]['viewer'],
-                  //     textAlign: TextAlign.end,
-                  //     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  //         fontWeight: FontWeight.w300, color: Colors.white)),
-                ],
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final id = int.tryParse(GoRouterState.of(context).pathParameters['id'] ?? '') ?? 0;
+    final id =
+        int.tryParse(GoRouterState.of(context).pathParameters['id'] ?? '') ?? 0;
     final detailAsync = ref.watch(artikelDetailProvider(id));
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBarWSWidget.getAppbarWidget(
-          title: "Artikel Detail", context: context, elevation: 0),
-      body: detailAsync.when(
-        data: (result) => layout(context, result),
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (err, stack) => layout(
-            context,
-            ArtikelDetailResult(
-              detail: ArtikelData(
-                id: id,
-                judul: '',
-                image: '',
-                updatedAt: DateTime.now().toIso8601String(),
-                publishDate: '',
-              ),
-              lainnya: const [],
-              share: '',
-            )),
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF8FAF9),
+        body: SafeArea(
+          child: detailAsync.when(
+            data: (result) => result.detail.judul.isEmpty
+                ? _buildMissing(context)
+                : _buildBody(context, result),
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: artikelTeal),
+            ),
+            error: (_, __) => _buildMissing(context),
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () => Navigator.of(context).pop(),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: artikelBorder),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_back_rounded,
+                size: 20,
+                color: artikelTitle,
+              ),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Text(
+              'Artikel',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: artikelTitle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMissing(BuildContext context) {
+    return Column(
+      children: [
+        _buildHeader(context),
+        Expanded(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.article_outlined,
+                    size: 48, color: Colors.black26),
+                const SizedBox(height: 12),
+                Text(
+                  'Artikel tidak ditemukan',
+                  style: GoogleFonts.poppins(fontSize: 13, color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBody(BuildContext context, ArtikelDetailResult result) {
+    final detail = result.detail;
+    final kategori = (detail.categoryArtikel?['nama'] ??
+            detail.categoryArtikel?['name'] ??
+            '')
+        .toString();
+
+    return Column(
+      children: [
+        _buildHeader(context),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 28),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: detail.image.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: detail.image,
+                            fit: BoxFit.cover,
+                            errorWidget: (_, __, ___) =>
+                                const KajianFallbackImage(),
+                          )
+                        : const KajianFallbackImage(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                if (kategori.isNotEmpty) _buildChip(kategori),
+                const SizedBox(height: 10),
+                Text(
+                  cleanArtikelText(detail.judul),
+                  style: GoogleFonts.poppins(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: artikelTitle,
+                    height: 1.35,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_today_rounded,
+                        size: 12, color: artikelTeal),
+                    const SizedBox(width: 4),
+                    Text(
+                      formatArtikelDate(
+                        detail.publishDate.isNotEmpty
+                            ? detail.publishDate
+                            : detail.updatedAt,
+                      ),
+                      style: GoogleFonts.poppins(
+                        color: artikelTeal,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: artikelBorder),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: HtmlWidget(
+                    detail.isi ?? '',
+                    customStylesBuilder: (element) {
+                      if (element.localName == 'p') {
+                        return {
+                          'margin': '0px 0px 8px 0px',
+                          'padding': '0px',
+                          'text-align': 'justify',
+                          'font-size': '13.5px',
+                          'line-height': '1.7',
+                        };
+                      }
+                      if (element.localName == 'br') {
+                        return {'margin': '0px', 'padding': '0px'};
+                      }
+                      if (element.localName == 'h2' ||
+                          element.localName == 'h3') {
+                        return {
+                          'font-size': '16px',
+                          'font-weight': 'bold',
+                          'color': '#137065',
+                        };
+                      }
+                      return null;
+                    },
+                    textStyle: GoogleFonts.poppins(
+                      fontSize: 13.5,
+                      height: 1.7,
+                      color: const Color(0xFF333333),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: artikelTeal,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () => _shareDetail(result),
+                    icon: const Icon(Icons.share_rounded, size: 18),
+                    label: Text(
+                      'Bagikan Artikel',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                if (result.lainnya.isNotEmpty) ...[
+                  const SizedBox(height: 26),
+                  Text(
+                    'Artikel Lainnya',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: artikelTitle,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ...result.lainnya.map(
+                    (item) => ArtikelCard(
+                      judul: item.judul,
+                      image: item.image,
+                      dateLabel: formatArtikelDate(
+                        item.publishDate.isNotEmpty
+                            ? item.publishDate
+                            : item.updatedAt,
+                      ),
+                      onTap: () => context.push(
+                        AppRoutes.artikelDetail.replaceFirst(':id', '${item.id}'),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChip(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF5F2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.poppins(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: artikelTeal,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _shareDetail(ArtikelDetailResult result) async {
+    final detail = result.detail;
+    final file = await downloadAndSaveFile(
+      url: detail.image,
+      pathsave: '/artikel',
+    );
+    final shared = await SharePlus.instance.share(
+      ShareParams(files: [XFile(file)], text: result.share, subject: detail.judul),
+    );
+    if (shared.status == ShareResultStatus.success) {
+      Fluttertoast.showToast(msg: 'Berhasil dishare');
+    }
   }
 }

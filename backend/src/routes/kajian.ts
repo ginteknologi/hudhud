@@ -21,25 +21,18 @@ kajian.get('/list', async (c) => {
   }
 });
 
-// GET /api/v1/kajian/slider
+// GET /api/v1/kajian/slider?type=tafsir
+// `type` cocok persis dengan `tipe` (asal: kajian_kategoris.nama di MariaDB prod).
 kajian.get('/slider', async (c) => {
-  const type = c.req.query('type');
+  const type = c.req.query('type') || 'tafsir';
   try {
-    let query = `
+    const { results } = await c.env.DB.prepare(`
       SELECT id, judul, ustadz, deskripsi as subjudul, deskripsi,
              thumbnail as image, thumbnail, video_link as link, video_link, tipe
       FROM kajian
-      WHERE tipe = 'slider'
-    `;
-    const params: any[] = [];
-    if (type) {
-      query += ' AND (judul LIKE ? OR deskripsi LIKE ?)';
-      params.push(`%${type}%`, `%${type}%`);
-    }
-    query += ' ORDER BY id DESC LIMIT 5';
-
-    const stmt = c.env.DB.prepare(query);
-    const { results } = params.length > 0 ? await stmt.bind(...params).all() : await stmt.all();
+      WHERE tipe = ?
+      ORDER BY id DESC LIMIT 5
+    `).bind(type).all();
 
     return apiResponse(c, 200, true, 'Success', results || []);
   } catch (e: any) {

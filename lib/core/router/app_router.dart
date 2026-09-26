@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/pages/akun/akun_page.dart';
@@ -16,8 +17,11 @@ import 'package:masjid_app/pages/hadits/bab/bab_hadits_page.dart';
 import 'package:masjid_app/pages/hadits/content/content_hadits_page.dart';
 import 'package:masjid_app/pages/hadits/detail/detail_hadits_page.dart';
 import 'package:masjid_app/pages/hadits/hadits_page.dart';
+import 'package:masjid_app/pages/hadits/list/hadits_list_page.dart';
 import 'package:masjid_app/pages/home/home_page.dart';
 import 'package:masjid_app/pages/kalenderdzulhijjah/kalenderdzulhijjah_page.dart';
+import 'package:masjid_app/pages/kajian/detail/kajian_detail_page.dart';
+import 'package:masjid_app/pages/kajian/kajian_list_page.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_page.dart';
 import 'package:masjid_app/pages/muazin/muazin_page.dart';
 import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_page.dart';
@@ -43,6 +47,7 @@ import 'package:masjid_app/pages/sedekah/transaksi/status/status_sedekah_page.da
 import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_page.dart';
 import 'package:masjid_app/pages/splashscreen/splashscreen_page.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
+import 'package:masjid_app/providers/kajian_provider.dart';
 
 class AppRoutes {
   static const String splash = '/splash';
@@ -63,6 +68,7 @@ class AppRoutes {
   static const String doaContent = '/doa/:id/:content';
   static const String dzikir = '/dzikir';
   static const String hadits = '/hadits';
+  static const String haditsListRoute = '/hadits/list/:id'; // v2 — langsung ke list hadits
   static const String haditsBab = '/hadits/bab/:id';
   static const String haditsDetail = '/hadits/:id';
   static const String haditsContent = '/hadits/:id/:content';
@@ -79,6 +85,9 @@ class AppRoutes {
   static const String ruanganBooking = '/ruangan/booking';
   static const String dkm = '/dkm';
   static const String muazin = '/muazin';
+  static const String kajianLive = '/kajian/live';
+  static const String kajianTafsir = '/kajian/tafsir';
+  static const String kajianDetail = '/kajian/detail/:id';
   static const String artikel = '/artikel';
   static const String artikelDetail = '/artikel/:id';
   static const String notifikasi = '/notifikasi';
@@ -181,6 +190,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.hadits,
         builder: (context, state) => HaditsPage(),
       ),
+      // v2 — List hadits langsung dengan pagination
+      GoRoute(
+        path: AppRoutes.haditsListRoute,
+        builder: (context, state) => const HaditsListPage(),
+      ),
       GoRoute(
         path: AppRoutes.haditsBab,
         builder: (context, state) => const BabHaditsPage(),
@@ -244,6 +258,28 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.muazin,
         builder: (context, state) => MuazinPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.kajianLive,
+        builder: (context, state) => KajianListPage(
+          title: 'Riwayat Kajian Live',
+          tag: 'Kajian Live',
+          badgeColor: const Color(0xFFE53935),
+          provider: kajianLiveListProvider,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.kajianTafsir,
+        builder: (context, state) => KajianListPage(
+          title: 'Kajian Tafsir Quran',
+          tag: 'Tafsir Qur’an',
+          badgeColor: const Color(0xFF048C7C),
+          provider: kajianTafsirListProvider,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.kajianDetail,
+        builder: (context, state) => const KajianDetailPage(),
       ),
       GoRoute(
         path: AppRoutes.artikel,

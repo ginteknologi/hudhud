@@ -54,14 +54,16 @@ api.route('/ruangan', ruanganRouter);
 api.route('/profile', profileRouter);
 api.route('/', extraRouter); // /dkm, /sosmed, /event, /kartu-ucapan, /live, /notif, /fcm, /home
 
-// Media Streamer (Cloudflare R2 Bucket)
-api.get('/media/:key', async (c) => {
-  const key = c.req.param('key');
+// Media Streamer (Cloudflare R2 Bucket) — Mendukung path bertingkat seperti /media/files/xxx.png
+app.get('/media/*', async (c) => {
+  const path = c.req.path.replace(/^\/media\//, '');
+  if (!path) return c.json({ code: 400, message: 'Key path media diperlukan' }, 400);
+
   if (!c.env.MEDIA_BUCKET) {
     return c.json({ code: 404, message: 'Bucket media tidak dikonfigurasi' }, 404);
   }
   try {
-    const object = await c.env.MEDIA_BUCKET.get(key);
+    const object = await c.env.MEDIA_BUCKET.get(path);
     if (!object) {
       return c.json({ code: 404, message: 'Media tidak ditemukan' }, 404);
     }
@@ -69,6 +71,15 @@ api.get('/media/:key', async (c) => {
     object.writeHttpMetadata(headers);
     headers.set('etag', object.httpEtag);
     headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    
+    // Fallback Content-Type jika belum ada di metadata
+    if (!headers.get('content-type')) {
+      if (path.endsWith('.png')) headers.set('content-type', 'image/png');
+      else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) headers.set('content-type', 'image/jpeg');
+      else if (path.endsWith('.webp')) headers.set('content-type', 'image/webp');
+      else if (path.endsWith('.svg')) headers.set('content-type', 'image/svg+xml');
+    }
+
     return new Response(object.body, { headers });
   } catch (e) {
     return c.json({ code: 500, message: 'Gagal mengambil media' }, 500);

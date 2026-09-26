@@ -4,7 +4,10 @@ import { apiResponse } from '../helpers/response';
 
 const hadits = new Hono<{ Bindings: Env }>();
 
+// ============================================================
 // GET /api/v1/hadits
+// Daftar semua imam/perawi
+// ============================================================
 hadits.get('/', async (c) => {
   try {
     const { results } = await c.env.DB.prepare(
@@ -12,90 +15,65 @@ hadits.get('/', async (c) => {
     ).all();
     return apiResponse(c, 200, true, 'Success', results || []);
   } catch (e: any) {
-    return apiResponse(c, 200, true, 'Success', []);
+    return apiResponse(c, 500, false, e.message, []);
   }
 });
 
-// GET /api/v1/hadits/detail/:id
+// ============================================================
+// GET /api/v1/hadits/detail/:namaTabel?page=1&limit=20
+// Daftar hadits dengan pagination
+// Arbain: langsung semua (42 hadits, tidak perlu pagination)
+// ============================================================
 hadits.get('/detail/:id', async (c) => {
   const table = c.req.param('id');
+  const page  = Math.max(1, parseInt(c.req.query('page')  || '1',  10));
+  const limit = Math.min(100, Math.max(1, parseInt(c.req.query('limit') || '20', 10)));
+  const offset = (page - 1) * limit;
+
   try {
     if (table === 'arbain') {
+      // Arbain: kembalikan semua (42 hadits)
       const { results } = await c.env.DB.prepare(
-        'SELECT NoHdt, ID_Kitab, Kitab_Indonesia, Isi_Arab, Isi_Indonesia FROM hadits_arbain ORDER BY NoHdt ASC'
+        'SELECT NoHdt, Isi_Arab, Isi_Indonesia FROM hadits_arbain ORDER BY NoHdt ASC'
       ).all();
       return apiResponse(c, 200, true, 'Success', results || []);
-    } else {
-      const { results } = await c.env.DB.prepare(
-        'SELECT ID_Kitab, Kitab_Indonesia, Kitab_Arab, total_hadits as NoHdt FROM hadits_kitab WHERE namaTabel = ? ORDER BY ID_Kitab ASC'
-      ).bind(table).all();
-      return apiResponse(c, 200, true, 'Success', results || []);
     }
+
+    // 9 Imam: pagination
+    const [{ total }] = (await c.env.DB.prepare(
+      'SELECT COUNT(*) as total FROM hadits_konten WHERE namaTabel = ?'
+    ).bind(table).all()).results as any[];
+
+    const { results } = await c.env.DB.prepare(
+      'SELECT NoHdt, Isi_Arab, Isi_Indonesia FROM hadits_konten WHERE namaTabel = ? ORDER BY NoHdt ASC LIMIT ? OFFSET ?'
+    ).bind(table, limit, offset).all();
+
+    return apiResponse(c, 200, true, 'Success', results || [], {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (e: any) {
-    return apiResponse(c, 200, true, 'Success', []);
+    return apiResponse(c, 500, false, e.message, []);
   }
 });
 
-// GET /api/v1/hadits/detail/bab/:id?kitab=:idKitab
+// ============================================================
+// GET /api/v1/hadits/detail/bab/:namaTabel?kitab=1
+// DEPRECATED — dijaga untuk backward compatibility
+// Arahkan ke endpoint pagination
+// ============================================================
 hadits.get('/detail/bab/:id', async (c) => {
-  const table = c.req.param('id');
-  const kitab = c.req.query('kitab') || '1';
-  try {
-    if (table === 'arbain') {
-      const { results } = await c.env.DB.prepare(
-        'SELECT ID_Bab, ID_Kitab, Bab_Indonesia, Bab_Arab FROM hadits_bab WHERE namaTabel = ? ORDER BY ID_Bab ASC'
-      ).bind('arbain').all();
-      return apiResponse(c, 200, true, 'Success', results || []);
-    } else {
-      const { results } = await c.env.DB.prepare(
-        'SELECT ID_Bab, ID_Kitab, Bab_Indonesia, Bab_Arab FROM hadits_bab WHERE namaTabel = ? AND ID_Kitab = ? ORDER BY ID_Bab ASC'
-      ).bind(table, kitab).all();
-      return apiResponse(c, 200, true, 'Success', results || []);
-    }
-  } catch (e: any) {
-    return apiResponse(c, 200, true, 'Success', []);
-  }
+  return apiResponse(c, 200, true, 'Deprecated. Gunakan /detail/:namaTabel?page=1', []);
 });
 
-// GET /api/v1/hadits/detail/bab/content/:id?ID_Kitab=&ID_Bab=
+// ============================================================
+// GET /api/v1/hadits/detail/bab/content/:namaTabel?ID_Kitab=&ID_Bab=
+// DEPRECATED — dijaga untuk backward compatibility
+// ============================================================
 hadits.get('/detail/bab/content/:id', async (c) => {
-  const table = c.req.param('id');
-  const idKitab = c.req.query('ID_Kitab');
-  const idBab = c.req.query('ID_Bab');
-
-  try {
-    if (table === 'arbain') {
-      let query = 'SELECT NoHdt, ID_Bab, ID_Kitab, Isi_Arab, Isi_Indonesia FROM hadits_arbain';
-      const params: any[] = [];
-      if (idBab && idBab !== 'null') {
-        query += ' WHERE ID_Bab = ?';
-        params.push(parseInt(idBab, 10));
-      }
-      query += ' ORDER BY NoHdt ASC';
-
-      const stmt = c.env.DB.prepare(query);
-      const { results } = params.length > 0 ? await stmt.bind(...params).all() : await stmt.all();
-      return apiResponse(c, 200, true, 'Success', results || []);
-    } else {
-      let query = 'SELECT NoHdt, ID_Bab, ID_Kitab, Isi_Arab, Isi_Indonesia FROM hadits_konten WHERE namaTabel = ?';
-      const params: any[] = [table];
-
-      if (idBab && idBab !== 'null') {
-        query += ' AND ID_Bab = ?';
-        params.push(parseInt(idBab, 10));
-      } else if (idKitab && idKitab !== 'null') {
-        query += ' AND ID_Kitab = ?';
-        params.push(parseInt(idKitab, 10));
-      }
-      query += ' ORDER BY NoHdt ASC';
-
-      const stmt = c.env.DB.prepare(query);
-      const { results } = await stmt.bind(...params).all();
-      return apiResponse(c, 200, true, 'Success', results || []);
-    }
-  } catch (e: any) {
-    return apiResponse(c, 200, true, 'Success', []);
-  }
+  return apiResponse(c, 200, true, 'Deprecated. Gunakan /detail/:namaTabel?page=1', []);
 });
 
 export default hadits;

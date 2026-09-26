@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/pages/hadits/component/hadits_last_read_card.dart';
 import 'package:masjid_app/providers/hadits_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -305,7 +304,7 @@ class _HaditsPageState extends ConsumerState<HaditsPage> {
           borderRadius: BorderRadius.circular(18),
           onTap: () async {
             await context.push(
-              '${AppRoutes.hadits}/$namaTabel',
+              '/hadits/list/$namaTabel',
               extra: book,
             );
             if (mounted) setState(() {});

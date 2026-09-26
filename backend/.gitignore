@@ -14,6 +14,9 @@ yarn-error.log*
 # Build outputs
 dist/
 
+# SQL chunk hasil tools/sync_d1.mjs (dibuat ulang tiap sync)
+sync_temp/
+
 # OS specific
 .DS_Store
 Thumbs.db
