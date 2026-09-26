@@ -3,8 +3,8 @@ class ApiEndpoints {
   // Default to local/dev or Cloudflare Worker domain via compile-time environment variable
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    // defaultValue: 'https://marbot-api.ginteknologi.workers.dev/api/v1',
-    defaultValue: 'http://192.168.1.10:8787/api/v1',
+    defaultValue: 'https://marbot-api.ginteknologi.workers.dev/api/v1',
+    // defaultValue: 'http://192.168.1.10:8787/api/v1',
   );
 
   static const String mediaBaseUrl = String.fromEnvironment(
@@ -35,8 +35,11 @@ class ApiEndpoints {
   static const String dzikir = '/doa/dzikir';
 
   // Hadits
-  static const String haditsBab = '/hadits/bab';
-  static const String haditsDetail = '/hadits/detail'; // + /:id
+  static const String hadits = '/hadits';
+  static const String haditsBab = '/hadits/bab'; // + /:namaTabel
+  static const String haditsDetail = '/hadits/detail'; // + /:namaTabel
+  static const String haditsSearch = '/hadits/search';
+  static const String haditsTema = '/hadits/tema'; // + /:id
 
   // Artikel & Kajian
   static const String artikel = '/artikel';

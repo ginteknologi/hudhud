@@ -1,17 +1,13 @@
 import 'dart:convert';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/button/iconbutton.dart';
-import 'package:masjid_app/components/input/input_text.dart';
-import 'package:masjid_app/components/layout/custom_modal_bottom_sheet.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
+import 'package:masjid_app/pages/quran/component/mushaf_filter_bottom_sheet.dart';
 import 'package:masjid_app/pages/quran/halaman_madinah/component/image_viewer_widget.dart';
 import 'package:masjid_app/providers/quran_page_providers.dart';
 import 'package:masjid_app/storage/bookmarkStorage.dart';
@@ -30,19 +26,15 @@ class _HalamanQuranMadinahPageState
   static const String _lastReadKey = 'madinahLastRead';
 
   final BookmarkStorage _bookmarkStorage = BookmarkStorage("madinah");
-  final TextEditingController searchController = TextEditingController();
-  final TextEditingController inputFilter = TextEditingController();
 
   var surahSaatIni = 'Quran Madinah';
   var halSaatIni = '1';
   var bookmarked = false;
-  var selectedJuz = true;
-  var isMax = false;
   int toSurat = 0;
   int lastReadHal = 1;
-  String _search = '';
   Map<String, dynamic>? _currentPage;
   bool _isNavbarVisible = true;
+  DateTime? _lastOrientationToggleTime;
 
   @override
   void initState() {
@@ -66,8 +58,6 @@ class _HalamanQuranMadinahPageState
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    searchController.dispose();
-    inputFilter.dispose();
     super.dispose();
   }
 
@@ -114,6 +104,7 @@ class _HalamanQuranMadinahPageState
         _currentPage = item;
         surahSaatIni = item['surat'].toString();
         halSaatIni = item['hal'].toString();
+        toSurat = index + 1;
       });
       _saveBookmark(item);
     });
@@ -142,26 +133,6 @@ class _HalamanQuranMadinahPageState
     });
   }
 
-  /// Pengganti `goToData(item)`: cari surah hasil pencarian di aset halaman.
-  void _goToData(dynamic itemData, List<Map<String, dynamic>> listSurah) {
-    final matches = listSurah.where((item) =>
-        item['surat'].toString().toLowerCase() ==
-        itemData['nama'].toString().toLowerCase());
-    if (matches.isEmpty) return;
-    _setPageFromItem(matches.first);
-  }
-
-  /// Pengganti `goToNumber(numbertogo)`: /quran/juz/{id} → `hal` → halaman.
-  Future<void> _goToNumber(
-      String numbertogo, List<Map<String, dynamic>> listSurah) async {
-    final juz = await ref.read(quranJuzPageProvider(numbertogo).future);
-    final hal = juz?.hal;
-    if (hal == null) return;
-    final matches = listSurah.where((item) => item['hal'] == hal);
-    if (matches.isEmpty) return;
-    _setPageFromItem(matches.first);
-  }
-
   /// Pengganti `goToHal(numbertogo)`: langsung cari nomor halaman di aset.
   void _goToHal(String numbertogo, List<Map<String, dynamic>> listSurah) {
     final matches =
@@ -171,6 +142,14 @@ class _HalamanQuranMadinahPageState
   }
 
   void _toggleOrientation() {
+    final now = DateTime.now();
+    if (_lastOrientationToggleTime != null &&
+        now.difference(_lastOrientationToggleTime!) <
+            const Duration(milliseconds: 600)) {
+      return;
+    }
+    _lastOrientationToggleTime = now;
+
     final orientation = MediaQuery.of(context).orientation;
     if (orientation == Orientation.portrait) {
       SystemChrome.setPreferredOrientations([
@@ -182,6 +161,23 @@ class _HalamanQuranMadinahPageState
         DeviceOrientation.portraitUp,
       ]);
     }
+  }
+
+  void _openFilterBottomSheet(
+    List<Map<String, dynamic>> listSurah, {
+    MushafFilterTab initialTab = MushafFilterTab.halaman,
+  }) {
+    final curHal = int.tryParse(halSaatIni) ?? lastReadHal;
+    showMushafFilterBottomSheet(
+      context: context,
+      currentHal: curHal,
+      currentSurah: surahSaatIni,
+      listSurah: listSurah,
+      initialTab: initialTab,
+      onSelectPage: (targetPage) {
+        _goToHal(targetPage.toString(), listSurah);
+      },
+    );
   }
 
   SafeArea layout(List<Map<String, dynamic>> listSurah, bool isLoadingList,
@@ -253,355 +249,12 @@ class _HalamanQuranMadinahPageState
   }
 
   void showModal(List<Map<String, dynamic>> listSurah, BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        useSafeArea: true,
-        showDragHandle: false,
-        enableDrag: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(0.0),
-          ),
-        ),
-        builder: (BuildContext bc) {
-          return StatefulBuilder(builder: (BuildContext bc, setModalState) {
-            return CustomModalBottomSheet(
-              typeSheet: TypeBottomSheet.typeFullscreenSheet,
-              content: [
-                InputText(
-                  suffixIcon: Icon(Icons.search),
-                  labelPosition: 'none',
-                  placeholder: 'Cari',
-                  radius: 5,
-                  isFill: true,
-                  fillColor: Colors.white,
-                  placeholderStyle: Theme.of(context).textTheme.bodyMedium,
-                  inputPadding: const EdgeInsets.all(15),
-                  controller: searchController,
-                  onSubmit: (newValue) {},
-                  onEditingComplete: () {},
-                  onChanged: (newValue) {
-                    setState(() {
-                      _search = newValue;
-                    });
-                    setModalState(() {});
-                  },
-                  validator: (newValue) {
-                    if (newValue!.isEmpty) {
-                      return "Mohon untuk diisi.";
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 30,
-                  child: Text(
-                    "Surah",
-                    textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor),
-                  ),
-                ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height -
-                        kBottomNavigationBarHeight -
-                        kToolbarHeight -
-                        60,
-                    child: Consumer(builder: (context, ref, child) {
-                      final searchAsync =
-                          ref.watch(quranSurahSearchProvider(_search));
-                      if (searchAsync.isLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      final results = searchAsync.valueOrNull ?? const [];
-                      return ListView.builder(
-                        physics: const ClampingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: results.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          var item = results[index];
-                          return FadeInUp(
-                            child: ListItemUiWidget(
-                              showIcon: IconPosition.left,
-                              iconLeft: Text(item['id'].toString()),
-                              id: item['id'],
-                              title: item['nama'],
-                              subTitle:
-                                  '${item['arti']} - ${item['ayat']} ayat',
-                              subtitleStyle: TextStyle(fontSize: 2),
-                              onTap: () {
-                                _goToData(item, listSurah);
-                                if (context.mounted) {
-                                  Navigator.pop(context);
-                                }
-                              },
-                              titleStyle: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                            ),
-                          );
-                        },
-                      );
-                    }))
-              ],
-            );
-          });
-        });
+    _openFilterBottomSheet(listSurah, initialTab: MushafFilterTab.surah);
   }
 
   void showDialogFilter(
       List<Map<String, dynamic>> listSurah, BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext dialogContext) {
-        return StatefulBuilder(builder: (BuildContext bc, setModalState) {
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
-              child: Column(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width - 25,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Color(0xFF189A8C),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(7),
-                            topRight: Radius.circular(7))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Pergi Ke',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.white),
-                        ),
-                        ButtonIcon(
-                          onTap: () {
-                            Navigator.pop(dialogContext);
-                          },
-                          bgcolor: Colors.transparent,
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                      width: MediaQuery.of(context).size.width - 25,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(7),
-                              bottomRight: Radius.circular(7))),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ButtonElevated(
-                                title: 'Juz',
-                                width: 120,
-                                bgcolor: selectedJuz == true
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).secondaryHeaderColor,
-                                height: 30,
-                                color: selectedJuz == true
-                                    ? Colors.white
-                                    : Colors.black,
-                                radius: 0,
-                                onPressed: () {
-                                  setModalState(() {
-                                    selectedJuz = !selectedJuz;
-                                  });
-                                },
-                              ),
-                              ButtonElevated(
-                                title: 'Halaman',
-                                width: 120,
-                                bgcolor: selectedJuz == false
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).secondaryHeaderColor,
-                                height: 30,
-                                color: selectedJuz == false
-                                    ? Colors.white
-                                    : Colors.black,
-                                radius: 0,
-                                onPressed: () {
-                                  setModalState(() {
-                                    selectedJuz = !selectedJuz;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: InputText(
-                              inputType: TextInputType.number,
-                              controller: inputFilter,
-                              labelPosition: "none",
-                              placeholder:
-                                  selectedJuz == true ? "1-30" : "1-604",
-                              textAlign: TextAlign.center,
-                              isFill: true,
-                              placeholderStyle:
-                                  Theme.of(context).textTheme.bodyMedium,
-                              inputAction: TextInputAction.next,
-                              onSubmit: (newValue) {},
-                              onEditingComplete: () {},
-                              onChanged: (newValue) {},
-                              validator: (newValue) {
-                                if (newValue!.isEmpty) {
-                                  return "Mohon untuk diisi.";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          isMax != true
-                              ? Container()
-                              : SizedBox(
-                                  width: MediaQuery.of(context).size.width - 25,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      selectedJuz == true
-                                          ? Text('Maks Juz 30',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(color: Colors.red))
-                                          : Text('Maks Halaman 604',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(color: Colors.red))
-                                    ],
-                                  ),
-                                ),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 25,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 15),
-                            decoration: BoxDecoration(
-                                color: Color(0xFFDCDCDC),
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(7),
-                                    bottomRight: Radius.circular(7))),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: selectedJuz
-                                    ? [
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        ButtonElevated(
-                                          title: 'Buka Juz',
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.5,
-                                          size: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.fontSize,
-                                          bgcolor: Color(0xFF2128C2),
-                                          height: 30,
-                                          color: Colors.white,
-                                          radius: 5,
-                                          onPressed: () {
-                                            if (selectedJuz == true) {
-                                              final number = int.tryParse(
-                                                  inputFilter.text);
-                                              if (number == null) return;
-                                              if (number > 30) {
-                                                setModalState(() {
-                                                  isMax = true;
-                                                });
-                                              } else {
-                                                setModalState(() {
-                                                  isMax = false;
-                                                });
-                                                _goToNumber(inputFilter.text,
-                                                    listSurah);
-                                                Navigator.pop(dialogContext);
-                                              }
-                                            }
-                                          },
-                                        ),
-                                      ]
-                                    : [
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        ButtonElevated(
-                                          title: 'Buka Halaman',
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.5,
-                                          size: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.fontSize,
-                                          bgcolor: Color(0xFF2128C2),
-                                          height: 30,
-                                          color: Colors.white,
-                                          radius: 5,
-                                          onPressed: () {
-                                            if (selectedJuz != true) {
-                                              final number = int.tryParse(
-                                                  inputFilter.text);
-                                              if (number == null) return;
-                                              if (number > 604) {
-                                                setModalState(() {
-                                                  isMax = true;
-                                                });
-                                              } else {
-                                                setModalState(() {
-                                                  isMax = false;
-                                                });
-                                                _goToHal(inputFilter.text,
-                                                    listSurah);
-                                                Navigator.pop(dialogContext);
-                                              }
-                                            }
-                                          },
-                                        ),
-                                      ]),
-                          ),
-                        ],
-                      )),
-                ],
-              ),
-            ),
-          );
-        });
-      },
-    );
+    _openFilterBottomSheet(listSurah, initialTab: MushafFilterTab.halaman);
   }
 
   @override

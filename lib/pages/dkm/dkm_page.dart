@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -39,8 +40,38 @@ const List<Map<String, String>> kOfficialSocials = [
   },
 ];
 
-class DkmPage extends ConsumerWidget {
+class DkmPage extends ConsumerStatefulWidget {
   const DkmPage({super.key});
+
+  @override
+  ConsumerState<DkmPage> createState() => _DkmPageState();
+}
+
+class _DkmPageState extends ConsumerState<DkmPage> {
+  late final ScrollController _scrollController;
+  bool _isScrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final scrolled =
+        _scrollController.hasClients && _scrollController.offset > 24;
+    if (scrolled != _isScrolled) {
+      setState(() => _isScrolled = scrolled);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future<void> _openLink(BuildContext context, String link) async {
     final url = Uri.parse(link);
@@ -51,69 +82,55 @@ class DkmPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final user = ref.watch(authNotifierProvider).valueOrNull;
     final version = ref.watch(appVersionProvider).valueOrNull ?? '0.0.0';
     final isLoggedIn = user != null;
+    final topPadding = MediaQuery.of(context).padding.top;
 
-    return Scaffold(
-      backgroundColor: kTilePageBg,
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final overlayStyle = SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: _isScrolled ? Brightness.dark : Brightness.light,
+      statusBarBrightness: _isScrolled ? Brightness.light : Brightness.dark,
+    );
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlayStyle,
+      child: Scaffold(
+        backgroundColor: kTilePageBg,
+        body: Stack(
           children: [
-            _header(context, user?.name ?? 'Tamu', user?.email ?? '',
-                user?.photo ?? ''),
-            const SizedBox(height: 22),
-            const SettingsSectionTitle('Pengaturan'),
-            SettingsCard(
+            SingleChildScrollView(
+              controller: _scrollController,
+              physics: const ClampingScrollPhysics(),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SettingsTapRow(
-                    icon: Icons.tune_rounded,
-                    title: 'Pengaturan Umum',
-                    subtitle: 'Notifikasi adzan, izin, dan baterai',
-                    onTap: () => context.push(AppRoutes.pengaturanUmum),
-                  ),
-                  const Divider(height: 1, color: kTileBorder),
-                  SettingsTapRow(
-                    icon: Icons.menu_book_rounded,
-                    title: 'Pengaturan Al-Qur\'an',
-                    subtitle: 'Ukuran teks, terjemahan, dan qori murottal',
-                    onTap: () => context.push(AppRoutes.quranPengaturan),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 22),
-            const SettingsSectionTitle('Akun'),
-            SettingsCard(
-              child: Column(
-                children: [
-                  SettingsTapRow(
-                    icon: Icons.person_outline_rounded,
-                    title: 'Edit Profil',
-                    subtitle: isLoggedIn
-                        ? 'Ubah nama, nomor telepon, dan foto'
-                        : 'Masuk untuk mengubah profil',
-                    onTap: () => context.push(
-                      isLoggedIn ? AppRoutes.profileEdit : AppRoutes.auth,
+                  _header(context, user?.name ?? 'Tamu', user?.email ?? '',
+                      user?.photo ?? ''),
+                  const SizedBox(height: 22),
+                  const SettingsSectionTitle('Pengaturan'),
+              SettingsCard(
+                child: Column(
+                  children: [
+                    SettingsTapRow(
+                      icon: Icons.tune_rounded,
+                      title: 'Pengaturan Umum',
+                      subtitle: 'Notifikasi adzan, izin, dan baterai',
+                      onTap: () => context.push(AppRoutes.pengaturanUmum),
                     ),
-                  ),
-                  const Divider(height: 1, color: kTileBorder),
-                  SettingsTapRow(
-                    icon: Icons.history_rounded,
-                    title: 'Riwayat Sedekah',
-                    onTap: () => context.push(
-                      isLoggedIn ? AppRoutes.profileRiwayat : AppRoutes.auth,
+                    const Divider(height: 1, color: kTileBorder),
+                    SettingsTapRow(
+                      icon: Icons.menu_book_rounded,
+                      title: 'Pengaturan Al-Qur\'an',
+                      subtitle: 'Ukuran teks, terjemahan, dan qori murottal',
+                      onTap: () => context.push(AppRoutes.quranPengaturan),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 22),
-            const SettingsSectionTitle('Ikuti Kami'),
+              const SizedBox(height: 22),
+              const SettingsSectionTitle('Ikuti Kami'),
             SettingsCard(
               child: SettingsSocialRow(
                 items: kOfficialSocials,
@@ -179,7 +196,66 @@ class DkmPage extends ConsumerWidget {
           ],
         ),
       ),
-    );
+      // Sticky AppBar dengan background putih saat di-scroll
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: IgnorePointer(
+          ignoring: !_isScrolled,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height: topPadding + 48,
+            decoration: BoxDecoration(
+              color: _isScrolled
+                  ? Colors.white.withValues(alpha: 0.98)
+                  : Colors.transparent,
+              border: _isScrolled
+                  ? const Border(
+                      bottom: BorderSide(
+                        color: Color(0xFFE2EBE8),
+                        width: 0.8,
+                      ),
+                    )
+                  : null,
+              boxShadow: _isScrolled
+                  ? [
+                      BoxShadow(
+                        color:
+                            const Color(0xFF048C7C).withValues(alpha: 0.06),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                  : null,
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: _isScrolled ? 1.0 : 0.0,
+                child: Container(
+                  height: 48,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Marbot',
+                    style: TextStyle(
+                      color: Color(0xFF137065),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+);
   }
 
   Widget _header(
@@ -203,15 +279,22 @@ class DkmPage extends ConsumerWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFF032621),
-            Color(0xFF063E36),
-            Color(0xFF0D6357),
+            Color(0xFF048C7C),
+            Color(0xFF036F63),
+            Color(0xFF02574D),
           ],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(18),
           bottomRight: Radius.circular(18),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x22048C7C),
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,42 +370,6 @@ class DkmPage extends ConsumerWidget {
                       ),
                     ),
                   ],
-                ),
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => context.push(AppRoutes.profile),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Profil',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Icon(
-                          Icons.chevron_right_rounded,
-                          size: 16,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ],

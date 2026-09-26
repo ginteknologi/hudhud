@@ -1,4 +1,4 @@
-// Model v2 — Hadits flat structure (tanpa kitab/bab)
+// Model v3 — Hadits: Kitab (imam) → Bab → Hadits, plus tema.
 
 /// Data satu imam/perawi (dari GET /hadits)
 class ImamData {
@@ -8,12 +8,16 @@ class ImamData {
   final String longNama;
   final String namaTabel;
 
+  /// Jumlah bab kitab ini. 0 = kitab belum punya level bab, layar bab dilewati.
+  final int babCount;
+
   const ImamData({
     required this.imamId,
     required this.imamSorting,
     required this.hadits,
     required this.longNama,
     required this.namaTabel,
+    this.babCount = 0,
   });
 
   factory ImamData.fromMap(Map<String, dynamic> map) {
@@ -23,6 +27,7 @@ class ImamData {
       hadits: map['hadits'] as int? ?? 0,
       longNama: map['longNama'] as String? ?? '',
       namaTabel: map['namaTabel'] as String? ?? '',
+      babCount: map['babCount'] as int? ?? 0,
     );
   }
 
@@ -32,16 +37,20 @@ class ImamData {
         'hadits': hadits,
         'longNama': longNama,
         'namaTabel': namaTabel,
+        'babCount': babCount,
       };
 }
 
-/// Data satu hadits (dari GET /hadits/detail/:namaTabel)
+/// Data satu hadits (dari GET /hadits/detail/:namaTabel atau /hadits/search)
 class HaditsData {
+  /// Diisi pada hasil pencarian; daftar per kitab mengabaikannya.
+  final String namaTabel;
   final int noHdt;
   final String isiArab;
   final String isiIndonesia;
 
   const HaditsData({
+    this.namaTabel = '',
     required this.noHdt,
     required this.isiArab,
     required this.isiIndonesia,
@@ -49,6 +58,7 @@ class HaditsData {
 
   factory HaditsData.fromMap(Map<String, dynamic> map) {
     return HaditsData(
+      namaTabel: map['namaTabel'] as String? ?? '',
       noHdt: map['NoHdt'] as int? ?? 0,
       isiArab: map['Isi_Arab'] as String? ?? '',
       isiIndonesia: map['Isi_Indonesia'] as String? ?? '',
@@ -56,7 +66,78 @@ class HaditsData {
   }
 }
 
-/// Metadata pagination dari API
+/// Satu bab dalam kitab (dari GET /hadits/bab/:namaTabel)
+class HaditsBab {
+  final int id;
+  final String nama;
+  final String? namaArab;
+  final int urutan;
+  final int noAwal;
+  final int noAkhir;
+
+  const HaditsBab({
+    required this.id,
+    required this.nama,
+    this.namaArab,
+    required this.urutan,
+    required this.noAwal,
+    required this.noAkhir,
+  });
+
+  factory HaditsBab.fromMap(Map<String, dynamic> map) {
+    return HaditsBab(
+      id: map['id'] as int? ?? 0,
+      nama: map['nama'] as String? ?? '',
+      namaArab: map['namaArab'] as String?,
+      urutan: map['urutan'] as int? ?? 0,
+      noAwal: map['noAwal'] as int? ?? 0,
+      noAkhir: map['noAkhir'] as int? ?? 0,
+    );
+  }
+}
+
+/// Kategori tema (dari GET /hadits/tema) — jumlah = banyak hadits di dalamnya
+class HaditsTema {
+  final int id;
+  final String nama;
+  final int jumlah;
+
+  const HaditsTema({required this.id, required this.nama, this.jumlah = 0});
+
+  factory HaditsTema.fromMap(Map<String, dynamic> map) {
+    return HaditsTema(
+      id: map['id'] as int? ?? 0,
+      nama: map['nama'] as String? ?? '',
+      jumlah: map['jumlah'] as int? ?? 0,
+    );
+  }
+}
+
+/// Satu hadits dalam koleksi tema (dari GET /hadits/tema/:id)
+class HaditsKoleksi {
+  final int id;
+  final String judul;
+  final String arab;
+  final String indo;
+
+  const HaditsKoleksi({
+    required this.id,
+    required this.judul,
+    required this.arab,
+    required this.indo,
+  });
+
+  factory HaditsKoleksi.fromMap(Map<String, dynamic> map) {
+    return HaditsKoleksi(
+      id: map['id'] as int? ?? 0,
+      judul: map['judul'] as String? ?? '',
+      arab: map['arab'] as String? ?? '',
+      indo: map['indo'] as String? ?? '',
+    );
+  }
+}
+
+/// Metadata pagination dari API (ada di root response, bukan di dalam `data`)
 class HaditsPagination {
   final int page;
   final int limit;
@@ -86,53 +167,4 @@ class HaditsPageResult {
   final HaditsPagination pagination;
 
   const HaditsPageResult({required this.items, required this.pagination});
-}
-
-// ----------------------------------------------------------------
-// Model lama — dipertahankan agar file lain tidak compile error
-// ----------------------------------------------------------------
-class ListKitabData {
-  int idKitab;
-  int? noHdt;
-  int? idBab;
-  String kitabIndonesia;
-  String? kitabArab;
-
-  ListKitabData({
-    required this.idKitab,
-    required this.kitabIndonesia,
-    this.kitabArab,
-    this.noHdt,
-    this.idBab,
-  });
-}
-
-class ListBabData {
-  int idBab;
-  int idKitab;
-  String babIndonesia;
-  String babArab;
-
-  ListBabData({
-    required this.idBab,
-    required this.idKitab,
-    required this.babIndonesia,
-    required this.babArab,
-  });
-}
-
-class ListHadistData {
-  int noHdt;
-  int? idKitab;
-  int? idBab;
-  String isiIndonesia;
-  String isiArab;
-
-  ListHadistData({
-    required this.noHdt,
-    this.idBab,
-    this.idKitab,
-    required this.isiIndonesia,
-    required this.isiArab,
-  });
 }

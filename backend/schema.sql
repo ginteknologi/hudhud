@@ -284,3 +284,36 @@ CREATE TABLE IF NOT EXISTS event (
     lokasi TEXT DEFAULT 'Masjid An-Ni''mah Cibubur',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 12. Hadits v3 — Bab & Tema (lihat sql/hadits_bab_tema.sql untuk DDL lengkap)
+CREATE TABLE IF NOT EXISTS hadits_bab (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    namaTabel TEXT    NOT NULL,
+    urutan    INTEGER NOT NULL DEFAULT 0,
+    nama      TEXT    NOT NULL,
+    namaArab  TEXT,
+    noAwal    INTEGER NOT NULL,
+    noAkhir   INTEGER NOT NULL,
+    UNIQUE(namaTabel, urutan)
+);
+CREATE INDEX IF NOT EXISTS idx_hadits_bab_tabel ON hadits_bab(namaTabel, urutan);
+
+CREATE TABLE IF NOT EXISTS hadits_koleksi (
+    id    INTEGER PRIMARY KEY,
+    judul TEXT    NOT NULL,
+    arab  TEXT    NOT NULL,
+    indo  TEXT    NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS hadits_tema (
+    id     INTEGER PRIMARY KEY,
+    nama   TEXT    NOT NULL,
+    parent INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS hadits_tema_item (
+    temaId    INTEGER NOT NULL,
+    koleksiId INTEGER NOT NULL,
+    PRIMARY KEY (temaId, koleksiId)
+);
+CREATE INDEX IF NOT EXISTS idx_hadits_tema_item ON hadits_tema_item(temaId);

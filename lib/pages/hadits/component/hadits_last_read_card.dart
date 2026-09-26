@@ -5,21 +5,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/core/router/app_router.dart';
-import 'package:masjid_app/models/hadist_data.dart';
 import 'package:masjid_app/providers/hadits_providers.dart';
 
+/// Kartu "Lanjutkan Baca".
+///
+/// Push ke reader lewat query param — bukan `extra` ke route legacy (dulu
+/// mendarat di halaman kosong karena provider-nya `return []`).
 class HaditsLastReadCard extends ConsumerWidget {
-  final VoidCallback? onRefresh;
-  const HaditsLastReadCard({super.key, this.onRefresh});
+  const HaditsLastReadCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookmark = ref.watch(haditsBookmarkProvider);
+    final entries = ref.watch(haditsBookmarkProvider);
+    final bookmark = entries.isEmpty ? null : entries.first;
     final hasBookmark = bookmark != null && bookmark.isValid;
 
     final title = hasBookmark ? bookmark.longNama : "Hadits Arba'in An-Nawawiyah";
     final detail = hasBookmark
-        ? 'Hadits No. ${bookmark.noHdt}${bookmark.kitabIndonesia.isNotEmpty ? ' • ${bookmark.kitabIndonesia}' : ''}'
+        ? 'Hadits No. ${bookmark.noHdt}'
+            '${(bookmark.babIndonesia ?? '').isNotEmpty ? ' • ${bookmark.babIndonesia}' : ''}'
         : 'Mulai pelajari 42 hadits pokok Rasulullah SAW';
 
     return Container(
@@ -59,7 +63,7 @@ class HaditsLastReadCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          hasBookmark ? "Terakhir Dibaca" : "Rekomendasi Baca",
+                          hasBookmark ? 'Terakhir Dibaca' : 'Rekomendasi Baca',
                           style: GoogleFonts.poppins(
                             color: const Color(0xFFF9D576),
                             fontSize: 12,
@@ -71,16 +75,17 @@ class HaditsLastReadCard extends ConsumerWidget {
                     if (hasBookmark)
                       InkWell(
                         onTap: () {
-                          ref.read(haditsBookmarkProvider.notifier).clearBookmark();
+                          ref.read(haditsBookmarkProvider.notifier).clearAll();
                           Fluttertoast.showToast(
-                            msg: 'Tanda Terakhir Dibaca dihapus',
+                            msg: 'Riwayat dibaca dibersihkan',
                             backgroundColor: const Color(0xFF4A5568),
                             textColor: Colors.white,
                           );
                         },
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.18),
                             borderRadius: BorderRadius.circular(8),
@@ -88,7 +93,8 @@ class HaditsLastReadCard extends ConsumerWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.close_rounded, size: 12, color: Colors.white),
+                              const Icon(Icons.close_rounded,
+                                  size: 12, color: Colors.white),
                               const SizedBox(width: 3),
                               Text(
                                 'Hapus',
@@ -127,54 +133,13 @@ class HaditsLastReadCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 InkWell(
-                  onTap: () async {
-                    if (hasBookmark) {
-                      final bm = bookmark;
-                      await context.push(
-                        '${AppRoutes.hadits}/${bm.idKitab}/${bm.idBab ?? bm.idKitab}',
-                        extra: {
-                          'detail': {
-                            'namaTabel': bm.namaTabel,
-                            'longNama': bm.longNama,
-                            'hadits': bm.totalHadits,
-                          },
-                          'content': ListKitabData(
-                            idKitab: bm.idKitab,
-                            kitabIndonesia: bm.kitabIndonesia,
-                          ),
-                          'bab': bm.idBab != null
-                              ? ListBabData(
-                                  idBab: bm.idBab!,
-                                  idKitab: bm.idKitab,
-                                  babIndonesia: bm.babIndonesia ?? '',
-                                  babArab: '',
-                                )
-                              : null,
-                          'babIndonesia': bm.babIndonesia ?? '',
-                          'initialNoHdt': bm.noHdt,
-                        },
-                      );
-                    } else {
-                      // Buka Arbain default
-                      await context.push(
-                        '${AppRoutes.hadits}/1/1',
-                        extra: {
-                          'detail': {
-                            'namaTabel': 'arbain',
-                            'longNama': "Hadits Arba'in An-Nawawiyah",
-                            'hadits': 42,
-                          },
-                          'content': ListKitabData(
-                            idKitab: 1,
-                            kitabIndonesia: "Arba'in An-Nawawiyah",
-                          ),
-                          'babIndonesia': "Arba'in An-Nawawiyah",
-                          'initialNoHdt': 1,
-                        },
-                      );
-                    }
-                    onRefresh?.call();
-                  },
+                  // Landing ikut rebuild sendiri: markRead di reader mengubah
+                  // haditsBookmarkProvider, dan landing meng-watch-nya.
+                  onTap: () => context.push(
+                    hasBookmark
+                        ? '${AppRoutes.haditsListRoute.replaceFirst(':id', bookmark.namaTabel)}?mulai=${bookmark.noHdt}'
+                        : AppRoutes.haditsListRoute.replaceFirst(':id', 'arbain'),
+                  ),
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
                     padding: const EdgeInsets.symmetric(

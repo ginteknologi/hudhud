@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -20,38 +21,24 @@ class AkunPage extends ConsumerWidget {
     final userPhoto = user?.photo ?? '';
     final version = ref.watch(appVersionProvider).valueOrNull ?? '0.0.0';
 
-    return Scaffold(
-      backgroundColor: kTilePageBg,
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _header(context, userName, userEmail, userPhoto),
-              const SizedBox(height: 22),
-              const SettingsSectionTitle('Akun'),
-              SettingsCard(
-                child: Column(
-                  children: [
-                    SettingsTapRow(
-                      icon: Icons.edit_outlined,
-                      title: 'Edit Profil',
-                      subtitle: 'Ubah nama, nomor telepon, dan foto',
-                      onTap: () => context.push(AppRoutes.profileEdit),
-                    ),
-                    const Divider(height: 1, color: kTileBorder),
-                    SettingsTapRow(
-                      icon: Icons.history_rounded,
-                      title: 'Riwayat Sedekah',
-                      onTap: () => context.push(AppRoutes.profileRiwayat),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 22),
-              const SettingsSectionTitle('Ikuti Kami'),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: kTilePageBg,
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _header(context, userName, userEmail, userPhoto),
+                const SizedBox(height: 22),
+                const SettingsSectionTitle('Ikuti Kami'),
               SettingsCard(
                 child: SettingsSocialRow(
                   items: kOfficialSocials,
@@ -104,6 +91,7 @@ class AkunPage extends ConsumerWidget {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -128,15 +116,22 @@ class AkunPage extends ConsumerWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFF032621),
-            Color(0xFF063E36),
-            Color(0xFF0D6357),
+            Color(0xFF048C7C),
+            Color(0xFF036F63),
+            Color(0xFF02574D),
           ],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(18),
           bottomRight: Radius.circular(18),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x22048C7C),
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         children: [

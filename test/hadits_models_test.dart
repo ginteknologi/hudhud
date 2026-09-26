@@ -98,4 +98,37 @@ void main() {
       expect(updated.showTranslation, true);
     });
   });
+
+  group('Riwayat & bookmark', () {
+    HaditsBookmarkData entry(String namaTabel, int noHdt) => HaditsBookmarkData(
+          namaTabel: namaTabel,
+          longNama: 'Kitab $namaTabel',
+          noHdt: noHdt,
+        );
+
+    test('melepas bookmark menyisakan entri riwayat', () {
+      HaditsBookmarkStorage.saveBookmark(entry('nabawi', 7));
+      expect(HaditsBookmarkStorage.getBookmarks().length, 1);
+
+      HaditsBookmarkStorage.unbookmark('nabawi', 7);
+
+      expect(HaditsBookmarkStorage.getBookmarks(), isEmpty);
+      expect(HaditsBookmarkStorage.getAll().length, 1);
+      expect(HaditsBookmarkStorage.getAll().first.noHdt, 7);
+    });
+
+    test('prune membuang riwayat lama, bookmark tetap', () {
+      HaditsBookmarkStorage.saveBookmark(entry('jaga', 1));
+      for (var i = 1; i <= 120; i++) {
+        HaditsBookmarkStorage.markRead(entry('riwayat', i));
+      }
+
+      final all = HaditsBookmarkStorage.getAll();
+      expect(all.length, lessThanOrEqualTo(100));
+      expect(
+        all.any((e) => e.namaTabel == 'jaga' && e.noHdt == 1 && e.isBookmark),
+        true,
+      );
+    });
+  });
 }

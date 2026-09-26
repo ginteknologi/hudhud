@@ -94,19 +94,15 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
     return Container(
       margin: const EdgeInsets.only(top: 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        gradient: const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            Color(0xFF0D6357),
-            Color(0xFF137065),
-            Color(0xFF1A8A7D),
-          ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFE2EBE8),
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.18),
+            color: const Color(0xFF048C7C).withValues(alpha: 0.06),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -116,28 +112,27 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
         color: Colors.transparent,
         child: InkWell(
           onTap: onContinue,
-          borderRadius: BorderRadius.circular(14),
-          splashColor: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
             child: Row(
               children: [
                 // Minimalist Quran Bookmark Icon
                 Container(
-                  width: 36,
-                  height: 36,
+                  width: 38,
+                  height: 38,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.16),
+                    color: const Color(0xFFE6F4F2),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFFF9D576).withValues(alpha: 0.4),
+                      color: const Color(0xFFD0EBE6),
                       width: 0.8,
                     ),
                   ),
                   child: const Icon(
                     Icons.bookmark_added_rounded,
-                    color: Color(0xFFF9D576),
-                    size: 19,
+                    color: Color(0xFF048C7C),
+                    size: 20,
                   ),
                 ),
 
@@ -157,10 +152,10 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
+                                color: Color(0xFF193B36),
+                                fontSize: 13.5,
                                 fontWeight: FontWeight.bold,
-                                letterSpacing: 0.2,
+                                letterSpacing: 0.1,
                               ),
                             ),
                           ),
@@ -171,15 +166,15 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                               vertical: 1.5,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF9D576).withValues(alpha: 0.22),
+                              color: const Color(0xFFE6F4F2),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Text(
                               'Tilawah',
                               style: TextStyle(
-                                color: Color(0xFFF9D576),
+                                color: Color(0xFF048C7C),
                                 fontSize: 9.5,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -190,8 +185,8 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                         detailText,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
+                        style: const TextStyle(
+                          color: Color(0xFF6B7280),
                           fontSize: 11,
                         ),
                       ),
@@ -201,20 +196,20 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
 
                 const SizedBox(width: 10),
 
-                // Minimalist Action Pill
+                // Action Pill
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
+                    horizontal: 12,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color(0xFF048C7C),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: const Color(0xFF048C7C).withValues(alpha: 0.25),
                         blurRadius: 4,
-                        offset: const Offset(0, 1),
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -224,7 +219,7 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                       Text(
                         'Lanjut',
                         style: TextStyle(
-                          color: Color(0xFF048C7C),
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 11,
                         ),
@@ -233,7 +228,7 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                       Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 9,
-                        color: Color(0xFF048C7C),
+                        color: Colors.white,
                       ),
                     ],
                   ),

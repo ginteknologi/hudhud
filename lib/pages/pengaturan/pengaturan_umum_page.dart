@@ -212,6 +212,17 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
               ),
             ),
             const SizedBox(height: 20),
+            const SettingsSectionTitle('Audio Aplikasi'),
+            SettingsCard(
+              child: SettingsSwitchRow(
+                icon: Icons.music_note_rounded,
+                title: 'Audio Bismillah Pembuka',
+                subtitle: 'Putar bacaan bismillah saat aplikasi dibuka',
+                value: settings.bismillahAudioEnabled,
+                onChanged: (v) => notifier.setBismillahAudioEnabled(v),
+              ),
+            ),
+            const SizedBox(height: 22),
             const SettingsSectionTitle('Notifikasi Adzan'),
             SettingsCard(
               child: Column(

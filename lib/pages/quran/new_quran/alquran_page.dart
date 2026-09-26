@@ -72,7 +72,8 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
         return Dialog(
           elevation: 0,
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Consumer(
             builder: (context, ref, _) {
               final randomAsync = ref.watch(randomAyatProvider);
@@ -88,72 +89,75 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
 
                   return Padding(
                     padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () => Navigator.of(dialogContext).pop(),
-                            ),
-                            Text(
-                              '$surat : $ayat',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.share, size: 20),
-                              onPressed: () {
-                                SharePlus.instance.share(
-                                  ShareParams(
-                                    text:
-                                        '$arab\n\n$terjemahan\n\n($surat : $ayat)',
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          arab,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            fontFamily: GoogleFonts.amiriQuran().fontFamily,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            height: 1.6,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () =>
+                                    Navigator.of(dialogContext).pop(),
+                              ),
+                              Text(
+                                '$surat : $ayat',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.share, size: 20),
+                                onPressed: () {
+                                  SharePlus.instance.share(
+                                    ShareParams(
+                                      text:
+                                          '$arab\n\n$terjemahan\n\n($surat : $ayat)',
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          terjemahan,
-                          textAlign: TextAlign.justify,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.black87,
+                          const SizedBox(height: 16),
+                          Text(
+                            arab,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontFamily: GoogleFonts.amiriQuran().fontFamily,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              height: 1.6,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        ButtonElevated(
-                          title: 'Acak Lagi',
-                          iconLeft: const Icon(Icons.refresh,
-                              color: Colors.white, size: 18),
-                          showIcon: 'left',
-                          bgcolor: const Color(0xFF048C7C),
-                          height: 40,
-                          color: Colors.white,
-                          radius: 8,
-                          shadow: false,
-                          onPressed: () {
-                            ref.invalidate(randomAyatProvider);
-                          },
-                        ),
-                      ],
+                          const SizedBox(height: 12),
+                          Text(
+                            terjemahan,
+                            textAlign: TextAlign.justify,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          ButtonElevated(
+                            title: 'Acak Lagi',
+                            iconLeft: const Icon(Icons.refresh,
+                                color: Colors.white, size: 18),
+                            showIcon: 'left',
+                            bgcolor: const Color(0xFF048C7C),
+                            height: 40,
+                            color: Colors.white,
+                            radius: 8,
+                            shadow: false,
+                            onPressed: () {
+                              ref.invalidate(randomAyatProvider);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -240,7 +244,8 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                                   backgroundColor: const Color(0xFFE6F4F2),
                                   foregroundColor: const Color(0xFF048C7C),
                                 ),
-                                icon: const Icon(Icons.shuffle_rounded, size: 20),
+                                icon:
+                                    const Icon(Icons.shuffle_rounded, size: 20),
                                 onPressed: () => _showRandomAyatDialog(context),
                               ),
                               const SizedBox(width: 6),
@@ -250,7 +255,8 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                                   backgroundColor: const Color(0xFFE6F4F2),
                                   foregroundColor: const Color(0xFF048C7C),
                                 ),
-                                icon: const Icon(Icons.settings_outlined, size: 20),
+                                icon: const Icon(Icons.settings_outlined,
+                                    size: 20),
                                 onPressed: () =>
                                     _openReader(AppRoutes.quranPengaturan),
                               ),
@@ -285,7 +291,8 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                             });
                           },
                           decoration: InputDecoration(
-                            hintText: "Cari surah (misal: Yasin, Al-Mulk, 36)...",
+                            hintText:
+                                "Cari surah (misal: Yasin, Al-Mulk, 36)...",
                             hintStyle: const TextStyle(
                                 fontSize: 13, color: Colors.black38),
                             prefixIcon: const Icon(Icons.search,
@@ -557,12 +564,14 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
 
             return InkWell(
               onTap: () async {
-                await context.push('${AppRoutes.quranPerAyat}?surah=${item.id}');
+                await context
+                    .push('${AppRoutes.quranPerAyat}?surah=${item.id}');
                 if (mounted) setState(_loadBookmarks);
               },
               borderRadius: BorderRadius.circular(10),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                 child: Row(
                   children: [
                     // Badge Nomor Surah Islami
@@ -771,7 +780,8 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
       },
       {
         'title': 'Mushaf Tajwid Berwarna',
-        'desc': 'Dilengkapi panduan warna kaidah tajwid untuk kemudahan tilawah',
+        'desc':
+            'Dilengkapi panduan warna kaidah tajwid untuk kemudahan tilawah',
         'route': AppRoutes.quranPageTajwid,
         'icon': 'assets/icons/tajwid.png',
         'bookmark': _tajwidBookmark,
@@ -974,9 +984,8 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
               ),
               trailing: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: hasData
-                      ? const Color(0xFF048C7C)
-                      : Colors.grey.shade300,
+                  backgroundColor:
+                      hasData ? const Color(0xFF048C7C) : Colors.grey.shade300,
                   foregroundColor: hasData ? Colors.white : Colors.black54,
                   elevation: 0,
                   padding:

@@ -13,6 +13,7 @@ class PreferencesService {
   static const String _keyToken = 'jwt_token';
   static const String _keyFcmToken = 'fcm_token';
   static const String _keyOnboarding = 'onboarding_completed';
+  static const String _keyBismillahAudio = 'bismillah_audio_enabled';
   static const String _keyLastReadAyat = 'last_read_ayat';
   static const String _keyLastReadHal = 'last_read_halaman';
 
@@ -67,6 +68,9 @@ class PreferencesService {
 
   static bool get onboardingCompleted => _prefs.getBool(_keyOnboarding) ?? false;
   static set onboardingCompleted(bool value) => _prefs.setBool(_keyOnboarding, value);
+
+  static bool get bismillahAudioEnabled => _prefs.getBool(_keyBismillahAudio) ?? true;
+  static set bismillahAudioEnabled(bool value) => _prefs.setBool(_keyBismillahAudio, value);
 
   // Clear session on logout
   static Future<void> clearAuth() async {

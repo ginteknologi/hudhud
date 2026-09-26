@@ -22,10 +22,16 @@ final surahListRawProvider =
       queryParameters: search.isNotEmpty ? {'search': search} : null,
       fromJson: (json) {
         if (json is List) {
-          return json
-              .whereType<Map>()
-              .map((item) => Map<String, dynamic>.from(item))
-              .toList();
+          return json.whereType<Map>().map((item) {
+            final m = Map<String, dynamic>.from(item);
+            final type = (m['tipe'] ?? m['type'] ?? '').toString();
+            final arab = (m['arab'] ?? m['asma'] ?? '').toString();
+            m['tipe'] = type;
+            m['type'] = type;
+            m['arab'] = arab;
+            m['asma'] = arab;
+            return m;
+          }).toList();
         }
         return <Map<String, dynamic>>[];
       },

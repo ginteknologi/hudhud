@@ -3,12 +3,14 @@ class ApiResponse<T> {
   final int code;
   final String message;
   final T? data;
+  final Map<String, dynamic>? rawJson;
 
   ApiResponse({
     required this.success,
     required this.code,
     required this.message,
     this.data,
+    this.rawJson,
   });
 
   factory ApiResponse.fromJson(
@@ -22,6 +24,7 @@ class ApiResponse<T> {
       data: json['data'] != null && fromJsonT != null
           ? fromJsonT(json['data'])
           : json['data'] as T?,
+      rawJson: json,
     );
   }
 }

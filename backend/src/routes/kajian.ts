@@ -165,4 +165,24 @@ kajian.get('/kaji-live/slider', async (c) => {
   }
 });
 
+// GET /api/v1/kajian/muadzin & /api/v1/kajian/muadzin/list
+const getMuadzinList = async (c: any) => {
+  try {
+    const { results } = await c.env.DB.prepare(`
+      SELECT id, judul, ustadz, deskripsi as subjudul, deskripsi,
+             thumbnail as image, thumbnail, video_link as link, video_link, tipe
+      FROM kajian
+      WHERE tipe = 'muadzin'
+      ORDER BY id DESC
+    `).all();
+
+    return apiResponse(c, 200, true, 'Success', results || []);
+  } catch (e: any) {
+    return apiResponse(c, 200, true, 'Success', []);
+  }
+};
+
+kajian.get('/muadzin', getMuadzinList);
+kajian.get('/muadzin/list', getMuadzinList);
+
 export default kajian;

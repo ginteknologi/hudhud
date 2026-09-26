@@ -38,6 +38,7 @@ class AppSettings {
   final int adzanRemindMinutes;
   final bool adzanSound;
   final bool adzanVibrate;
+  final bool bismillahAudioEnabled;
 
   const AppSettings({
     this.adzanEnabled = false,
@@ -51,6 +52,7 @@ class AppSettings {
     this.adzanRemindMinutes = 0,
     this.adzanSound = true,
     this.adzanVibrate = true,
+    this.bismillahAudioEnabled = true,
   });
 
   bool isPrayerOn(String key) => adzanPrayers[key] ?? false;
@@ -61,6 +63,7 @@ class AppSettings {
     int? adzanRemindMinutes,
     bool? adzanSound,
     bool? adzanVibrate,
+    bool? bismillahAudioEnabled,
   }) {
     return AppSettings(
       adzanEnabled: adzanEnabled ?? this.adzanEnabled,
@@ -68,6 +71,8 @@ class AppSettings {
       adzanRemindMinutes: adzanRemindMinutes ?? this.adzanRemindMinutes,
       adzanSound: adzanSound ?? this.adzanSound,
       adzanVibrate: adzanVibrate ?? this.adzanVibrate,
+      bismillahAudioEnabled:
+          bismillahAudioEnabled ?? this.bismillahAudioEnabled,
     );
   }
 }
@@ -95,7 +100,13 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
       adzanRemindMinutes: PreferencesService.getInt(_kAdzanRemind) ?? 0,
       adzanSound: PreferencesService.getBool(_kAdzanSound) ?? true,
       adzanVibrate: PreferencesService.getBool(_kAdzanVibrate) ?? true,
+      bismillahAudioEnabled: PreferencesService.bismillahAudioEnabled,
     );
+  }
+
+  Future<void> setBismillahAudioEnabled(bool value) async {
+    state = state.copyWith(bismillahAudioEnabled: value);
+    PreferencesService.bismillahAudioEnabled = value;
   }
 
   Future<void> setAdzanEnabled(bool value) async {

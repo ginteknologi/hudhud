@@ -13,11 +13,11 @@ import 'package:masjid_app/pages/doa/detail/detail_doa_page.dart';
 import 'package:masjid_app/pages/doa/doa_page.dart';
 import 'package:masjid_app/pages/pengaturan/pengaturan_umum_page.dart';
 import 'package:masjid_app/pages/dzikir/dzikir_page.dart';
-import 'package:masjid_app/pages/hadits/bab/bab_hadits_page.dart';
-import 'package:masjid_app/pages/hadits/content/content_hadits_page.dart';
-import 'package:masjid_app/pages/hadits/detail/detail_hadits_page.dart';
+import 'package:masjid_app/pages/hadits/bab/hadits_bab_page.dart';
 import 'package:masjid_app/pages/hadits/hadits_page.dart';
 import 'package:masjid_app/pages/hadits/list/hadits_list_page.dart';
+import 'package:masjid_app/pages/hadits/search/hadits_search_page.dart';
+import 'package:masjid_app/pages/hadits/tema/hadits_tema_page.dart';
 import 'package:masjid_app/pages/home/home_page.dart';
 import 'package:masjid_app/pages/jadwal_imsakiah/jadwal_imsakiah_page.dart';
 import 'package:masjid_app/pages/masjid_terdekat/cari_masjid_page.dart';
@@ -69,10 +69,13 @@ class AppRoutes {
   static const String doaContent = '/doa/:id/:content';
   static const String dzikir = '/dzikir';
   static const String hadits = '/hadits';
-  static const String haditsListRoute = '/hadits/list/:id'; // v2 — langsung ke list hadits
+  // Tiga level: /hadits → /hadits/bab/:id → /hadits/list/:id
+  // Reader menerima scope lewat query param: ?bab= / ?mulai= / ?akhir=
+  static const String haditsListRoute = '/hadits/list/:id';
   static const String haditsBab = '/hadits/bab/:id';
-  static const String haditsDetail = '/hadits/:id';
-  static const String haditsContent = '/hadits/:id/:content';
+  static const String haditsSearch = '/hadits/search';
+  static const String haditsTema = '/hadits/tema';
+  static const String haditsTemaDetail = '/hadits/tema/:id';
   static const String sedekah = '/sedekah';
   static const String sedekahDetail = '/sedekah/:id';
   static const String sedekahTransaksi = '/sedekah/:id/transaksi';
@@ -214,15 +217,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.haditsBab,
-        builder: (context, state) => const BabHaditsPage(),
+        builder: (context, state) => const HaditsBabPage(),
       ),
       GoRoute(
-        path: AppRoutes.haditsDetail,
-        builder: (context, state) => const DetailHaditsPage(),
+        path: AppRoutes.haditsSearch,
+        builder: (context, state) => const HaditsSearchPage(),
       ),
       GoRoute(
-        path: AppRoutes.haditsContent,
-        builder: (context, state) => const ContentHaditsPage(),
+        path: AppRoutes.haditsTema,
+        builder: (context, state) => const HaditsTemaPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.haditsTemaDetail,
+        builder: (context, state) => const HaditsTemaPage(),
       ),
       GoRoute(
         path: AppRoutes.sedekah,

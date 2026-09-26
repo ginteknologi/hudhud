@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,9 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/button/iconbutton.dart';
-import 'package:masjid_app/components/input/input_text.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
 import 'package:masjid_app/models/quran_models.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_controller.dart';
@@ -45,10 +41,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
   bool isLoadingList = true;
   bool isLoadingDetail = false;
 
-  final TextEditingController inputAyat = TextEditingController();
-  final TextEditingController inputSurah = TextEditingController();
-  final GlobalKey<AutoCompleteTextFieldState<String>> autoCompleteKey =
-      GlobalKey();
+  int? _highlightedAyatIndex;
+  Timer? _highlightTimer;
 
   final List<ItemScrollController> itemScrollController = [];
   final List<Tab> myTabs = [];
@@ -67,6 +61,43 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
   bool _useBookmark = false;
   int? _targetSurah;
   int? _targetAyat;
+
+  int _getJuzNumber(int surahNumber, [int ayatNumber = 1]) {
+    for (int i = kQuranJuzList.length - 1; i >= 0; i--) {
+      final j = kQuranJuzList[i];
+      if (surahNumber > j.startSurahNumber ||
+          (surahNumber == j.startSurahNumber && ayatNumber >= j.startAyat)) {
+        return j.juzNumber;
+      }
+    }
+    return 1;
+  }
+
+  String _getSurahSubtitle(Map<String, dynamic> surah, {int ayat = 1}) {
+    final ayatCount = surah['ayat'] ?? surah['jumlahAyat'] ?? 0;
+    final rawType =
+        (surah['tipe'] ?? surah['type'] ?? '').toString().toLowerCase();
+    final typeName = rawType.contains('mad')
+        ? 'Madaniyyah'
+        : (rawType.isNotEmpty ? 'Makkiyyah' : '');
+
+    final surahId = (surah['id'] is int)
+        ? surah['id'] as int
+        : int.tryParse(surah['id']?.toString() ?? '1') ?? 1;
+
+    final juzNum = _getJuzNumber(surahId, ayat);
+
+    final parts = <String>[];
+    if (ayatCount > 0) parts.add('$ayatCount Ayat');
+    if (typeName.isNotEmpty) parts.add(typeName);
+    if (juzNum > 0) parts.add('Juz $juzNum');
+
+    return parts.isEmpty ? 'Al-Qur\'an' : parts.join(' • ');
+  }
+
+  String _getSurahArab(Map<String, dynamic> surah) {
+    return (surah['arab'] ?? surah['asma'] ?? '').toString();
+  }
 
   @override
   void didChangeDependencies() {
@@ -158,19 +189,59 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
     }
   }
 
-  Future<void> prosesPencarian(BuildContext dialogContext) async {
-    final ddd = list.indexWhere((element) => element['nama'] == inputSurah.text);
-    final getSurah = list.where((p0) => p0['nama'] == inputSurah.text).first;
-    final newindex = myTabs.length - ddd - 1;
-    await getDetailData(surahId: getSurah['id'] as int);
-    if (!mounted) return;
-    pageController!.jumpToPage(newindex);
-    await Future.delayed(const Duration(milliseconds: 100));
-    itemScrollController[newindex].jumpTo(
-      index: int.parse(inputAyat.text) - 1,
-    );
-    if (dialogContext.mounted) {
-      Navigator.of(dialogContext).pop();
+  void _setHighlightAyat(int index) {
+    _highlightTimer?.cancel();
+    setState(() {
+      _highlightedAyatIndex = index;
+    });
+    _highlightTimer = Timer(const Duration(milliseconds: 2500), () {
+      if (mounted) {
+        setState(() {
+          _highlightedAyatIndex = null;
+        });
+      }
+    });
+  }
+
+  Future<void> _jumpToSurahAndAyat(int surahId, int ayatNumber) async {
+    final ddd = list.indexWhere((element) => element['id'] == surahId);
+    if (ddd == -1) return;
+
+    final targetContentIndex =
+        contentTab.indexWhere((data) => data.idContent == surahId);
+
+    // Jika surah berbeda dari yang sedang aktif, beralih tab dan page
+    if (detail['id'] != surahId) {
+      final pageIndex = myTabs.length - ddd - 1;
+      if (pageController != null && pageController!.hasClients) {
+        pageController!.jumpToPage(pageIndex);
+      }
+      setState(() {
+        detail = Map<String, dynamic>.from(list[ddd]);
+      });
+      tabController?.animateTo(ddd);
+    }
+
+    // Pastikan data ayat surah tersebut sudah termuat
+    await getDetailData(surahId: surahId);
+
+    final ayatIndex = ayatNumber - 1;
+    if (targetContentIndex != -1 &&
+        ayatIndex >= 0 &&
+        ayatIndex < contentTab[targetContentIndex].list.length) {
+      await Future.delayed(const Duration(milliseconds: 150));
+      if (itemScrollController[targetContentIndex].isAttached) {
+        try {
+          itemScrollController[targetContentIndex].scrollTo(
+            index: ayatIndex,
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeInOutCubic,
+          );
+        } catch (_) {
+          itemScrollController[targetContentIndex].jumpTo(index: ayatIndex);
+        }
+      }
+      _setHighlightAyat(ayatIndex);
     }
   }
 
@@ -426,7 +497,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
     );
   }
 
-  void _showSurahPickerDialog() {
+  void _showSurahPickerDialog({void Function(Map<String, dynamic>)? onSelectSurah}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -498,7 +569,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: isCurrent
-                                  ? const Color(0xFF048C7C)
+                                   ? const Color(0xFF048C7C)
                                   : Colors.black54,
                             ),
                           ),
@@ -514,11 +585,11 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             ),
                           ),
                           subtitle: Text(
-                            "${s['ayat']} Ayat • ${s['tipe']}",
+                            _getSurahSubtitle(s),
                             style: const TextStyle(fontSize: 11),
                           ),
                           trailing: Text(
-                            "${s['arab'] ?? ''}",
+                            _getSurahArab(s),
                             style: TextStyle(
                               fontFamily: GoogleFonts.amiriQuran().fontFamily,
                               fontSize: 17,
@@ -527,6 +598,10 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           ),
                           onTap: () {
                             Navigator.of(bottomSheetContext).pop();
+                            if (onSelectSurah != null) {
+                              onSelectSurah(s);
+                              return;
+                            }
                             final ddd = list
                                 .indexWhere((element) => element['id'] == s['id']);
                             if (ddd != -1) {
@@ -657,160 +732,775 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
     );
   }
 
-  void showDialogFilter() {
-    showDialog(
+  Widget _highlightMatch(
+    String text,
+    String query,
+    TextStyle defaultStyle,
+    TextStyle matchStyle,
+  ) {
+    if (query.isEmpty) {
+      return Text(text,
+          style: defaultStyle, maxLines: 3, overflow: TextOverflow.ellipsis);
+    }
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    final spans = <TextSpan>[];
+    int start = 0;
+    while (true) {
+      final index = lowerText.indexOf(lowerQuery, start);
+      if (index == -1) {
+        if (start < text.length) {
+          spans.add(TextSpan(text: text.substring(start), style: defaultStyle));
+        }
+        break;
+      }
+      if (index > start) {
+        spans.add(TextSpan(
+            text: text.substring(start, index), style: defaultStyle));
+      }
+      spans.add(TextSpan(
+        text: text.substring(index, index + query.length),
+        style: matchStyle,
+      ));
+      start = index + query.length;
+    }
+    return RichText(
+      text: TextSpan(children: spans),
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  List<int> _getQuickJumpVerses(int total) {
+    final Set<int> result = {1};
+    if (total <= 7) {
+      for (int i = 2; i <= total; i++) {
+        result.add(i);
+      }
+      return result.toList();
+    }
+    if (total >= 10 && total < 30) {
+      result.add(5);
+      result.add(10);
+      result.add(20);
+    } else if (total >= 30 && total < 100) {
+      result.add(10);
+      result.add((total * 0.25).round());
+      result.add((total * 0.50).round());
+      result.add((total * 0.75).round());
+    } else {
+      result.add(25);
+      result.add(50);
+      result.add(100);
+      if (total > 150) result.add(150);
+      if (total > 200) result.add(200);
+      if (total > 250) result.add(250);
+    }
+    result.add(total);
+    final list = result.where((v) => v >= 1 && v <= total).toList();
+    list.sort();
+    return list;
+  }
+
+  void _showFilterBottomSheet() {
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: true,
-      builder: (dialogContext) {
-        return PopScope(
-          canPop: true,
-          onPopInvokedWithResult: (didPop, _) {
-            inputSurah.text = "";
-            inputAyat.text = "";
-          },
-          child: Dialog(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Color(0xFF189A8C),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(7),
-                            topRight: Radius.circular(7))),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (bottomSheetContext) {
+        int selectedTabIndex = 0;
+        Map<String, dynamic> activeSurah = Map<String, dynamic>.from(
+          detail.isNotEmpty
+              ? detail
+              : (list.isNotEmpty ? list.first : <String, dynamic>{}),
+        );
+        final ayatInputController = TextEditingController();
+        final searchWordController = TextEditingController();
+        String searchWord = '';
+        String? ayatErrorText;
+
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            final totalAyat = (activeSurah['ayat'] as int?) ?? 1;
+            final quickVerses = _getQuickJumpVerses(totalAyat);
+
+            // Cari list ayat untuk surah aktif
+            final targetSurahIndex = contentTab
+                .indexWhere((data) => data.idContent == activeSurah['id']);
+            final List<AyatModel> versesList = targetSurahIndex != -1
+                ? contentTab[targetSurahIndex].list
+                : <AyatModel>[];
+
+            final searchMatches = searchWord.isEmpty
+                ? <AyatModel>[]
+                : versesList.where((item) {
+                    final q = searchWord.toLowerCase();
+                    return item.arti.toLowerCase().contains(q) ||
+                        item.latin.toLowerCase().contains(q) ||
+                        item.arab.contains(searchWord) ||
+                        item.madinah.contains(searchWord);
+                  }).toList();
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom,
+              ),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
+                ),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Handle bar
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Header: Judul & tombol close
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Navigasi & Pencarian Ayat",
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        IconButton(
+                          visualDensity: VisualDensity.compact,
+                          icon: const Icon(Icons.close_rounded,
+                              size: 22, color: Colors.black54),
+                          onPressed: () =>
+                              Navigator.of(bottomSheetContext).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Segmented Button Tab
+                    Container(
+                      padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Color(0xFF189A8C),
+                        color: const Color(0xFFF1F5F5),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Pergi Ke Ayat',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white),
+                          Expanded(
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () {
+                                setModalState(() {
+                                  selectedTabIndex = 0;
+                                });
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 9),
+                                decoration: BoxDecoration(
+                                  color: selectedTabIndex == 0
+                                      ? const Color(0xFF048C7C)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: selectedTabIndex == 0
+                                      ? [
+                                          BoxShadow(
+                                            color: const Color(0xFF048C7C)
+                                                .withValues(alpha: 0.25),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          )
+                                        ]
+                                      : null,
+                                ),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.explore_rounded,
+                                      size: 16,
+                                      color: selectedTabIndex == 0
+                                          ? Colors.white
+                                          : Colors.black54,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      "Lompat Ayat",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: selectedTabIndex == 0
+                                            ? Colors.white
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                          ButtonIcon(
-                            onTap: () {
-                              Navigator.of(dialogContext).pop();
-                              inputSurah.text = "";
-                              inputAyat.text = "";
-                            },
-                            bgcolor: Colors.transparent,
-                            icon: const Icon(
-                              Icons.close,
-                              color: Colors.white,
+                          Expanded(
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () {
+                                setModalState(() {
+                                  selectedTabIndex = 1;
+                                });
+                                if (versesList.isEmpty) {
+                                  getDetailData(
+                                    surahId: activeSurah['id'] as int,
+                                  ).then((_) {
+                                    if (context.mounted) {
+                                      setModalState(() {});
+                                    }
+                                  });
+                                }
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 9),
+                                decoration: BoxDecoration(
+                                  color: selectedTabIndex == 1
+                                      ? const Color(0xFF048C7C)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: selectedTabIndex == 1
+                                      ? [
+                                          BoxShadow(
+                                            color: const Color(0xFF048C7C)
+                                                .withValues(alpha: 0.25),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          )
+                                        ]
+                                      : null,
+                                ),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.search_rounded,
+                                      size: 16,
+                                      color: selectedTabIndex == 1
+                                          ? Colors.white
+                                          : Colors.black54,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      "Cari Kata",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: selectedTabIndex == 1
+                                            ? Colors.white
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  Container(
-                      padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.width / 40),
-                      color: Colors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SimpleAutoCompleteTextField(
-                            key: autoCompleteKey,
-                            controller: inputSurah,
-                            suggestions: list
-                                .map((e) => e['nama'].toString())
-                                .toList(),
-                            textChanged: (text) {
-                              // Handle when text is changed
+                    const SizedBox(height: 14),
+
+                    // TAB 0: Lompat Ayat
+                    if (selectedTabIndex == 0) ...[
+                      // Card Surah yang dipilih
+                      InkWell(
+                        onTap: () {
+                          _showSurahPickerDialog(
+                            onSelectSurah: (picked) {
+                              setModalState(() {
+                                activeSurah = picked;
+                                ayatInputController.clear();
+                                ayatErrorText = null;
+                              });
                             },
-                            textSubmitted: (text) {
-                              // Handle when text is submitted
-                            },
-                            clearOnSubmit: false,
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Color(0xFFDCDCDC), width: 1.0),
-                              ),
-                              fillColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hintText: 'Cari surah',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .color!
-                                          .withValues(alpha: .5)),
-                              contentPadding: EdgeInsets.all(13),
-                              border: OutlineInputBorder(),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(14),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 11),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF7FAFA),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: const Color(0xFF048C7C)
+                                  .withValues(alpha: 0.3),
+                              width: 1.2,
                             ),
                           ),
-                          InputText(
-                            inputType: TextInputType.number,
-                            controller: inputAyat,
-                            labelPosition: "none",
-                            placeholder: "Nomor ayat",
-                            isFill: true,
-                            placeholderStyle: Theme.of(context).textTheme.bodySmall,
-                            inputAction: TextInputAction.next,
-                            onSubmit: (newValue) {},
-                            onEditingComplete: () {},
-                            onChanged: (newValue) {},
-                            validator: (newValue) {
-                              if (newValue!.isEmpty) {
-                                return "Mohon untuk diisi.";
-                              }
-                              return null;
-                            },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 34,
+                                height: 34,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE6F4F2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "${activeSurah['id'] ?? 1}",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: Color(0xFF048C7C),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${activeSurah['nama'] ?? ''}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        if (_getSurahArab(activeSurah).isNotEmpty) ...[
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            "(${_getSurahArab(activeSurah)})",
+                                            style: TextStyle(
+                                              fontFamily: GoogleFonts
+                                                      .amiriQuran()
+                                                  .fontFamily,
+                                              fontSize: 14,
+                                              color: const Color(0xFF048C7C),
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                    Text(
+                                      _getSurahSubtitle(activeSurah),
+                                      style: const TextStyle(
+                                        fontSize: 11.5,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                      color: Colors.grey.shade300),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "Ganti",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF048C7C),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      size: 16,
+                                      color: Color(0xFF048C7C),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Input Nomor Ayat
+                      TextField(
+                        controller: ayatInputController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: InputDecoration(
+                          labelText: "Nomor Ayat",
+                          labelStyle: const TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF048C7C),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          hintText: "Masukkan ayat (1 - $totalAyat)...",
+                          hintStyle: const TextStyle(fontSize: 13),
+                          prefixIcon: const Icon(
+                            Icons.format_list_numbered_rounded,
+                            size: 20,
+                            color: Color(0xFF048C7C),
+                          ),
+                          suffixIcon: ayatInputController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear_rounded,
+                                      size: 18),
+                                  onPressed: () {
+                                    setModalState(() {
+                                      ayatInputController.clear();
+                                      ayatErrorText = null;
+                                    });
+                                  },
+                                )
+                              : null,
+                          errorText: ayatErrorText,
+                          filled: true,
+                          fillColor: const Color(0xFFF9FBFB),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.grey.shade300),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.grey.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF048C7C),
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                        onChanged: (val) {
+                          if (ayatErrorText != null) {
+                            setModalState(() {
+                              ayatErrorText = null;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Quick Chips
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Pintasan Ayat:",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 6,
+                            children: quickVerses.map((verseNum) {
+                              final isSelected =
+                                  ayatInputController.text == verseNum.toString();
+                              return ActionChip(
+                                label: Text(
+                                  verseNum == totalAyat
+                                      ? "Akhir ($verseNum)"
+                                      : "Ayat $verseNum",
+                                  style: TextStyle(
+                                    fontSize: 11.5,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : const Color(0xFF048C7C),
+                                  ),
+                                ),
+                                backgroundColor: isSelected
+                                    ? const Color(0xFF048C7C)
+                                    : const Color(0xFFE6F4F2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: BorderSide(
+                                    color: isSelected
+                                        ? const Color(0xFF048C7C)
+                                        : const Color(0xFFD4EFEA),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 0),
+                                onPressed: () {
+                                  setModalState(() {
+                                    ayatInputController.text =
+                                        verseNum.toString();
+                                    ayatErrorText = null;
+                                  });
+                                },
+                              );
+                            }).toList(),
                           ),
                         ],
-                      )),
-                  Container(
-                      padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.width / 40),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFDCDCDC),
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(7),
-                            bottomRight: Radius.circular(7)),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ButtonElevated(
-                            title: 'Buka Ayat',
-                            width: MediaQuery.of(context).size.width / 2.5,
-                            size: Theme.of(context).textTheme.bodySmall?.fontSize,
-                            bgcolor: Color(0xFF2128C2),
-                            height: 30,
-                            color: Colors.white,
-                            radius: 5,
-                            onPressed: () {
-                              prosesPencarian(dialogContext);
-                            },
-                          )
-                        ],
-                      )),
-                ],
+                      const SizedBox(height: 18),
+
+                      // Tombol Lompat ke Ayat
+                      ElevatedButton(
+                        onPressed: () {
+                          final text = ayatInputController.text.trim();
+                          final val = int.tryParse(text);
+                          if (val == null || val < 1 || val > totalAyat) {
+                            setModalState(() {
+                              ayatErrorText =
+                                  "Nomor ayat harus antara 1 s/d $totalAyat";
+                            });
+                            return;
+                          }
+                          Navigator.of(bottomSheetContext).pop();
+                          _jumpToSurahAndAyat(
+                              activeSurah['id'] as int, val);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF048C7C),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 13),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.arrow_forward_rounded, size: 18),
+                            SizedBox(width: 8),
+                            Text(
+                              "Buka Ayat",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+
+                    // TAB 1: Cari Kata
+                    if (selectedTabIndex == 1) ...[
+                      // Search input
+                      TextField(
+                        controller: searchWordController,
+                        decoration: InputDecoration(
+                          hintText:
+                              "Cari kata dalam ${activeSurah['nama']}...",
+                          hintStyle: const TextStyle(fontSize: 13),
+                          prefixIcon: const Icon(Icons.search_rounded,
+                              size: 20, color: Color(0xFF048C7C)),
+                          suffixIcon: searchWordController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear_rounded,
+                                      size: 18),
+                                  onPressed: () {
+                                    setModalState(() {
+                                      searchWordController.clear();
+                                      searchWord = '';
+                                    });
+                                  },
+                                )
+                              : null,
+                          filled: true,
+                          fillColor: const Color(0xFFF9FBFB),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.grey.shade300),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.grey.shade300),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF048C7C),
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setModalState(() {
+                            searchWord = val.trim();
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Hasil pencarian
+                      Expanded(
+                        child: searchWord.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.manage_search_rounded,
+                                      size: 48,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Text(
+                                      "Cari Teks & Terjemahan",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "Ketik kata dalam terjemahan Indonesia,\naksara Arab, atau transliterasi Latin.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : searchMatches.isEmpty
+                                ? Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.search_off_rounded,
+                                          size: 44,
+                                          color: Colors.grey.shade400,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Tidak ditemukan ayat dengan kata \"$searchWord\"",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : ListView.separated(
+                                    itemCount: searchMatches.length,
+                                    separatorBuilder: (_, __) =>
+                                        const Divider(height: 1),
+                                    itemBuilder: (context, idx) {
+                                      final item = searchMatches[idx];
+                                      return ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 4, vertical: 4),
+                                        leading: Container(
+                                          width: 34,
+                                          height: 34,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xFFE6F4F2),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "${item.ayat}",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              color: Color(0xFF048C7C),
+                                            ),
+                                          ),
+                                        ),
+                                        title: Text(
+                                          item.madinah.isNotEmpty
+                                              ? item.madinah
+                                              : item.arab,
+                                          textAlign: TextAlign.right,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily:
+                                                GoogleFonts.amiriQuran()
+                                                    .fontFamily,
+                                            fontSize: 15,
+                                            color: const Color(0xFF048C7C),
+                                          ),
+                                        ),
+                                        subtitle: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: _highlightMatch(
+                                            item.arti,
+                                            searchWord,
+                                            const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black87,
+                                            ),
+                                            const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF048C7C),
+                                              backgroundColor:
+                                                  Color(0xFFE6F4F2),
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          Navigator.of(bottomSheetContext)
+                                              .pop();
+                                          _jumpToSurahAndAyat(
+                                              activeSurah['id'] as int,
+                                              item.ayat);
+                                        },
+                                      );
+                                    },
+                                  ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -859,7 +1549,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                       Text(
                         detail.isEmpty
                             ? "Pilih Surah"
-                            : "${detail['ayat']} Ayat • ${detail['tipe']}",
+                            : _getSurahSubtitle(detail,
+                                ayat: (_currentPlayingAyatIndex ?? 0) + 1),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -882,9 +1573,9 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
             onPressed: _showFontSettingsDialog,
           ),
           IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: "Lompat ke Ayat",
-            onPressed: showDialogFilter,
+            icon: const Icon(Icons.search_rounded),
+            tooltip: "Cari & Lompat Ayat",
+            onPressed: _showFilterBottomSheet,
           ),
         ],
       ),
@@ -1041,18 +1732,24 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
         final AyatModel item = contentTab[indexPage].list[index];
         final bool isPlayingThis =
             (isPlaySound && _currentPlayingAyatIndex == index);
+        final bool isHighlightedThis = (_highlightedAyatIndex == index);
 
         return InkWell(
           onTap: () => _showBottomSheet(item),
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
             decoration: BoxDecoration(
-              color: isPlayingThis ? const Color(0xFFE6F4F2) : Colors.white,
+              color: isPlayingThis
+                  ? const Color(0xFFE6F4F2)
+                  : (isHighlightedThis
+                      ? const Color(0xFFC8ECE8)
+                      : Colors.white),
               border: Border(
                 bottom: BorderSide(
-                  color: isPlayingThis
+                  color: (isPlayingThis || isHighlightedThis)
                       ? const Color(0xFF048C7C)
                       : const Color(0xFFEEEEEE),
-                  width: isPlayingThis ? 2.0 : 1.0,
+                  width: (isPlayingThis || isHighlightedThis) ? 2.0 : 1.0,
                 ),
               ),
             ),
@@ -1219,13 +1916,12 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
 
   @override
   void dispose() {
+    _highlightTimer?.cancel();
     _indexSubscription?.cancel();
     _stateSubscription?.cancel();
     tabController?.dispose();
     pageController?.dispose();
     player.dispose();
-    inputAyat.dispose();
-    inputSurah.dispose();
     super.dispose();
   }
 }

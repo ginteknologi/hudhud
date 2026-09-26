@@ -5,38 +5,43 @@ import 'package:masjid_app/providers/api_providers.dart';
 import 'package:masjid_app/storage/hadits_bookmark_storage.dart';
 
 // ============================================================
-// v2 Providers — struktur baru (flat, pagination)
+// v3 Providers — Kitab → Bab → Hadits, plus tema & pencarian
 // ============================================================
 
-/// GET /hadits — daftar imam/perawi
-final haditsBooksProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+/// GET /hadits — daftar imam/perawi + babCount
+final haditsBooksProvider = FutureProvider<List<ImamData>>((ref) async {
   final apiClient = ref.watch(apiClientProvider);
   try {
-    final response = await apiClient.get<List<Map<String, dynamic>>>(
-      '/hadits',
-      fromJson: (json) {
-        if (json is List) {
-          return json.map((item) => Map<String, dynamic>.from(item as Map)).toList();
-        }
-        return [];
-      },
+    final response = await apiClient.get<List<dynamic>>(
+      ApiEndpoints.hadits,
+      fromJson: (json) => json is List ? json : <dynamic>[],
     );
-    return response.data ?? [];
+    return (response.data ?? [])
+        .map((e) => ImamData.fromMap(Map<String, dynamic>.from(e as Map)))
+        .toList();
   } catch (e) {
     return [];
   }
 });
 
-/// Params untuk hadits list (namaTabel + page)
+/// Params untuk daftar hadits satu kitab.
+///
+/// `mulai`/`akhir` = jendela NoHdt. Dipakai bareng oleh scope bab, lompat
+/// nomor, dan lanjutkan-baca — ketiganya memang hal yang sama.
+/// WAJIB ikut di `==`/`hashCode`, kalau tidak cache bab A dipakai bab B.
 class HaditsListParams {
   final String namaTabel;
   final int page;
   final int limit;
+  final int? mulai;
+  final int? akhir;
 
   const HaditsListParams({
     required this.namaTabel,
     this.page = 1,
     this.limit = 20,
+    this.mulai,
+    this.akhir,
   });
 
   @override
@@ -46,47 +51,54 @@ class HaditsListParams {
           runtimeType == other.runtimeType &&
           namaTabel == other.namaTabel &&
           page == other.page &&
-          limit == other.limit;
+          limit == other.limit &&
+          mulai == other.mulai &&
+          akhir == other.akhir;
 
   @override
-  int get hashCode => namaTabel.hashCode ^ page.hashCode ^ limit.hashCode;
+  int get hashCode =>
+      namaTabel.hashCode ^
+      page.hashCode ^
+      limit.hashCode ^
+      mulai.hashCode ^
+      akhir.hashCode;
 }
 
-/// GET /hadits/detail/:namaTabel?page=N&limit=20
-/// Mengembalikan HaditsPageResult (items + pagination)
+/// GET /hadits/detail/:namaTabel?page=N&limit=20&mulai=&akhir=
 final haditsListProvider =
     FutureProvider.family<HaditsPageResult, HaditsListParams>((ref, params) async {
   final apiClient = ref.watch(apiClientProvider);
   try {
-    final response = await apiClient.get<Map<String, dynamic>>(
+    final response = await apiClient.get<List<dynamic>>(
       '${ApiEndpoints.haditsDetail}/${params.namaTabel}',
       queryParameters: {
         'page': params.page,
         'limit': params.limit,
+        if (params.mulai != null) 'mulai': params.mulai,
+        if (params.akhir != null) 'akhir': params.akhir,
       },
-      fromJson: (json) {
-        if (json is Map) return Map<String, dynamic>.from(json);
-        return <String, dynamic>{};
-      },
+      fromJson: (json) => json is List ? json : <dynamic>[],
     );
 
-    final raw = response.data ?? {};
-    final dataList = raw['data'];
-    final items = (dataList is List)
-        ? dataList.map((e) => HaditsData.fromMap(Map<String, dynamic>.from(e as Map))).toList()
-        : <HaditsData>[];
+    final items = (response.data ?? [])
+        .map((e) => HaditsData.fromMap(Map<String, dynamic>.from(e as Map)))
+        .toList();
 
-    final paginationRaw = raw['pagination'];
-    final pagination = (paginationRaw is Map)
-        ? HaditsPagination.fromMap(Map<String, dynamic>.from(paginationRaw))
-        : HaditsPagination(
-            page: params.page,
-            limit: params.limit,
-            total: items.length,
-            totalPages: 1,
-          );
+    // Pagination ada di root response, bukan di dalam `data`.
+    final rawJson = response.rawJson ?? {};
+    final total = rawJson['total'] as int? ?? items.length;
+    final totalPages =
+        rawJson['totalPages'] as int? ?? (total > 0 ? (total / params.limit).ceil() : 1);
 
-    return HaditsPageResult(items: items, pagination: pagination);
+    return HaditsPageResult(
+      items: items,
+      pagination: HaditsPagination(
+        page: rawJson['page'] as int? ?? params.page,
+        limit: rawJson['limit'] as int? ?? params.limit,
+        total: total,
+        totalPages: totalPages,
+      ),
+    );
   } catch (e) {
     return HaditsPageResult(
       items: [],
@@ -95,102 +107,179 @@ final haditsListProvider =
   }
 });
 
-// ============================================================
-// Providers lama — dipertahankan agar screen lama tidak error
-// (BabHaditsPage, ContentHaditsPage masih ada di router lama)
-// ============================================================
-
-final haditsDetailProvider =
-    FutureProvider.family<List<ListKitabData>, String>((ref, namaTabel) async {
-  return [];
-});
-
-class HaditsBabParams {
-  final String namaTabel;
-  final int idKitab;
-
-  const HaditsBabParams({required this.namaTabel, required this.idKitab});
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is HaditsBabParams &&
-          runtimeType == other.runtimeType &&
-          namaTabel == other.namaTabel &&
-          idKitab == other.idKitab;
-
-  @override
-  int get hashCode => namaTabel.hashCode ^ idKitab.hashCode;
-}
-
+/// GET /hadits/bab/:namaTabel — daftar bab satu kitab. Kosong = kitab tanpa bab.
 final haditsBabProvider =
-    FutureProvider.family<List<ListBabData>, HaditsBabParams>((ref, params) async {
-  return [];
+    FutureProvider.family<List<HaditsBab>, String>((ref, namaTabel) async {
+  final apiClient = ref.watch(apiClientProvider);
+  try {
+    final response = await apiClient.get<List<dynamic>>(
+      '${ApiEndpoints.haditsBab}/$namaTabel',
+      fromJson: (json) => json is List ? json : <dynamic>[],
+    );
+    return (response.data ?? [])
+        .map((e) => HaditsBab.fromMap(Map<String, dynamic>.from(e as Map)))
+        .toList();
+  } catch (e) {
+    return [];
+  }
 });
 
-class HaditsContentParams {
-  final String namaTabel;
-  final int idKitab;
-  final int? idBab;
+/// Params pencarian. `q` sudah dinormalisasi (trim) sebelum masuk sini.
+class HaditsSearchParams {
+  final String q;
+  final int page;
+  final int limit;
+  final String? namaTabel;
 
-  const HaditsContentParams({
-    required this.namaTabel,
-    required this.idKitab,
-    this.idBab,
+  const HaditsSearchParams({
+    required this.q,
+    this.page = 1,
+    this.limit = 20,
+    this.namaTabel,
   });
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HaditsContentParams &&
+      other is HaditsSearchParams &&
           runtimeType == other.runtimeType &&
-          namaTabel == other.namaTabel &&
-          idKitab == other.idKitab &&
-          idBab == other.idBab;
+          q == other.q &&
+          page == other.page &&
+          limit == other.limit &&
+          namaTabel == other.namaTabel;
 
   @override
-  int get hashCode => namaTabel.hashCode ^ idKitab.hashCode ^ idBab.hashCode;
+  int get hashCode => q.hashCode ^ page.hashCode ^ limit.hashCode ^ namaTabel.hashCode;
 }
 
-final haditsContentProvider =
-    FutureProvider.family<List<ListHadistData>, HaditsContentParams>((ref, params) async {
-  return [];
+/// GET /hadits/search?q=&namaTabel=&page=
+final haditsSearchProvider =
+    FutureProvider.family<HaditsPageResult, HaditsSearchParams>((ref, params) async {
+  final apiClient = ref.watch(apiClientProvider);
+  const empty = HaditsPageResult(
+    items: [],
+    pagination: HaditsPagination(page: 1, limit: 20, total: 0, totalPages: 0),
+  );
+  if (params.q.length < 3) return empty;
+
+  try {
+    final response = await apiClient.get<List<dynamic>>(
+      ApiEndpoints.haditsSearch,
+      queryParameters: {
+        'q': params.q,
+        'page': params.page,
+        'limit': params.limit,
+        if (params.namaTabel != null && params.namaTabel!.isNotEmpty)
+          'namaTabel': params.namaTabel,
+      },
+      fromJson: (json) => json is List ? json : <dynamic>[],
+    );
+
+    final items = (response.data ?? [])
+        .map((e) => HaditsData.fromMap(Map<String, dynamic>.from(e as Map)))
+        .toList();
+
+    final rawJson = response.rawJson ?? {};
+    final total = rawJson['total'] as int? ?? items.length;
+    final totalPages =
+        rawJson['totalPages'] as int? ?? (total > 0 ? (total / params.limit).ceil() : 1);
+
+    return HaditsPageResult(
+      items: items,
+      pagination: HaditsPagination(
+        page: rawJson['page'] as int? ?? params.page,
+        limit: rawJson['limit'] as int? ?? params.limit,
+        total: total,
+        totalPages: totalPages,
+      ),
+    );
+  } catch (e) {
+    return empty;
+  }
+});
+
+/// GET /hadits/tema — kategori induk + jumlah hadits
+final haditsTemaProvider = FutureProvider<List<HaditsTema>>((ref) async {
+  final apiClient = ref.watch(apiClientProvider);
+  try {
+    final response = await apiClient.get<List<dynamic>>(
+      ApiEndpoints.haditsTema,
+      fromJson: (json) => json is List ? json : <dynamic>[],
+    );
+    return (response.data ?? [])
+        .map((e) => HaditsTema.fromMap(Map<String, dynamic>.from(e as Map)))
+        .toList();
+  } catch (e) {
+    return [];
+  }
+});
+
+/// GET /hadits/tema/:id — isi satu tema (tanpa pagination, set kurasi kecil)
+final haditsTemaDetailProvider =
+    FutureProvider.family<List<HaditsKoleksi>, int>((ref, id) async {
+  final apiClient = ref.watch(apiClientProvider);
+  try {
+    final response = await apiClient.get<List<dynamic>>(
+      '${ApiEndpoints.haditsTema}/$id',
+      fromJson: (json) => json is List ? json : <dynamic>[],
+    );
+    return (response.data ?? [])
+        .map((e) => HaditsKoleksi.fromMap(Map<String, dynamic>.from(e as Map)))
+        .toList();
+  } catch (e) {
+    return [];
+  }
 });
 
 // ============================================================
-// Bookmark Provider — tetap sama
+// Bookmark & riwayat — satu daftar, bukan family
+// (jumlah entri tak terbatas, jadi family berarti notifier tak terbatas)
 // ============================================================
-class HaditsBookmarkNotifier extends StateNotifier<HaditsBookmarkData?> {
-  HaditsBookmarkNotifier() : super(HaditsBookmarkStorage.getBookmark());
+class HaditsBookmarkNotifier extends StateNotifier<List<HaditsBookmarkData>> {
+  HaditsBookmarkNotifier() : super(HaditsBookmarkStorage.getAll());
 
-  void saveBookmark(HaditsBookmarkData data) {
-    HaditsBookmarkStorage.saveBookmark(data);
-    state = data;
-  }
+  List<HaditsBookmarkData> get bookmarks =>
+      state.where((e) => e.isBookmark).toList();
 
-  void clearBookmark() {
-    HaditsBookmarkStorage.clear();
-    state = null;
-  }
+  HaditsBookmarkData? get latest => state.isEmpty ? null : state.first;
 
-  bool toggleBookmark(HaditsBookmarkData data) {
-    if (state != null &&
-        state!.namaTabel == data.namaTabel &&
-        state!.noHdt == data.noHdt) {
-      clearBookmark();
+  bool isBookmarked(String namaTabel, int noHdt) => state
+      .any((e) => e.namaTabel == namaTabel && e.noHdt == noHdt && e.isBookmark);
+
+  /// Simpan sebagai bookmark, atau lepas bookmark-nya. Entri tetap tinggal
+  /// di riwayat — melepas bookmark bukan menghapus jejak baca.
+  bool toggle(HaditsBookmarkData data) {
+    if (isBookmarked(data.namaTabel, data.noHdt)) {
+      HaditsBookmarkStorage.unbookmark(data.namaTabel, data.noHdt);
+      reload();
       return false;
-    } else {
-      saveBookmark(data);
-      return true;
     }
+    HaditsBookmarkStorage.saveBookmark(data);
+    reload();
+    return true;
   }
 
-  void refresh() {
-    state = HaditsBookmarkStorage.getBookmark();
+  void remove(String namaTabel, int noHdt) {
+    HaditsBookmarkStorage.remove(namaTabel, noHdt);
+    reload();
   }
+
+  void markRead(HaditsBookmarkData data) {
+    HaditsBookmarkStorage.markRead(data);
+    reload();
+  }
+
+  void clearAll() {
+    HaditsBookmarkStorage.clear();
+    reload();
+  }
+
+  void refresh() => reload();
+
+  void reload() => state = HaditsBookmarkStorage.getAll();
 }
 
 final haditsBookmarkProvider =
-    StateNotifierProvider<HaditsBookmarkNotifier, HaditsBookmarkData?>((ref) {
+    StateNotifierProvider<HaditsBookmarkNotifier, List<HaditsBookmarkData>>((ref) {
   return HaditsBookmarkNotifier();
 });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// Palet & kartu bersama untuk halaman bergaya pengaturan (Marbot, Profil,
@@ -26,29 +27,42 @@ class SettingsPageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
 
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(
-        top: topPadding + 10,
-        left: 14,
-        right: 18,
-        bottom: 16,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
       ),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF032621),
-            Color(0xFF063E36),
-            Color(0xFF0D6357),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.only(
+          top: topPadding + 10,
+          left: 14,
+          right: 18,
+          bottom: 16,
+        ),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF048C7C),
+              Color(0xFF036F63),
+              Color(0xFF02574D),
+            ],
+          ),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(18),
+            bottomRight: Radius.circular(18),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x22048C7C),
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
           ],
         ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(18),
-          bottomRight: Radius.circular(18),
-        ),
-      ),
       child: Row(
         children: [
           if (leading != null) ...[leading!, const SizedBox(width: 8)],
@@ -82,6 +96,7 @@ class SettingsPageHeader extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }

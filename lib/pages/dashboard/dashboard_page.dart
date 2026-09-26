@@ -36,6 +36,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     _scrollController.addListener(_onScroll);
   }
 
@@ -74,8 +75,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     final overlayStyle = SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: _isScrolled ? Brightness.dark : Brightness.light,
@@ -93,10 +92,12 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       value: overlayStyle,
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FAF9),
-        body: RefreshIndicator(
-          color: const Color(0xFF048C7C),
-          backgroundColor: Colors.white,
-          onRefresh: () async {
+        body: Stack(
+          children: [
+            RefreshIndicator(
+              color: const Color(0xFF048C7C),
+              backgroundColor: Colors.white,
+              onRefresh: () async {
             ref.invalidate(jadwalShalatProvider);
             ref.invalidate(sedangLiveListProvider);
             ref.invalidate(kajianSliderProvider('doa_ramadhan'));
@@ -245,8 +246,23 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             ),
           ),
         ),
-      ),
-    );
+        // Pelindung status bar saat di-scroll
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height: MediaQuery.of(context).padding.top,
+            color: _isScrolled
+                ? const Color(0xFFF8FAF9).withValues(alpha: 0.96)
+                : Colors.transparent,
+          ),
+        ),
+      ],
+    ),
+  ),
+);
   }
 
   Widget _buildSeparator(

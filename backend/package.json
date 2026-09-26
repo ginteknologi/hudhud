@@ -14,6 +14,8 @@
     "d1:import:hadits:v2": "node tools/import_hadits_v2.mjs all",
     "d1:import:hadits:v2:sql-only": "node tools/import_hadits_v2.mjs all --sql-only",
     "d1:import:hadits:v2:d1-only": "node tools/import_hadits_v2.mjs all --d1-only",
+    "d1:import:quran": "node tools/import_quran.mjs",
+    "d1:import:quran:sql-only": "node tools/import_quran.mjs --sql-only",
     "r2:create": "wrangler r2 bucket create masjid-media"
   },
   "dependencies": {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:masjid_app/core/audio/app_audio_service.dart';
 import 'package:masjid_app/core/router/app_router.dart';
-
 import 'package:masjid_app/core/storage/preferences_service.dart';
 
 class SplashscreenPage extends StatefulWidget {
@@ -16,6 +16,7 @@ class _SplashscreenPageState extends State<SplashscreenPage> {
   @override
   void initState() {
     super.initState();
+    AppAudioService.playBismillah();
     _checkRedirect();
   }
 

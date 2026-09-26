@@ -36,9 +36,9 @@ class DashboardHeader extends ConsumerWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFF032621),
-            Color(0xFF063E36),
-            Color(0xFF0D6357),
+            Color(0xFF048C7C),
+            Color(0xFF036F63),
+            Color(0xFF02574D),
           ],
         ),
         borderRadius: BorderRadius.only(
