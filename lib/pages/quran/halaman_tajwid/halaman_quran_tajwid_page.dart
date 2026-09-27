@@ -14,7 +14,7 @@ import 'package:masjid_app/pages/quran/halaman_tajwid/component/image_viewer_wid
 import 'package:masjid_app/pages/quran/halaman_tajwid/model/tajwid_ayah_data.dart';
 import 'package:masjid_app/providers/quran_page_providers.dart';
 import 'package:masjid_app/providers/quran_provider.dart';
-import 'package:masjid_app/storage/bookmarkStorage.dart';
+import 'package:masjid_app/core/storage/bookmark_storage.dart';
 
 class HalamanQuranTajwidPage extends ConsumerStatefulWidget {
   const HalamanQuranTajwidPage({super.key});
@@ -267,7 +267,7 @@ class _HalamanQuranTajwidPageState
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.2),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.2),
             width: 1.2,
           ),
         ),
@@ -289,7 +289,7 @@ class _HalamanQuranTajwidPageState
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 5),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF048C7C).withValues(alpha: 0.12),
+                              color: const Color(0xFFD06A4C).withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Row(
@@ -298,7 +298,7 @@ class _HalamanQuranTajwidPageState
                                 const Icon(
                                   Icons.menu_book_rounded,
                                   size: 14,
-                                  color: Color(0xFF048C7C),
+                                  color: Color(0xFFD06A4C),
                                 ),
                                 const SizedBox(width: 5),
                                 Flexible(
@@ -309,7 +309,7 @@ class _HalamanQuranTajwidPageState
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 11,
-                                      color: Color(0xFF048C7C),
+                                      color: Color(0xFFD06A4C),
                                     ),
                                   ),
                                 ),
@@ -378,7 +378,7 @@ class _HalamanQuranTajwidPageState
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Color(0xFF048C7C),
+                              color: Color(0xFFD06A4C),
                             ),
                           ),
                         ),
@@ -427,9 +427,9 @@ class _HalamanQuranTajwidPageState
                   Expanded(
                     child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: const Color(0xFF048C7C),
+                        foregroundColor: const Color(0xFFD06A4C),
                         side: BorderSide(
-                          color: const Color(0xFF048C7C).withValues(alpha: 0.4),
+                          color: const Color(0xFFD06A4C).withValues(alpha: 0.4),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -461,7 +461,7 @@ class _HalamanQuranTajwidPageState
                   Expanded(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF048C7C),
+                        backgroundColor: const Color(0xFFD06A4C),
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -616,7 +616,7 @@ class _HalamanQuranTajwidPageState
                           context.pop('refresh');
                         },
                         child: const Icon(Icons.arrow_back_rounded)),
-                    backgroundColor: const Color(0xFF048C7C),
+                    backgroundColor: const Color(0xFFD06A4C),
                     elevation: 0,
                     titleSpacing: 0,
                     title: Align(
@@ -719,7 +719,7 @@ class _HalamanQuranTajwidPageState
                 ? Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF048C7C),
+                      color: const Color(0xFFD06A4C),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.2),

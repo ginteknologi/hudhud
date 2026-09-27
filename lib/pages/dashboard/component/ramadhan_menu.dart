@@ -26,7 +26,7 @@ class RamadhanMenuWidget extends ConsumerWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.05),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -81,7 +81,7 @@ class RamadhanMenuWidget extends ConsumerWidget {
                     maxLines: 1,
                     style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      color: const Color(0xFF048C7C),
+                      color: const Color(0xFFD06A4C),
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                     ),
@@ -131,7 +131,7 @@ class RamadhanMenuWidget extends ConsumerWidget {
                     maxLines: 1,
                     style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      color: const Color(0xFF048C7C),
+                      color: const Color(0xFFD06A4C),
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                     ),
@@ -157,8 +157,8 @@ class RamadhanMenuWidget extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF0D6357),
-              Color(0xFF1E8D7F),
+              Color(0xFF8C3B24),
+              Color(0xFFD06A4C),
             ],
           ),
         ),
@@ -168,7 +168,7 @@ class RamadhanMenuWidget extends ConsumerWidget {
             Text(
               '${hijri.hDay}',
               style: const TextStyle(
-                color: Color(0xFFF9D576),
+                color: Color(0xFFECA843),
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),

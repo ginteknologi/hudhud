@@ -10,7 +10,7 @@ class NearbyMasjidService {
             Dio(
               BaseOptions(
                 headers: {
-                  'User-Agent': 'MarbotMasjidApp/1.0 (contact@marbot.id)',
+                  'User-Agent': 'HudhudApp/1.0 (contact@hudhud.app)',
                 },
                 connectTimeout: const Duration(seconds: 12),
                 receiveTimeout: const Duration(seconds: 15),

@@ -444,7 +444,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                     min: 18.0,
                     max: 36.0,
                     divisions: 9,
-                    activeColor: const Color(0xFF048C7C),
+                    activeColor: const Color(0xFFD06A4C),
                     onChanged: (val) => notifier.updateArabicFontSize(val),
                   ),
                   const SizedBox(height: 8),
@@ -457,14 +457,14 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                     min: 11.0,
                     max: 20.0,
                     divisions: 9,
-                    activeColor: const Color(0xFF048C7C),
+                    activeColor: const Color(0xFFD06A4C),
                     onChanged: (val) => notifier.updateTranslationFontSize(val),
                   ),
                   const SizedBox(height: 8),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     activeThumbColor: Colors.white,
-                    activeTrackColor: const Color(0xFF048C7C),
+                    activeTrackColor: const Color(0xFFD06A4C),
                     inactiveThumbColor: Colors.white,
                     inactiveTrackColor: Colors.grey.shade300,
                     trackOutlineColor:
@@ -477,7 +477,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     activeThumbColor: Colors.white,
-                    activeTrackColor: const Color(0xFF048C7C),
+                    activeTrackColor: const Color(0xFFD06A4C),
                     inactiveThumbColor: Colors.white,
                     inactiveTrackColor: Colors.grey.shade300,
                     trackOutlineColor:
@@ -569,7 +569,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: isCurrent
-                                   ? const Color(0xFF048C7C)
+                                   ? const Color(0xFFD06A4C)
                                   : Colors.black54,
                             ),
                           ),
@@ -580,7 +580,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                   ? FontWeight.bold
                                   : FontWeight.w500,
                               color: isCurrent
-                                  ? const Color(0xFF048C7C)
+                                  ? const Color(0xFFD06A4C)
                                   : Colors.black87,
                             ),
                           ),
@@ -593,7 +593,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             style: TextStyle(
                               fontFamily: GoogleFonts.amiriQuran().fontFamily,
                               fontSize: 17,
-                              color: const Color(0xFF048C7C),
+                              color: const Color(0xFFD06A4C),
                             ),
                           ),
                           onTap: () {
@@ -915,13 +915,13 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                     const EdgeInsets.symmetric(vertical: 9),
                                 decoration: BoxDecoration(
                                   color: selectedTabIndex == 0
-                                      ? const Color(0xFF048C7C)
+                                      ? const Color(0xFFD06A4C)
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: selectedTabIndex == 0
                                       ? [
                                           BoxShadow(
-                                            color: const Color(0xFF048C7C)
+                                            color: const Color(0xFFD06A4C)
                                                 .withValues(alpha: 0.25),
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
@@ -978,13 +978,13 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                     const EdgeInsets.symmetric(vertical: 9),
                                 decoration: BoxDecoration(
                                   color: selectedTabIndex == 1
-                                      ? const Color(0xFF048C7C)
+                                      ? const Color(0xFFD06A4C)
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: selectedTabIndex == 1
                                       ? [
                                           BoxShadow(
-                                            color: const Color(0xFF048C7C)
+                                            color: const Color(0xFFD06A4C)
                                                 .withValues(alpha: 0.25),
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
@@ -1047,7 +1047,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             color: const Color(0xFFF7FAFA),
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
-                              color: const Color(0xFF048C7C)
+                              color: const Color(0xFFD06A4C)
                                   .withValues(alpha: 0.3),
                               width: 1.2,
                             ),
@@ -1067,7 +1067,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13,
-                                    color: Color(0xFF048C7C),
+                                    color: Color(0xFFD06A4C),
                                   ),
                                 ),
                               ),
@@ -1096,7 +1096,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                                       .amiriQuran()
                                                   .fontFamily,
                                               fontSize: 14,
-                                              color: const Color(0xFF048C7C),
+                                              color: const Color(0xFFD06A4C),
                                             ),
                                           ),
                                         ],
@@ -1129,13 +1129,13 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xFF048C7C),
+                                        color: Color(0xFFD06A4C),
                                       ),
                                     ),
                                     Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       size: 16,
-                                      color: Color(0xFF048C7C),
+                                      color: Color(0xFFD06A4C),
                                     ),
                                   ],
                                 ),
@@ -1157,7 +1157,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           labelText: "Nomor Ayat",
                           labelStyle: const TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF048C7C),
+                            color: Color(0xFFD06A4C),
                             fontWeight: FontWeight.w500,
                           ),
                           hintText: "Masukkan ayat (1 - $totalAyat)...",
@@ -1165,7 +1165,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           prefixIcon: const Icon(
                             Icons.format_list_numbered_rounded,
                             size: 20,
-                            color: Color(0xFF048C7C),
+                            color: Color(0xFFD06A4C),
                           ),
                           suffixIcon: ayatInputController.text.isNotEmpty
                               ? IconButton(
@@ -1197,7 +1197,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                              color: Color(0xFF048C7C),
+                              color: Color(0xFFD06A4C),
                               width: 1.5,
                             ),
                           ),
@@ -1243,17 +1243,17 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                         : FontWeight.normal,
                                     color: isSelected
                                         ? Colors.white
-                                        : const Color(0xFF048C7C),
+                                        : const Color(0xFFD06A4C),
                                   ),
                                 ),
                                 backgroundColor: isSelected
-                                    ? const Color(0xFF048C7C)
+                                    ? const Color(0xFFD06A4C)
                                     : const Color(0xFFE6F4F2),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   side: BorderSide(
                                     color: isSelected
-                                        ? const Color(0xFF048C7C)
+                                        ? const Color(0xFFD06A4C)
                                         : const Color(0xFFD4EFEA),
                                   ),
                                 ),
@@ -1290,7 +1290,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                               activeSurah['id'] as int, val);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF048C7C),
+                          backgroundColor: const Color(0xFFD06A4C),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 13),
                           shape: RoundedRectangleBorder(
@@ -1325,7 +1325,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                               "Cari kata dalam ${activeSurah['nama']}...",
                           hintStyle: const TextStyle(fontSize: 13),
                           prefixIcon: const Icon(Icons.search_rounded,
-                              size: 20, color: Color(0xFF048C7C)),
+                              size: 20, color: Color(0xFFD06A4C)),
                           suffixIcon: searchWordController.text.isNotEmpty
                               ? IconButton(
                                   icon: const Icon(Icons.clear_rounded,
@@ -1355,7 +1355,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                              color: Color(0xFF048C7C),
+                              color: Color(0xFFD06A4C),
                               width: 1.5,
                             ),
                           ),
@@ -1446,7 +1446,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12,
-                                              color: Color(0xFF048C7C),
+                                              color: Color(0xFFD06A4C),
                                             ),
                                           ),
                                         ),
@@ -1462,7 +1462,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                                 GoogleFonts.amiriQuran()
                                                     .fontFamily,
                                             fontSize: 15,
-                                            color: const Color(0xFF048C7C),
+                                            color: const Color(0xFFD06A4C),
                                           ),
                                         ),
                                         subtitle: Padding(
@@ -1478,7 +1478,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                             const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,
-                                              color: Color(0xFF048C7C),
+                                              color: Color(0xFFD06A4C),
                                               backgroundColor:
                                                   Color(0xFFE6F4F2),
                                             ),
@@ -1513,7 +1513,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF048C7C),
+        backgroundColor: const Color(0xFFD06A4C),
         foregroundColor: Colors.white,
         elevation: 0,
         title: InkWell(
@@ -1583,7 +1583,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
           ? Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFF048C7C),
+                color: const Color(0xFFD06A4C),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.15),
@@ -1654,7 +1654,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
               children: [
                 Container(
                   decoration: const BoxDecoration(
-                    color: Color(0xFF048C7C),
+                    color: Color(0xFFD06A4C),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,
@@ -1747,7 +1747,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
               border: Border(
                 bottom: BorderSide(
                   color: (isPlayingThis || isHighlightedThis)
-                      ? const Color(0xFF048C7C)
+                      ? const Color(0xFFD06A4C)
                       : const Color(0xFFEEEEEE),
                   width: (isPlayingThis || isHighlightedThis) ? 2.0 : 1.0,
                 ),
@@ -1767,7 +1767,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                       height: 32,
                       decoration: BoxDecoration(
                         color: isPlayingThis
-                            ? const Color(0xFF048C7C)
+                            ? const Color(0xFFD06A4C)
                             : const Color(0xFFE6F4F2),
                         shape: BoxShape.circle,
                       ),
@@ -1779,7 +1779,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           fontWeight: FontWeight.bold,
                           color: isPlayingThis
                               ? Colors.white
-                              : const Color(0xFF048C7C),
+                              : const Color(0xFFD06A4C),
                         ),
                       ),
                     ),
@@ -1794,7 +1794,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             isPlayingThis
                                 ? Icons.pause_circle_outline_rounded
                                 : Icons.play_circle_outline_rounded,
-                            color: const Color(0xFF048C7C),
+                            color: const Color(0xFFD06A4C),
                             size: 22,
                           ),
                           tooltip: isPlayingThis ? 'Jeda Audio' : 'Putar Ayat',
@@ -1887,7 +1887,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                     style: TextStyle(
                       fontSize: uiSettings.translationFontSize,
                       fontStyle: FontStyle.italic,
-                      color: const Color(0xFF048C7C),
+                      color: const Color(0xFFD06A4C),
                       height: 1.4,
                     ),
                   ),

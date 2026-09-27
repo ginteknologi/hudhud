@@ -80,7 +80,7 @@ class DzikirFullScreenPainter extends CustomPainter {
         colors: [
           Color(0xFFE88A3C), // Vibrant morning orange at top right
           Color(0xFFE8AB52), // Golden amber
-          Color(0xFF137065), // Calming emerald transition
+          Color(0xFFD06A4C), // Calming emerald transition
           Color(0xFF0C5047), // Deep emerald base
           Color(0xFF083E38), // Grounded teal bottom
         ],

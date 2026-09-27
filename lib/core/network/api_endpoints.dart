@@ -41,25 +41,12 @@ class ApiEndpoints {
   static const String haditsSearch = '/hadits/search';
   static const String haditsTema = '/hadits/tema'; // + /:id
 
-  // Artikel & Kajian
+  // Artikel
   static const String artikel = '/artikel';
   static const String artikelTerbaru = '/artikel/terbaru';
-  static const String kajianList = '/kajian/list';
-  static const String kajianSlider = '/kajian/slider';
-  static const String kajianLiveList = '/kajian/kaji-live/list';
-  static const String kajianLiveSlider = '/kajian/kaji-live/slider';
-  static const String muadzinList = '/kajian/muadzin/list';
-  static const String live = '/live';
 
-  // Sedekah & Transaksi
-  static const String campaign = '/campaign';
-  static const String paymentList = '/transaksi/list_payment';
-  static const String order = '/transaksi/order';
-  static const String invoiceDetail = '/transaksi/detail'; // + /:invoice
+  // Transaksi
   static const String transaksiHistory = '/transaksi/history'; // + /:email
-
-  // Fasilitas & Ruangan
-  static const String bookingRuangan = '/ruangan/booking';
 
   // Notif & Events
   static const String notif = '/notif';

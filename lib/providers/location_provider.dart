@@ -7,9 +7,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-/// Dipakai kalau user belum pernah mengambil lokasi GPS — server menghitung
-/// jadwal sholat memakai koordinat masjid.
-const String kDefaultLocationName = 'Masjid An-Ni’mah Cibubur';
+/// Default lokasi saat user belum mengaktifkan GPS.
+const String kDefaultLocationName = 'Jakarta';
 
 class SavedLocation {
   const SavedLocation({

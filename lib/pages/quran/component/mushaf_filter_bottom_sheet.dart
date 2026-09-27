@@ -189,7 +189,7 @@ class _MushafFilterBottomSheetState
                   children: [
                     Icon(
                       Icons.menu_book_rounded,
-                      color: Color(0xFF048C7C),
+                      color: Color(0xFFD06A4C),
                       size: 22,
                     ),
                     SizedBox(width: 8),
@@ -272,12 +272,12 @@ class _MushafFilterBottomSheetState
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 9),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF048C7C) : Colors.transparent,
+            color: isSelected ? const Color(0xFFD06A4C) : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: const Color(0xFF048C7C).withValues(alpha: 0.25),
+                      color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -344,7 +344,7 @@ class _MushafFilterBottomSheetState
               children: [
                 const Icon(
                   Icons.info_outline_rounded,
-                  color: Color(0xFF048C7C),
+                  color: Color(0xFFD06A4C),
                   size: 20,
                 ),
                 const SizedBox(width: 10),
@@ -354,7 +354,7 @@ class _MushafFilterBottomSheetState
                     style: const TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF048C7C),
+                      color: Color(0xFFD06A4C),
                     ),
                   ),
                 ),
@@ -381,7 +381,7 @@ class _MushafFilterBottomSheetState
             decoration: InputDecoration(
               prefixIcon: const Icon(
                 Icons.find_in_page_rounded,
-                color: Color(0xFF048C7C),
+                color: Color(0xFFD06A4C),
               ),
               suffixIcon: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -412,7 +412,7 @@ class _MushafFilterBottomSheetState
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide:
-                    const BorderSide(color: Color(0xFF048C7C), width: 1.8),
+                    const BorderSide(color: Color(0xFFD06A4C), width: 1.8),
               ),
             ),
             onChanged: _onPageInputChanged,
@@ -453,15 +453,15 @@ class _MushafFilterBottomSheetState
                 labelStyle: TextStyle(
                   fontSize: 12,
                   fontWeight: isTarget ? FontWeight.bold : FontWeight.w500,
-                  color: isTarget ? Colors.white : const Color(0xFF048C7C),
+                  color: isTarget ? Colors.white : const Color(0xFFD06A4C),
                 ),
                 backgroundColor:
-                    isTarget ? const Color(0xFF048C7C) : const Color(0xFFE6F4F2),
+                    isTarget ? const Color(0xFFD06A4C) : const Color(0xFFE6F4F2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                   side: BorderSide(
                     color: isTarget
-                        ? const Color(0xFF048C7C)
+                        ? const Color(0xFFD06A4C)
                         : const Color(0xFFBBE5E0),
                   ),
                 ),
@@ -474,7 +474,7 @@ class _MushafFilterBottomSheetState
           // Tombol Konfirmasi Lompat Halaman
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF048C7C),
+              backgroundColor: const Color(0xFFD06A4C),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
@@ -512,7 +512,7 @@ class _MushafFilterBottomSheetState
           style: const TextStyle(
             fontSize: 12.5,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF048C7C),
+            color: Color(0xFFD06A4C),
           ),
         ),
       ),
@@ -598,7 +598,7 @@ class _MushafFilterBottomSheetState
                         height: 36,
                         decoration: BoxDecoration(
                           color: isCurrentJuz
-                              ? const Color(0xFF048C7C)
+                              ? const Color(0xFFD06A4C)
                               : const Color(0xFFE6F4F2),
                           shape: BoxShape.circle,
                         ),
@@ -610,7 +610,7 @@ class _MushafFilterBottomSheetState
                             fontSize: 12.5,
                             color: isCurrentJuz
                                 ? Colors.white
-                                : const Color(0xFF048C7C),
+                                : const Color(0xFFD06A4C),
                           ),
                         ),
                       ),
@@ -622,7 +622,7 @@ class _MushafFilterBottomSheetState
                               ? FontWeight.bold
                               : FontWeight.w600,
                           color: isCurrentJuz
-                              ? const Color(0xFF048C7C)
+                              ? const Color(0xFFD06A4C)
                               : Colors.black87,
                         ),
                       ),
@@ -640,7 +640,7 @@ class _MushafFilterBottomSheetState
                         ),
                         decoration: BoxDecoration(
                           color: isCurrentJuz
-                              ? const Color(0xFF048C7C)
+                              ? const Color(0xFFD06A4C)
                               : const Color(0xFFF1F5F9),
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -651,7 +651,7 @@ class _MushafFilterBottomSheetState
                             fontWeight: FontWeight.bold,
                             color: isCurrentJuz
                                 ? Colors.white
-                                : const Color(0xFF048C7C),
+                                : const Color(0xFFD06A4C),
                           ),
                         ),
                       ),
@@ -706,7 +706,7 @@ class _MushafFilterBottomSheetState
         Expanded(
           child: surahAsync.when(
             loading: () => const Center(
-              child: CircularProgressIndicator(color: Color(0xFF048C7C)),
+              child: CircularProgressIndicator(color: Color(0xFFD06A4C)),
             ),
             error: (_, __) => _buildFallbackSurahListFromLocal(),
             data: (surahList) {
@@ -759,7 +759,7 @@ class _MushafFilterBottomSheetState
                       height: 36,
                       decoration: BoxDecoration(
                         color: isCurrent
-                            ? const Color(0xFF048C7C)
+                            ? const Color(0xFFD06A4C)
                             : const Color(0xFFE6F4F2),
                         shape: BoxShape.circle,
                       ),
@@ -771,7 +771,7 @@ class _MushafFilterBottomSheetState
                           fontSize: 12.5,
                           color: isCurrent
                               ? Colors.white
-                              : const Color(0xFF048C7C),
+                              : const Color(0xFFD06A4C),
                         ),
                       ),
                     ),
@@ -782,7 +782,7 @@ class _MushafFilterBottomSheetState
                         fontWeight:
                             isCurrent ? FontWeight.bold : FontWeight.w600,
                         color: isCurrent
-                            ? const Color(0xFF048C7C)
+                            ? const Color(0xFFD06A4C)
                             : Colors.black87,
                       ),
                     ),
@@ -798,7 +798,7 @@ class _MushafFilterBottomSheetState
                       style: TextStyle(
                         fontFamily: GoogleFonts.amiriQuran().fontFamily,
                         fontSize: 17,
-                        color: const Color(0xFF048C7C),
+                        color: const Color(0xFFD06A4C),
                       ),
                     ),
                     onTap: () => _confirmGoToPage(startPage),
@@ -857,7 +857,7 @@ class _MushafFilterBottomSheetState
             "${idx + 1}",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: isCurrent ? const Color(0xFF048C7C) : Colors.black54,
+              color: isCurrent ? const Color(0xFFD06A4C) : Colors.black54,
             ),
           ),
           title: Text(
@@ -865,14 +865,14 @@ class _MushafFilterBottomSheetState
             style: TextStyle(
               fontSize: 14,
               fontWeight: isCurrent ? FontWeight.bold : FontWeight.w600,
-              color: isCurrent ? const Color(0xFF048C7C) : Colors.black87,
+              color: isCurrent ? const Color(0xFFD06A4C) : Colors.black87,
             ),
           ),
           trailing: Text(
             "Hal. $hal",
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              color: Color(0xFF048C7C),
+              color: Color(0xFFD06A4C),
               fontSize: 12,
             ),
           ),

@@ -12,9 +12,9 @@ void main() {
     await PreferencesService.init();
   });
 
-  test('default: lokasi masjid, tanpa koordinat GPS', () {
+  test('default: nama kota default (Jakarta), tanpa koordinat GPS', () {
     final notifier = LocationNotifier();
-    expect(notifier.state.name, kDefaultLocationName);
+    expect(notifier.state.name, 'Jakarta');
     expect(notifier.state.isGps, isFalse);
   });
 

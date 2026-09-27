@@ -32,7 +32,7 @@ class PrayerTimesCard extends ConsumerWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF048C7C).withValues(alpha: 0.08),
+                color: const Color(0xFFD06A4C).withValues(alpha: 0.08),
                 blurRadius: 18,
                 offset: const Offset(0, 6),
               ),
@@ -43,7 +43,7 @@ class PrayerTimesCard extends ConsumerWidget {
               ),
             ],
             border: Border.all(
-              color: const Color(0xFFE2EBE8),
+              color: const Color(0xFFEFE7DE),
               width: 1,
             ),
           ),
@@ -65,7 +65,7 @@ class PrayerTimesCard extends ConsumerWidget {
                       errorBuilder: (_, __, ___) => Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Color(0xFF0D6357), Color(0xFF1E8D7F)],
+                            colors: [Color(0xFF8C3B24), Color(0xFFD06A4C)],
                           ),
                         ),
                       ),
@@ -103,7 +103,7 @@ class PrayerTimesCard extends ConsumerWidget {
                                     const Icon(
                                       Icons.calendar_today_outlined,
                                       size: 13,
-                                      color: Color(0xFFF9D576),
+                                      color: Color(0xFFECA843),
                                     ),
                                     const SizedBox(width: 6),
                                     Expanded(
@@ -161,7 +161,7 @@ class PrayerTimesCard extends ConsumerWidget {
                                       width: 6,
                                       height: 6,
                                       decoration: const BoxDecoration(
-                                        color: Color(0xFFF9D576),
+                                        color: Color(0xFFECA843),
                                         shape: BoxShape.circle,
                                       ),
                                     ),
@@ -182,7 +182,7 @@ class PrayerTimesCard extends ConsumerWidget {
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF68D8D6),
+                                    color: Color(0xFFFDE8C8),
                                     letterSpacing: 0.3,
                                   ),
                                 ),
@@ -207,16 +207,16 @@ class PrayerTimesCard extends ConsumerWidget {
                     return Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: isActive ? const Color(0xFF048C7C) : const Color(0xFFF8FAF9),
+                        color: isActive ? const Color(0xFFD06A4C) : const Color(0xFFFBF7F2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: isActive ? const Color(0xFF048C7C) : const Color(0xFFEAEAEA),
+                          color: isActive ? const Color(0xFFD06A4C) : const Color(0xFFEAEAEA),
                           width: 0.8,
                         ),
                         boxShadow: isActive
                             ? [
                                 BoxShadow(
-                                  color: const Color(0xFF048C7C).withValues(alpha: 0.3),
+                                  color: const Color(0xFFD06A4C).withValues(alpha: 0.3),
                                   blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
@@ -240,7 +240,7 @@ class PrayerTimesCard extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: isActive ? const Color(0xFFF9D576) : const Color(0xFF137065),
+                              color: isActive ? const Color(0xFFECA843) : const Color(0xFFD06A4C),
                             ),
                           ),
                         ],
@@ -266,11 +266,11 @@ class PrayerTimesCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
+        border: Border.all(color: const Color(0xFFEFE7DE)),
       ),
       child: const Center(
         child: CircularProgressIndicator(
-          color: Color(0xFF048C7C),
+          color: Color(0xFFD06A4C),
           strokeWidth: 2.5,
         ),
       ),
@@ -298,7 +298,7 @@ class PrayerTimesCard extends ConsumerWidget {
           const SizedBox(height: 8),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF048C7C),
+              backgroundColor: const Color(0xFFD06A4C),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () => ref.refresh(jadwalShalatProvider),

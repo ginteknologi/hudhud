@@ -79,7 +79,7 @@ class HaditsTemaPage extends ConsumerWidget {
             borderRadius: BorderRadius.circular(9),
           ),
           child: const Icon(Icons.category_rounded,
-              size: 17, color: Color(0xFF048C7C)),
+              size: 17, color: Color(0xFFD06A4C)),
         ),
         title: Text(
           tema.nama,
@@ -166,7 +166,7 @@ class HaditsTemaPage extends ConsumerWidget {
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF048C7C),
+                color: const Color(0xFFD06A4C),
               ),
             ),
           const SizedBox(height: 10),
@@ -225,7 +225,7 @@ class HaditsTemaPage extends ConsumerWidget {
                           border: Border.all(color: const Color(0xFFE2EBE8)),
                         ),
                         child: const Icon(Icons.arrow_back_rounded,
-                            size: 20, color: Color(0xFF137065)),
+                            size: 20, color: Color(0xFFD06A4C)),
                       ),
                     ),
                     const SizedBox(width: 14),
@@ -240,7 +240,7 @@ class HaditsTemaPage extends ConsumerWidget {
                             style: GoogleFonts.poppins(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF137065),
+                              color: const Color(0xFFD06A4C),
                             ),
                           ),
                           if (subtitle != null)

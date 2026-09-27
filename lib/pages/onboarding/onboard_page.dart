@@ -50,7 +50,7 @@ class _OnboardPageState extends State<OnboardPage> {
       badge: 'EKOSISTEM MASJID MODERN',
       title: "Makmurkan Masjid\nDalam Satu Genggaman",
       description:
-          "Dapatkan jadwal kajian ilmiah, doa harian, kemudahan infaq digital, arah kiblat presisi, serta informasi terkini kegiatan masjid di Marbot App.",
+          "Dapatkan jadwal kajian ilmiah, doa harian, kemudahan infaq digital, arah kiblat presisi, serta informasi terkini di Hudhud.",
       imagePath: 'assets/img/masjid.png',
     ),
   ];
@@ -91,7 +91,7 @@ class _OnboardPageState extends State<OnboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryTeal = Color(0xFF048C7C);
+    const primaryCinnamon = Color(0xFFD06A4C);
     const deepTeal = Color(0xFF032621);
     const darkText = Color(0xFF132A26);
     const mutedText = Color(0xFF5A726C);
@@ -123,14 +123,14 @@ class _OnboardPageState extends State<OnboardPage> {
                             height: 32,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF048C7C), Color(0xFF063E36)],
+                                colors: [Color(0xFFD06A4C), Color(0xFF4A1E13)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
-                                  color: primaryTeal.withValues(alpha: 0.25),
+                                  color: primaryCinnamon.withValues(alpha: 0.25),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -148,7 +148,7 @@ class _OnboardPageState extends State<OnboardPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Marbot App",
+                                  "Hudhud",
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.poppins(
@@ -197,7 +197,7 @@ class _OnboardPageState extends State<OnboardPage> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: primaryTeal.withValues(alpha: 0.04),
+                                  color: primaryCinnamon.withValues(alpha: 0.04),
                                   blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
@@ -211,14 +211,14 @@ class _OnboardPageState extends State<OnboardPage> {
                                   style: GoogleFonts.poppins(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: primaryTeal,
+                                    color: primaryCinnamon,
                                   ),
                                 ),
                                 const SizedBox(width: 4),
                                 const Icon(
                                   FlutterRemix.arrow_right_s_line,
                                   size: 14,
-                                  color: primaryTeal,
+                                  color: primaryCinnamon,
                                 ),
                               ],
                             ),
@@ -246,7 +246,7 @@ class _OnboardPageState extends State<OnboardPage> {
                     return _buildSlideContent(
                       context,
                       slide: slide,
-                      primaryColor: primaryTeal,
+                      primaryColor: primaryCinnamon,
                       darkText: darkText,
                       mutedText: mutedText,
                     );
@@ -267,7 +267,7 @@ class _OnboardPageState extends State<OnboardPage> {
                         _slides.length,
                         (index) => _buildIndicator(
                           isActive: index == _currentIndex,
-                          primaryColor: primaryTeal,
+                          primaryColor: primaryCinnamon,
                         ),
                       ),
                     ),
@@ -282,14 +282,14 @@ class _OnboardPageState extends State<OnboardPage> {
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [Color(0xFF048C7C), Color(0xFF06574D)],
+                              colors: [Color(0xFFD06A4C), Color(0xFF6B2B1B)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: primaryTeal.withValues(alpha: 0.35),
+                                color: primaryCinnamon.withValues(alpha: 0.35),
                                 blurRadius: 16,
                                 offset: const Offset(0, 6),
                               ),
@@ -359,7 +359,7 @@ class _OnboardPageState extends State<OnboardPage> {
                                   child: const Center(
                                     child: Icon(
                                       FlutterRemix.arrow_left_line,
-                                      color: primaryTeal,
+                                      color: primaryCinnamon,
                                       size: 20,
                                     ),
                                   ),
@@ -380,14 +380,14 @@ class _OnboardPageState extends State<OnboardPage> {
                                 padding: const EdgeInsets.symmetric(horizontal: 24),
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFF048C7C), Color(0xFF06574D)],
+                                    colors: [Color(0xFFD06A4C), Color(0xFF6B2B1B)],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: primaryTeal.withValues(alpha: 0.30),
+                                      color: primaryCinnamon.withValues(alpha: 0.30),
                                       blurRadius: 14,
                                       offset: const Offset(0, 5),
                                     ),

@@ -2,10 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:masjid_app/pages/kajian/component/kajian_card.dart';
 
-const Color artikelTeal = Color(0xFF048C7C);
-const Color artikelTitle = Color(0xFF137065);
+const Color artikelTeal = Color(0xFFD06A4C);
+const Color artikelTitle = Color(0xFFD06A4C);
 const Color artikelBorder = Color(0xFFE2EBE8);
 
 /// Bersihkan HTML dari judul artikel (backend mengirim judul ber-tag).
@@ -95,9 +94,9 @@ class ArtikelCard extends StatelessWidget {
             ? CachedNetworkImage(
                 imageUrl: image,
                 fit: BoxFit.cover,
-                errorWidget: (_, __, ___) => const KajianFallbackImage(),
+                errorWidget: (_, __, ___) => const ArtikelFallbackImage(),
               )
-            : const KajianFallbackImage(),
+            : const ArtikelFallbackImage(),
       ),
     );
   }
@@ -133,10 +132,10 @@ class ArtikelCard extends StatelessWidget {
                 CachedNetworkImage(
                   imageUrl: image,
                   fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) => const KajianFallbackImage(),
+                  errorWidget: (_, __, ___) => const ArtikelFallbackImage(),
                 )
               else
-                const KajianFallbackImage(),
+                const ArtikelFallbackImage(),
               Positioned(
                 top: 10,
                 left: 10,
@@ -235,6 +234,36 @@ class ArtikelCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ArtikelFallbackImage extends StatelessWidget {
+  const ArtikelFallbackImage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF8C3B24),
+            Color(0xFFD06A4C),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Opacity(
+          opacity: 0.25,
+          child: Image.asset(
+            'assets/icons/app_icon.png',
+            height: 60,
+            width: 60,
+          ),
+        ),
       ),
     );
   }

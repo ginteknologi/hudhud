@@ -36,9 +36,9 @@ class DashboardHeader extends ConsumerWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFF048C7C),
-            Color(0xFF036F63),
-            Color(0xFF02574D),
+            Color(0xFFD06A4C),
+            Color(0xFFB85639),
+            Color(0xFF8C3B24),
           ],
         ),
         borderRadius: BorderRadius.only(
@@ -47,7 +47,7 @@ class DashboardHeader extends ConsumerWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Color(0x22048C7C),
+            color: Color(0x28D06A4C),
             blurRadius: 10,
             offset: Offset(0, 3),
           ),
@@ -98,14 +98,14 @@ class DashboardHeader extends ConsumerWidget {
                         height: 11,
                         child: CircularProgressIndicator(
                           strokeWidth: 1.6,
-                          color: Color(0xFFF9D576),
+                          color: Color(0xFFECA843),
                         ),
                       )
                     else
                       const Icon(
                         Icons.location_on_rounded,
                         size: 11,
-                        color: Color(0xFFF9D576),
+                        color: Color(0xFFECA843),
                       ),
                     const SizedBox(width: 3),
                     Flexible(
@@ -132,8 +132,8 @@ class DashboardHeader extends ConsumerWidget {
                     if (location.isGps) ...[
                       const SizedBox(width: 4),
                       _HeaderIconButton(
-                        icon: Icons.mosque_rounded,
-                        tooltip: 'Kembali ke lokasi masjid',
+                        icon: Icons.refresh_rounded,
+                        tooltip: 'Kembali ke lokasi default',
                         onTap: () =>
                             ref.read(locationProvider.notifier).reset(),
                       ),
@@ -182,7 +182,7 @@ class DashboardHeader extends ConsumerWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFFF9D576),
+                      color: const Color(0xFFECA843),
                       width: 1.2,
                     ),
                   ),

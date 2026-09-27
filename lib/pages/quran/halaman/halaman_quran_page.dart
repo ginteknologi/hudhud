@@ -10,7 +10,7 @@ import 'package:masjid_app/models/bookmark_data.dart';
 import 'package:masjid_app/pages/quran/component/mushaf_filter_bottom_sheet.dart';
 import 'package:masjid_app/pages/quran/halaman/component/image_viewer_widget.dart';
 import 'package:masjid_app/providers/quran_page_providers.dart';
-import 'package:masjid_app/storage/bookmarkStorage.dart';
+import 'package:masjid_app/core/storage/bookmark_storage.dart';
 
 class HalamanQuranPage extends ConsumerStatefulWidget {
   const HalamanQuranPage({super.key});
@@ -293,7 +293,7 @@ class _HalamanQuranPageState extends ConsumerState<HalamanQuranPage> {
                           context.pop('refresh');
                         },
                         child: const Icon(Icons.arrow_back_rounded)),
-                    backgroundColor: Color(0xFF048C7C),
+                    backgroundColor: Color(0xFFD06A4C),
                     elevation: 0,
                     titleSpacing: 0,
                     title: Align(
@@ -396,7 +396,7 @@ class _HalamanQuranPageState extends ConsumerState<HalamanQuranPage> {
                 ? Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF048C7C),
+                      color: const Color(0xFFD06A4C),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.2),

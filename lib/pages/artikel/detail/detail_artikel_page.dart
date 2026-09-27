@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:masjid_app/configs/file_setup.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/pages/artikel/component/artikel_card.dart';
-import 'package:masjid_app/pages/kajian/component/kajian_card.dart';
 import 'package:masjid_app/providers/artikel_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -141,9 +140,9 @@ class DetailArtikelPage extends ConsumerWidget {
                             imageUrl: detail.image,
                             fit: BoxFit.cover,
                             errorWidget: (_, __, ___) =>
-                                const KajianFallbackImage(),
+                                const ArtikelFallbackImage(),
                           )
-                        : const KajianFallbackImage(),
+                        : const ArtikelFallbackImage(),
                   ),
                 ),
                 const SizedBox(height: 16),

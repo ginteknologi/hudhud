@@ -61,7 +61,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
     final authState = ref.watch(authNotifierProvider);
     final isLoading = authState.isLoading;
 
-    const primaryTeal = Color(0xFF048C7C);
+    const primaryCinnamon = Color(0xFFD06A4C);
     const surfaceBg = Color(0xFFF8FAF9);
     const darkText = Color(0xFF132A26);
     const mutedText = Color(0xFF5A726C);
@@ -78,7 +78,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
           child: Column(
             children: [
               // 1. Header Islami Elegan Bergaya Home Dashboard
-              _buildTopHeader(context, primaryTeal),
+              _buildTopHeader(context, primaryCinnamon),
 
               // 2. Card Form & Opsi Masuk (Overlapping Header)
               Transform.translate(
@@ -95,7 +95,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: primaryTeal.withValues(alpha: 0.08),
+                          color: primaryCinnamon.withValues(alpha: 0.08),
                           blurRadius: 24,
                           offset: const Offset(0, 8),
                         ),
@@ -111,7 +111,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Chip Highlight Fitur Masjid
-                        _buildFeaturePills(primaryTeal),
+                        _buildFeaturePills(primaryCinnamon),
                         const SizedBox(height: 20),
 
                         // Judul & Penjelasan
@@ -176,7 +176,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
 
                         // Loading State atau Pilihan Tombol
                         if (isLoading)
-                          _buildLoadingIndicator(primaryTeal)
+                          _buildLoadingIndicator(primaryCinnamon)
                         else ...[
                           // Primary CTA: Lanjutkan dengan Google
                           _buildGoogleButton(onTap: _handleGoogleLogin),
@@ -216,7 +216,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
 
                           // Secondary CTA: Masuk sebagai Tamu
                           _buildGuestButton(
-                            primaryColor: primaryTeal,
+                            primaryColor: primaryCinnamon,
                             onTap: _handleGuestLogin,
                           ),
                         ],
@@ -237,7 +237,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                         const Icon(
                           FlutterRemix.shield_check_line,
                           size: 14,
-                          color: Color(0xFF048C7C),
+                          color: Color(0xFFD06A4C),
                         ),
                         const SizedBox(width: 6),
                         Text(
@@ -252,7 +252,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      "Marbot App • Menuju Ekosistem Masjid Makmur & Mandiri",
+                      "Hudhud • Daily Quran & Stories",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 10.5,
@@ -286,8 +286,8 @@ class _AuthPageState extends ConsumerState<AuthPage> {
           end: Alignment.bottomCenter,
           colors: [
             Color(0xFF032621),
-            Color(0xFF063E36),
-            Color(0xFF0D6357),
+            Color(0xFF4A1E13),
+            Color(0xFF8C3B24),
           ],
         ),
         borderRadius: BorderRadius.only(
@@ -330,7 +330,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
               errorBuilder: (_, __, ___) => const Icon(
                 FlutterRemix.building_2_line,
                 size: 36,
-                color: Color(0xFF048C7C),
+                color: Color(0xFFD06A4C),
               ),
             ),
           ),
@@ -380,7 +380,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  "Marbot App",
+                  "Hudhud",
                   style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontSize: 11.5,

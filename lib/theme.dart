@@ -6,24 +6,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class AppColors {
-  static const Color appPrimary = Color(0xFF048C7C);
+  static const Color appPrimary = Color(0xFFD06A4C); // Hudhud Terracotta / Cinnamon
   static const Color textPrimary = Colors.white;
-  static const Color appPrimary2 = Color(0xFF1E8EE3);
-  static const Color appAccent = Color(0xFFDDEFFF);
-  static const Color appAccent2 = Color(0xFFB4DBFF);
-  static const Color appWarning = Color(0xFFf1c40f);
-  static const Color appSuccess = Color(0xFF2ecc71);
-  static const Color appDanger = Color(0xFFe74c3c);
+  static const Color appPrimary2 = Color(0xFFECA843); // Hudhud Amber Gold
+  static const Color appAccent = Color(0xFFF7EBE4); // Warm Sand Tint
+  static const Color appAccent2 = Color(0xFFF0D6C8); // Soft Cinnamon Cream
+  static const Color appWarning = Color(0xFFF1C40F);
+  static const Color appSuccess = Color(0xFF2ECC71);
+  static const Color appDanger = Color(0xFFE74C3C);
   static const Color background = Colors.white;
-  static const Color surface = Color(0xFFF4F4F4);
+  static const Color surface = Color(0xFFFBF7F2); // Warm Off-White
   static const Color primary = appPrimary;
   static const Color secondary = appAccent;
   static const Color backgroundDark = Color(0xFF212121);
   static const Color surfaceDark = Color(0xFF333333);
-  static const Color primaryDark = Color(0xFF002EA6);
+  static const Color primaryDark = Color(0xFF8C3B24);
   static const Color secondaryDark = appAccent;
   static const Color text = Colors.white;
-  static const Color textDark = Colors.black;
+  static const Color textDark = Color(0xFF2B2523); // Deep Charcoal
   static const Color grey = Color(0xFFE8E8E8);
 
   static Color switchColor(Set<WidgetState> states) {

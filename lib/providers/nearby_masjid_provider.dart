@@ -14,9 +14,9 @@ final nearbyMasjidsProvider = FutureProvider<List<NearbyMasjid>>((ref) async {
   final radius = ref.watch(searchRadiusProvider);
   final service = ref.watch(nearbyMasjidServiceProvider);
 
-  // Jika belum ada koordinat GPS, gunakan default masjid Cibubur
-  final lat = location.latitude ?? -6.3688;
-  final lng = location.longitude ?? 106.8833;
+  // Jika belum ada koordinat GPS, gunakan default Jakarta
+  final lat = location.latitude ?? -6.2088;
+  final lng = location.longitude ?? 106.8456;
 
   return await service.fetchNearbyMasjids(
     latitude: lat,

@@ -103,7 +103,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                           child: const Icon(
                             Icons.arrow_back_rounded,
                             size: 20,
-                            color: Color(0xFF137065),
+                            color: Color(0xFFD06A4C),
                           ),
                         ),
                       ),
@@ -117,7 +117,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                               style: GoogleFonts.poppins(
                                 fontSize: 19,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF137065),
+                                color: const Color(0xFFD06A4C),
                               ),
                             ),
                             const SizedBox(height: 1),
@@ -144,12 +144,12 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                       gradient: const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [Color(0xFF0D6357), Color(0xFF1E8D7F)],
+                        colors: [Color(0xFF8C3B24), Color(0xFFD06A4C)],
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF048C7C).withValues(alpha: 0.25),
+                          color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
                           blurRadius: 16,
                           offset: const Offset(0, 6),
                         ),
@@ -252,7 +252,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                         ),
                         prefixIcon: const Icon(
                           Icons.search_rounded,
-                          color: Color(0xFF048C7C),
+                          color: Color(0xFFD06A4C),
                           size: 22,
                         ),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -284,7 +284,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF137065),
+                          color: const Color(0xFFD06A4C),
                         ),
                       ),
                       Text(
@@ -292,7 +292,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF048C7C),
+                          color: const Color(0xFFD06A4C),
                         ),
                       ),
                     ],
@@ -373,7 +373,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
         border: Border.all(color: const Color(0xFFE2EBE8)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.04),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -407,7 +407,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF048C7C),
+                        color: const Color(0xFFD06A4C),
                       ),
                     ),
                   ),
@@ -446,7 +446,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
                   ),
                   child: const Icon(
                     Icons.chevron_right_rounded,
-                    color: Color(0xFF048C7C),
+                    color: Color(0xFFD06A4C),
                     size: 20,
                   ),
                 ),
@@ -482,7 +482,7 @@ class _DoaPageState extends ConsumerState<DoaPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF048C7C),
+                backgroundColor: const Color(0xFFD06A4C),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

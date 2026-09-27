@@ -138,7 +138,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
           ? 'Disimpan ke Tanda Baca (No. ${hadits.noHdt})'
           : 'Tanda Baca dilepas (tetap ada di Riwayat)',
       backgroundColor:
-          saved ? const Color(0xFF048C7C) : const Color(0xFF4A5568),
+          saved ? const Color(0xFFD06A4C) : const Color(0xFF4A5568),
       textColor: Colors.white,
     );
   }
@@ -149,7 +149,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
         '${hadits.isiArab}\n\n'
         'Artinya:\n'
         '"${hadits.isiIndonesia}"\n\n'
-        '(Dibagikan melalui Aplikasi Masjid An-Ni\'mah - Marbot)';
+        '(Dibagikan melalui Hudhud)';
     SharePlus.instance.share(ShareParams(text: text));
   }
 
@@ -162,7 +162,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
     Clipboard.setData(ClipboardData(text: text));
     Fluttertoast.showToast(
       msg: 'Teks hadits disalin ke clipboard',
-      backgroundColor: const Color(0xFF048C7C),
+      backgroundColor: const Color(0xFFD06A4C),
       textColor: Colors.white,
     );
   }
@@ -278,7 +278,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                         child: const Icon(
                           Icons.menu_book_outlined,
                           size: 36,
-                          color: Color(0xFF048C7C),
+                          color: Color(0xFFD06A4C),
                         ),
                       ),
                       const SizedBox(height: 14),
@@ -367,7 +367,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                   child: const Icon(
                     Icons.arrow_back_rounded,
                     size: 20,
-                    color: Color(0xFF137065),
+                    color: Color(0xFFD06A4C),
                   ),
                 ),
               ),
@@ -383,7 +383,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF137065),
+                        color: const Color(0xFFD06A4C),
                       ),
                     ),
                     if (pagination.total > 0)
@@ -410,7 +410,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                   ),
                   icon: const Icon(
                     Icons.tune_rounded,
-                    color: Color(0xFF048C7C),
+                    color: Color(0xFFD06A4C),
                     size: 22,
                   ),
                   tooltip: 'Lompat / Ganti Kitab',
@@ -419,7 +419,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                 onPressed: () => HaditsFontSizeModal.show(context),
                 icon: const Icon(
                   Icons.text_fields_rounded,
-                  color: Color(0xFF048C7C),
+                  color: Color(0xFFD06A4C),
                   size: 22,
                 ),
                 tooltip: 'Ukuran Teks',
@@ -438,7 +438,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.menu_book_rounded,
-                      size: 13, color: Color(0xFF048C7C)),
+                      size: 13, color: Color(0xFFD06A4C)),
                   const SizedBox(width: 6),
                   Flexible(
                     child: Text(
@@ -447,7 +447,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF048C7C),
+                        color: const Color(0xFFD06A4C),
                       ),
                     ),
                   ),
@@ -479,7 +479,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isBookmarked
-              ? const Color(0xFF048C7C).withValues(alpha: 0.4)
+              ? const Color(0xFFD06A4C).withValues(alpha: 0.4)
               : const Color(0xFFE2EBE8),
         ),
         boxShadow: [
@@ -500,7 +500,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF048C7C),
+                    color: const Color(0xFFD06A4C),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -524,13 +524,13 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.bookmark_rounded,
-                            size: 11, color: Color(0xFF048C7C)),
+                            size: 11, color: Color(0xFFD06A4C)),
                         const SizedBox(width: 3),
                         Text(
                           'Disimpan',
                           style: GoogleFonts.poppins(
                             fontSize: 10,
-                            color: const Color(0xFF048C7C),
+                            color: const Color(0xFFD06A4C),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -543,7 +543,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
                   icon: isBookmarked
                       ? Icons.bookmark_rounded
                       : Icons.bookmark_border_rounded,
-                  color: isBookmarked ? const Color(0xFF048C7C) : Colors.black45,
+                  color: isBookmarked ? const Color(0xFFD06A4C) : Colors.black45,
                   onTap: () => _saveBookmark(hadits, total, book, bab),
                 ),
                 const SizedBox(width: 4),
@@ -615,7 +615,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF048C7C),
+              color: const Color(0xFFD06A4C),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
@@ -661,7 +661,7 @@ class _HaditsListPageState extends ConsumerState<HaditsListPage> {
               icon: const Icon(Icons.refresh_rounded, size: 18),
               label: const Text('Coba Lagi'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF048C7C),
+                backgroundColor: const Color(0xFFD06A4C),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -723,14 +723,14 @@ class _PaginationButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: enabled
-                ? const Color(0xFF048C7C).withValues(alpha: 0.3)
+                ? const Color(0xFFD06A4C).withValues(alpha: 0.3)
                 : Colors.transparent,
           ),
         ),
         child: Icon(
           icon,
           size: 22,
-          color: enabled ? const Color(0xFF048C7C) : Colors.black26,
+          color: enabled ? const Color(0xFFD06A4C) : Colors.black26,
         ),
       ),
     );

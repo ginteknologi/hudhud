@@ -55,12 +55,12 @@ class AlquranPengaturanPage extends ConsumerWidget {
                     qori['name']!,
                     style: TextStyle(
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? const Color(0xFF048C7C) : Colors.black87,
+                      color: isSelected ? const Color(0xFFD06A4C) : Colors.black87,
                     ),
                   ),
                   trailing: isSelected
                       ? const Icon(Icons.check_circle_rounded,
-                          color: Color(0xFF048C7C))
+                          color: Color(0xFFD06A4C))
                       : null,
                   onTap: () {
                     ref
@@ -166,7 +166,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: uiSettings.translationFontSize,
                                     fontStyle: FontStyle.italic,
-                                    color: const Color(0xFF048C7C),
+                                    color: const Color(0xFFD06A4C),
                                   ),
                                 ),
                               ],
@@ -195,7 +195,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                 style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF048C7C))),
+                                    color: Color(0xFFD06A4C))),
                           ],
                         ),
                         Slider(
@@ -203,7 +203,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                           min: 18.0,
                           max: 36.0,
                           divisions: 9,
-                          activeColor: const Color(0xFF048C7C),
+                          activeColor: const Color(0xFFD06A4C),
                           onChanged: (val) =>
                               uiNotifier.updateArabicFontSize(val),
                         ),
@@ -218,7 +218,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                 style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF048C7C))),
+                                    color: Color(0xFFD06A4C))),
                           ],
                         ),
                         Slider(
@@ -226,7 +226,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                           min: 11.0,
                           max: 20.0,
                           divisions: 9,
-                          activeColor: const Color(0xFF048C7C),
+                          activeColor: const Color(0xFFD06A4C),
                           onChanged: (val) =>
                               uiNotifier.updateTranslationFontSize(val),
                         ),
@@ -235,7 +235,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
                           activeThumbColor: Colors.white,
-                          activeTrackColor: const Color(0xFF048C7C),
+                          activeTrackColor: const Color(0xFFD06A4C),
                           inactiveThumbColor: Colors.white,
                           inactiveTrackColor: Colors.grey.shade300,
                           trackOutlineColor:
@@ -248,7 +248,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
                           activeThumbColor: Colors.white,
-                          activeTrackColor: const Color(0xFF048C7C),
+                          activeTrackColor: const Color(0xFFD06A4C),
                           inactiveThumbColor: Colors.white,
                           inactiveTrackColor: Colors.grey.shade300,
                           trackOutlineColor:
@@ -340,7 +340,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                   horizontal: 10, vertical: 7),
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                    color: const Color(0xFF048C7C)),
+                                    color: const Color(0xFFD06A4C)),
                                 borderRadius: BorderRadius.circular(8),
                                 color: const Color(0xFFE6F4F2),
                               ),
@@ -360,13 +360,13 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                       style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xFF048C7C),
+                                        color: Color(0xFFD06A4C),
                                       ),
                                     ),
                                   ),
                                   const SizedBox(width: 4),
                                   const Icon(Icons.arrow_drop_down,
-                                      size: 18, color: Color(0xFF048C7C)),
+                                      size: 18, color: Color(0xFFD06A4C)),
                                 ],
                               ),
                             ),
@@ -710,7 +710,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
           iconTheme: const IconThemeData(color: Colors.white),
           color: Colors.white,
           titleAlign: Alignment.centerLeft,
-          backgroundColor: const Color(0xFF048C7C)),
+          backgroundColor: const Color(0xFFD06A4C)),
       body: ref.watch(quranDownloadProvider).isLoadingList
           ? const Center(child: CircularProgressIndicator())
           : _layout(ref, context),

@@ -82,7 +82,7 @@ class MyApp extends ConsumerWidget {
     });
 
     return MaterialApp.router(
-      title: 'Marbot App',
+      title: 'Hudhud',
       routerConfig: router,
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,

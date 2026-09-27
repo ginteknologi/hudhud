@@ -108,7 +108,7 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF137065),
+                color: const Color(0xFFD06A4C),
               ),
             ),
             const SizedBox(height: 12),
@@ -154,7 +154,7 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
               Icon(
                 icon,
                 size: 15,
-                color: active ? const Color(0xFF048C7C) : Colors.black45,
+                color: active ? const Color(0xFFD06A4C) : Colors.black45,
               ),
               const SizedBox(width: 6),
               Text(
@@ -162,7 +162,7 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
                 style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                  color: active ? const Color(0xFF048C7C) : Colors.black45,
+                  color: active ? const Color(0xFFD06A4C) : Colors.black45,
                 ),
               ),
             ],
@@ -205,7 +205,7 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFF048C7C)),
+            borderSide: const BorderSide(color: Color(0xFFD06A4C)),
           ),
         ),
         style: GoogleFonts.poppins(fontSize: 14),
@@ -235,7 +235,7 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
         child: ElevatedButton(
           onPressed: _submit,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF048C7C),
+            backgroundColor: const Color(0xFFD06A4C),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 13),
             shape: RoundedRectangleBorder(
@@ -277,14 +277,14 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
               leading: Icon(
                 Icons.menu_book_rounded,
                 size: 20,
-                color: active ? const Color(0xFF048C7C) : Colors.black38,
+                color: active ? const Color(0xFFD06A4C) : Colors.black38,
               ),
               title: Text(
                 book.longNama,
                 style: GoogleFonts.poppins(
                   fontSize: 13,
                   fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                  color: active ? const Color(0xFF048C7C) : Colors.black87,
+                  color: active ? const Color(0xFFD06A4C) : Colors.black87,
                 ),
               ),
               subtitle: Text(
@@ -295,7 +295,7 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
               ),
               trailing: active
                   ? const Icon(Icons.check_rounded,
-                      size: 18, color: Color(0xFF048C7C))
+                      size: 18, color: Color(0xFFD06A4C))
                   : null,
               onTap: active
                   ? null

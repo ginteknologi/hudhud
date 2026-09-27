@@ -97,7 +97,7 @@ class _HaditsSearchPageState extends ConsumerState<HaditsSearchPage> {
                 border: Border.all(color: const Color(0xFFE2EBE8)),
               ),
               child: const Icon(Icons.arrow_back_rounded,
-                  size: 20, color: Color(0xFF137065)),
+                  size: 20, color: Color(0xFFD06A4C)),
             ),
           ),
           const SizedBox(width: 10),
@@ -115,7 +115,7 @@ class _HaditsSearchPageState extends ConsumerState<HaditsSearchPage> {
                 hintText: 'Cari teks hadits…',
                 hintStyle: GoogleFonts.poppins(fontSize: 13, color: Colors.black38),
                 prefixIcon: const Icon(Icons.search_rounded,
-                    size: 20, color: Color(0xFF048C7C)),
+                    size: 20, color: Color(0xFFD06A4C)),
                 suffixIcon: _controller.text.isEmpty
                     ? null
                     : IconButton(
@@ -139,7 +139,7 @@ class _HaditsSearchPageState extends ConsumerState<HaditsSearchPage> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF048C7C)),
+                  borderSide: const BorderSide(color: Color(0xFFD06A4C)),
                 ),
               ),
               style: GoogleFonts.poppins(fontSize: 14),
@@ -177,10 +177,10 @@ class _HaditsSearchPageState extends ConsumerState<HaditsSearchPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: active ? const Color(0xFF048C7C) : Colors.white,
+            color: active ? const Color(0xFFD06A4C) : Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: active ? const Color(0xFF048C7C) : const Color(0xFFE2EBE8),
+              color: active ? const Color(0xFFD06A4C) : const Color(0xFFE2EBE8),
             ),
           ),
           child: Text(
@@ -293,7 +293,7 @@ class _HaditsSearchPageState extends ConsumerState<HaditsSearchPage> {
                     style: GoogleFonts.poppins(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF048C7C),
+                      color: const Color(0xFFD06A4C),
                     ),
                   ),
                 ),

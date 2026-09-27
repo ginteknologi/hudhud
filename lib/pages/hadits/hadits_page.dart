@@ -142,7 +142,7 @@ class HaditsPage extends ConsumerWidget {
                 ],
               ),
               child: const Icon(Icons.arrow_back_rounded,
-                  size: 20, color: Color(0xFF137065)),
+                  size: 20, color: Color(0xFFD06A4C)),
             ),
           ),
           const SizedBox(width: 14),
@@ -155,7 +155,7 @@ class HaditsPage extends ConsumerWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 19,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF137065),
+                    color: const Color(0xFFD06A4C),
                   ),
                 ),
                 const SizedBox(height: 1),
@@ -200,7 +200,7 @@ class HaditsPage extends ConsumerWidget {
               child: Row(
                 children: [
                   const Icon(Icons.search_rounded,
-                      color: Color(0xFF048C7C), size: 22),
+                      color: Color(0xFFD06A4C), size: 22),
                   const SizedBox(width: 10),
                   Text(
                     'Cari teks hadits…',
@@ -233,7 +233,7 @@ class HaditsPage extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF137065),
+              color: const Color(0xFFD06A4C),
             ),
           ),
           if (trailing != null)
@@ -242,7 +242,7 @@ class HaditsPage extends ConsumerWidget {
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF048C7C),
+                color: const Color(0xFFD06A4C),
               ),
             ),
         ],
@@ -279,7 +279,7 @@ class HaditsPage extends ConsumerWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF137065),
+                          color: const Color(0xFFD06A4C),
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -310,7 +310,7 @@ class HaditsPage extends ConsumerWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF048C7C),
+                    color: const Color(0xFFD06A4C),
                   ),
                 ),
               ),
@@ -338,7 +338,7 @@ class HaditsPage extends ConsumerWidget {
         border: Border.all(color: const Color(0xFFE2EBE8)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.05),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -381,7 +381,7 @@ class HaditsPage extends ConsumerWidget {
                                 width: 44,
                                 height: 44,
                                 colorFilter: const ColorFilter.mode(
-                                  Color(0xFF048C7C),
+                                  Color(0xFFD06A4C),
                                   BlendMode.srcIn,
                                 ),
                               ),
@@ -424,14 +424,14 @@ class HaditsPage extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Icon(Icons.menu_book_rounded,
-                                size: 11, color: Color(0xFF048C7C)),
+                                size: 11, color: Color(0xFFD06A4C)),
                             const SizedBox(width: 4),
                             Text(
                               '${book.hadits} Hadits',
                               style: GoogleFonts.poppins(
                                 fontSize: 10.5,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFF048C7C),
+                                color: const Color(0xFFD06A4C),
                               ),
                             ),
                           ],
@@ -488,7 +488,7 @@ class HaditsPage extends ConsumerWidget {
                       ? Icons.bookmark_rounded
                       : Icons.history_rounded,
                   size: 20,
-                  color: const Color(0xFF048C7C),
+                  color: const Color(0xFFD06A4C),
                 ),
                 title: Text(
                   e.longNama,
@@ -548,7 +548,7 @@ class HaditsPage extends ConsumerWidget {
               icon: const Icon(Icons.refresh_rounded, size: 18),
               label: const Text('Coba Lagi'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF048C7C),
+                backgroundColor: const Color(0xFFD06A4C),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

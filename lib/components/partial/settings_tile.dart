@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// Palet & kartu bersama untuk halaman bergaya pengaturan (Marbot, Profil,
-/// Pengaturan Umum) supaya tampilannya konsisten dengan beranda.
-const Color kTileAccent = Color(0xFF048C7C);
-const Color kTileGold = Color(0xFFF9D576);
-const Color kTileBorder = Color(0xFFE2EBE8);
-const Color kTileTextDark = Color(0xFF2C3E50);
-const Color kTileTextMuted = Color(0xFF7A8E88);
-const Color kTilePageBg = Color(0xFFF8FAF9);
+/// Palet & kartu bersama untuk halaman bergaya pengaturan (Hudhud, Profil,
+/// Pengaturan Umum) bernuansa Burung Hudhud.
+const Color kTileAccent = Color(0xFFD06A4C); // Hudhud Terracotta
+const Color kTileGold = Color(0xFFECA843); // Crest Amber Gold
+const Color kTileBorder = Color(0xFFEFE7DE); // Warm Sand Border
+const Color kTileTextDark = Color(0xFF2B2523); // Deep Charcoal
+const Color kTileTextMuted = Color(0xFF8C817A); // Soft Feather Grey
+const Color kTilePageBg = Color(0xFFFBF7F2); // Warm Sand White
 
 class SettingsPageHeader extends StatelessWidget {
   const SettingsPageHeader({
@@ -46,9 +46,9 @@ class SettingsPageHeader extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF048C7C),
-              Color(0xFF036F63),
-              Color(0xFF02574D),
+              Color(0xFFD06A4C),
+              Color(0xFFB85639),
+              Color(0xFF8C3B24),
             ],
           ),
           borderRadius: BorderRadius.only(
@@ -57,7 +57,7 @@ class SettingsPageHeader extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Color(0x22048C7C),
+              color: Color(0x28D06A4C),
               blurRadius: 10,
               offset: Offset(0, 3),
             ),

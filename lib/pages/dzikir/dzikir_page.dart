@@ -74,12 +74,12 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
       buffer.writeln('Keutamaan: ${item.faedah}');
       buffer.writeln();
     }
-    buffer.writeln("(Dibagikan melalui Aplikasi Masjid An-Ni'mah - Marbot)");
+    buffer.writeln("(Dibagikan melalui Hudhud)");
 
     Clipboard.setData(ClipboardData(text: buffer.toString().trim()));
     Fluttertoast.showToast(
       msg: 'Teks Dzikir berhasil disalin',
-      backgroundColor: const Color(0xFF048C7C),
+      backgroundColor: const Color(0xFFD06A4C),
       textColor: Colors.white,
     );
   }
@@ -104,7 +104,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
       buffer.writeln('Keutamaan: ${item.faedah}');
       buffer.writeln();
     }
-    buffer.writeln("Dibagikan melalui Aplikasi Masjid An-Ni'mah - Marbot");
+    buffer.writeln("Dibagikan melalui Hudhud");
 
     SharePlus.instance.share(
       ShareParams(
@@ -146,7 +146,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF137065),
+                      color: const Color(0xFFD06A4C),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -154,7 +154,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                   // Toggle Transliterasi (Latin)
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    activeTrackColor: const Color(0xFF048C7C),
+                    activeTrackColor: const Color(0xFFD06A4C),
                     title: Text(
                       'Tampilkan Teks Latin',
                       style: GoogleFonts.poppins(
@@ -179,7 +179,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                   // Toggle Terjemahan (Arti)
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    activeTrackColor: const Color(0xFF048C7C),
+                    activeTrackColor: const Color(0xFFD06A4C),
                     title: Text(
                       'Tampilkan Terjemahan (Arti)',
                       style: GoogleFonts.poppins(
@@ -218,7 +218,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF048C7C),
+                          color: const Color(0xFFD06A4C),
                         ),
                       ),
                     ],
@@ -226,9 +226,9 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                   const SizedBox(height: 6),
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: const Color(0xFF048C7C),
+                      activeTrackColor: const Color(0xFFD06A4C),
                       inactiveTrackColor: const Color(0xFFE2EBE8),
-                      thumbColor: const Color(0xFF137065),
+                      thumbColor: const Color(0xFFD06A4C),
                     ),
                     child: Slider(
                       value: _arabicFontSize,
@@ -516,7 +516,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
             Icon(
               icon,
               size: 16,
-              color: isSelected ? const Color(0xFF137065) : Colors.white70,
+              color: isSelected ? const Color(0xFFD06A4C) : Colors.white70,
             ),
             const SizedBox(width: 6),
             Text(
@@ -524,7 +524,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? const Color(0xFF137065) : Colors.white70,
+                color: isSelected ? const Color(0xFFD06A4C) : Colors.white70,
               ),
             ),
           ],
@@ -588,7 +588,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                   decoration: BoxDecoration(
                     color: isCompleted
                         ? const Color(0xFF4CAF50)
-                        : const Color(0xFF048C7C).withValues(alpha: 0.15),
+                        : const Color(0xFFD06A4C).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
@@ -597,7 +597,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: isCompleted ? Colors.white : const Color(0xFF048C7C),
+                        color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
                       ),
                     ),
                   ),
@@ -610,7 +610,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF137065),
+                      color: const Color(0xFFD06A4C),
                     ),
                   ),
                 ),
@@ -628,7 +628,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                     style: GoogleFonts.poppins(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      color: isCompleted ? Colors.white : const Color(0xFF048C7C),
+                      color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
                     ),
                   ),
                 ),
@@ -755,7 +755,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                         border: Border.all(
                           color: isCompleted
                               ? const Color(0xFF388E3C)
-                              : const Color(0xFF048C7C).withValues(alpha: 0.3),
+                              : const Color(0xFFD06A4C).withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
@@ -764,7 +764,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                           Icon(
                             isCompleted ? Icons.check_circle_rounded : Icons.fingerprint_rounded,
                             size: 18,
-                            color: isCompleted ? Colors.white : const Color(0xFF048C7C),
+                            color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -774,7 +774,7 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                             style: GoogleFonts.poppins(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: isCompleted ? Colors.white : const Color(0xFF048C7C),
+                              color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
                             ),
                           ),
                         ],
@@ -787,14 +787,14 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                 IconButton(
                   icon: const Icon(Icons.copy_rounded, size: 18),
                   tooltip: 'Salin Teks',
-                  color: const Color(0xFF137065),
+                  color: const Color(0xFFD06A4C),
                   onPressed: () => _copyToClipboard(item),
                 ),
                 // Share Icon Button
                 IconButton(
                   icon: const Icon(Icons.share_rounded, size: 18),
                   tooltip: 'Bagikan',
-                  color: const Color(0xFF048C7C),
+                  color: const Color(0xFFD06A4C),
                   onPressed: () => _shareDzikir(item),
                 ),
               ],

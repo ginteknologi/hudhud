@@ -115,7 +115,7 @@ class HaditsBabPage extends ConsumerWidget {
                 border: Border.all(color: const Color(0xFFE2EBE8)),
               ),
               child: const Icon(Icons.arrow_back_rounded,
-                  size: 20, color: Color(0xFF137065)),
+                  size: 20, color: Color(0xFFD06A4C)),
             ),
           ),
           const SizedBox(width: 14),
@@ -130,7 +130,7 @@ class HaditsBabPage extends ConsumerWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF137065),
+                    color: const Color(0xFFD06A4C),
                   ),
                 ),
                 Text(
@@ -154,7 +154,7 @@ class HaditsBabPage extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF048C7C),
+        color: const Color(0xFFD06A4C),
         borderRadius: BorderRadius.circular(14),
       ),
       child: ListTile(
@@ -208,7 +208,7 @@ class HaditsBabPage extends ConsumerWidget {
             style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF048C7C),
+              color: const Color(0xFFD06A4C),
             ),
           ),
         ),
@@ -252,7 +252,7 @@ class HaditsBabPage extends ConsumerWidget {
               AppRoutes.haditsListRoute.replaceFirst(':id', namaTabel),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF048C7C),
+              backgroundColor: const Color(0xFFD06A4C),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

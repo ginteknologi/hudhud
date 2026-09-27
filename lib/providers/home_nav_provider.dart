@@ -11,9 +11,7 @@ final homeBottomNavTypeProvider = Provider<BottomBarEnum>((ref) {
     case 1:
       return BottomBarEnum.alquran;
     case 2:
-      return BottomBarEnum.muazin;
-    case 3:
-      return BottomBarEnum.dkm;
+      return BottomBarEnum.account;
     default:
       return BottomBarEnum.beranda;
   }
@@ -34,16 +32,10 @@ final homeBottomMenuListProvider = Provider<List<BottomMenuModel>>((ref) {
       navType: BottomBarEnum.alquran,
     ),
     BottomMenuModel(
-      icon: 'assets/icons/sahabat_muadzin.png',
-      activeIcon: 'assets/icons/sahabat_muadzin_a.png',
-      title: 'Sahabat Muazin',
-      navType: BottomBarEnum.muazin,
-    ),
-    BottomMenuModel(
       icon: 'assets/icons/dkm.png',
       activeIcon: 'assets/icons/dkm_a.png',
-      title: 'Marbot',
-      navType: BottomBarEnum.dkm,
+      title: 'Akun',
+      navType: BottomBarEnum.account,
     ),
   ];
 });

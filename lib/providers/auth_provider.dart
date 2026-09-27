@@ -68,7 +68,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserModel?>> {
       final guest = UserModel(
         id: 0,
         name: 'Tamu (Guest)',
-        email: 'guest@annimah.id',
+        email: 'guest@hudhud.app',
         photo: '',
       );
       PreferencesService.isLogin = true;

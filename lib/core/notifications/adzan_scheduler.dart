@@ -8,8 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// Penjadwal notifikasi adzan harian (lokal, tanpa server).
 ///
-/// ponytail: zona waktu di-hardcode Asia/Jakarta karena app hanya untuk
-/// Masjid An-Ni'mah Cibubur (WIB). Kalau nanti perlu multizona, tambahkan
+/// Zona waktu default Asia/Jakarta (WIB). Kalau nanti perlu multizona, tambahkan
 /// `flutter_timezone` untuk membaca zona perangkat.
 /// ponytail: suara adzan masih memakai suara notifikasi bawaan; kalau
 /// `android/app/src/main/res/raw/adzan.mp3` sudah tersedia, ganti

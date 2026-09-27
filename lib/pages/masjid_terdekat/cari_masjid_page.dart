@@ -55,7 +55,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
           IconButton(
             icon: Icon(
               _viewMode == ViewMode.list ? Icons.map_outlined : Icons.format_list_bulleted,
-              color: const Color(0xFF048C7C),
+              color: const Color(0xFFD06A4C),
             ),
             tooltip: _viewMode == ViewMode.list ? 'Tampilkan Peta' : 'Tampilkan Daftar',
             onPressed: () {
@@ -65,7 +65,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.refresh, color: Color(0xFF048C7C)),
+            icon: const Icon(Icons.refresh, color: Color(0xFFD06A4C)),
             tooltip: 'Segarkan',
             onPressed: () {
               ref.invalidate(nearbyMasjidsProvider);
@@ -84,12 +84,12 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF048C7C).withValues(alpha: 0.1),
+                    color: const Color(0xFFD06A4C).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.my_location,
-                    color: Color(0xFF048C7C),
+                    color: Color(0xFFD06A4C),
                     size: 18,
                   ),
                 ),
@@ -135,7 +135,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                         },
                   style: TextButton.styleFrom(
                     visualDensity: VisualDensity.compact,
-                    foregroundColor: const Color(0xFF048C7C),
+                    foregroundColor: const Color(0xFFD06A4C),
                   ),
                   icon: location.loading
                       ? const SizedBox(
@@ -243,7 +243,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: active ? const Color(0xFF048C7C) : Colors.transparent,
+          color: active ? const Color(0xFFD06A4C) : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Icon(
@@ -272,7 +272,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
             // Tile Layer OpenStreetMap Resmi (100% Gratis & Bersih tanpa watermark API Key)
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.masjid.marbot',
+              userAgentPackageName: 'app.hudhud.companion',
             ),
             // Pin Lokasi User
             MarkerLayer(
@@ -320,7 +320,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                           Container(
                             padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF048C7C),
+                              color: const Color(0xFFD06A4C),
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 2),
                               boxShadow: [
@@ -353,7 +353,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
           bottom: 24,
           child: FloatingActionButton.small(
             backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF048C7C),
+            foregroundColor: const Color(0xFFD06A4C),
             elevation: 3,
             onPressed: () {
               _mapController.move(userCenter, 15);
@@ -383,7 +383,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.place, size: 16, color: Color(0xFF048C7C)),
+                const Icon(Icons.place, size: 16, color: Color(0xFFD06A4C)),
                 const SizedBox(width: 6),
                 Text(
                   '${masjids.length} masjid ditemukan di sekitar Anda',
@@ -430,12 +430,12 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF048C7C).withValues(alpha: 0.1),
+                      color: const Color(0xFFD06A4C).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
                       Icons.mosque,
-                      color: Color(0xFF048C7C),
+                      color: Color(0xFFD06A4C),
                       size: 24,
                     ),
                   ),
@@ -458,7 +458,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF048C7C),
+                            color: Color(0xFFD06A4C),
                           ),
                         ),
                       ],
@@ -476,7 +476,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF048C7C),
+                    backgroundColor: const Color(0xFFD06A4C),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
@@ -515,7 +515,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF048C7C) : const Color(0xFFF1F5F9),
+          color: isSelected ? const Color(0xFFD06A4C) : const Color(0xFFF1F5F9),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -538,7 +538,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
         border: Border.all(color: const Color(0xFFE2EBE8)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.04),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -565,7 +565,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF048C7C).withValues(alpha: 0.08),
+                    color: const Color(0xFFD06A4C).withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -574,7 +574,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                       width: 24,
                       height: 24,
                       colorFilter: const ColorFilter.mode(
-                        Color(0xFF048C7C),
+                        Color(0xFFD06A4C),
                         BlendMode.srcIn,
                       ),
                     ),
@@ -615,7 +615,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF048C7C).withValues(alpha: 0.1),
+                              color: const Color(0xFFD06A4C).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Row(
@@ -624,7 +624,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                                 const Icon(
                                   Icons.directions_walk,
                                   size: 14,
-                                  color: Color(0xFF048C7C),
+                                  color: Color(0xFFD06A4C),
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
@@ -632,7 +632,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                                   style: const TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xFF048C7C),
+                                    color: Color(0xFFD06A4C),
                                   ),
                                 ),
                               ],
@@ -647,14 +647,14 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF048C7C),
+                                  color: Color(0xFFD06A4C),
                                 ),
                               ),
                               SizedBox(width: 4),
                               Icon(
                                 Icons.open_in_new,
                                 size: 14,
-                                color: Color(0xFF048C7C),
+                                color: Color(0xFFD06A4C),
                               ),
                             ],
                           ),
@@ -705,7 +705,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF048C7C),
+                backgroundColor: const Color(0xFFD06A4C),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
@@ -742,7 +742,7 @@ class _CariMasjidPageState extends ConsumerState<CariMasjidPage> {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF048C7C),
+                backgroundColor: const Color(0xFFD06A4C),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),

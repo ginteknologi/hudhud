@@ -298,7 +298,7 @@ class _QiblaPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [kTileAccent, Color(0xFF1E8D7F)],
+          colors: [kTileAccent, Color(0xFFD06A4C)],
         ).createShader(Rect.fromPoints(tip, Offset(center.dx, baseY))),
     );
     canvas.drawCircle(tip, radius * 0.024, Paint()..color = kTileGold);

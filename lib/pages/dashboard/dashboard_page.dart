@@ -5,21 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/models/artikel_model.dart';
 import 'package:masjid_app/models/doa_models.dart';
-import 'package:masjid_app/models/kajian_model.dart';
 import 'package:masjid_app/pages/artikel/component/artikel_card.dart';
-import 'package:masjid_app/pages/kajian/component/kajian_card.dart';
 import 'package:masjid_app/pages/dashboard/component/count_down.dart';
 import 'package:masjid_app/pages/dashboard/component/dashboard_header.dart';
 import 'package:masjid_app/pages/dashboard/component/dashboard_menu_grid.dart';
 import 'package:masjid_app/pages/dashboard/component/prayer_times_card.dart';
 import 'package:masjid_app/pages/dashboard/component/quick_quran_card.dart';
 import 'package:masjid_app/pages/dashboard/component/ramadhan_menu.dart';
-import 'package:masjid_app/pages/dashboard/component/sedang_live.dart';
 import 'package:masjid_app/providers/artikel_provider.dart';
-import 'package:masjid_app/providers/dashboard_data_providers.dart';
 import 'package:masjid_app/providers/doa_providers.dart';
 import 'package:masjid_app/providers/jadwal_shalat_provider.dart';
-import 'package:masjid_app/providers/kajian_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class DashboardPage extends ConsumerStatefulWidget {
@@ -81,28 +76,20 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       statusBarBrightness: _isScrolled ? Brightness.light : Brightness.dark,
     );
 
-    final sedangLiveAsync = ref.watch(sedangLiveListProvider);
-    final kajianSahabatAsync = ref.watch(kajianSliderProvider('doa_ramadhan'));
-    final kajianLiveAsync = ref.watch(kajianLiveSliderProvider);
-    final kajianSliderAsync = ref.watch(kajianSliderProvider('tafsir'));
     final artikelAsync = ref.watch(artikelTerbaruProvider);
     final doaAsync = ref.watch(doaListProvider(const DoaListParams(categoryId: '1')));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: overlayStyle,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF9),
+        backgroundColor: const Color(0xFFFBF7F2),
         body: Stack(
           children: [
             RefreshIndicator(
-              color: const Color(0xFF048C7C),
+              color: const Color(0xFFD06A4C),
               backgroundColor: Colors.white,
               onRefresh: () async {
             ref.invalidate(jadwalShalatProvider);
-            ref.invalidate(sedangLiveListProvider);
-            ref.invalidate(kajianSliderProvider('doa_ramadhan'));
-            ref.invalidate(kajianLiveSliderProvider);
-            ref.invalidate(kajianSliderProvider('tafsir'));
             ref.invalidate(artikelTerbaruProvider);
             ref.invalidate(doaListProvider(const DoaListParams(categoryId: '1')));
           },
@@ -129,25 +116,20 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       // 3. Kartu Cepat "Lanjutkan Tilawah" Al-Qur'an (Minimalis)
                       const QuickQuranCard(),
 
-                      // 4. Grid 10 Layanan Masjid & Ibadah
+                      // 4. Grid Layanan & Ibadah
                       const DashboardMenuGrid(),
 
-                      // 5. Sedang Live (Jika ada data)
-                      SedangLiveWidget(
-                        listSedangLive: sedangLiveAsync.valueOrNull ?? [],
-                      ),
-
-                      // 6. Countdown Ramadhan / Event Khusus
+                      // 5. Countdown Ramadhan / Event Khusus
                       const SizedBox(height: 14),
                       const CountDownWidget(),
 
-                      // 7. Menu Imsakiyah & Penanggalan Ramadhan
+                      // 6. Menu Imsakiyah & Penanggalan Ramadhan
                       const SizedBox(height: 14),
                       const RamadhanMenuWidget(),
 
                       const SizedBox(height: 22),
 
-                      // 8. Doa Pilihan (Kartu Inspirasi Doa Harian)
+                      // 7. Doa Pilihan (Kartu Inspirasi Doa Harian)
                       _buildSeparator(
                         'Doa Pilihan',
                         'Lihat Semua',
@@ -162,67 +144,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
                       const SizedBox(height: 22),
 
-                      // 9. Sahabat Masjid (Video Card Interaktif)
-                      _buildSeparator(
-                        'Sahabat Masjid',
-                        'Lihat Semua',
-                        context,
-                        () => context.push(AppRoutes.kajianSahabat),
-                      ),
-                      const SizedBox(height: 10),
-                      Skeletonizer(
-                        enabled: kajianSahabatAsync.isLoading,
-                        child: _buildKajianSlider(
-                          kajianSahabatAsync.valueOrNull ?? [],
-                          tag: 'Sahabat Masjid',
-                          badgeColor: const Color(0xFFE9A23B),
-                          context: context,
-                        ),
-                      ),
-
-                      const SizedBox(height: 22),
-
-                      // 10. Riwayat Kajian Live (Video Card Interaktif)
-                      _buildSeparator(
-                        'Riwayat Kajian Live',
-                        'Lihat Semua',
-                        context,
-                        () => context.push(AppRoutes.kajianLive),
-                      ),
-                      const SizedBox(height: 10),
-                      Skeletonizer(
-                        enabled: kajianLiveAsync.isLoading,
-                        child: _buildKajianSlider(
-                          kajianLiveAsync.valueOrNull ?? [],
-                          tag: 'Kajian Live',
-                          badgeColor: const Color(0xFFE53935),
-                          context: context,
-                        ),
-                      ),
-
-                      const SizedBox(height: 22),
-
-                      // 10. Kajian Tafsir Quran (Video Card Interaktif)
-                      _buildSeparator(
-                        'Kajian Tafsir Quran',
-                        'Lihat Semua',
-                        context,
-                        () => context.push(AppRoutes.kajianTafsir),
-                      ),
-                      const SizedBox(height: 10),
-                      Skeletonizer(
-                        enabled: kajianSliderAsync.isLoading,
-                        child: _buildKajianSlider(
-                          kajianSliderAsync.valueOrNull ?? [],
-                          tag: 'Tafsir Qur’an',
-                          badgeColor: const Color(0xFF048C7C),
-                          context: context,
-                        ),
-                      ),
-
-                      const SizedBox(height: 22),
-
-                      // 11. Artikel Terbaru (Featured & Compact Magazine Style)
+                      // 8. Artikel Terbaru (Featured & Compact Magazine Style)
                       _buildSeparator(
                         'Artikel Terbaru',
                         'Lihat Semua',
@@ -255,7 +177,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             duration: const Duration(milliseconds: 200),
             height: MediaQuery.of(context).padding.top,
             color: _isScrolled
-                ? const Color(0xFFF8FAF9).withValues(alpha: 0.96)
+                ? const Color(0xFFFBF7F2).withValues(alpha: 0.96)
                 : Colors.transparent,
           ),
         ),
@@ -278,7 +200,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
           title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            color: Color(0xFF137065),
+            color: Color(0xFFD06A4C),
             fontSize: 16,
             letterSpacing: 0.1,
           ),
@@ -295,7 +217,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                   Text(
                     'Lihat Semua',
                     style: TextStyle(
-                      color: Color(0xFF048C7C),
+                      color: Color(0xFFD06A4C),
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
@@ -304,7 +226,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                   Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 11,
-                    color: Color(0xFF048C7C),
+                    color: Color(0xFFD06A4C),
                   ),
                 ],
               ),
@@ -344,7 +266,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF048C7C).withValues(alpha: 0.05),
+                  color: const Color(0xFFD06A4C).withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 3),
                 ),
@@ -384,7 +306,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                             child: const Icon(
                               Icons.auto_stories_rounded,
                               size: 15,
-                              color: Color(0xFF048C7C),
+                              color: Color(0xFFD06A4C),
                             ),
                           ),
                           Container(
@@ -393,7 +315,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF9D576).withValues(alpha: 0.25),
+                              color: const Color(0xFFECA843).withValues(alpha: 0.25),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Text(
@@ -419,7 +341,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
-                              color: Color(0xFF137065),
+                              color: Color(0xFFD06A4C),
                             ),
                           ),
                           const SizedBox(height: 3),
@@ -448,7 +370,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                 : 'Shahih',
                             style: const TextStyle(
                               fontSize: 10,
-                              color: Color(0xFF048C7C),
+                              color: Color(0xFFD06A4C),
                               fontWeight: FontWeight.w500,
                               fontStyle: FontStyle.italic,
                             ),
@@ -460,14 +382,14 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF048C7C),
+                                  color: Color(0xFFD06A4C),
                                 ),
                               ),
                               SizedBox(width: 2),
                               Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 9,
-                                color: Color(0xFF048C7C),
+                                color: Color(0xFFD06A4C),
                               ),
                             ],
                           ),
@@ -484,41 +406,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     );
   }
 
-  /// Slider Kajian — kartu dari [KajianCard]
-  Widget _buildKajianSlider(
-    List<KajianModel> list, {
-    required String tag,
-    required Color badgeColor,
-    required BuildContext context,
-  }) {
-    return SizedBox(
-      height: 140,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: list.isEmpty ? 3 : list.length,
-        itemBuilder: (context, index) {
-          final item = list.isNotEmpty ? list[index] : null;
-
-          return KajianCard(
-            item: item,
-            tag: tag,
-            badgeColor: badgeColor,
-            onTap: item == null
-                ? null
-                : () => context.push(
-                      AppRoutes.kajianDetail.replaceFirst(
-                        ':id',
-                        '${item.id}',
-                      ),
-                      extra: item,
-                    ),
-          );
-        },
-      ),
-    );
-  }
-
   /// List Artikel bergaya Majalah Islami (1 Featured + Compact List).
   /// Kartunya dari [ArtikelCard] — sama dengan halaman daftar & detail artikel.
   Widget _buildArtikelList(List<ArtikelModel> list, BuildContext context) {
@@ -528,7 +415,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE2EBE8)),
+          border: Border.all(color: const Color(0xFFEFE7DE)),
         ),
         child: const Center(
           child: Text(

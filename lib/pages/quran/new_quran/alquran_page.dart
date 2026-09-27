@@ -9,7 +9,7 @@ import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
 import 'package:masjid_app/models/quran_models.dart';
 import 'package:masjid_app/providers/quran_provider.dart';
-import 'package:masjid_app/storage/bookmarkStorage.dart';
+import 'package:masjid_app/core/storage/bookmark_storage.dart';
 import 'package:share_plus/share_plus.dart';
 
 class AlquranPage extends ConsumerStatefulWidget {
@@ -147,7 +147,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                             iconLeft: const Icon(Icons.refresh,
                                 color: Colors.white, size: 18),
                             showIcon: 'left',
-                            bgcolor: const Color(0xFF048C7C),
+                            bgcolor: const Color(0xFFD06A4C),
                             height: 40,
                             color: Colors.white,
                             radius: 8,
@@ -218,7 +218,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                                       .titleLarge
                                       ?.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF137065),
+                                        color: const Color(0xFFD06A4C),
                                       ),
                                 ),
                                 const SizedBox(height: 2),
@@ -242,7 +242,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                                 tooltip: "Ayat Kejutan",
                                 style: IconButton.styleFrom(
                                   backgroundColor: const Color(0xFFE6F4F2),
-                                  foregroundColor: const Color(0xFF048C7C),
+                                  foregroundColor: const Color(0xFFD06A4C),
                                 ),
                                 icon:
                                     const Icon(Icons.shuffle_rounded, size: 20),
@@ -253,7 +253,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                                 tooltip: "Pengaturan",
                                 style: IconButton.styleFrom(
                                   backgroundColor: const Color(0xFFE6F4F2),
-                                  foregroundColor: const Color(0xFF048C7C),
+                                  foregroundColor: const Color(0xFFD06A4C),
                                 ),
                                 icon: const Icon(Icons.settings_outlined,
                                     size: 20),
@@ -296,7 +296,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                             hintStyle: const TextStyle(
                                 fontSize: 13, color: Colors.black38),
                             prefixIcon: const Icon(Icons.search,
-                                color: Color(0xFF048C7C), size: 22),
+                                color: Color(0xFFD06A4C), size: 22),
                             suffixIcon: _searchQuery.isNotEmpty
                                 ? IconButton(
                                     icon: const Icon(Icons.clear,
@@ -331,10 +331,10 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                     tabAlignment: TabAlignment.start,
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-                    indicatorColor: const Color(0xFF048C7C),
+                    indicatorColor: const Color(0xFFD06A4C),
                     indicatorWeight: 3,
                     indicatorSize: TabBarIndicatorSize.label,
-                    labelColor: const Color(0xFF048C7C),
+                    labelColor: const Color(0xFFD06A4C),
                     unselectedLabelColor: Colors.black45,
                     labelStyle: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 13),
@@ -416,11 +416,11 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0D6357), Color(0xFF1E8D7F)],
+          colors: [Color(0xFF8C3B24), Color(0xFFD06A4C)],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.25),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -437,14 +437,14 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                 Row(
                   children: [
                     const Icon(Icons.bookmark_added_rounded,
-                        color: Color(0xFFF9D576), size: 16),
+                        color: Color(0xFFECA843), size: 16),
                     const SizedBox(width: 6),
                     Text(
                       hasAyat || hasMushaf
                           ? "Terakhir Dibaca"
                           : "Yuk Mulai Membaca",
                       style: const TextStyle(
-                        color: Color(0xFFF9D576),
+                        color: Color(0xFFECA843),
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
@@ -484,14 +484,14 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                         Text(
                           hasAyat || hasMushaf ? "Lanjutkan" : "Buka Surah",
                           style: const TextStyle(
-                            color: Color(0xFF048C7C),
+                            color: Color(0xFFD06A4C),
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(width: 4),
                         const Icon(Icons.arrow_forward_rounded,
-                            size: 14, color: Color(0xFF048C7C)),
+                            size: 14, color: Color(0xFFD06A4C)),
                       ],
                     ),
                   ),
@@ -583,7 +583,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                           height: 38,
                           width: 38,
                           colorFilter: const ColorFilter.mode(
-                            Color(0xFF048C7C),
+                            Color(0xFFD06A4C),
                             BlendMode.srcIn,
                           ),
                         ),
@@ -592,7 +592,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF048C7C),
+                            color: Color(0xFFD06A4C),
                           ),
                         ),
                       ],
@@ -635,7 +635,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                         fontFamily: GoogleFonts.amiriQuran().fontFamily,
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF048C7C),
+                        color: const Color(0xFFD06A4C),
                       ),
                     ),
                   ],
@@ -646,7 +646,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
         );
       },
       loading: () => const Center(
-        child: CircularProgressIndicator(color: Color(0xFF048C7C)),
+        child: CircularProgressIndicator(color: Color(0xFFD06A4C)),
       ),
       error: (_, __) => Center(
         child: Column(
@@ -710,7 +710,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF048C7C),
+                      color: Color(0xFFD06A4C),
                     ),
                   ),
                 ),
@@ -750,7 +750,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                     fontFamily: GoogleFonts.amiriQuran().fontFamily,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF048C7C),
+                    color: const Color(0xFFD06A4C),
                   ),
                 ),
               ],
@@ -853,7 +853,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                                   ? Icons.bookmark_added_rounded
                                   : Icons.menu_book_rounded,
                               size: 13,
-                              color: const Color(0xFF048C7C),
+                              color: const Color(0xFFD06A4C),
                             ),
                             const SizedBox(width: 4),
                             Expanded(
@@ -866,7 +866,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                                 style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF048C7C),
+                                  color: Color(0xFFD06A4C),
                                 ),
                               ),
                             ),
@@ -964,7 +964,7 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                 ),
                 child: Icon(
                   bm['icon'] as IconData,
-                  color: hasData ? const Color(0xFF048C7C) : Colors.grey,
+                  color: hasData ? const Color(0xFFD06A4C) : Colors.grey,
                   size: 20,
                 ),
               ),
@@ -979,13 +979,13 @@ class _AlquranPageState extends ConsumerState<AlquranPage>
                 bm['subtitle'] as String,
                 style: TextStyle(
                   fontSize: 12,
-                  color: hasData ? const Color(0xFF048C7C) : Colors.black45,
+                  color: hasData ? const Color(0xFFD06A4C) : Colors.black45,
                 ),
               ),
               trailing: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      hasData ? const Color(0xFF048C7C) : Colors.grey.shade300,
+                      hasData ? const Color(0xFFD06A4C) : Colors.grey.shade300,
                   foregroundColor: hasData ? Colors.white : Colors.black54,
                   elevation: 0,
                   padding:

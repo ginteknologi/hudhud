@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:masjid_app/models/menu_bottom_data.dart';
+import 'package:masjid_app/pages/akun/akun_page.dart';
 import 'package:masjid_app/pages/dashboard/dashboard_page.dart';
-import 'package:masjid_app/pages/dkm/dkm_page.dart';
-import 'package:masjid_app/pages/muazin/muazin_page.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
 import 'package:masjid_app/providers/home_nav_provider.dart';
 
@@ -14,8 +13,7 @@ class HomePage extends ConsumerWidget {
   static const List<Widget> _pages = [
     DashboardPage(),
     AlquranPage(),
-    MuazinPage(),
-    DkmPage(),
+    AkunPage(),
   ];
 
   @override
@@ -24,7 +22,7 @@ class HomePage extends ConsumerWidget {
     final menuList = ref.watch(homeBottomMenuListProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
+      backgroundColor: const Color(0xFFFBF7F2),
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
       // Menggunakan IndexedStack agar status scroll & state tiap tab tetap terjaga
@@ -53,13 +51,13 @@ class HomePage extends ConsumerWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
         border: Border(
           top: BorderSide(
-            color: const Color(0xFFE5EDE9),
+            color: const Color(0xFFEFE7DE),
             width: 0.8,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.08),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),
@@ -94,7 +92,7 @@ class HomePage extends ConsumerWidget {
                           ref.read(homeBottomNavIndexProvider.notifier).state = index;
                         }
                       },
-                      splashColor: const Color(0xFF048C7C).withValues(alpha: 0.1),
+                      splashColor: const Color(0xFFD06A4C).withValues(alpha: 0.1),
                       highlightColor: Colors.transparent,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -119,8 +117,8 @@ class HomePage extends ConsumerWidget {
                               fontSize: 10,
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                               color: isSelected
-                                  ? const Color(0xFF048C7C)
-                                  : const Color(0xFF7A8E88),
+                                  ? const Color(0xFFD06A4C)
+                                  : const Color(0xFF8C817A),
                               letterSpacing: 0.1,
                             ),
                           ),

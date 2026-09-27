@@ -89,7 +89,7 @@ class RadarSearchLoadingWidget extends StatefulWidget {
   const RadarSearchLoadingWidget({
     super.key,
     this.message,
-    this.color = const Color(0xFF048C7C),
+    this.color = const Color(0xFFD06A4C),
   });
 
   @override

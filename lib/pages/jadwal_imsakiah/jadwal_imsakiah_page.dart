@@ -20,7 +20,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF6F8F7),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF048C7C),
+        backgroundColor: const Color(0xFFD06A4C),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -40,7 +40,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
         ],
       ),
       body: RefreshIndicator(
-        color: const Color(0xFF048C7C),
+        color: const Color(0xFFD06A4C),
         onRefresh: () async {
           ref.invalidate(jadwalImsakiahProvider);
           await ref.read(jadwalImsakiahProvider.future);
@@ -96,7 +96,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
       decoration: const BoxDecoration(
-        color: Color(0xFF048C7C),
+        color: Color(0xFFD06A4C),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
@@ -159,7 +159,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
         border: Border.all(color: const Color(0xFFE2EBE8)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.04),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -169,7 +169,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: const Icon(Icons.chevron_left, color: Color(0xFF048C7C)),
+            icon: const Icon(Icons.chevron_left, color: Color(0xFFD06A4C)),
             onPressed: () {
               ref.read(selectedImsakiahDateProvider.notifier).state = DateTime(
                 selectedDate.year,
@@ -180,7 +180,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
           ),
           Row(
             children: [
-              const Icon(Icons.calendar_month, color: Color(0xFF048C7C), size: 18),
+              const Icon(Icons.calendar_month, color: Color(0xFFD06A4C), size: 18),
               const SizedBox(width: 8),
               Text(
                 monthName,
@@ -193,7 +193,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
             ],
           ),
           IconButton(
-            icon: const Icon(Icons.chevron_right, color: Color(0xFF048C7C)),
+            icon: const Icon(Icons.chevron_right, color: Color(0xFFD06A4C)),
             onPressed: () {
               ref.read(selectedImsakiahDateProvider.notifier).state = DateTime(
                 selectedDate.year,
@@ -216,14 +216,14 @@ class JadwalImsakiahPage extends ConsumerWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF048C7C), Color(0xFF1DB4A2)],
+          colors: [Color(0xFFD06A4C), Color(0xFFECA843)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.25),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -351,7 +351,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
         border: Border.all(color: const Color(0xFFE2EBE8)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.04),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -364,7 +364,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
             decoration: const BoxDecoration(
-              color: Color(0xFF048C7C),
+              color: Color(0xFFD06A4C),
             ),
             child: Row(
               children: [
@@ -438,7 +438,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
           fontSize: 12,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           color: highlight
-              ? const Color(0xFF048C7C)
+              ? const Color(0xFFD06A4C)
               : (isBold ? const Color(0xFF1F2937) : const Color(0xFF4B5563)),
         ),
       ),
@@ -450,7 +450,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: const Center(
         child: CircularProgressIndicator(
-          color: Color(0xFF048C7C),
+          color: Color(0xFFD06A4C),
         ),
       ),
     );
@@ -513,7 +513,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
           const SizedBox(height: 16),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF048C7C),
+              backgroundColor: const Color(0xFFD06A4C),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
@@ -546,7 +546,7 @@ class JadwalImsakiahPage extends ConsumerWidget {
       buffer.writeln('• Berbuka: ${todayItem.berbuka} WIB\n');
     }
 
-    buffer.writeln('Dapatkan jadwal ibadah lengkap di aplikasi Marbot.');
+    buffer.writeln('Dapatkan jadwal ibadah lengkap di aplikasi Hudhud.');
 
     SharePlus.instance.share(
       ShareParams(

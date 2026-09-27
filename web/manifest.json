@@ -1,6 +1,6 @@
 {
-    "name": "masjid_app",
-    "short_name": "masjid_app",
+    "name": "Hudhud",
+    "short_name": "Hudhud",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

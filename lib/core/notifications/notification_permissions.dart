@@ -140,7 +140,7 @@ class NotificationPermissions {
   static Future<bool> openSettings() => openAppSettings();
 
   static const MethodChannel _settingsChannel =
-      MethodChannel('marbot/system_settings');
+      MethodChannel('hudhud/system_settings');
 
   static Future<bool> _openSystemScreen(String method) async {
     try {

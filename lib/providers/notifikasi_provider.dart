@@ -37,14 +37,3 @@ final notifikasiDetailProvider =
   );
   return response.data ?? <String, dynamic>{};
 });
-
-// Detail invoice transaksi: GET /transaksi/detail/invoice/:invoice
-final invoiceDetailProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, invoice) async {
-  final apiClient = ref.watch(apiClientProvider);
-  final response = await apiClient.get<Map<String, dynamic>>(
-    '${ApiEndpoints.invoiceDetail}/invoice/$invoice',
-    fromJson: (json) => Map<String, dynamic>.from(json as Map),
-  );
-  return response.data ?? <String, dynamic>{};
-});

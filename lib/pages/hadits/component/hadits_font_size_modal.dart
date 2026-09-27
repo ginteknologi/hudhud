@@ -55,7 +55,7 @@ class HaditsFontSizeModal extends ConsumerWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF137065),
+                  color: const Color(0xFFD06A4C),
                 ),
               ),
               IconButton(
@@ -83,15 +83,15 @@ class HaditsFontSizeModal extends ConsumerWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF048C7C),
+                  color: const Color(0xFFD06A4C),
                 ),
               ),
             ],
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFF048C7C),
-              thumbColor: const Color(0xFF048C7C),
+              activeTrackColor: const Color(0xFFD06A4C),
+              thumbColor: const Color(0xFFD06A4C),
               inactiveTrackColor: const Color(0xFFE2EBE8),
             ),
             child: Slider(
@@ -122,15 +122,15 @@ class HaditsFontSizeModal extends ConsumerWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF048C7C),
+                  color: const Color(0xFFD06A4C),
                 ),
               ),
             ],
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFF048C7C),
-              thumbColor: const Color(0xFF048C7C),
+              activeTrackColor: const Color(0xFFD06A4C),
+              thumbColor: const Color(0xFFD06A4C),
               inactiveTrackColor: const Color(0xFFE2EBE8),
             ),
             child: Slider(
@@ -171,7 +171,7 @@ class HaditsFontSizeModal extends ConsumerWidget {
                   style: GoogleFonts.amiri(
                     fontSize: settings.arabicFontSize,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF137065),
+                    color: const Color(0xFFD06A4C),
                     height: 1.8,
                   ),
                 ),

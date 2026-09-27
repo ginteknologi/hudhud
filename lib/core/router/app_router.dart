@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/pages/akun/akun_page.dart';
@@ -7,7 +6,6 @@ import 'package:masjid_app/pages/akun/riwayat/riwayat_page.dart';
 import 'package:masjid_app/pages/artikel/artikel_page.dart';
 import 'package:masjid_app/pages/artikel/detail/detail_artikel_page.dart';
 import 'package:masjid_app/pages/auth/auth_page.dart';
-import 'package:masjid_app/pages/dkm/dkm_page.dart';
 import 'package:masjid_app/pages/doa/content/doa_content_page.dart';
 import 'package:masjid_app/pages/doa/detail/detail_doa_page.dart';
 import 'package:masjid_app/pages/doa/doa_page.dart';
@@ -21,12 +19,8 @@ import 'package:masjid_app/pages/hadits/tema/hadits_tema_page.dart';
 import 'package:masjid_app/pages/home/home_page.dart';
 import 'package:masjid_app/pages/jadwal_imsakiah/jadwal_imsakiah_page.dart';
 import 'package:masjid_app/pages/masjid_terdekat/cari_masjid_page.dart';
-import 'package:masjid_app/pages/kajian/detail/kajian_detail_page.dart';
-import 'package:masjid_app/pages/kajian/kajian_list_page.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_page.dart';
-import 'package:masjid_app/pages/muazin/muazin_page.dart';
 import 'package:masjid_app/pages/notifikasi/detail/detail_notifikasi_page.dart';
-import 'package:masjid_app/pages/notifikasi/invoice/invoice_page.dart';
 import 'package:masjid_app/pages/notifikasi/notifikasi_page.dart';
 import 'package:masjid_app/pages/onboarding/onboard_page.dart';
 import 'package:masjid_app/pages/quran/halaman/halaman_quran_page.dart';
@@ -36,16 +30,6 @@ import 'package:masjid_app/pages/quran/list_ayat/detail/detail_quran_page.dart';
 import 'package:masjid_app/pages/quran/list_ayat/list_ayat_quran_page.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_page.dart';
 import 'package:masjid_app/pages/quran/pengaturan/alquran_pengaturan_page.dart';
-import 'package:masjid_app/pages/ruangan/booking/booking_ruangan_page.dart';
-import 'package:masjid_app/pages/ruangan/jadwal/jadwal_ruangan_page.dart';
-import 'package:masjid_app/pages/ruangan/ruangan_page.dart';
-import 'package:masjid_app/pages/sedekah/detail/detailsedekah_page.dart';
-import 'package:masjid_app/pages/sedekah/sedekah_page.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/instruksi/instruksi_page.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/metode/metode_transaksi_page.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/paymentEwallet/payment_transaksi_page.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/status/status_sedekah_page.dart';
-import 'package:masjid_app/pages/sedekah/transaksi/transaksi_sedekah_page.dart';
 import 'package:masjid_app/pages/splashscreen/splashscreen_page.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
@@ -76,31 +60,13 @@ class AppRoutes {
   static const String haditsSearch = '/hadits/search';
   static const String haditsTema = '/hadits/tema';
   static const String haditsTemaDetail = '/hadits/tema/:id';
-  static const String sedekah = '/sedekah';
-  static const String sedekahDetail = '/sedekah/:id';
-  static const String sedekahTransaksi = '/sedekah/:id/transaksi';
-  static const String sedekahMetode = '/sedekah/:id/transaksi/metode';
-  static const String sedekahPayment = '/sedekah/:id/transaksi/payment';
-  static const String sedekahStatus = '/sedekah/:id/transaksi/status';
-  static const String sedekahInstruksi = '/sedekah/transaksi/intruksi';
   static const String kiblat = '/kiblat';
-  static const String ruangan = '/ruangan';
-  static const String ruanganJadwal = '/ruangan/jadwal';
-  static const String ruanganBooking = '/ruangan/booking';
-  static const String dkm = '/dkm';
-  static const String muazin = '/muazin';
-  static const String kajianSahabat = '/kajian/sahabat';
-  static const String kajianLive = '/kajian/live';
-  static const String kajianTafsir = '/kajian/tafsir';
-  static const String kajianDetail = '/kajian/detail/:id';
   static const String artikel = '/artikel';
   static const String artikelDetail = '/artikel/:id';
   static const String notifikasi = '/notifikasi';
   static const String notifikasiDetail = '/notifikasi/detail/:id';
-  static const String notifikasiInvoice = '/notifikasi/detail/invoice/:invoice';
   static const String onboarding = '/onboard';
   static const String jadwalImsakiah = '/jadwal-imsakiah';
-  static const String kalenderDzulhijjah = '/kalenderdzulhijjah';
   static const String cariMasjid = '/cari-masjid';
   static const String profile = '/profile';
   static const String profileEdit = '/akun/edit';
@@ -232,91 +198,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const HaditsTemaPage(),
       ),
       GoRoute(
-        path: AppRoutes.sedekah,
-        builder: (context, state) => SedekahPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.sedekahDetail,
-        builder: (context, state) => const DetailSedekahPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.sedekahTransaksi,
-        builder: (context, state) => const TransaksiSedekahPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.sedekahMetode,
-        builder: (context, state) => const MetodeTransaksiSedekahPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.sedekahPayment,
-        builder: (context, state) => const PaymentTransaksiSedekahPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.sedekahStatus,
-        builder: (context, state) => const StatusTransaksiSedekahPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.sedekahInstruksi,
-        builder: (context, state) => const InstruksiPage(),
-      ),
-      GoRoute(
         path: AppRoutes.kiblat,
         builder: (context, state) => KiblatPage(),
       ),
       GoRoute(
         path: AppRoutes.cariMasjid,
         builder: (context, state) => const CariMasjidPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.ruangan,
-        builder: (context, state) => const RuanganPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.ruanganJadwal,
-        builder: (context, state) => const JadwalRuanganPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.ruanganBooking,
-        builder: (context, state) => const BookingRuanganPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.dkm,
-        builder: (context, state) => DkmPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.muazin,
-        builder: (context, state) => MuazinPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.kajianSahabat,
-        builder: (context, state) => const KajianListPage(
-          title: 'Sahabat Masjid',
-          tag: 'Sahabat Masjid',
-          badgeColor: Color(0xFFE9A23B),
-          type: 'doa_ramadhan',
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.kajianLive,
-        builder: (context, state) => const KajianListPage(
-          title: 'Riwayat Kajian Live',
-          tag: 'Kajian Live',
-          badgeColor: Color(0xFFE53935),
-          type: 'live',
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.kajianTafsir,
-        builder: (context, state) => const KajianListPage(
-          title: 'Kajian Tafsir Quran',
-          tag: 'Tafsir Qur’an',
-          badgeColor: Color(0xFF048C7C),
-          type: 'tafsir',
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.kajianDetail,
-        builder: (context, state) => const KajianDetailPage(),
       ),
       GoRoute(
         path: AppRoutes.artikel,
@@ -331,10 +218,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const NotifikasiPage(),
       ),
       GoRoute(
-        path: AppRoutes.notifikasiInvoice,
-        builder: (context, state) => const InvoiceNotifikasiPage(),
-      ),
-      GoRoute(
         path: AppRoutes.notifikasiDetail,
         builder: (context, state) => const DetailNotifikasiPage(),
       ),
@@ -344,10 +227,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.jadwalImsakiah,
-        builder: (context, state) => const JadwalImsakiahPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.kalenderDzulhijjah,
         builder: (context, state) => const JadwalImsakiahPage(),
       ),
       GoRoute(

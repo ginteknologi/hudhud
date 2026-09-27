@@ -32,11 +32,11 @@ class HaditsLastReadCard extends ConsumerWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0D6357), Color(0xFF1E8D7F)],
+          colors: [Color(0xFF8C3B24), Color(0xFFD06A4C)],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.25),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
             blurRadius: 14,
             offset: const Offset(0, 5),
           ),
@@ -58,14 +58,14 @@ class HaditsLastReadCard extends ConsumerWidget {
                       children: [
                         const Icon(
                           Icons.bookmark_added_rounded,
-                          color: Color(0xFFF9D576),
+                          color: Color(0xFFECA843),
                           size: 16,
                         ),
                         const SizedBox(width: 6),
                         Text(
                           hasBookmark ? 'Terakhir Dibaca' : 'Rekomendasi Baca',
                           style: GoogleFonts.poppins(
-                            color: const Color(0xFFF9D576),
+                            color: const Color(0xFFECA843),
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
@@ -163,7 +163,7 @@ class HaditsLastReadCard extends ConsumerWidget {
                         Text(
                           hasBookmark ? "Lanjutkan Baca" : "Mulai Baca",
                           style: GoogleFonts.poppins(
-                            color: const Color(0xFF0D6357),
+                            color: const Color(0xFF8C3B24),
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -172,7 +172,7 @@ class HaditsLastReadCard extends ConsumerWidget {
                         const Icon(
                           Icons.arrow_forward_rounded,
                           size: 14,
-                          color: Color(0xFF0D6357),
+                          color: Color(0xFF8C3B24),
                         ),
                       ],
                     ),

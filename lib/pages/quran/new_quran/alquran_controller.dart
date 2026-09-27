@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
-import 'package:masjid_app/storage/bookmarkStorage.dart';
+import 'package:masjid_app/core/storage/bookmark_storage.dart';
 
 /// State bookmark per jenis tilawah ("ayat", "indonesia", "madinah", "tajwid").
 /// Pengganti AlquranController (GetX) — UI-nya kini di alquran_page.dart.

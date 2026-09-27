@@ -22,11 +22,10 @@ class KiblatPage extends ConsumerStatefulWidget {
 }
 
 class _KiblatPageState extends ConsumerState<KiblatPage> {
-  /// Perkiraan koordinat area Masjid An-Ni'mah Cibubur — dipakai hanya kalau
-  /// user belum mengaktifkan GPS. Selisihnya di bawah 0.1° untuk seluruh
-  /// Jakarta, tapi ganti angka ini kalau butuh presisi.
-  static const double _defaultLatitude = -6.3728;
-  static const double _defaultLongitude = 106.8811;
+  /// Perkiraan koordinat area Jakarta — dipakai hanya kalau
+  /// user belum mengaktifkan GPS.
+  static const double _defaultLatitude = -6.2088;
+  static const double _defaultLongitude = 106.8456;
 
   /// Toleransi "sudah tepat menghadap kiblat".
   static const double _alignedWithin = 5;

@@ -227,7 +227,7 @@ final artikelDetailProvider =
       detail: detail,
       lainnya: lainnya,
       share:
-          '${detail.judul}\n\n${_convertHtmlToText(detail.isi ?? '')}\n\nDibagikan dari aplikasi\n\n Marbot App',
+          '${detail.judul}\n\n${_convertHtmlToText(detail.isi ?? '')}\n\nDibagikan dari aplikasi\n\nHudhud',
     );
   } catch (e) {
     return empty;

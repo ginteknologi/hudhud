@@ -1,4 +1,4 @@
-enum BottomBarEnum { beranda, alquran, ruangan, dkm, muazin }
+enum BottomBarEnum { beranda, alquran, account }
 
 class BottomMenuModel {
   BottomMenuModel(

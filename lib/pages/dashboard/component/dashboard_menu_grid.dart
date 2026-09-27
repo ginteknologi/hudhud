@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/providers/home_nav_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DashboardMenuGrid extends ConsumerWidget {
   const DashboardMenuGrid({super.key});
@@ -63,28 +61,6 @@ class DashboardMenuGrid extends ConsumerWidget {
         'isPng': false,
         'onTap': () => context.push(AppRoutes.cariMasjid),
       },
-      {
-        'label': 'Instagram',
-        'icon': 'assets/icons/insta2.svg',
-        'isPng': false,
-        'onTap': () async {
-          final url = Uri.parse('https://www.instagram.com/marbot.aplikasi/');
-          if (!await launchUrl(url)) {
-            Fluttertoast.showToast(msg: 'Tidak dapat membuka Instagram');
-          }
-        },
-      },
-      {
-        'label': 'Youtube',
-        'icon': 'assets/icons/Youtube.svg',
-        'isPng': false,
-        'onTap': () async {
-          final url = Uri.parse('https://www.youtube.com/@MarbotAplikasi');
-          if (!await launchUrl(url)) {
-            Fluttertoast.showToast(msg: 'Tidak dapat membuka Youtube');
-          }
-        },
-      },
     ];
 
     return Container(
@@ -94,12 +70,12 @@ class DashboardMenuGrid extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFFE2EBE8),
+          color: const Color(0xFFEFE7DE),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.05),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.05),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -111,8 +87,8 @@ class DashboardMenuGrid extends ConsumerWidget {
         itemCount: menus.length,
         padding: EdgeInsets.zero,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5,
-          childAspectRatio: 0.76,
+          crossAxisCount: 4,
+          childAspectRatio: 0.85,
           crossAxisSpacing: 8,
           mainAxisSpacing: 10,
         ),
@@ -125,8 +101,8 @@ class DashboardMenuGrid extends ConsumerWidget {
             child: InkWell(
               onTap: item['onTap'] as void Function()?,
               borderRadius: BorderRadius.circular(16),
-              splashColor: const Color(0xFF048C7C).withValues(alpha: 0.12),
-              highlightColor: const Color(0xFF048C7C).withValues(alpha: 0.06),
+              splashColor: const Color(0xFFD06A4C).withValues(alpha: 0.12),
+              highlightColor: const Color(0xFFD06A4C).withValues(alpha: 0.06),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -135,10 +111,10 @@ class DashboardMenuGrid extends ConsumerWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEAF5F2),
+                      color: const Color(0xFFFBF2EC),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                        color: const Color(0xFFD4EAE5),
+                        color: const Color(0xFFF2DED6),
                         width: 0.8,
                       ),
                     ),
@@ -165,7 +141,7 @@ class DashboardMenuGrid extends ConsumerWidget {
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF2C3E50),
+                      color: Color(0xFF2B2523),
                       letterSpacing: 0.1,
                     ),
                   ),

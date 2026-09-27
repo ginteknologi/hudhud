@@ -86,7 +86,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_rounded,
-              color: Color(0xFF137065),
+              color: Color(0xFFD06A4C),
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -100,7 +100,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF137065),
+                  color: const Color(0xFFD06A4C),
                 ),
               ),
               Text(
@@ -117,7 +117,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
           centerTitle: false,
         ),
         body: RefreshIndicator(
-          color: const Color(0xFF048C7C),
+          color: const Color(0xFFD06A4C),
           backgroundColor: Colors.white,
           onRefresh: () => ref.read(doaInfiniteProvider(params).notifier).refresh(),
           child: _buildContent(context, categoryId, categoryName, params, state),
@@ -207,7 +207,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                         ),
                         prefixIcon: const Icon(
                           Icons.search_rounded,
-                          color: Color(0xFF048C7C),
+                          color: Color(0xFFD06A4C),
                           size: 22,
                         ),
                         suffixIcon: _query.isNotEmpty
@@ -239,7 +239,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF137065),
+                          color: const Color(0xFFD06A4C),
                         ),
                       ),
                       Text(
@@ -247,7 +247,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF048C7C),
+                          color: const Color(0xFFD06A4C),
                         ),
                       ),
                     ],
@@ -326,7 +326,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                     height: 26,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
-                      color: Color(0xFF048C7C),
+                      color: Color(0xFFD06A4C),
                     ),
                   ),
                 ),
@@ -367,7 +367,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
         border: Border.all(color: const Color(0xFFE2EBE8)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.04),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -410,7 +410,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF048C7C),
+                            color: const Color(0xFFD06A4C),
                           ),
                         ),
                       ),
@@ -425,7 +425,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF137065),
+                              color: const Color(0xFFD06A4C),
                               height: 1.3,
                             ),
                           ),
@@ -451,7 +451,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
                       ),
                       child: const Icon(
                         Icons.chevron_right_rounded,
-                        color: Color(0xFF048C7C),
+                        color: Color(0xFFD06A4C),
                         size: 18,
                       ),
                     ),
@@ -531,7 +531,7 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF048C7C),
+                backgroundColor: const Color(0xFFD06A4C),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

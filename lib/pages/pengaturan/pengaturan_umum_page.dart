@@ -168,7 +168,7 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
             'notifikasi terjadwal kalau app tidak diizinkan berjalan otomatis.\n\n'
             '1. Buka Pengaturan Aplikasi di bawah ini.\n'
             '2. Pilih menu Autostart / Mulai Otomatis / Jalankan Otomatis.\n'
-            '3. Aktifkan untuk Marbot App.\n'
+            '3. Aktifkan untuk Hudhud.\n'
             '4. Di menu Baterai, pilih "Tanpa Batasan" / "Jangan optimalkan".',
             style: TextStyle(fontSize: 13, height: 1.5),
           ),

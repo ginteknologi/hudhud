@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +47,7 @@ class DetailNotifikasiPage extends ConsumerWidget {
                                   color: Theme.of(context).primaryColor)
                               // TextStyle(
                               //     fontFamily: "DMSerifDisplay",
-                              //     color: Color(0xFF048C7C),
+                              //     color: Color(0xFFD06A4C),
                               //     fontSize: 30)
                               ),
                         ),
@@ -60,7 +59,7 @@ class DetailNotifikasiPage extends ConsumerWidget {
                                   color: Colors.black)
                               // TextStyle(
                               //     fontFamily: "DMSerifDisplay",
-                              //     color: Color(0xFF048C7C),
+                              //     color: Color(0xFFD06A4C),
                               //     fontSize: 30)
                               ),
                         ),
@@ -87,7 +86,7 @@ class DetailNotifikasiPage extends ConsumerWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             AutoSizeText(
-                                                "No. Invoice : ${list['data']['transaksi']['invoice']}",
+                                                "ID Transaksi : ${list['data']['transaksi']['invoice'] ?? '-'}",
                                                 maxLines: 1,
                                                 style: Theme.of(context).textTheme.bodyMedium
                                                     ?.copyWith(
@@ -168,7 +167,7 @@ class DetailNotifikasiPage extends ConsumerWidget {
                                             ],
                                           ),
                                           AutoSizeText(
-                                            "DKM Mesjid An Ni'mah ",
+                                            "Tim Hudhud",
                                             style: Theme.of(context).textTheme.bodySmall
                                                 ?.copyWith(
                                               fontWeight: FontWeight.bold,
@@ -222,32 +221,6 @@ class DetailNotifikasiPage extends ConsumerWidget {
                                   ),
                                 )),
                           ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: screenWidth,
-                          child: ButtonElevated(
-                            title: 'Lihat Invoice',
-                            width: screenWidth,
-                            bgcolor: Color(0xFF007EA6),
-                            height: 45,
-                            color: Colors.white,
-                            radius: 5,
-                            onPressed: () {
-                              if (kDebugMode) {
-                                debugPrint(list['data']['transaksi']
-                                        ['invoice']
-                                    .toString());
-                              }
-                              context.push(
-                                  AppRoutes.notifikasiInvoice.replaceFirst(
-                                      ':invoice',
-                                      list['data']['transaksi']['invoice']
-                                          .toString()));
-                            },
-                          ),
                         ),
                         SizedBox(
                           height: 50,

@@ -46,8 +46,7 @@ final riwayatSedekahProvider = FutureProvider<RiwayatSedekah>((ref) async {
   }
 });
 
-/// Kontak / sosial media resmi sekarang di-hardcode di
-/// `lib/pages/dkm/dkm_page.dart` (kOfficialSocials) — tidak lagi dari server.
+/// Info versi aplikasi
 
 final appVersionProvider = FutureProvider<String>((ref) async {
   try {

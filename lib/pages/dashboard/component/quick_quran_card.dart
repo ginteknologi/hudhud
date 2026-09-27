@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
-import 'package:masjid_app/storage/bookmarkStorage.dart';
+import 'package:masjid_app/core/storage/bookmark_storage.dart';
 
 class QuickQuranCard extends StatefulWidget {
   const QuickQuranCard({super.key});
@@ -97,12 +97,12 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFFE2EBE8),
+          color: const Color(0xFFEFE7DE),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF048C7C).withValues(alpha: 0.06),
+            color: const Color(0xFFD06A4C).withValues(alpha: 0.06),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -122,16 +122,16 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE6F4F2),
+                    color: const Color(0xFFF7EBE4),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFFD0EBE6),
+                      color: const Color(0xFFF0D6C8),
                       width: 0.8,
                     ),
                   ),
                   child: const Icon(
                     Icons.bookmark_added_rounded,
-                    color: Color(0xFF048C7C),
+                    color: Color(0xFFD06A4C),
                     size: 20,
                   ),
                 ),
@@ -152,7 +152,7 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                color: Color(0xFF193B36),
+                                color: Color(0xFF2B2523),
                                 fontSize: 13.5,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 0.1,
@@ -166,13 +166,13 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                               vertical: 1.5,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE6F4F2),
+                              color: const Color(0xFFF7EBE4),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Text(
                               'Tilawah',
                               style: TextStyle(
-                                color: Color(0xFF048C7C),
+                                color: Color(0xFFD06A4C),
                                 fontSize: 9.5,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -203,11 +203,11 @@ class _QuickQuranCardState extends State<QuickQuranCard> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF048C7C),
+                    color: const Color(0xFFD06A4C),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF048C7C).withValues(alpha: 0.25),
+                        color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
