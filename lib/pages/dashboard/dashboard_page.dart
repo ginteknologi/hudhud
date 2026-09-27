@@ -354,7 +354,17 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
-                onTap: () => context.push(AppRoutes.doa),
+                onTap: item == null
+                    ? null
+                    : () => context.push(
+                          AppRoutes.doaContent
+                              .replaceFirst(':id', '1')
+                              .replaceFirst(':content', item.id.toString()),
+                          extra: {
+                            'categoryName': 'Doa Pilihan',
+                            'doaItem': item,
+                          },
+                        ),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
