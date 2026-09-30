@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masjid_app/components/partial/settings_tile.dart';
 import 'package:masjid_app/core/notifications/adzan_scheduler.dart';
 import 'package:masjid_app/core/notifications/notification_permissions.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/providers/app_settings_provider.dart';
 import 'package:masjid_app/providers/jadwal_shalat_provider.dart';
 
@@ -98,11 +100,12 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
 
   void _showRemindPicker() {
     final settings = ref.read(appSettingsProvider);
+    final t = context.hudhud;
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      backgroundColor: t.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(t.radiusMd)),
       ),
       builder: (sheetContext) => SafeArea(
         // BottomSheet membatasi tingginya; 6 pilihan + header bisa melebihi
@@ -116,25 +119,36 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: t.outline,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Pengingat Sebelum Adzan',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: t.charcoal,
+                ),
               ),
               const SizedBox(height: 8),
               ...kAdzanRemindOptions.map((minutes) {
                 final isSelected = minutes == settings.adzanRemindMinutes;
                 return ListTile(
                   dense: true,
-                  title: Text(minutes == 0 ? 'Tidak ada' : '$minutes menit'),
+                  title: Text(
+                    minutes == 0 ? 'Tidak ada' : '$minutes menit',
+                    style: TextStyle(
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.normal,
+                      color: isSelected ? t.terracottaDark : t.charcoal,
+                    ),
+                  ),
                   trailing: isSelected
-                      ? const Icon(
-                          Icons.check_circle_rounded,
-                          color: kTileAccent,
+                      ? Icon(
+                          LucideIcons.circleCheck,
+                          color: t.terracotta,
                         )
                       : null,
                   onTap: () async {
@@ -155,14 +169,22 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
   }
 
   void _showAutostartHint() {
+    final t = context.hudhud;
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
+        backgroundColor: t.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(t.radiusMd),
         ),
-        title: const Text('Aktifkan Autostart'),
-        content: const SingleChildScrollView(
+        title: Text(
+          'Aktifkan Autostart',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: t.charcoal,
+          ),
+        ),
+        content: SingleChildScrollView(
           child: Text(
             'Beberapa HP (Xiaomi, Oppo, Vivo, Realme, Samsung) mematikan '
             'notifikasi terjadwal kalau app tidak diizinkan berjalan otomatis.\n\n'
@@ -170,16 +192,21 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
             '2. Pilih menu Autostart / Mulai Otomatis / Jalankan Otomatis.\n'
             '3. Aktifkan untuk Hudhud.\n'
             '4. Di menu Baterai, pilih "Tanpa Batasan" / "Jangan optimalkan".',
-            style: TextStyle(fontSize: 13, height: 1.5),
+            style: TextStyle(fontSize: 13, height: 1.5, color: t.charcoal),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Tutup'),
+            child: Text('Tutup', style: TextStyle(color: t.muted)),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: kTileAccent),
+            style: FilledButton.styleFrom(
+              backgroundColor: t.terracotta,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(t.radiusSm),
+              ),
+            ),
             onPressed: () async {
               Navigator.of(dialogContext).pop();
               await NotificationPermissions.openSettings();
@@ -195,58 +222,65 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
   Widget build(BuildContext context) {
     final settings = ref.watch(appSettingsProvider);
     final notifier = ref.read(appSettingsProvider.notifier);
+    final t = context.hudhud;
 
     return Scaffold(
-      backgroundColor: kTilePageBg,
+      backgroundColor: t.sand,
+      appBar: AppBar(
+        title: const Text('Pengaturan Umum'),
+        leading: IconButton(
+          constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+          tooltip: 'Kembali',
+          onPressed: () => context.pop(),
+          icon: const Icon(LucideIcons.arrowLeft),
+        ),
+      ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
+        padding: EdgeInsets.symmetric(vertical: t.spaceMd),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SettingsPageHeader(
-              title: 'Pengaturan Umum',
-              subtitle: 'Notifikasi dan izin aplikasi',
-              leading: SettingsHeaderButton(
-                icon: Icons.arrow_back_rounded,
-                onTap: () => context.pop(),
-              ),
-            ),
-            const SizedBox(height: 20),
             const SettingsSectionTitle('Audio Aplikasi'),
             SettingsCard(
               child: SettingsSwitchRow(
-                icon: Icons.music_note_rounded,
+                icon: LucideIcons.music,
                 title: 'Audio Bismillah Pembuka',
                 subtitle: 'Putar bacaan bismillah saat aplikasi dibuka',
                 value: settings.bismillahAudioEnabled,
                 onChanged: (v) => notifier.setBismillahAudioEnabled(v),
               ),
             ),
-            const SizedBox(height: 22),
+            SizedBox(height: t.spaceLg),
             const SettingsSectionTitle('Notifikasi Adzan'),
             SettingsCard(
               child: Column(
                 children: [
                   SettingsSwitchRow(
-                    icon: Icons.notifications_active_rounded,
+                    icon: LucideIcons.bell,
                     title: 'Notifikasi Adzan',
                     subtitle: 'Bunyi pengingat setiap masuk waktu sholat',
                     value: settings.adzanEnabled,
                     onChanged: _toggleAdzan,
                   ),
                   if (settings.adzanEnabled) ...[
-                    const Divider(height: 1, color: kTileBorder),
+                    Divider(height: 1, color: t.outline),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
+                      padding: EdgeInsets.fromLTRB(
+                        t.spaceMd + 2,
+                        t.spaceMd + 2,
+                        t.spaceMd + 2,
+                        t.spaceSm,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Pilih Waktu Sholat',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: kTileTextDark,
+                              color: t.charcoal,
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -269,25 +303,25 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
                         ],
                       ),
                     ),
-                    const Divider(height: 1, color: kTileBorder),
+                    Divider(height: 1, color: t.outline),
                     SettingsTapRow(
-                      icon: Icons.timer_outlined,
+                      icon: LucideIcons.clock,
                       title: 'Pengingat Sebelum Adzan',
                       trailingText: settings.adzanRemindMinutes == 0
                           ? 'Tidak ada'
                           : '${settings.adzanRemindMinutes} menit',
                       onTap: _showRemindPicker,
                     ),
-                    const Divider(height: 1, color: kTileBorder),
+                    Divider(height: 1, color: t.outline),
                     SettingsSwitchRow(
-                      icon: Icons.volume_up_rounded,
+                      icon: LucideIcons.volume2,
                       title: 'Suara',
                       value: settings.adzanSound,
                       onChanged: (v) => notifier.setAdzanSound(v),
                     ),
-                    const Divider(height: 1, color: kTileBorder),
+                    Divider(height: 1, color: t.outline),
                     SettingsSwitchRow(
-                      icon: Icons.vibration_rounded,
+                      icon: LucideIcons.vibrate,
                       title: 'Getar',
                       value: settings.adzanVibrate,
                       onChanged: (v) => notifier.setAdzanVibrate(v),
@@ -296,17 +330,17 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 22),
+            SizedBox(height: t.spaceLg),
             const SettingsSectionTitle('Izin & Baterai'),
-            _permissionCard(),
-            const SizedBox(height: 32),
+            _permissionCard(t),
+            SizedBox(height: t.spaceXl),
           ],
         ),
       ),
     );
   }
 
-  Widget _permissionCard() {
+  Widget _permissionCard(HudhudTheme t) {
     final status = _permissions;
 
     return SettingsCard(
@@ -314,43 +348,71 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(14, 14, 14, 4),
-            child: Text(
-              status == null
-                  ? 'Memeriksa izin...'
-                  : status.allGood
-                      ? 'Semua izin sudah aktif'
-                      : '${status.pendingCount} izin belum aktif — adzan bisa tidak muncul',
-              style: TextStyle(
-                fontSize: 11.5,
-                height: 1.4,
-                fontWeight: FontWeight.w500,
-                color: status?.allGood == true ? kTileAccent : kTileTextMuted,
-              ),
+            padding: EdgeInsets.fromLTRB(
+              t.spaceMd + 2,
+              t.spaceMd + 2,
+              t.spaceMd + 2,
+              t.spaceXs,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  status?.allGood == true
+                      ? LucideIcons.circleCheck
+                      : LucideIcons.circleAlert,
+                  size: 15,
+                  color: status?.allGood == true ? t.success : t.amber,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    status == null
+                        ? 'Memeriksa izin...'
+                        : status.allGood
+                            ? 'Semua izin sudah aktif'
+                            : '${status.pendingCount} izin belum aktif — adzan bisa tidak muncul',
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      height: 1.4,
+                      fontWeight: FontWeight.w600,
+                      color: status?.allGood == true ? t.success : t.charcoal,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 4),
           _permissionRow(
+            t: t,
             title: 'Izin Notifikasi',
             granted: status?.notifications == PermissionLevel.granted,
             onTap: () => _openSystemSettings(PermissionTarget.notifications),
           ),
-          const Divider(height: 1, color: kTileBorder),
+          Divider(height: 1, color: t.outline),
           _permissionRow(
+            t: t,
             title: 'Alarm Presisi',
             granted: status?.exactAlarm == PermissionLevel.granted,
             onTap: () => _openSystemSettings(PermissionTarget.exactAlarm),
           ),
-          const Divider(height: 1, color: kTileBorder),
+          Divider(height: 1, color: t.outline),
           _permissionRow(
+            t: t,
             title: 'Bebas Optimasi Baterai',
             granted: status?.batteryOptimization == PermissionLevel.granted,
             blocked: status?.batteryOptimization == PermissionLevel.blocked,
             onTap: () =>
                 _openSystemSettings(PermissionTarget.batteryOptimization),
           ),
-          const Divider(height: 1, color: kTileBorder),
+          Divider(height: 1, color: t.outline),
           Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            padding: EdgeInsets.fromLTRB(
+              t.spaceMd + 2,
+              t.spaceMd,
+              t.spaceMd + 2,
+              t.spaceMd + 2,
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -358,15 +420,15 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
                     height: 42,
                     child: FilledButton.icon(
                       onPressed: _requestAllPermissions,
-                      icon: const Icon(Icons.verified_user_rounded, size: 17),
+                      icon: const Icon(LucideIcons.shieldCheck, size: 17),
                       label: const Text(
                         'Aktifkan Semua Izin',
                         style: TextStyle(fontSize: 12.5),
                       ),
                       style: FilledButton.styleFrom(
-                        backgroundColor: kTileAccent,
+                        backgroundColor: t.terracotta,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(t.radiusMd),
                         ),
                       ),
                     ),
@@ -380,13 +442,13 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
                     onPressed: _showAutostartHint,
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.zero,
-                      foregroundColor: kTileAccent,
-                      side: const BorderSide(color: kTileBorder),
+                      foregroundColor: t.terracotta,
+                      side: BorderSide(color: t.outline),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(t.radiusMd),
                       ),
                     ),
-                    child: const Icon(Icons.help_outline_rounded, size: 19),
+                    child: const Icon(LucideIcons.helpCircle, size: 19),
                   ),
                 ),
               ],
@@ -398,6 +460,7 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
   }
 
   Widget _permissionRow({
+    required HudhudTheme t,
     required String title,
     required bool granted,
     bool blocked = false,
@@ -413,25 +476,25 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
               children: [
                 Icon(
                   granted
-                      ? Icons.check_circle_rounded
+                      ? LucideIcons.circleCheck
                       : blocked
-                          ? Icons.error_rounded
-                          : Icons.cancel_rounded,
+                          ? LucideIcons.circleAlert
+                          : LucideIcons.circleX,
                   size: 18,
                   color: granted
-                      ? kTileAccent
+                      ? t.success
                       : blocked
-                          ? const Color(0xFFE0A800)
-                          : const Color(0xFFD9534F),
+                          ? t.amber
+                          : t.danger,
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
-                      color: kTileTextDark,
+                      color: t.charcoal,
                     ),
                   ),
                 ),
@@ -444,16 +507,16 @@ class _PengaturanUmumPageState extends ConsumerState<PengaturanUmumPage> {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: granted ? kTileAccent : kTileTextMuted,
+                    color: granted ? t.success : t.muted,
                   ),
                 ),
                 if (!granted)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
                     child: Icon(
-                      Icons.chevron_right_rounded,
-                      size: 18,
-                      color: kTileTextMuted,
+                      LucideIcons.chevronRight,
+                      size: 16,
+                      color: t.muted,
                     ),
                   ),
               ],
@@ -476,6 +539,7 @@ class _PrayerChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -484,10 +548,10 @@ class _PrayerChip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: active ? const Color(0xFFEAF5F2) : Colors.white,
+            color: active ? t.terracotta.withValues(alpha: 0.12) : t.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: active ? kTileAccent : kTileBorder,
+              color: active ? t.terracotta : t.outline,
               width: active ? 1.2 : 1,
             ),
           ),
@@ -495,15 +559,15 @@ class _PrayerChip extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (active) ...[
-                const Icon(Icons.check_rounded, size: 14, color: kTileAccent),
+                Icon(LucideIcons.check, size: 14, color: t.terracotta),
                 const SizedBox(width: 4),
               ],
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 12,
-                  fontWeight: active ? FontWeight.bold : FontWeight.w500,
-                  color: active ? kTileAccent : kTileTextMuted,
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  color: active ? t.terracottaDark : t.muted,
                 ),
               ),
             ],

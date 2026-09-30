@@ -12,10 +12,28 @@ void main() {
     await PreferencesService.init();
   });
 
-  test('default: nama kota default (Jakarta), tanpa koordinat GPS', () {
+  test('default location has no coordinates until detected or selected', () {
     final notifier = LocationNotifier();
-    expect(notifier.state.name, 'Jakarta');
-    expect(notifier.state.isGps, isFalse);
+    expect(notifier.state.name, kDefaultLocationName);
+    expect(notifier.state.hasCoordinates, isFalse);
+    expect(notifier.state.latitude, isNull);
+    expect(notifier.state.longitude, isNull);
+    expect(notifier.state.isDeviceLocation, isFalse);
+  });
+
+  test('manual location is saved without being marked as device GPS', () async {
+    final notifier = LocationNotifier();
+    await notifier.setManualLocation(
+      name: 'Makassar',
+      latitude: -5.1477,
+      longitude: 119.4327,
+      timeZoneId: 'Asia/Makassar',
+    );
+
+    expect(notifier.state.hasCoordinates, isTrue);
+    expect(notifier.state.isDeviceLocation, isFalse);
+    expect(notifier.state.timeZoneId, 'Asia/Makassar');
+    expect(LocationNotifier().state.name, 'Makassar');
   });
 
   test('lokasi GPS tersimpan dan terbaca ulang', () async {

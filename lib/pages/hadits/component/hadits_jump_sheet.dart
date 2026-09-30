@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/hadist_data.dart';
 
 /// Bottom sheet dua tab: lompat ke nomor hadits, atau pindah kitab.
-///
-/// Dipakai reader hadits lewat ikon filter di header.
 Future<void> showHaditsJumpSheet({
   required BuildContext context,
   required String namaTabel,
@@ -14,17 +13,24 @@ Future<void> showHaditsJumpSheet({
   required void Function(int noHdt) onJump,
   required void Function(String namaTabel) onSelectKitab,
 }) {
+  final t = context.hudhud;
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => _HaditsJumpSheet(
-      namaTabel: namaTabel,
-      longNama: longNama,
-      totalHadits: totalHadits,
-      listBooks: listBooks,
-      onJump: onJump,
-      onSelectKitab: onSelectKitab,
+    builder: (_) => Container(
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(t.radiusMd)),
+      ),
+      child: _HaditsJumpSheet(
+        namaTabel: namaTabel,
+        longNama: longNama,
+        totalHadits: totalHadits,
+        listBooks: listBooks,
+        onJump: onJump,
+        onSelectKitab: onSelectKitab,
+      ),
     ),
   );
 }
@@ -78,75 +84,95 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
+
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
-        ),
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceLg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: Container(
-                width: 42,
+                width: 36,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD8E3E0),
-                  borderRadius: BorderRadius.circular(2),
+                  color: t.outline,
+                  borderRadius: BorderRadius.circular(t.radiusSm),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              widget.longNama,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFFD06A4C),
-              ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.longNama,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: t.charcoal,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                  icon: Icon(LucideIcons.x, size: 18, color: t.muted),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
-            _buildTabs(),
+            _buildTabs(t),
             const SizedBox(height: 16),
-            if (_tab == 0) ..._buildJump() else ..._buildKitabList(),
+            if (_tab == 0) ..._buildJump(t) else ..._buildKitabList(t),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTabs() {
+  Widget _buildTabs(HudhudTheme t) {
     return Container(
+      height: t.controlHeight,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F5F3),
-        borderRadius: BorderRadius.circular(12),
+        color: t.sand,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
       ),
       child: Row(
         children: [
-          _tabButton(0, 'Lompat Hadits', Icons.tag_rounded),
-          _tabButton(1, 'Ganti Kitab', Icons.menu_book_rounded),
+          _tabButton(t, 0, 'Lompat Hadits', LucideIcons.hash),
+          _tabButton(t, 1, 'Ganti Kitab', LucideIcons.bookOpen),
         ],
       ),
     );
   }
 
-  Widget _tabButton(int index, String label, IconData icon) {
+  Widget _tabButton(HudhudTheme t, int index, String label, IconData icon) {
     final active = _tab == index;
     return Expanded(
       child: GestureDetector(
         onTap: () => setState(() => _tab = index),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 9),
           decoration: BoxDecoration(
-            color: active ? Colors.white : Colors.transparent,
-            borderRadius: BorderRadius.circular(9),
+            color: active ? t.surface : Colors.transparent,
+            borderRadius: BorderRadius.circular(t.radiusSm),
+            boxShadow: active
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    )
+                  ]
+                : null,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -154,15 +180,16 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
               Icon(
                 icon,
                 size: 15,
-                color: active ? const Color(0xFFD06A4C) : Colors.black45,
+                color: active ? t.terracotta : t.muted,
               ),
               const SizedBox(width: 6),
               Text(
                 label,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                  color: active ? const Color(0xFFD06A4C) : Colors.black45,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 13,
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  color: active ? t.terracotta : t.muted,
                 ),
               ),
             ],
@@ -172,7 +199,7 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
     );
   }
 
-  List<Widget> _buildJump() {
+  List<Widget> _buildJump(HudhudTheme t) {
     final total = widget.totalHadits;
     final chips = <int>{
       1,
@@ -182,33 +209,36 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
       ..sort();
 
     return [
-      TextField(
-        controller: _controller,
-        autofocus: true,
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.go,
-        onSubmitted: (_) => _submit(),
-        decoration: InputDecoration(
-          hintText: total > 0 ? 'Nomor 1–$total' : 'Nomor hadits',
-          hintStyle: GoogleFonts.poppins(fontSize: 13, color: Colors.black38),
-          prefixIcon: const Icon(Icons.search_rounded, size: 20),
-          filled: true,
-          fillColor: const Color(0xFFF8FAF9),
-          contentPadding: const EdgeInsets.symmetric(vertical: 14),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFE2EBE8)),
+      Container(
+        height: t.controlHeight,
+        decoration: BoxDecoration(
+          color: t.surface,
+          borderRadius: BorderRadius.circular(t.radiusMd),
+          border: Border.all(color: t.outline),
+        ),
+        child: TextField(
+          controller: _controller,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.go,
+          onSubmitted: (_) => _submit(),
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 14,
+            color: t.charcoal,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFE2EBE8)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFD06A4C)),
+          decoration: InputDecoration(
+            hintText: total > 0 ? 'Nomor 1–$total' : 'Nomor hadits',
+            hintStyle: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 13,
+              color: t.muted,
+            ),
+            prefixIcon: Icon(LucideIcons.search, size: 18, color: t.muted),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           ),
         ),
-        style: GoogleFonts.poppins(fontSize: 14),
       ),
       const SizedBox(height: 12),
       Wrap(
@@ -216,12 +246,20 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
         children: [
           for (final no in chips)
             ActionChip(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(t.radiusMd),
+                side: BorderSide(color: t.outline),
+              ),
+              backgroundColor: t.sand,
               label: Text(
                 no == 1 ? 'Awal' : (no == total ? 'Akhir' : 'Tengah'),
-                style: GoogleFonts.poppins(fontSize: 11),
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: t.charcoal,
+                ),
               ),
-              backgroundColor: const Color(0xFFEAF5F2),
-              side: BorderSide.none,
               onPressed: () {
                 _controller.text = '$no';
                 _submit();
@@ -230,79 +268,101 @@ class _HaditsJumpSheetState extends State<_HaditsJumpSheet> {
         ],
       ),
       const SizedBox(height: 16),
-      SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: _submit,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFD06A4C),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 13),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: Text(
-            'Buka Hadits',
-            style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
+      FilledButton(
+        onPressed: _submit,
+        style: FilledButton.styleFrom(
+          minimumSize: Size(double.infinity, t.controlHeight),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(t.radiusMd),
           ),
         ),
+        child: const Text('Buka Hadits'),
       ),
     ];
   }
 
-  List<Widget> _buildKitabList() {
+  List<Widget> _buildKitabList(HudhudTheme t) {
     if (widget.listBooks.isEmpty) {
       return [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Text(
             'Daftar kitab tidak tersedia',
-            style: GoogleFonts.poppins(fontSize: 13, color: Colors.black45),
+            style: TextStyle(fontFamily: 'Roboto', fontSize: 13, color: t.muted),
           ),
         ),
       ];
     }
     return [
-      Flexible(
-        child: ListView.builder(
+      ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.4,
+        ),
+        child: ListView.separated(
           shrinkWrap: true,
           itemCount: widget.listBooks.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 6),
           itemBuilder: (_, i) {
             final book = widget.listBooks[i];
             final active = book.namaTabel == widget.namaTabel;
-            return ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              leading: Icon(
-                Icons.menu_book_rounded,
-                size: 20,
-                color: active ? const Color(0xFFD06A4C) : Colors.black38,
-              ),
-              title: Text(
-                book.longNama,
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                  color: active ? const Color(0xFFD06A4C) : Colors.black87,
+            return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(t.radiusMd),
+                onTap: active
+                    ? null
+                    : () {
+                        Navigator.of(context).pop();
+                        widget.onSelectKitab(book.namaTabel);
+                      },
+                child: Container(
+                  constraints: BoxConstraints(minHeight: t.controlHeight),
+                  padding: EdgeInsets.symmetric(horizontal: t.spaceMd, vertical: t.spaceSm),
+                  decoration: BoxDecoration(
+                    color: active ? t.sand : t.surface,
+                    borderRadius: BorderRadius.circular(t.radiusMd),
+                    border: Border.all(color: active ? t.terracotta : t.outline),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        LucideIcons.bookOpen,
+                        size: 18,
+                        color: active ? t.terracotta : t.muted,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              book.longNama,
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 13,
+                                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                                color: active ? t.terracotta : t.charcoal,
+                              ),
+                            ),
+                            Text(
+                              book.babCount > 0
+                                  ? '${book.hadits} hadits · ${book.babCount} bab'
+                                  : '${book.hadits} hadits',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 11,
+                                color: t.muted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (active)
+                        Icon(LucideIcons.check, size: 18, color: t.terracotta),
+                    ],
+                  ),
                 ),
               ),
-              subtitle: Text(
-                book.babCount > 0
-                    ? '${book.hadits} hadits · ${book.babCount} bab'
-                    : '${book.hadits} hadits',
-                style: GoogleFonts.poppins(fontSize: 10, color: Colors.black45),
-              ),
-              trailing: active
-                  ? const Icon(Icons.check_rounded,
-                      size: 18, color: Color(0xFFD06A4C))
-                  : null,
-              onTap: active
-                  ? null
-                  : () {
-                      Navigator.of(context).pop();
-                      widget.onSelectKitab(book.namaTabel);
-                    },
             );
           },
         ),

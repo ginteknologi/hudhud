@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/worship/worship_reader_scaffold.dart';
+import 'package:masjid_app/components/worship/worship_state_views.dart';
 import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/hadist_data.dart';
 import 'package:masjid_app/providers/hadits_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// HaditsBabPage — level 2 dari Kitab → Bab → Hadits.
-///
-/// Kitab yang tidak punya bab tidak pernah sampai ke sini: landing memeriksa
-/// `babCount` dan langsung push ke reader.
 class HaditsBabPage extends ConsumerWidget {
   const HaditsBabPage({super.key});
 
@@ -30,37 +28,39 @@ class HaditsBabPage extends ConsumerWidget {
     }
     final longNama = book?.longNama ?? 'Hadits ${namaTabel.toUpperCase()}';
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF9),
-        body: SafeArea(
-          child: asyncBab.when(
-            data: (babs) => _buildBody(context, namaTabel, longNama, babs,
-                book?.hadits ?? 0, isLoading: false),
-            loading: () => _buildBody(
-              context,
-              namaTabel,
-              longNama,
-              List.generate(
-                6,
-                (i) => HaditsBab(
-                  id: i,
-                  nama: 'Nama bab sedang dimuat',
-                  urutan: i,
-                  noAwal: 1,
-                  noAkhir: 5,
-                ),
-              ),
-              book?.hadits ?? 0,
-              isLoading: true,
+    return WorshipReaderScaffold(
+      title: longNama,
+      subtitle: '${book?.hadits ?? 0} Hadits',
+      body: asyncBab.when(
+        data: (babs) => _buildBody(
+          context,
+          namaTabel,
+          longNama,
+          babs,
+          book?.hadits ?? 0,
+          isLoading: false,
+        ),
+        loading: () => _buildBody(
+          context,
+          namaTabel,
+          longNama,
+          List.generate(
+            8,
+            (i) => HaditsBab(
+              id: i,
+              nama: 'Nama bab sedang dimuat...',
+              urutan: i + 1,
+              noAwal: 1,
+              noAkhir: 10,
             ),
-            error: (_, __) =>
-                _buildBody(context, namaTabel, longNama, const [], 0, isLoading: false),
           ),
+          book?.hadits ?? 0,
+          isLoading: true,
+        ),
+        error: (_, __) => WorshipErrorView(
+          title: 'Gagal Memuat Bab Hadits',
+          message: 'Silakan periksa koneksi dan coba lagi.',
+          onRetry: () => ref.invalidate(haditsBabProvider(namaTabel)),
         ),
       ),
     );
@@ -74,73 +74,20 @@ class HaditsBabPage extends ConsumerWidget {
     int totalHadits, {
     required bool isLoading,
   }) {
+    final t = context.hudhud;
+
     return Skeletonizer(
       enabled: isLoading,
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(child: _buildHeader(context, longNama, babs.length)),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (ctx, i) => i == 0
-                    ? _buildAllHaditsTile(context, namaTabel, longNama, totalHadits)
-                    : _buildBabTile(context, babs[i - 1], namaTabel, longNama),
-                childCount: babs.length + 1,
-              ),
-            ),
-          ),
-          if (!isLoading && babs.isEmpty)
-            SliverToBoxAdapter(child: _buildEmpty(context, namaTabel)),
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, String longNama, int jumlahBab) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Navigator.of(context).pop(),
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE2EBE8)),
-              ),
-              child: const Icon(Icons.arrow_back_rounded,
-                  size: 20, color: Color(0xFFD06A4C)),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  longNama,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFFD06A4C),
-                  ),
-                ),
-                Text(
-                  '$jumlahBab bab',
-                  style: GoogleFonts.poppins(fontSize: 11, color: Colors.black54),
-                ),
-              ],
-            ),
-          ),
-        ],
+      child: ListView.separated(
+        padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceXl),
+        itemCount: babs.length + 1,
+        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        itemBuilder: (ctx, i) {
+          if (i == 0) {
+            return _buildAllHaditsTile(context, namaTabel, longNama, totalHadits);
+          }
+          return _buildBabTile(context, babs[i - 1], namaTabel, longNama);
+        },
       ),
     );
   }
@@ -151,30 +98,63 @@ class HaditsBabPage extends ConsumerWidget {
     String longNama,
     int totalHadits,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFD06A4C),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        leading: const Icon(Icons.all_inclusive_rounded, color: Colors.white),
-        title: Text(
-          'Semua Hadits',
-          style: GoogleFonts.poppins(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        subtitle: Text(
-          totalHadits > 0 ? '$totalHadits hadits' : 'Seluruh kitab',
-          style: GoogleFonts.poppins(fontSize: 10, color: Colors.white70),
-        ),
-        trailing: const Icon(Icons.chevron_right_rounded, color: Colors.white),
+    final t = context.hudhud;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusMd),
         onTap: () => context.push(
           AppRoutes.haditsListRoute.replaceFirst(':id', namaTabel),
+        ),
+        child: Container(
+          constraints: BoxConstraints(minHeight: t.controlHeight),
+          padding: EdgeInsets.all(t.spaceMd),
+          decoration: BoxDecoration(
+            color: t.terracotta,
+            borderRadius: BorderRadius.circular(t.radiusMd),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(t.radiusSm),
+                ),
+                child: const Center(
+                  child: Icon(LucideIcons.bookOpen, size: 18, color: Colors.white),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Semua Hadits',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      totalHadits > 0 ? '$totalHadits hadits lengkap' : 'Seluruh kitab',
+                      style: const TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 12,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(LucideIcons.chevronRight, size: 18, color: Colors.white),
+            ],
+          ),
         ),
       ),
     );
@@ -186,84 +166,76 @@ class HaditsBabPage extends ConsumerWidget {
     String namaTabel,
     String longNama,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
-      ),
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        leading: Container(
-          width: 34,
-          height: 34,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: const Color(0xFFEAF5F2),
-            borderRadius: BorderRadius.circular(9),
-          ),
-          child: Text(
-            '${bab.urutan}',
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFD06A4C),
-            ),
-          ),
-        ),
-        title: Text(
-          bab.nama,
-          style: GoogleFonts.poppins(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF1A1A1A),
-          ),
-        ),
-        subtitle: Text(
-          bab.noAwal == bab.noAkhir
-              ? 'Hadits ${bab.noAwal}'
-              : 'Hadits ${bab.noAwal}–${bab.noAkhir}',
-          style: GoogleFonts.poppins(fontSize: 10, color: Colors.black45),
-        ),
-        trailing: const Icon(Icons.chevron_right_rounded, color: Colors.black26),
+    final t = context.hudhud;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusMd),
         onTap: () => context.push(
           '${AppRoutes.haditsListRoute.replaceFirst(':id', namaTabel)}?bab=${bab.id}',
         ),
-      ),
-    );
-  }
-
-  Widget _buildEmpty(BuildContext context, String namaTabel) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 40, 24, 0),
-      child: Column(
-        children: [
-          const Icon(Icons.menu_book_outlined, size: 44, color: Colors.black26),
-          const SizedBox(height: 12),
-          Text(
-            'Kitab ini belum punya daftar bab',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(fontSize: 13, color: Colors.black54),
+        child: Container(
+          constraints: BoxConstraints(minHeight: t.controlHeight),
+          padding: EdgeInsets.all(t.spaceMd),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.radiusMd),
+            border: Border.all(color: t.outline),
           ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => context.push(
-              AppRoutes.haditsListRoute.replaceFirst(':id', namaTabel),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFD06A4C),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          child: Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: t.sand,
+                  borderRadius: BorderRadius.circular(t.radiusSm),
+                ),
+                child: Center(
+                  child: Text(
+                    '${bab.urutan}',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: t.terracotta,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            child: Text(
-              'Buka Semua Hadits',
-              style: GoogleFonts.poppins(fontSize: 13),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      bab.nama,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: t.charcoal,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      bab.noAwal == bab.noAkhir
+                          ? 'Hadits ${bab.noAwal}'
+                          : 'Hadits ${bab.noAwal}–${bab.noAkhir}',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 11,
+                        color: t.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(LucideIcons.chevronRight, size: 18, color: t.muted),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

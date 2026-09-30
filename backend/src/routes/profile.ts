@@ -4,28 +4,28 @@ import { apiResponse } from '../helpers/response';
 
 const profile = new Hono<{ Bindings: Env }>();
 
-// GET /api/v1/profile
-profile.get('/', async (c) => {
+// PUT /api/v1/profile/:id
+profile.put('/:id', async (c) => {
   try {
-    const { results } = await c.env.DB.prepare('SELECT id, name as nama, email, photo, total_sedekah FROM users').all();
-    return apiResponse(c, 200, true, 'Daftar pengguna', results || []);
-  } catch (e: any) {
-    return apiResponse(c, 200, true, 'Daftar pengguna', []);
-  }
-});
+    const id = c.req.param('id');
+    const body = await c.req.json();
+    const { nama, photo } = body;
 
-// GET /api/v1/profile/:id
-profile.get('/:id', async (c) => {
-  const id = c.req.param('id');
-  try {
+    const result = await c.env.DB.prepare(
+      'UPDATE users SET name = ?, photo = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?'
+    ).bind(nama || 'Pengguna', photo || '', id).run();
+
+    if (!result.meta.changes) {
+      return apiResponse(c, 404, false, 'Pengguna tidak ditemukan', null);
+    }
+
     const user = await c.env.DB.prepare(
-      'SELECT id, name as nama, email, photo, total_sedekah FROM users WHERE id = ? OR email = ?'
-    ).bind(id, id).first();
+      'SELECT id, name as nama, email, photo FROM users WHERE id = ?'
+    ).bind(id).first();
 
-    if (!user) return apiResponse(c, 404, false, 'Pengguna tidak ditemukan', null);
-    return apiResponse(c, 200, true, 'Profil pengguna', user);
+    return apiResponse(c, 200, true, 'Profil berhasil diperbarui', user);
   } catch (e: any) {
-    return apiResponse(c, 404, false, 'Pengguna tidak ditemukan', null);
+    return apiResponse(c, 500, false, 'Gagal memperbarui profil', null);
   }
 });
 

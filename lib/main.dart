@@ -13,6 +13,7 @@ import 'package:masjid_app/core/router/app_router.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/providers/app_settings_provider.dart';
 import 'package:masjid_app/providers/jadwal_shalat_provider.dart';
+import 'package:masjid_app/providers/location_provider.dart';
 import 'package:masjid_app/theme.dart';
 
 Future<void> main() async {
@@ -77,6 +78,7 @@ class MyApp extends ConsumerWidget {
         AdzanScheduler.sync(
           jadwal: jadwal,
           settings: ref.read(appSettingsProvider),
+          timeZoneId: ref.read(locationProvider).timeZoneId ?? 'Asia/Jakarta',
         );
       }
     });

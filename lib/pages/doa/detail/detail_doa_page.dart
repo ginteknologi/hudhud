@@ -1,13 +1,12 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/worship/worship_reader_scaffold.dart';
+import 'package:masjid_app/components/worship/worship_state_views.dart';
 import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/doa_models.dart';
-import 'package:masjid_app/models/pagination_state.dart';
 import 'package:masjid_app/providers/doa_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -56,12 +55,13 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
       id: i + 1,
       judul: 'Contoh Judul Doa Lengkap',
       arab: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ',
-      arti: 'Ya Allah, sesungguhnya aku memohon ampunan dan keselamatan kepada-Mu di dunia dan akhirat.',
+      arti: 'Ya Allah, sesungguhnya aku memohon ampunan dan keselamatan.',
     ),
   );
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
     final routeState = GoRouterState.of(context);
     final categoryId = routeState.pathParameters['id'] ?? '';
     final extra = routeState.extra;
@@ -72,478 +72,252 @@ class _DetailDoaPageState extends ConsumerState<DetailDoaPage> {
     final params = DoaListParams(categoryId: categoryId, query: _query);
     final state = ref.watch(doaInfiniteProvider(params));
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF9),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          scrolledUnderElevation: 1,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Color(0xFFD06A4C),
+    return WorshipReaderScaffold(
+      title: categoryName,
+      subtitle: 'Daftar doa pilihan',
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceMd),
+            child: _buildSearchBar(t),
+          ),
+          Expanded(
+            child: Builder(
+              builder: (ctx) {
+                if (state.isLoading && state.items.isEmpty) {
+                  return _buildList(
+                    context,
+                    categoryId,
+                    categoryName,
+                    _dummyDoaList,
+                    isLoading: true,
+                    hasMore: false,
+                    isLoadingMore: false,
+                    params: params,
+                  );
+                }
+
+                if (state.errorMessage != null && state.items.isEmpty) {
+                  return WorshipErrorView(
+                    title: "Gagal Memuat Daftar Do'a",
+                    message: state.errorMessage!,
+                    onRetry: () => ref
+                        .read(doaInfiniteProvider(params).notifier)
+                        .loadFirstPage(),
+                  );
+                }
+
+                if (state.items.isEmpty) {
+                  return WorshipEmptyView(
+                    title: "Do'a Tidak Ditemukan",
+                    message: _query.isNotEmpty
+                        ? 'Tidak ada doa yang cocok dengan "$_query".'
+                        : 'Belum ada doa pada kategori ini.',
+                    icon: LucideIcons.fileQuestion,
+                    actionLabel: _query.isNotEmpty ? 'Hapus Pencarian' : null,
+                    onAction: _query.isNotEmpty
+                        ? () {
+                            _searchController.clear();
+                            setState(() => _query = '');
+                          }
+                        : null,
+                  );
+                }
+
+                return _buildList(
+                  context,
+                  categoryId,
+                  categoryName,
+                  state.items,
+                  isLoading: false,
+                  hasMore: state.hasMore,
+                  isLoadingMore: state.isLoadingMore,
+                  params: params,
+                );
+              },
             ),
-            onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                categoryName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFFD06A4C),
-                ),
-              ),
-              Text(
-                "Daftar do'a & lafadz bacaan",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                  fontSize: 11,
-                  color: Colors.black54,
-                ),
-              ),
-            ],
-          ),
-          centerTitle: false,
-        ),
-        body: RefreshIndicator(
-          color: const Color(0xFFD06A4C),
-          backgroundColor: Colors.white,
-          onRefresh: () => ref.read(doaInfiniteProvider(params).notifier).refresh(),
-          child: _buildContent(context, categoryId, categoryName, params, state),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    String categoryId,
-    String categoryName,
-    DoaListParams params,
-    PaginationState<DoaItemModel> state,
-  ) {
-    if (state.isLoading && state.items.isEmpty) {
-      return _buildScrollView(
-        context,
-        categoryId,
-        categoryName,
-        _dummyDoaList,
-        isLoading: true,
-        state: state,
-      );
-    }
-
-    if (state.errorMessage != null && state.items.isEmpty) {
-      return _buildError(context, params);
-    }
-
-    return _buildScrollView(
-      context,
-      categoryId,
-      categoryName,
-      state.items,
-      isLoading: false,
-      state: state,
+  Widget _buildSearchBar(HudhudTheme t) {
+    return Container(
+      height: t.controlHeight,
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
+      ),
+      child: TextField(
+        controller: _searchController,
+        style: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 14,
+          color: t.charcoal,
+        ),
+        decoration: InputDecoration(
+          hintText: 'Cari judul doa...',
+          hintStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 13,
+            color: t.muted,
+          ),
+          prefixIcon: Icon(LucideIcons.search, size: 18, color: t.muted),
+          suffixIcon: _query.isNotEmpty
+              ? IconButton(
+                  constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                  icon: Icon(LucideIcons.x, size: 16, color: t.muted),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() => _query = '');
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        ),
+        onSubmitted: (val) => setState(() => _query = val.trim()),
+        textInputAction: TextInputAction.search,
+      ),
     );
   }
 
-  Widget _buildScrollView(
+  Widget _buildList(
     BuildContext context,
     String categoryId,
     String categoryName,
-    List<DoaItemModel> list, {
+    List<DoaItemModel> items, {
     required bool isLoading,
-    required PaginationState<DoaItemModel> state,
+    required bool hasMore,
+    required bool isLoadingMore,
+    required DoaListParams params,
   }) {
+    final t = context.hudhud;
+
     return Skeletonizer(
       enabled: isLoading,
-      child: CustomScrollView(
+      child: ListView.separated(
         controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(
-          parent: BouncingScrollPhysics(),
-        ),
-        slivers: [
-          // Search & Summary Header
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Search Bar
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFE2EBE8)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (val) => setState(() => _query = val),
-                      style: GoogleFonts.poppins(fontSize: 13),
-                      decoration: InputDecoration(
-                        hintText: "Cari judul doa atau arti...",
-                        hintStyle: GoogleFonts.poppins(
-                          color: Colors.black38,
-                          fontSize: 13,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.search_rounded,
-                          color: Color(0xFFD06A4C),
-                          size: 22,
-                        ),
-                        suffixIcon: _query.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear_rounded, size: 18),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  setState(() => _query = '');
-                                },
-                              )
-                            : null,
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14,
-                          horizontal: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Section Title Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Pilihan Doa',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFFD06A4C),
-                        ),
-                      ),
-                      Text(
-                        isLoading ? 'Memuat...' : '${list.length} Doa Dimuat',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFD06A4C),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // List Items
-          if (!isLoading && list.isEmpty)
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/doa.svg',
-                        width: 48,
-                        height: 48,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.black26,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Doa tidak ditemukan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Coba cari dengan kata kunci lain',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: Colors.black38,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final item = list[index];
-                    return FadeInUp(
-                      duration: Duration(milliseconds: 180 + (index * 35).clamp(0, 400)),
-                      child: _buildDoaCard(context, item, index, categoryId, categoryName),
-                    );
-                  },
-                  childCount: list.length,
-                ),
-              ),
-            ),
-
-          // Bottom Loading Indicator (Infinite Scroll feedback)
-          if (state.isLoadingMore)
-            const SliverToBoxAdapter(
+        padding: EdgeInsets.fromLTRB(t.spaceLg, 0, t.spaceLg, t.spaceXl),
+        itemCount: items.length + (hasMore || isLoadingMore ? 1 : 0),
+        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        itemBuilder: (ctx, index) {
+          if (index == items.length) {
+            return Center(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Center(
-                  child: SizedBox(
-                    width: 26,
-                    height: 26,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: Color(0xFFD06A4C),
-                    ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(t.terracotta),
                   ),
                 ),
               ),
-            )
-          else if (!state.hasMore && list.isNotEmpty && !isLoading)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 28, top: 8),
-                child: Center(
-                  child: Text(
-                    'Semua doa telah dimuat',
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      color: Colors.black38,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
+            );
+          }
+
+          final item = items[index];
+          return _buildItemTile(context, categoryId, categoryName, item, index + 1);
+        },
       ),
     );
   }
 
-  Widget _buildDoaCard(
+  Widget _buildItemTile(
     BuildContext context,
-    DoaItemModel item,
-    int index,
     String categoryId,
     String categoryName,
+    DoaItemModel item,
+    int index,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+    final t = context.hudhud;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        onTap: () {
+          context.push(
+            AppRoutes.doaContent
+                .replaceFirst(':id', categoryId)
+                .replaceFirst(':content', item.id.toString()),
+            extra: {
+              'categoryName': categoryName,
+              'doaItem': item,
+            },
+          );
+        },
+        child: Container(
+          constraints: BoxConstraints(minHeight: t.controlHeight),
+          padding: EdgeInsets.all(t.spaceMd),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.radiusMd),
+            border: Border.all(color: t.outline),
           ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            context.push(
-              AppRoutes.doaContent
-                  .replaceFirst(':id', categoryId)
-                  .replaceFirst(':content', item.id.toString()),
-              extra: {
-                'categoryName': categoryName,
-                'doaItem': item,
-              },
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top row: Badge Number, Title, Chevron
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8F5F1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${index + 1}',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFFD06A4C),
-                          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: t.sand,
+                      borderRadius: BorderRadius.circular(t.radiusSm),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$index',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: t.terracotta,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.judul,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFD06A4C),
-                              height: 1.3,
-                            ),
-                          ),
-                          if (item.riwayat.isNotEmpty) ...[
-                            const SizedBox(height: 2),
-                            Text(
-                              item.riwayat,
-                              style: GoogleFonts.poppins(
-                                fontSize: 10,
-                                color: Colors.black45,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAF9),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.chevron_right_rounded,
-                        color: Color(0xFFD06A4C),
-                        size: 18,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Arabic Snippet (if available)
-                if (item.arab.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFBFDFC),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFEDF5F2)),
-                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
                     child: Text(
-                      item.arab,
-                      textAlign: TextAlign.right,
-                      textDirection: TextDirection.rtl,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.amiri(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1E293B),
-                        height: 1.8,
+                      item.judul,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: t.charcoal,
+                        height: 1.3,
                       ),
                     ),
                   ),
+                  Icon(LucideIcons.chevronRight, size: 18, color: t.muted),
                 ],
-
-                // Translation preview
-                if (item.arti.isNotEmpty) ...[
-                  const SizedBox(height: 10),
-                  Text(
-                    item.arti,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      color: Colors.black54,
-                      height: 1.4,
-                    ),
+              ),
+              if (item.arti.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(
+                  item.arti,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 12,
+                    color: t.muted,
+                    height: 1.4,
                   ),
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildError(BuildContext context, DoaListParams params) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.cloud_off_rounded,
-              size: 48,
-              color: Colors.black38,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Gagal memuat daftar doa',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black54,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD06A4C),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-              onPressed: () => ref.read(doaInfiniteProvider(params).notifier).loadFirstPage(),
-              child: Text(
-                'Coba Lagi',
-                style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
+              ],
+            ],
+          ),
         ),
       ),
     );

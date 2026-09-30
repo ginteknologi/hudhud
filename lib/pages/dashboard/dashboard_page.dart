@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/hudhud_ui.dart';
+import 'package:masjid_app/core/companion/hudhud_day_period.dart';
 import 'package:masjid_app/core/router/app_router.dart';
-import 'package:masjid_app/models/artikel_model.dart';
-import 'package:masjid_app/models/doa_models.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
+import 'package:masjid_app/models/jadwal_shalat_model.dart';
 import 'package:masjid_app/pages/artikel/component/artikel_card.dart';
-import 'package:masjid_app/pages/dashboard/component/count_down.dart';
-import 'package:masjid_app/pages/dashboard/component/dashboard_header.dart';
-import 'package:masjid_app/pages/dashboard/component/dashboard_menu_grid.dart';
-import 'package:masjid_app/pages/dashboard/component/prayer_times_card.dart';
-import 'package:masjid_app/pages/dashboard/component/quick_quran_card.dart';
-import 'package:masjid_app/pages/dashboard/component/ramadhan_menu.dart';
 import 'package:masjid_app/providers/artikel_provider.dart';
-import 'package:masjid_app/providers/doa_providers.dart';
+import 'package:masjid_app/providers/auth_provider.dart';
+import 'package:masjid_app/providers/home_nav_provider.dart';
 import 'package:masjid_app/providers/jadwal_shalat_provider.dart';
+import 'package:masjid_app/providers/location_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class DashboardPage extends ConsumerStatefulWidget {
@@ -24,380 +22,447 @@ class DashboardPage extends ConsumerStatefulWidget {
   ConsumerState<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends ConsumerState<DashboardPage> {
-  final ScrollController _scrollController = ScrollController();
-  bool _isScrolled = false;
-
+class _DashboardPageState extends ConsumerState<DashboardPage>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !ref.read(locationProvider).hasCoordinates) {
+        _initializeLocation();
+      }
+    });
   }
 
-  void _onScroll() {
-    final scrolled = _scrollController.hasClients && _scrollController.offset > 50;
-    if (scrolled != _isScrolled) {
-      setState(() {
-        _isScrolled = scrolled;
-      });
+  Future<void> _initializeLocation() async {
+    final message = await ref.read(locationProvider.notifier).detect();
+    if (!mounted || message == null) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content:
+              Text('$message. Pilih lokasi untuk waktu salat yang akurat.')),
+    );
+    await _showLocationOptions();
+  }
+
+  Future<void> _showLocationOptions() async {
+    final choice = await showModalBottomSheet<_LocationChoice>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.my_location),
+              title: const Text('Gunakan lokasi perangkat'),
+              onTap: () => Navigator.pop(context, _LocationChoice.device),
+            ),
+            for (final city in _indonesianCities)
+              ListTile(
+                leading: const Icon(Icons.location_city),
+                title: Text(city.name),
+                subtitle: Text(city.zoneLabel),
+                onTap: () => Navigator.pop(context, city),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted || choice == null) return;
+    if (choice == _LocationChoice.device) {
+      final message = await ref.read(locationProvider.notifier).detect();
+      if (mounted && message != null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+      }
+      return;
     }
+    await ref.read(locationProvider.notifier).setManualLocation(
+          name: choice.name,
+          latitude: choice.latitude,
+          longitude: choice.longitude,
+          timeZoneId: choice.timeZoneId,
+        );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) return;
+    final location = ref.read(locationProvider);
+    if (!location.isDeviceLocation || location.loading) return;
+    ref.read(locationProvider.notifier).detect();
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  String _cleanText(String text) {
-    if (text.isEmpty) return '';
-    return text
-        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' ')
-        .replaceAll(RegExp(r'</?p>', caseSensitive: false), ' ')
-        .replaceAll(RegExp(r'<[^>]*>'), '')
-        .replaceAll('&nbsp;', ' ')
-        .replaceAll('&amp;', '&')
-        .replaceAll('&quot;', '"')
-        .replaceAll('&apos;', "'")
-        .replaceAll('&#39;', "'")
-        .replaceAll('&lt;', '<')
-        .replaceAll('&gt;', '>')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
   }
 
   @override
   Widget build(BuildContext context) {
-    final overlayStyle = SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: _isScrolled ? Brightness.dark : Brightness.light,
-      statusBarBrightness: _isScrolled ? Brightness.light : Brightness.dark,
-    );
+    final schedule = ref.watch(jadwalShalatProvider);
+    final countdown = ref.watch(prayerCountdownProvider);
+    final location = ref.watch(locationProvider);
+    final articles = ref.watch(artikelTerbaruProvider);
+    final user = ref.watch(authNotifierProvider).valueOrNull;
+    final t = context.hudhud;
 
-    final artikelAsync = ref.watch(artikelTerbaruProvider);
-    final doaAsync = ref.watch(doaListProvider(const DoaListParams(categoryId: '1')));
-
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: overlayStyle,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFBF7F2),
-        body: Stack(
-          children: [
-            RefreshIndicator(
-              color: const Color(0xFFD06A4C),
-              backgroundColor: Colors.white,
-              onRefresh: () async {
+    return Scaffold(
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
             ref.invalidate(jadwalShalatProvider);
             ref.invalidate(artikelTerbaruProvider);
-            ref.invalidate(doaListProvider(const DoaListParams(categoryId: '1')));
+            await Future.wait([
+              ref.read(jadwalShalatProvider.future),
+              ref.read(artikelTerbaruProvider.future),
+            ]);
           },
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics(),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // 1. Header Profil & Lokasi Islami Elegan
-                const DashboardHeader(),
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding:
+                    EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, 0),
+                sliver: SliverToBoxAdapter(
+                  child: _Header(
+                    name: user?.name ?? 'Tamu',
+                    location: location.name,
+                    locationLoading: location.loading,
+                    onLocation: location.loading ? null : _showLocationOptions,
+                    onNotification: () => context.push(AppRoutes.notifikasi),
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: EdgeInsets.all(t.spaceLg),
+                sliver: SliverList.list(
+                  children: [
+                    schedule.when(
+                      loading: () => const _FocusSkeleton(),
+                      error: (_, __) => HudhudStateView(
+                        icon: LucideIcons.wifiOff,
+                        title: 'Jadwal belum dapat dimuat',
+                        message: 'Periksa koneksi lalu coba kembali.',
+                        actionLabel: 'Coba lagi',
+                        onAction: () => ref.invalidate(jadwalShalatProvider),
+                      ),
+                      data: (jadwal) => countdown.when(
+                        loading: () => const _FocusSkeleton(),
+                        error: (_, __) => _CompanionFocus(schedule: jadwal),
+                        data: (info) =>
+                            _CompanionFocus(schedule: jadwal, info: info),
+                      ),
+                    ),
+                    SizedBox(height: t.spaceXl),
+                    const HudhudSectionHeader(title: 'Waktu salat hari ini'),
+                    SizedBox(height: t.spaceSm),
+                    schedule.when(
+                      loading: () => const _PrayerStripSkeleton(),
+                      error: (_, __) => const SizedBox.shrink(),
+                      data: (jadwal) => _PrayerStrip(
+                        items: jadwal.toItems(),
+                        nextPrayerId: countdown.valueOrNull?.nextShalat.id,
+                      ),
+                    ),
+                    SizedBox(height: t.spaceXl),
+                    _ContinueTilawah(
+                      onTap: () => ref
+                          .read(homeBottomNavIndexProvider.notifier)
+                          .state = 1,
+                    ),
+                    SizedBox(height: t.spaceXl),
+                    const HudhudSectionHeader(title: 'Temani ibadahmu'),
+                    SizedBox(height: t.spaceSm),
+                    const _Services(),
+                    SizedBox(height: t.spaceXl),
+                    HudhudSectionHeader(
+                      title: 'Artikel terbaru',
+                      actionLabel: 'Lihat semua',
+                      onAction: () => context.push(AppRoutes.artikel),
+                    ),
+                    SizedBox(height: t.spaceSm),
+                    articles.when(
+                      loading: () => const _ArticleSkeleton(),
+                      error: (_, __) => HudhudStateView(
+                        icon: LucideIcons.wifiOff,
+                        title: 'Artikel belum dapat dimuat',
+                        message: 'Buka halaman artikel untuk mencoba kembali.',
+                        actionLabel: 'Lihat semua',
+                        onAction: () => context.push(AppRoutes.artikel),
+                      ),
+                      data: (items) => items.isEmpty
+                          ? HudhudStateView(
+                              icon: LucideIcons.newspaper,
+                              title: 'Belum ada artikel',
+                              message: 'Artikel terbaru akan tampil di sini.',
+                              actionLabel: 'Lihat semua',
+                              onAction: () => context.push(AppRoutes.artikel),
+                            )
+                          : Column(
+                              children: items.take(5).map((item) {
+                                final title = item.judul;
+                                final image = item.thumbnail;
+                                final date = formatArtikelDate(item.createdAt);
+                                return ArtikelCard(
+                                  judul: title,
+                                  image: image,
+                                  dateLabel: date,
+                                  onTap: () => context.push(
+                                    AppRoutes.artikelDetail
+                                        .replaceFirst(':id', '${item.id}'),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                    ),
+                    SizedBox(height: t.spaceXl),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-                // Konten Utama Beranda
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+class _LocationChoice {
+  const _LocationChoice({
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+    required this.timeZoneId,
+    required this.zoneLabel,
+  });
+
+  static const device = _LocationChoice(
+    name: '',
+    latitude: 0,
+    longitude: 0,
+    timeZoneId: '',
+    zoneLabel: '',
+  );
+
+  final String name;
+  final double latitude;
+  final double longitude;
+  final String timeZoneId;
+  final String zoneLabel;
+}
+
+const _indonesianCities = <_LocationChoice>[
+  _LocationChoice(
+      name: 'Jakarta',
+      latitude: -6.2088,
+      longitude: 106.8456,
+      timeZoneId: 'Asia/Jakarta',
+      zoneLabel: 'WIB'),
+  _LocationChoice(
+      name: 'Makassar',
+      latitude: -5.1477,
+      longitude: 119.4327,
+      timeZoneId: 'Asia/Makassar',
+      zoneLabel: 'WITA'),
+  _LocationChoice(
+      name: 'Kupang',
+      latitude: -10.1772,
+      longitude: 123.6070,
+      timeZoneId: 'Asia/Makassar',
+      zoneLabel: 'WITA'),
+  _LocationChoice(
+      name: 'Jayapura',
+      latitude: -2.5916,
+      longitude: 140.6690,
+      timeZoneId: 'Asia/Jayapura',
+      zoneLabel: 'WIT'),
+];
+
+class _Header extends StatelessWidget {
+  const _Header({
+    required this.name,
+    required this.location,
+    required this.locationLoading,
+    required this.onLocation,
+    required this.onNotification,
+  });
+
+  final String name;
+  final String location;
+  final bool locationLoading;
+  final VoidCallback? onLocation;
+  final VoidCallback onNotification;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.hudhud;
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Assalamu'alaikum, $name",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 3),
+              InkWell(
+                onTap: onLocation,
+                borderRadius: BorderRadius.circular(t.radiusSm),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // 2. Kartu Waktu Shalat Realtime
-                      const PrayerTimesCard(),
-
-                      // 3. Kartu Cepat "Lanjutkan Tilawah" Al-Qur'an (Minimalis)
-                      const QuickQuranCard(),
-
-                      // 4. Grid Layanan & Ibadah
-                      const DashboardMenuGrid(),
-
-                      // 5. Countdown Ramadhan / Event Khusus
-                      const SizedBox(height: 14),
-                      const CountDownWidget(),
-
-                      // 6. Menu Imsakiyah & Penanggalan Ramadhan
-                      const SizedBox(height: 14),
-                      const RamadhanMenuWidget(),
-
-                      const SizedBox(height: 22),
-
-                      // 7. Doa Pilihan (Kartu Inspirasi Doa Harian)
-                      _buildSeparator(
-                        'Doa Pilihan',
-                        'Lihat Semua',
-                        context,
-                        () => context.push(AppRoutes.doa),
-                      ),
-                      const SizedBox(height: 10),
-                      Skeletonizer(
-                        enabled: doaAsync.isLoading,
-                        child: _buildDoaSlider(doaAsync.valueOrNull ?? [], context),
-                      ),
-
-                      const SizedBox(height: 22),
-
-                      // 8. Artikel Terbaru (Featured & Compact Magazine Style)
-                      _buildSeparator(
-                        'Artikel Terbaru',
-                        'Lihat Semua',
-                        context,
-                        () => context.push(AppRoutes.artikel),
-                      ),
-                      const SizedBox(height: 10),
-                      Skeletonizer(
-                        enabled: artikelAsync.isLoading,
-                        child: _buildArtikelList(
-                          artikelAsync.valueOrNull ?? [],
-                          context,
-                        ),
-                      ),
-
-                      const SizedBox(height: 36),
+                      if (locationLoading)
+                        const SizedBox(
+                            width: 15,
+                            height: 15,
+                            child: CircularProgressIndicator(strokeWidth: 2))
+                      else
+                        Icon(LucideIcons.mapPin, size: 16, color: t.terracotta),
+                      const SizedBox(width: 6),
+                      Flexible(
+                          child: Text(location,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall)),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-        // Pelindung status bar saat di-scroll
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            height: MediaQuery.of(context).padding.top,
-            color: _isScrolled
-                ? const Color(0xFFFBF7F2).withValues(alpha: 0.96)
-                : Colors.transparent,
-          ),
-        ),
-      ],
-    ),
-  ),
-);
-  }
-
-  Widget _buildSeparator(
-    String title,
-    String? sub,
-    BuildContext context,
-    VoidCallback onTap,
-  ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFD06A4C),
-            fontSize: 16,
-            letterSpacing: 0.1,
-          ),
-        ),
-        if (sub != null && sub.isNotEmpty)
-          InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(12),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Lihat Semua',
-                    style: TextStyle(
-                      color: Color(0xFFD06A4C),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(width: 3),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 11,
-                    color: Color(0xFFD06A4C),
-                  ),
-                ],
               ),
-            ),
+            ],
           ),
+        ),
+        HudhudIconButton(
+            icon: LucideIcons.bell,
+            tooltip: 'Notifikasi',
+            onPressed: onNotification),
       ],
     );
   }
+}
 
-  /// Slider Doa bergaya Kartu Inspirasi / Quote Card Islami
-  Widget _buildDoaSlider(List<DoaItemModel> list, BuildContext context) {
-    return SizedBox(
-      height: 142,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: list.isEmpty ? 3 : list.length,
-        itemBuilder: (context, index) {
-          final item = list.isNotEmpty ? list[index] : null;
+class _CompanionFocus extends StatelessWidget {
+  const _CompanionFocus({required this.schedule, this.info});
 
-          return Container(
-            width: 230,
-            margin: const EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.white,
-                  Color(0xFFF5FAF8),
-                ],
-              ),
-              border: Border.all(
-                color: const Color(0xFFDCECE7),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFD06A4C).withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
-                onTap: item == null
-                    ? null
-                    : () => context.push(
-                          AppRoutes.doaContent
-                              .replaceFirst(':id', '1')
-                              .replaceFirst(':content', item.id.toString()),
-                          extra: {
-                            'categoryName': 'Doa Pilihan',
-                            'doaItem': item,
-                          },
-                        ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
+  final JadwalShalatModel schedule;
+  final NextShalatInfo? info;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.hudhud;
+    final companion = resolveHudhudCompanion(DateTime.now(), schedule);
+    final next = info?.nextShalat;
+    return Semantics(
+      container: true,
+      label:
+          '${companion.greeting}. ${companion.message}. Salat berikutnya ${next?.label ?? 'belum tersedia'} ${next?.waktu ?? ''}',
+      child: Container(
+        padding: EdgeInsets.all(t.spaceLg),
+        decoration: BoxDecoration(
+            color: t.surface, borderRadius: BorderRadius.circular(t.radiusMd)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Header Kartu Doa
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEAF5F2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.auto_stories_rounded,
-                              size: 15,
-                              color: Color(0xFFD06A4C),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFECA843).withValues(alpha: 0.25),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Text(
-                              'Doa Pilihan',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF9E780A),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Konten Judul & Makna Doa
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _cleanText(item?.judul ?? 'Doa Harian'),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              color: Color(0xFFD06A4C),
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            item?.arti.isNotEmpty == true
-                                ? _cleanText(item!.arti)
-                                : 'Doa harian untuk ketenangan hati dan keberkahan hidup.',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.black87,
-                              height: 1.3,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Footer Aksi
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            item?.riwayat.isNotEmpty == true
-                                ? _cleanText(item!.riwayat)
-                                : 'Shahih',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Color(0xFFD06A4C),
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          const Row(
-                            children: [
-                              Text(
-                                'Baca',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFD06A4C),
-                                ),
-                              ),
-                              SizedBox(width: 2),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 9,
-                                color: Color(0xFFD06A4C),
-                              ),
-                            ],
-                          ),
-                        ],
+                      HudhudStatusChip(
+                          label: companion.greeting,
+                          icon: LucideIcons.sunMedium),
+                      SizedBox(height: t.spaceMd),
+                      Text(
+                          next == null
+                              ? 'Jaga langkah kecilmu hari ini'
+                              : '${next.label} • ${next.waktu}',
+                          style: Theme.of(context).textTheme.headlineSmall),
+                      SizedBox(height: t.spaceXs),
+                      Text(
+                        info == null
+                            ? companion.message
+                            : '${info!.formattedRemaining} lagi. ${companion.message}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: t.muted),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(width: t.spaceSm),
+                Image.asset(companion.assetPath,
+                    width: 112,
+                    height: 126,
+                    fit: BoxFit.contain,
+                    semanticLabel: 'Ilustrasi pendamping Hudhud'),
+              ],
+            ),
+            SizedBox(height: t.spaceMd),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () => context.push(AppRoutes.jadwalImsakiah),
+                icon: const Icon(LucideIcons.calendarClock, size: 19),
+                label: const Text('Lihat jadwal lengkap'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PrayerStrip extends StatelessWidget {
+  const _PrayerStrip({required this.items, this.nextPrayerId});
+  final List<ShalatTimeItem> items;
+  final int? nextPrayerId;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.hudhud;
+    return SizedBox(
+      height: 76,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        separatorBuilder: (_, __) => SizedBox(width: t.spaceSm),
+        itemBuilder: (_, i) {
+          final item = items[i];
+          final isNext = item.id == nextPrayerId;
+          return Semantics(
+            container: true,
+            label:
+                '${item.label}, ${item.waktu}${isNext ? ', salat berikutnya' : ''}',
+            child: Container(
+              width: 82,
+              padding: EdgeInsets.all(t.spaceSm),
+              decoration: BoxDecoration(
+                color: isNext ? t.terracottaDark : t.surface,
+                borderRadius: BorderRadius.circular(t.radiusMd),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(item.label,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: isNext ? t.surface : t.charcoal,
+                          fontWeight: isNext ? FontWeight.w700 : null)),
+                  const SizedBox(height: 4),
+                  Text(item.waktu,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: isNext ? t.surface : t.terracottaDark)),
+                ],
               ),
             ),
           );
@@ -405,41 +470,117 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       ),
     );
   }
+}
 
-  /// List Artikel bergaya Majalah Islami (1 Featured + Compact List).
-  /// Kartunya dari [ArtikelCard] — sama dengan halaman daftar & detail artikel.
-  Widget _buildArtikelList(List<ArtikelModel> list, BuildContext context) {
-    if (list.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(20),
+class _ContinueTilawah extends StatelessWidget {
+  const _ContinueTilawah({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFEFE7DE)),
+            color: context.hudhud.terracotta.withValues(alpha: .09),
+            borderRadius: BorderRadius.circular(context.hudhud.radiusMd)),
+        child: HudhudActionRow(
+          icon: LucideIcons.bookOpen,
+          title: 'Lanjutkan tilawah',
+          subtitle: "Kembali ke bacaan Al-Qur'an terakhir",
+          onTap: onTap,
         ),
-        child: const Center(
-          child: Text(
-            'Belum ada artikel terbaru',
-            style: TextStyle(color: Colors.black54, fontSize: 12),
+      );
+}
+
+class _Services extends StatelessWidget {
+  const _Services();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.hudhud;
+    final services = [
+      (LucideIcons.compass, 'Kiblat', AppRoutes.kiblat),
+      (LucideIcons.handHeart, 'Doa', AppRoutes.doa),
+      (LucideIcons.sparkles, 'Dzikir', AppRoutes.dzikir),
+      (LucideIcons.scrollText, 'Hadits', AppRoutes.hadits),
+      (LucideIcons.calendarDays, 'Imsakiah', AppRoutes.jadwalImsakiah),
+      (LucideIcons.mapPinned, 'Masjid', AppRoutes.cariMasjid),
+    ];
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisExtent: MediaQuery.textScalerOf(context).scale(104),
+        crossAxisSpacing: t.spaceSm,
+        mainAxisSpacing: t.spaceSm,
+      ),
+      itemCount: services.length,
+      itemBuilder: (_, index) {
+        final item = services[index];
+        return HudhudServiceItem(
+            icon: item.$1, label: item.$2, onTap: () => context.push(item.$3));
+      },
+    );
+  }
+}
+
+class _ArticleSkeleton extends StatelessWidget {
+  const _ArticleSkeleton();
+
+  @override
+  Widget build(BuildContext context) => Skeletonizer(
+        enabled: true,
+        child: Column(
+          children: List.generate(
+            3,
+            (_) => const ArtikelCard(
+              judul: 'Artikel terbaru sedang dimuat',
+              image: '',
+              dateLabel: 'Memuat tanggal',
+            ),
           ),
         ),
       );
-    }
+}
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var i = 0; i < list.length; i++)
-          ArtikelCard(
-            judul: list[i].judul,
-            image: list[i].thumbnail,
-            dateLabel: formatArtikelDate(list[i].createdAt),
-            featured: i == 0,
-            onTap: () => context.push(
-              AppRoutes.artikelDetail.replaceFirst(':id', '${list[i].id}'),
-            ),
-          ),
-      ],
-    );
-  }
+class _FocusSkeleton extends StatelessWidget {
+  const _FocusSkeleton();
+  @override
+  Widget build(BuildContext context) => Skeletonizer(
+        enabled: true,
+        child: Container(
+          height: 236,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+              color: context.hudhud.surface,
+              borderRadius: BorderRadius.circular(context.hudhud.radiusMd)),
+          child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Selamat pagi'),
+                SizedBox(height: 20),
+                Text('Dzuhur • 12:00'),
+                SizedBox(height: 8),
+                Text('Satu jam lagi menuju waktu salat berikutnya.'),
+                Spacer(),
+                SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ColoredBox(color: Colors.white)),
+              ]),
+        ),
+      );
+}
+
+class _PrayerStripSkeleton extends StatelessWidget {
+  const _PrayerStripSkeleton();
+  @override
+  Widget build(BuildContext context) => Skeletonizer(
+        child: Row(
+            children: List.generate(
+                4,
+                (_) => Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Container(height: 76, color: Colors.white))))),
+      );
 }

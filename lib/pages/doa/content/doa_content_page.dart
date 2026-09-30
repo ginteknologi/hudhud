@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:html/parser.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/worship/worship_reader_scaffold.dart';
+import 'package:masjid_app/components/worship/worship_reader_toolbar.dart';
+import 'package:masjid_app/components/worship/worship_scripture_block.dart';
+import 'package:masjid_app/components/worship/worship_share_helper.dart';
+import 'package:masjid_app/components/worship/worship_state_views.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/doa_data.dart';
 import 'package:masjid_app/models/doa_models.dart';
 import 'package:masjid_app/providers/doa_providers.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ContentDoaPage extends ConsumerStatefulWidget {
@@ -33,89 +36,46 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
   }
 
   void _copyToClipboard(DoaData data, String categoryName) {
-    final buffer = StringBuffer();
-    if (data.judul.isNotEmpty) buffer.writeln(data.judul);
-    if (categoryName.isNotEmpty) buffer.writeln('Kategori: $categoryName');
-    buffer.writeln();
-
-    if (data.arabic != null && data.arabic!.isNotEmpty) {
-      buffer.writeln(data.arabic);
-      buffer.writeln();
-    }
-
-    if (data.transliteration != null && data.transliteration!.isNotEmpty) {
-      buffer.writeln('Transliterasi:');
-      buffer.writeln(_cleanHtml(data.transliteration!));
-      buffer.writeln();
-    }
-
-    if (data.translations != null && data.translations!.isNotEmpty) {
-      buffer.writeln('Artinya:');
-      buffer.writeln(_cleanHtml(data.translations!));
-      buffer.writeln();
-    } else if (data.isi != null && data.isi!.isNotEmpty) {
-      buffer.writeln('Artinya:');
-      buffer.writeln(_cleanHtml(data.isi!));
-      buffer.writeln();
-    }
-
-    buffer.writeln("(Dibagikan melalui Hudhud)");
-
-    Clipboard.setData(ClipboardData(text: buffer.toString().trim()));
-    Fluttertoast.showToast(
-      msg: "Do'a berhasil disalin ke papan klip",
-      backgroundColor: const Color(0xFFD06A4C),
-      textColor: Colors.white,
+    final text = WorshipShareHelper.formatWorshipText(
+      title: data.judul.isNotEmpty ? data.judul : "Do'a",
+      subtitle: categoryName.isNotEmpty ? 'Kategori: $categoryName' : null,
+      arabic: data.arabic,
+      latin: data.transliteration != null ? _cleanHtml(data.transliteration!) : null,
+      translation: data.translations != null
+          ? _cleanHtml(data.translations!)
+          : (data.isi != null ? _cleanHtml(data.isi!) : null),
+      source: data.opening != null ? _cleanHtml(data.opening!) : null,
     );
+    WorshipShareHelper.copy(text: text, successMessage: "Do'a berhasil disalin");
   }
 
   void _shareDoa(DoaData data, String categoryName) {
-    final buffer = StringBuffer();
-    if (data.judul.isNotEmpty) buffer.writeln(data.judul);
-    buffer.writeln();
-
-    if (data.arabic != null && data.arabic!.isNotEmpty) {
-      buffer.writeln(data.arabic);
-      buffer.writeln();
-    }
-
-    if (data.transliteration != null && data.transliteration!.isNotEmpty) {
-      buffer.writeln(_cleanHtml(data.transliteration!));
-      buffer.writeln();
-    }
-
-    if (data.translations != null && data.translations!.isNotEmpty) {
-      buffer.writeln('Artinya:');
-      buffer.writeln(_cleanHtml(data.translations!));
-      buffer.writeln();
-    } else if (data.isi != null && data.isi!.isNotEmpty) {
-      buffer.writeln('Artinya:');
-      buffer.writeln(_cleanHtml(data.isi!));
-      buffer.writeln();
-    }
-
-    buffer.writeln("Dibagikan melalui Hudhud");
-
-    SharePlus.instance.share(
-      ShareParams(
-        text: buffer.toString().trim(),
-        subject: data.judul.isNotEmpty ? data.judul : "Do'a Harian",
-      ),
+    final text = WorshipShareHelper.formatWorshipText(
+      title: data.judul.isNotEmpty ? data.judul : "Do'a",
+      subtitle: categoryName.isNotEmpty ? 'Kategori: $categoryName' : null,
+      arabic: data.arabic,
+      latin: data.transliteration != null ? _cleanHtml(data.transliteration!) : null,
+      translation: data.translations != null
+          ? _cleanHtml(data.translations!)
+          : (data.isi != null ? _cleanHtml(data.isi!) : null),
+      source: data.opening != null ? _cleanHtml(data.opening!) : null,
     );
+    WorshipShareHelper.share(text: text, subject: data.judul);
   }
 
   void _showFontSizeSheet() {
+    final t = context.hudhud;
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      backgroundColor: t.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(t.radiusMd)),
       ),
       builder: (ctx) {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceXl),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,39 +85,41 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.black12,
+                        color: t.outline,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: t.spaceLg),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Ukuran Teks Arab',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFFD06A4C),
+                          fontWeight: FontWeight.w700,
+                          color: t.charcoal,
                         ),
                       ),
                       Text(
                         '${_arabicFontSize.toInt()} pt',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFD06A4C),
+                          fontWeight: FontWeight.w700,
+                          color: t.terracotta,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: const Color(0xFFD06A4C),
-                      inactiveTrackColor: const Color(0xFFE2EBE8),
-                      thumbColor: const Color(0xFFD06A4C),
+                      activeTrackColor: t.terracotta,
+                      inactiveTrackColor: t.sand,
+                      thumbColor: t.terracotta,
                     ),
                     child: Slider(
                       value: _arabicFontSize,
@@ -170,21 +132,22 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(t.spaceMd),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAF9),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFE2EBE8)),
+                      color: t.sand,
+                      borderRadius: BorderRadius.circular(t.radiusMd),
+                      border: Border.all(color: t.outline),
                     ),
                     child: Text(
                       'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ',
                       textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
                       style: GoogleFonts.amiri(
                         fontSize: _arabicFontSize,
-                        color: const Color(0xFF2D3748),
+                        color: t.charcoal,
                       ),
                     ),
                   ),
@@ -217,88 +180,63 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
 
     final doaAsync = ref.watch(doaDetailProvider(contentId));
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF9),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          scrolledUnderElevation: 1,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Color(0xFFD06A4C),
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          title: Text(
-            categoryName,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.poppins(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFD06A4C),
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.format_size_rounded,
-                color: Color(0xFFD06A4C),
-              ),
-              tooltip: 'Ukuran Font',
-              onPressed: _showFontSizeSheet,
-            ),
-          ],
+    return WorshipReaderScaffold(
+      title: categoryName,
+      subtitle: 'Bacaan Doa',
+      actions: [
+        IconButton(
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          icon: const Icon(LucideIcons.type, size: 20),
+          tooltip: 'Ukuran Font',
+          onPressed: _showFontSizeSheet,
         ),
-        body: doaAsync.when(
-          data: (data) {
-            // Jika API detail mengembalikan null, gunakan passedDoaItem sebagai fallback
-            final finalData = data ??
-                DoaData(
-                  id: passedDoaItem?.id ?? int.tryParse(contentId) ?? 1,
-                  judul: passedDoaItem?.judul ?? "Do'a",
-                  updatedAt: '',
-                  arabic: passedDoaItem?.arab,
-                  transliteration: passedDoaItem?.latin,
-                  translations: passedDoaItem?.arti,
-                  isi: passedDoaItem?.arti,
-                );
-            return _buildContent(context, finalData, categoryName, isLoading: false);
-          },
-          loading: () {
-            // Gunakan fallback model dari router extra jika sudah ada saat loading
-            if (passedDoaItem != null) {
-              final initialData = DoaData(
-                id: passedDoaItem.id,
-                judul: passedDoaItem.judul,
-                updatedAt: '',
-                arabic: passedDoaItem.arab.isNotEmpty ? passedDoaItem.arab : null,
-                transliteration: passedDoaItem.latin.isNotEmpty ? passedDoaItem.latin : null,
-                translations: passedDoaItem.arti.isNotEmpty ? passedDoaItem.arti : null,
-                isi: passedDoaItem.arti.isNotEmpty ? passedDoaItem.arti : null,
-              );
-              return _buildContent(context, initialData, categoryName, isLoading: false);
-            }
-            return _buildContent(
-              context,
+      ],
+      body: doaAsync.when(
+        data: (data) {
+          final finalData = data ??
               DoaData(
-                id: 1,
-                judul: 'Memuat Judul Doa...',
+                id: passedDoaItem?.id ?? int.tryParse(contentId) ?? 1,
+                judul: passedDoaItem?.judul ?? "Do'a",
                 updatedAt: '',
-                arabic: 'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ',
-                translations: 'Sedang memuat arti dan terjemahan doa...',
-              ),
-              categoryName,
-              isLoading: true,
+                arabic: passedDoaItem?.arab,
+                transliteration: passedDoaItem?.latin,
+                translations: passedDoaItem?.arti,
+                isi: passedDoaItem?.arti,
+              );
+          return _buildContent(context, finalData, categoryName, isLoading: false);
+        },
+        loading: () {
+          if (passedDoaItem != null) {
+            final initialData = DoaData(
+              id: passedDoaItem.id,
+              judul: passedDoaItem.judul,
+              updatedAt: '',
+              arabic: passedDoaItem.arab.isNotEmpty ? passedDoaItem.arab : null,
+              transliteration:
+                  passedDoaItem.latin.isNotEmpty ? passedDoaItem.latin : null,
+              translations:
+                  passedDoaItem.arti.isNotEmpty ? passedDoaItem.arti : null,
+              isi: passedDoaItem.arti.isNotEmpty ? passedDoaItem.arti : null,
             );
-          },
-          error: (err, stack) => _buildError(context, contentId, passedDoaItem, categoryName),
+            return _buildContent(context, initialData, categoryName, isLoading: false);
+          }
+          return _buildContent(
+            context,
+            DoaData(
+              id: 1,
+              judul: 'Memuat Judul Doa...',
+              updatedAt: '',
+              arabic: 'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ',
+              translations: 'Sedang memuat arti dan terjemahan doa...',
+            ),
+            categoryName,
+            isLoading: true,
+          );
+        },
+        error: (err, stack) => WorshipErrorView(
+          title: 'Gagal Memuat Detail Doa',
+          message: 'Silakan periksa koneksi dan coba lagi.',
+          onRetry: () => ref.invalidate(doaDetailProvider(contentId)),
         ),
       ),
     );
@@ -310,364 +248,67 @@ class _ContentDoaPageState extends ConsumerState<ContentDoaPage> {
     String categoryName, {
     required bool isLoading,
   }) {
-    final hasArabic = data.arabic != null && data.arabic!.trim().isNotEmpty;
-    final hasTransliteration =
-        data.transliteration != null && data.transliteration!.trim().isNotEmpty;
-    final hasTranslations =
-        (data.translations != null && data.translations!.trim().isNotEmpty) ||
-            (data.isi != null && data.isi!.trim().isNotEmpty);
-    final translationContent = (data.translations != null && data.translations!.isNotEmpty)
-        ? data.translations!
-        : (data.isi ?? '');
+    final t = context.hudhud;
+    final arabicText = data.arabic ?? '';
+    final latinText = data.transliteration != null ? _cleanHtml(data.transliteration!) : null;
+    final translationText = data.translations != null
+        ? _cleanHtml(data.translations!)
+        : (data.isi != null ? _cleanHtml(data.isi!) : null);
+    final openingText = data.opening != null ? _cleanHtml(data.opening!) : null;
 
     return Skeletonizer(
       enabled: isLoading,
       child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+        padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceXl),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Top Badge & Card Container
+            // Header card
             Container(
-              width: double.infinity,
+              padding: EdgeInsets.all(t.spaceLg),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFE2EBE8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFD06A4C).withValues(alpha: 0.06),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                color: t.surface,
+                borderRadius: BorderRadius.circular(t.radiusMd),
+                border: Border.all(color: t.outline),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header Strip
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF4F9F7),
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                      border: Border(
-                        bottom: BorderSide(color: Color(0xFFE2EBE8)),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFD06A4C).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                categoryName,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xFFD06A4C),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
                           data.judul,
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFFD06A4C),
-                            height: 1.4,
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: t.charcoal,
+                            height: 1.3,
                           ),
                         ),
+                      ),
+                      if (!isLoading) ...[
+                        const SizedBox(width: 8),
+                        WorshipReaderToolbar(
+                          onCopy: () => _copyToClipboard(data, categoryName),
+                          onShare: () => _shareDoa(data, categoryName),
+                        ),
                       ],
-                    ),
+                    ],
                   ),
-
-                  // Reading Section
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Opening (if any)
-                        if (data.opening != null && data.opening!.trim().isNotEmpty) ...[
-                          HtmlWidget(
-                            data.opening!,
-                            textStyle: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-
-                        // Arabic Text Box
-                        if (hasArabic) ...[
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF8FAF9),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: const Color(0xFFE5EDE9)),
-                            ),
-                            child: HtmlWidget(
-                              data.arabic!,
-                              textStyle: GoogleFonts.amiri(
-                                fontSize: _arabicFontSize,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF1E293B),
-                                height: 2.0,
-                              ),
-                              customStylesBuilder: (element) {
-                                return {
-                                  'text-align': 'right',
-                                  'direction': 'rtl',
-                                };
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-
-                        // Transliterasi (Latin)
-                        if (hasTransliteration) ...[
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.record_voice_over_rounded,
-                                size: 16,
-                                color: Color(0xFFD06A4C),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                'Transliterasi',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xFFD06A4C),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: const Color(0xFFEAEAEA)),
-                            ),
-                            child: HtmlWidget(
-                              data.transliteration!,
-                              textStyle: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontStyle: FontStyle.italic,
-                                color: const Color(0xFF4A5568),
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-
-                        // Arti / Terjemahan
-                        if (hasTranslations) ...[
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.translate_rounded,
-                                size: 16,
-                                color: Color(0xFFD06A4C),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                'Artinya',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xFFD06A4C),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: const Color(0xFFEAEAEA)),
-                            ),
-                            child: HtmlWidget(
-                              translationContent,
-                              textStyle: GoogleFonts.poppins(
-                                fontSize: 13,
-                                color: const Color(0xFF2D3748),
-                                height: 1.6,
-                              ),
-                              customStylesBuilder: (element) {
-                                if (element.classes.contains('arabic') ||
-                                    element.classes.contains('arabic-quran')) {
-                                  return {
-                                    'font-family': 'Amiri',
-                                    'font-size': '${_arabicFontSize}px',
-                                    'font-weight': 'bold',
-                                    'text-align': 'right',
-                                    'direction': 'rtl',
-                                    'line-height': '2.0',
-                                    'color': '#1E293B',
-                                  };
-                                }
-                                if (element.classes.contains('latin-text')) {
-                                  return {
-                                    'font-style': 'italic',
-                                    'color': '#048C7C',
-                                    'font-size': '12px',
-                                    'margin-bottom': '6px',
-                                  };
-                                }
-                                if (element.classes.contains('text')) {
-                                  return {
-                                    'font-size': '13px',
-                                    'color': '#2D3748',
-                                    'line-height': '1.6',
-                                  };
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-
-                  // Bottom Action Buttons (Salin & Bagikan)
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: Row(
-                      children: [
-                        // Salin Button
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              foregroundColor: const Color(0xFFD06A4C),
-                              side: const BorderSide(color: Color(0xFFD06A4C)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            icon: const Icon(Icons.copy_rounded, size: 18),
-                            label: Text(
-                              'Salin',
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            onPressed: () => _copyToClipboard(data, categoryName),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Bagikan Button
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              backgroundColor: const Color(0xFFD06A4C),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            icon: const Icon(Icons.share_rounded, size: 18),
-                            label: Text(
-                              'Bagikan',
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            onPressed: () => _shareDoa(data, categoryName),
-                          ),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  const SizedBox(height: 16),
+                  WorshipScriptureBlock(
+                    arabic: arabicText,
+                    latin: latinText,
+                    translation: translationText,
+                    note: openingText,
+                    arabicFontSize: _arabicFontSize,
                   ),
                 ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildError(
-    BuildContext context,
-    String contentId,
-    DoaItemModel? fallbackItem,
-    String categoryName,
-  ) {
-    if (fallbackItem != null) {
-      final fallbackData = DoaData(
-        id: fallbackItem.id,
-        judul: fallbackItem.judul,
-        updatedAt: '',
-        arabic: fallbackItem.arab,
-        transliteration: fallbackItem.latin,
-        translations: fallbackItem.arti,
-      );
-      return _buildContent(context, fallbackData, categoryName, isLoading: false);
-    }
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.cloud_off_rounded,
-              size: 48,
-              color: Colors.black38,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Gagal memuat detail doa',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black54,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD06A4C),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () => ref.invalidate(doaDetailProvider(contentId)),
-              child: Text(
-                'Coba Lagi',
-                style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
               ),
             ),
           ],

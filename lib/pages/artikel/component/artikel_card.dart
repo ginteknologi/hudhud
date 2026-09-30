@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
-const Color artikelTeal = Color(0xFFD06A4C);
-const Color artikelTitle = Color(0xFFD06A4C);
-const Color artikelBorder = Color(0xFFE2EBE8);
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 
 /// Bersihkan HTML dari judul artikel (backend mengirim judul ber-tag).
 String cleanArtikelText(String text) {
@@ -37,9 +34,7 @@ String formatArtikelDate(String raw) {
   }
 }
 
-/// Kartu artikel — [featured] = kartu besar (cover + judul di bawah),
-/// selain itu baris kompak (thumbnail 68 + judul 2 baris).
-/// Satu sumber visual untuk home, daftar artikel, dan "Artikel Lainnya".
+/// Kartu artikel — featured menampilkan cover besar, lainnya thumbnail ringkas.
 class ArtikelCard extends StatelessWidget {
   const ArtikelCard({
     super.key,
@@ -58,35 +53,30 @@ class ArtikelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: t.spaceMd),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: artikelBorder),
-        boxShadow: [
-          BoxShadow(
-            color: artikelTeal.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
       ),
-      clipBehavior: featured ? Clip.antiAlias : Clip.none,
+      clipBehavior: Clip.antiAlias,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(t.radiusMd),
           onTap: onTap,
-          child: featured ? _featured() : _compact(),
+          child: featured ? _featured(context) : _compact(context),
         ),
       ),
     );
   }
 
-  Widget _thumb(double size, {BorderRadius? radius}) {
+  Widget _thumb(BuildContext context, double size) {
+    final t = context.hudhud;
     return ClipRRect(
-      borderRadius: radius ?? BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(t.radiusSm),
       child: SizedBox(
         width: size,
         height: size,
@@ -101,29 +91,36 @@ class ArtikelCard extends StatelessWidget {
     );
   }
 
-  Widget _meta(String label, {required IconData icon}) {
+  Widget _meta(BuildContext context, String label, {required IconData icon}) {
+    final t = context.hudhud;
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 12, color: artikelTeal),
-        const SizedBox(width: 4),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            color: artikelTeal,
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
+        Icon(icon, size: 14, color: t.muted),
+        const SizedBox(width: 5),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 11,
+              color: t.muted,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _featured() {
+  Widget _featured(BuildContext context) {
+    final t = context.hudhud;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 150,
+          height: 160,
           width: double.infinity,
           child: Stack(
             fit: StackFit.expand,
@@ -140,17 +137,18 @@ class ArtikelCard extends StatelessWidget {
                 top: 10,
                 left: 10,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                   decoration: BoxDecoration(
-                    color: artikelTeal,
-                    borderRadius: BorderRadius.circular(8),
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(t.radiusSm),
                   ),
                   child: Text(
                     'Artikel Utama',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: t.terracotta,
                     ),
                   ),
                 ),
@@ -159,44 +157,39 @@ class ArtikelCard extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(14),
+          padding: EdgeInsets.all(t.spaceMd),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 cleanArtikelText(judul),
-                maxLines: 2,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: artikelTitle,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                  color: t.charcoal,
                   height: 1.35,
                 ),
               ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              SizedBox(height: t.spaceSm),
+              Wrap(
+                spacing: t.spaceSm,
+                runSpacing: t.spaceXs,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  _meta(dateLabel, icon: Icons.calendar_today_rounded),
-                  Row(
-                    children: [
-                      Text(
-                        'Baca Selengkapnya',
-                        style: GoogleFonts.poppins(
-                          color: artikelTeal,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 3),
-                      const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 10,
-                        color: artikelTeal,
-                      ),
-                    ],
+                  _meta(context, dateLabel, icon: LucideIcons.calendarDays),
+                  Text(
+                    'Baca selengkapnya',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: t.terracotta,
+                    ),
                   ),
+                  Icon(LucideIcons.arrowRight, size: 14, color: t.terracotta),
                 ],
               ),
             ],
@@ -206,30 +199,32 @@ class ArtikelCard extends StatelessWidget {
     );
   }
 
-  Widget _compact() {
+  Widget _compact(BuildContext context) {
+    final t = context.hudhud;
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(t.spaceSm),
       child: Row(
         children: [
-          _thumb(68),
-          const SizedBox(width: 12),
+          _thumb(context, 72),
+          SizedBox(width: t.spaceMd),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   cleanArtikelText(judul),
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: const Color(0xFF2C3E50),
+                    color: t.charcoal,
                     height: 1.35,
                   ),
                 ),
-                const SizedBox(height: 6),
-                _meta(dateLabel, icon: Icons.access_time_rounded),
+                SizedBox(height: t.spaceXs),
+                _meta(context, dateLabel, icon: LucideIcons.clock3),
               ],
             ),
           ),
@@ -244,26 +239,11 @@ class ArtikelFallbackImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF8C3B24),
-            Color(0xFFD06A4C),
-          ],
-        ),
-      ),
+      color: t.sand,
       child: Center(
-        child: Opacity(
-          opacity: 0.25,
-          child: Image.asset(
-            'assets/icons/app_icon.png',
-            height: 60,
-            width: 60,
-          ),
-        ),
+        child: Icon(LucideIcons.newspaper, size: 44, color: t.terracotta),
       ),
     );
   }

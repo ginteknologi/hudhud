@@ -14,38 +14,6 @@ waktusolat.get('/', async (c) => {
   return apiResponse(c, 200, true, 'Success', times);
 });
 
-// GET /api/v1/waktusolat/list
-waktusolat.get('/list', async (c) => {
-  const lat = parseFloat(c.req.query('latitude') || '-6.3828119512920924');
-  const lng = parseFloat(c.req.query('longitude') || '106.92302257543139');
-  const now = new Date();
-  const times = calculatePrayerTimes(now, lat, lng);
-
-  const currentTimeMinutes = now.getHours() * 60 + now.getMinutes();
-
-  const toMinutes = (timeStr: string) => {
-    const [h, m] = timeStr.split(':').map(Number);
-    return h * 60 + m;
-  };
-
-  const list = [
-    { label: 'Imsak', time: times.imsak, status: false },
-    { label: 'Subuh', time: times.fajr, status: false },
-    { label: 'Dzuhur', time: times.dhuhr, status: false },
-    { label: 'Ashar', time: times.asr, status: false },
-    { label: 'Maghrib', time: times.maghrib, status: false },
-    { label: 'Isa', time: times.isha, status: false },
-  ];
-
-  let nextIndex = list.findIndex((item) => toMinutes(item.time) > currentTimeMinutes);
-  if (nextIndex === -1) {
-    nextIndex = 1; // Default to Subuh tomorrow
-  }
-  list[nextIndex].status = true;
-
-  return apiResponse(c, 200, true, 'Success', list);
-});
-
 // GET /api/v1/waktusolat/kalender
 waktusolat.get('/kalender', async (c) => {
   const lat = parseFloat(c.req.query('latitude') || '-6.3828119512920924');
@@ -77,38 +45,6 @@ waktusolat.get('/kalender', async (c) => {
   }
 
   return apiResponse(c, 200, true, 'Success', data);
-});
-
-// GET /api/v1/waktusolat/wp
-waktusolat.get('/wp', async (c) => {
-  const lat = parseFloat(c.req.query('latitude') || '-6.3828119512920924');
-  const lng = parseFloat(c.req.query('longitude') || '106.92302257543139');
-  const now = new Date();
-  const times = calculatePrayerTimes(now, lat, lng);
-
-  const hariini = now.toLocaleDateString('id-ID', {
-    timeZone: 'Asia/Jakarta',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
-
-  const hijriyah = now.toLocaleDateString('en-SA-u-ca-islamic-umalqura', {
-    timeZone: 'UTC',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
-
-  const result = [
-    {
-      ...times,
-      tanggal_hijriyah: hijriyah,
-      tanggal_hariini: hariini,
-    },
-  ];
-
-  return apiResponse(c, 200, true, 'Success', result);
 });
 
 export default waktusolat;

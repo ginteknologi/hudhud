@@ -7,7 +7,8 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:masjid_app/components/partial/settings_tile.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_compass.dart';
 import 'package:masjid_app/pages/kiblat/kiblat_math.dart';
 import 'package:masjid_app/providers/location_provider.dart';
@@ -22,18 +23,10 @@ class KiblatPage extends ConsumerStatefulWidget {
 }
 
 class _KiblatPageState extends ConsumerState<KiblatPage> {
-  /// Perkiraan koordinat area Jakarta — dipakai hanya kalau
-  /// user belum mengaktifkan GPS.
   static const double _defaultLatitude = -6.2088;
   static const double _defaultLongitude = 106.8456;
-
-  /// Toleransi "sudah tepat menghadap kiblat".
   static const double _alignedWithin = 5;
-
-  /// Kompas dianggap tidak ada kalau tidak ada data masuk selama ini.
   static const Duration _compassTimeout = Duration(seconds: 4);
-
-  /// Akurasi kompas di atas angka ini biasanya perlu dikalibrasi dulu.
   static const double _calibrationThreshold = 15;
 
   StreamSubscription<CompassEvent>? _compassSub;
@@ -62,24 +55,15 @@ class _KiblatPageState extends ConsumerState<KiblatPage> {
       _compassMissing = true;
       return;
     }
-
     _timeoutTimer = Timer(_compassTimeout, () {
-      if (mounted && _heading == null) {
-        setState(() => _compassMissing = true);
-      }
+      if (mounted && _heading == null) setState(() => _compassMissing = true);
     });
-
     _compassSub = events.listen(
       (event) {
         final heading = event.heading;
-        // Sensor belum stabil — event pertama sering bernilai null.
         if (!mounted || heading == null) return;
-
-        final bearing = _bearing;
-        final aligned =
-            shortestAngleDelta(heading, bearing).abs() <= _alignedWithin;
+        final aligned = shortestAngleDelta(heading, _bearing).abs() <= _alignedWithin;
         if (aligned && !_aligned) HapticFeedback.mediumImpact();
-
         _timeoutTimer?.cancel();
         setState(() {
           _heading = heading;
@@ -94,12 +78,8 @@ class _KiblatPageState extends ConsumerState<KiblatPage> {
     );
   }
 
-  double get _latitude =>
-      ref.read(locationProvider).latitude ?? _defaultLatitude;
-
-  double get _longitude =>
-      ref.read(locationProvider).longitude ?? _defaultLongitude;
-
+  double get _latitude => ref.read(locationProvider).latitude ?? _defaultLatitude;
+  double get _longitude => ref.read(locationProvider).longitude ?? _defaultLongitude;
   double get _bearing => qiblaBearing(_latitude, _longitude);
 
   Future<void> _detectLocation() async {
@@ -111,38 +91,45 @@ class _KiblatPageState extends ConsumerState<KiblatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
     final location = ref.watch(locationProvider);
     final bearing = _bearing;
     final distance = distanceToKaaba(_latitude, _longitude);
-    final dialSize = math.min(MediaQuery.of(context).size.width - 76, 300.0);
+    final dialSize = math.min(MediaQuery.sizeOf(context).width - 48, 300.0);
     final needsCalibration = _accuracy != null &&
         _accuracy! > _calibrationThreshold &&
         !_compassMissing;
 
     return Scaffold(
-      backgroundColor: kTilePageBg,
+      backgroundColor: t.sand,
+      appBar: AppBar(
+        title: const Text('Arah Kiblat'),
+        leading: IconButton(
+          tooltip: 'Kembali',
+          constraints: BoxConstraints(minWidth: t.controlHeight, minHeight: t.controlHeight),
+          onPressed: () => context.pop(),
+          icon: const Icon(LucideIcons.arrowLeft),
+        ),
+      ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: t.spaceXl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SettingsPageHeader(
-              title: 'Arah Kiblat',
-              subtitle: location.isGps
-                  ? location.name
-                  : '${location.name} (perkiraan)',
-              leading: SettingsHeaderButton(
-                icon: Icons.arrow_back_rounded,
-                onTap: () => context.pop(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceMd),
+              child: Text(
+                '${location.name}${location.isGps ? '' : ' (perkiraan)'}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: t.muted),
+                textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 18),
-            _statusPill(),
-            const SizedBox(height: 20),
+            _statusPill(context),
+            SizedBox(height: t.spaceMd),
             Center(
-              child: SizedBox(
-                width: dialSize,
-                height: dialSize,
+              child: SizedBox.square(
+                dimension: dialSize,
                 child: KiblatCompass(
                   qiblaBearing: bearing,
                   heading: _compassMissing ? null : _heading,
@@ -150,71 +137,49 @@ class _KiblatPageState extends ConsumerState<KiblatPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 22),
-            _stats(bearing, distance),
-            const SizedBox(height: 18),
-            _locationCard(location),
+            SizedBox(height: t.spaceMd),
+            _stats(context, bearing, distance),
+            SizedBox(height: t.spaceMd),
+            _locationCard(context, location),
             if (needsCalibration) ...[
-              const SizedBox(height: 18),
-              _calibrationCard(),
+              SizedBox(height: t.spaceMd),
+              _calibrationCard(context),
             ],
-            const SizedBox(height: 32),
           ],
         ),
       ),
     );
   }
 
-  Widget _statusPill() {
-    final (icon, text, color, background) = switch ((
-      _compassMissing,
-      _aligned,
-    )) {
+  Widget _statusPill(BuildContext context) {
+    final t = context.hudhud;
+    final (icon, text, color) = switch ((_compassMissing, _aligned)) {
       (true, _) => (
-          Icons.explore_off_rounded,
-          'Kompas HP tidak tersedia — arahkan bagian atas HP ke utara, '
-              'lalu ikuti jarum',
-          const Color(0xFF8A6D1F),
-          const Color(0xFFFDF6E3),
+          LucideIcons.compass,
+          'Kompas HP tidak tersedia — arahkan bagian atas HP ke utara, lalu ikuti jarum',
+          t.amber,
         ),
-      (false, true) => (
-          Icons.check_circle_rounded,
-          'Tepat menghadap kiblat',
-          kTileAccent,
-          const Color(0xFFEAF5F2),
-        ),
-      _ => (
-          Icons.screen_rotation_alt_rounded,
-          'Putar HP perlahan sampai jarum emas tepat di atas',
-          kTileTextMuted,
-          Colors.white,
-        ),
+      (false, true) => (LucideIcons.circleCheck, 'Tepat menghadap kiblat', t.success),
+      _ => (LucideIcons.rotateCw, 'Putar HP perlahan sampai jarum emas tepat di atas', t.muted),
     };
-
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
+      padding: EdgeInsets.symmetric(horizontal: t.spaceLg),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        constraints: BoxConstraints(minHeight: t.controlHeight),
+        padding: EdgeInsets.symmetric(horizontal: t.spaceMd, vertical: t.spaceSm),
         decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: color.withValues(alpha: 0.35),
-          ),
+          color: t.surface,
+          borderRadius: BorderRadius.circular(t.radiusMd),
+          border: Border.all(color: t.outline),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 18, color: color),
-            const SizedBox(width: 10),
+            Icon(icon, size: 20, color: color),
+            SizedBox(width: t.spaceSm),
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1.35,
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                ),
+                style: TextStyle(fontFamily: 'Roboto', color: t.charcoal, height: 1.4),
               ),
             ),
           ],
@@ -223,52 +188,65 @@ class _KiblatPageState extends ConsumerState<KiblatPage> {
     );
   }
 
-  Widget _stats(double bearing, double distance) {
-    final delta =
-        _heading == null ? null : shortestAngleDelta(_heading!, bearing).abs();
-
-    return SettingsCard(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Row(
-          children: [
-            _StatTile(
-              label: 'Derajat Kiblat',
-              value: '${bearing.toStringAsFixed(1)}°',
-            ),
-            const _StatDivider(),
-            _StatTile(
-              label: 'Selisih',
-              value: delta == null ? '—' : '${delta.toStringAsFixed(1)}°',
-            ),
-            const _StatDivider(),
-            _StatTile(
-              label: "Jarak Ka'bah",
-              value: '${distance.toStringAsFixed(0)} km',
+  Widget _stats(BuildContext context, double bearing, double distance) {
+    final t = context.hudhud;
+    final delta = _heading == null ? null : shortestAngleDelta(_heading!, bearing).abs();
+    final values = [
+      ('Derajat Kiblat', '${bearing.toStringAsFixed(1)}°'),
+      ('Selisih', delta == null ? '—' : '${delta.toStringAsFixed(1)}°'),
+      ("Jarak Ka'bah", '${distance.toStringAsFixed(0)} km'),
+    ];
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: t.spaceLg),
+      padding: EdgeInsets.symmetric(vertical: t.spaceMd),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < values.length; i++) ...[
+            if (i > 0) Container(width: 1, height: 32, color: t.outline),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(values[i].$2, style: TextStyle(fontFamily: 'Roboto', fontSize: 16, fontWeight: FontWeight.w700, color: t.terracottaDark)),
+                  SizedBox(height: t.spaceXs),
+                  Text(values[i].$1, maxLines: 2, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Roboto', fontSize: 12, color: t.muted)),
+                ],
+              ),
             ),
           ],
-        ),
+        ],
       ),
     );
   }
 
-  Widget _locationCard(SavedLocation location) {
-    return SettingsCard(
+  Widget _locationCard(BuildContext context, SavedLocation location) {
+    final t = context.hudhud;
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: t.spaceLg),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
+      ),
       child: Column(
         children: [
-          SettingsTapRow(
-            icon: Icons.my_location_rounded,
+          _locationAction(
+            context,
+            icon: LucideIcons.locateFixed,
             title: location.isGps ? 'Perbarui Lokasi GPS' : 'Pakai Lokasi GPS',
-            subtitle: location.isGps
-                ? location.name
-                : 'Arah kiblat sementara dihitung dari perkiraan lokasi masjid',
-            trailingText: location.loading ? 'Mencari...' : null,
+            subtitle: location.isGps ? location.name : 'Arah kiblat sementara dihitung dari perkiraan lokasi masjid',
+            trailing: location.loading ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2)) : null,
             onTap: location.loading ? null : _detectLocation,
           ),
           if (location.isGps) ...[
-            const Divider(height: 1, color: kTileBorder),
-            SettingsTapRow(
-              icon: Icons.mosque_rounded,
+            Divider(height: 1, color: t.outline),
+            _locationAction(
+              context,
+              icon: LucideIcons.mosque,
               title: 'Kembali ke Lokasi Masjid',
               subtitle: 'Hitung ulang dari koordinat masjid',
               onTap: () => ref.read(locationProvider.notifier).reset(),
@@ -279,86 +257,79 @@ class _KiblatPageState extends ConsumerState<KiblatPage> {
     );
   }
 
-  Widget _calibrationCard() {
-    return SettingsCard(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SettingsIconBox(Icons.threesixty_rounded),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Kalibrasi kompas',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: kTileTextDark,
-                    ),
+  Widget _locationAction(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback? onTap,
+    Widget? trailing,
+  }) {
+    final t = context.hudhud;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: t.controlHeight),
+          child: Padding(
+            padding: EdgeInsets.all(t.spaceMd),
+            child: Row(
+              children: [
+                Icon(icon, size: 20, color: t.terracotta),
+                SizedBox(width: t.spaceMd),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(title, style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w600, color: t.charcoal)),
+                      SizedBox(height: t.spaceXs),
+                      Text(subtitle, style: TextStyle(fontFamily: 'Roboto', color: t.muted, height: 1.35)),
+                    ],
                   ),
-                  SizedBox(height: 3),
-                  Text(
-                    'Akurasi kompas masih rendah. Jauhkan HP dari logam atau '
-                    'magnet, lalu gerakkan membentuk angka 8 beberapa kali.',
-                    style: TextStyle(
-                      fontSize: 11,
-                      height: 1.45,
-                      color: kTileTextMuted,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                trailing ?? (onTap == null ? const SizedBox.shrink() : Icon(LucideIcons.chevronRight, size: 18, color: t.muted)),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
-}
 
-class _StatTile extends StatelessWidget {
-  const _StatTile({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) => Expanded(
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: kTileAccent,
-              ),
+  Widget _calibrationCard(BuildContext context) {
+    final t = context.hudhud;
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: t.spaceLg),
+      constraints: BoxConstraints(minHeight: t.controlHeight),
+      padding: EdgeInsets.all(t.spaceMd),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(LucideIcons.rotate3d, size: 20, color: t.amber),
+          SizedBox(width: t.spaceSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Kalibrasi kompas', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w600, color: t.charcoal)),
+                SizedBox(height: t.spaceXs),
+                Text(
+                  'Akurasi kompas masih rendah. Jauhkan HP dari logam atau magnet, lalu gerakkan membentuk angka 8 beberapa kali.',
+                  style: TextStyle(fontFamily: 'Roboto', color: t.muted, height: 1.45),
+                ),
+              ],
             ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 10,
-                color: kTileTextMuted,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      );
-}
-
-class _StatDivider extends StatelessWidget {
-  const _StatDivider();
-
-  @override
-  Widget build(BuildContext context) =>
-      Container(width: 1, height: 30, color: kTileBorder);
+          ),
+        ],
+      ),
+    );
+  }
 }

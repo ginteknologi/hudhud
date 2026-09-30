@@ -1,5 +1,5 @@
--- Cloudflare D1 SQLite Schema for Masjid An-Ni'mah (Marbot Backend)
--- Comprehensive schema for full mobile API compatibility
+-- Cloudflare D1 SQLite Schema for Hudhud Backend
+-- Quran, Hadits, Doa, prayer times, articles, notifications, and events
 
 -- 1. Users & Auth
 CREATE TABLE IF NOT EXISTS users (
@@ -24,21 +24,7 @@ CREATE TABLE IF NOT EXISTS fcm_tokens (
     FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 3. Jadwal Shalat Cache
-CREATE TABLE IF NOT EXISTS jadwal_shalat (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tanggal DATE NOT NULL UNIQUE,
-    imsak TEXT NOT NULL,
-    subuh TEXT NOT NULL,
-    terbit TEXT NOT NULL,
-    dzuhur TEXT NOT NULL,
-    ashar TEXT NOT NULL,
-    maghrib TEXT NOT NULL,
-    isya TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- 4. Al-Qur'an
+-- 3. Al-Qur'an
 CREATE TABLE IF NOT EXISTS surah (
     id INTEGER PRIMARY KEY,
     nama TEXT NOT NULL,
@@ -61,7 +47,7 @@ CREATE TABLE IF NOT EXISTS ayat (
 );
 CREATE INDEX IF NOT EXISTS idx_ayat_surah ON ayat(surah_id, nomor_ayat);
 
--- 5. Doa & Dzikir
+-- 4. Doa & Dzikir
 CREATE TABLE IF NOT EXISTS doa_kategori (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nama TEXT NOT NULL,
@@ -88,18 +74,17 @@ CREATE TABLE IF NOT EXISTS dzikir (
     waktu TEXT DEFAULT 'solat' -- pagi, petang, solat
 );
 
--- 6. Hadits (v2)
+-- 5. Hadits (v2)
 DROP TABLE IF EXISTS had_imam;
 CREATE TABLE IF NOT EXISTS had_imam (
     imamId      INTEGER PRIMARY KEY,
     imamSorting INTEGER DEFAULT 0,
-    hadits      INTEGER DEFAULT 0,     -- total hadits dalam koleksi ini
+    hadits      INTEGER DEFAULT 0,
     longNama    TEXT    NOT NULL,
     namaTabel   TEXT    NOT NULL UNIQUE,
-    slug        TEXT    NOT NULL UNIQUE -- slug dari API sumber (misal: 'bukhari', 'abu-dawud')
+    slug        TEXT    NOT NULL UNIQUE
 );
 
--- Seed data 9 Imam + Arbain
 INSERT OR REPLACE INTO had_imam (imamId, imamSorting, hadits, longNama, namaTabel, slug) VALUES
   (1,  1, 42,   'Hadits Arba''in An-Nawawiyah', 'arbain',    'arbain'),
   (2,  2, 6638, 'Shahih Bukhari',               'bukhari',   'bukhari'),
@@ -112,41 +97,27 @@ INSERT OR REPLACE INTO had_imam (imamId, imamSorting, hadits, longNama, namaTabe
   (9,  9, 1587, 'Muwaththa'' Malik',            'malik',     'malik'),
   (10,10, 2949, 'Sunan Ad-Darimi',              'darimi',    'darimi');
 
--- ============================================================
--- 2. Konten Hadits — flat, bersih, tanpa kitab/bab artificial
--- ============================================================
 DROP TABLE IF EXISTS hadits_konten;
 CREATE TABLE IF NOT EXISTS hadits_konten (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    namaTabel    TEXT    NOT NULL,  -- FK ke had_imam.namaTabel
-    NoHdt        INTEGER NOT NULL,  -- nomor hadits dalam koleksi
+    namaTabel    TEXT    NOT NULL,
+    NoHdt        INTEGER NOT NULL,
     Isi_Arab     TEXT    NOT NULL,
     Isi_Indonesia TEXT   NOT NULL
 );
-
--- Index untuk query cepat: list per imam, get by nomor
-CREATE INDEX IF NOT EXISTS idx_hadits_konten_tabel     ON hadits_konten(namaTabel, NoHdt);
+CREATE INDEX IF NOT EXISTS idx_hadits_konten_tabel ON hadits_konten(namaTabel, NoHdt);
 CREATE INDEX IF NOT EXISTS idx_hadits_konten_pagination ON hadits_konten(namaTabel, id);
 
--- ============================================================
--- 3. Arbain — tabel terpisah (struktur berbeda, sumber berbeda)
--- ============================================================
 DROP TABLE IF EXISTS hadits_arbain;
 CREATE TABLE IF NOT EXISTS hadits_arbain (
     NoHdt        INTEGER PRIMARY KEY,
     Isi_Arab     TEXT NOT NULL,
     Isi_Indonesia TEXT NOT NULL
 );
-
--- ============================================================
--- 4. Tabel lama (hadits_kitab, hadits_bab) — DIHAPUS
--- Tidak dibutuhkan lagi di v2.
--- ============================================================
 DROP TABLE IF EXISTS hadits_kitab;
 DROP TABLE IF EXISTS hadits_bab;
 
-
--- 7. Kategori & Artikel Berita
+-- 6. Artikel
 CREATE TABLE IF NOT EXISTS artikel_kategori (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nama TEXT NOT NULL,
@@ -166,112 +137,12 @@ CREATE TABLE IF NOT EXISTS artikel (
     FOREIGN KEY(kategori_id) REFERENCES artikel_kategori(id) ON DELETE SET NULL
 );
 
--- 8. Jadwal Kajian & Video Streaming
-CREATE TABLE IF NOT EXISTS kajian (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    judul TEXT NOT NULL,
-    ustadz TEXT NOT NULL,
-    deskripsi TEXT,
-    thumbnail TEXT NOT NULL,
-    video_link TEXT,
-    tipe TEXT DEFAULT 'list', -- 'slider', 'list', 'live', 'muadzin'
-    tanggal_waktu DATETIME,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- 9. Sedekah & Transaksi Donasi
-CREATE TABLE IF NOT EXISTS campaign_sedekah (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    judul TEXT NOT NULL,
-    deskripsi TEXT,
-    target_nominal INTEGER DEFAULT 0,
-    terkumpul_nominal INTEGER DEFAULT 0,
-    thumbnail TEXT NOT NULL,
-    status TEXT DEFAULT 'aktif', -- 'aktif', 'selesai'
-    end_date DATE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS penyalur_campaign (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nama TEXT NOT NULL,
-    deskripsi TEXT,
-    logo TEXT,
-    kontak TEXT
-);
-
-CREATE TABLE IF NOT EXISTS transaksi_sedekah (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    invoice TEXT NOT NULL UNIQUE,
-    campaign_id INTEGER,
-    user_email TEXT,
-    nama_donatur TEXT NOT NULL,
-    nomor_hp TEXT,
-    nominal INTEGER NOT NULL,
-    pesan TEXT,
-    anonim BOOLEAN DEFAULT 0,
-    metode_pembayaran TEXT NOT NULL,
-    status TEXT DEFAULT 'pending', -- 'pending', 'paid', 'expired', 'failed'
-    payment_url TEXT,
-    va_number TEXT,
-    qr_string TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(campaign_id) REFERENCES campaign_sedekah(id) ON DELETE SET NULL
-);
-
--- 10. Ruangan & Booking Fasilitas
-CREATE TABLE IF NOT EXISTS ruangan (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nama TEXT NOT NULL,
-    kapasitas INTEGER DEFAULT 50,
-    fasilitas TEXT,
-    foto TEXT
-);
-
-CREATE TABLE IF NOT EXISTS booking_ruangan (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ruangan_id INTEGER NOT NULL,
-    nama_pemohon TEXT NOT NULL,
-    instansi TEXT,
-    kontak TEXT NOT NULL,
-    tanggal_mulai DATE NOT NULL,
-    tanggal_selesai DATE NOT NULL,
-    keperluan TEXT NOT NULL,
-    status TEXT DEFAULT 'pending', -- 'pending', 'disetujui', 'ditolak'
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(ruangan_id) REFERENCES ruangan(id) ON DELETE CASCADE
-);
-
--- 11. DKM, Sosial Media & Komunikasi
-CREATE TABLE IF NOT EXISTS dkm (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nama TEXT NOT NULL,
-    jabatan TEXT NOT NULL,
-    foto TEXT,
-    urutan INTEGER DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS sosmed (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nama TEXT NOT NULL,
-    type TEXT NOT NULL, -- youtube, instagram, facebook, whatsapp, website
-    icon TEXT,
-    link TEXT NOT NULL
-);
-
+-- 7. Notifications & Events
 CREATE TABLE IF NOT EXISTS notifikasi (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     judul TEXT NOT NULL,
     pesan TEXT NOT NULL,
     tipe TEXT DEFAULT 'info',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS kartu_ucapan (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    judul TEXT NOT NULL,
-    ucapan TEXT NOT NULL,
-    background_image TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -285,7 +156,7 @@ CREATE TABLE IF NOT EXISTS event (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 12. Hadits v3 — Bab & Tema (lihat sql/hadits_bab_tema.sql untuk DDL lengkap)
+-- 8. Hadits v3 — Bab & Tema (lihat sql/hadits_bab_tema.sql untuk DDL lengkap)
 CREATE TABLE IF NOT EXISTS hadits_bab (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
     namaTabel TEXT    NOT NULL,

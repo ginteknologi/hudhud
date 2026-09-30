@@ -45,9 +45,6 @@ class ApiEndpoints {
   static const String artikel = '/artikel';
   static const String artikelTerbaru = '/artikel/terbaru';
 
-  // Transaksi
-  static const String transaksiHistory = '/transaksi/history'; // + /:email
-
   // Notif & Events
   static const String notif = '/notif';
   static const String event = '/event';

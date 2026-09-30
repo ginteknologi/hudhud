@@ -7,44 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:masjid_app/core/network/api_endpoints.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
 import 'package:masjid_app/models/user_model.dart';
-import 'package:masjid_app/providers/api_providers.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
 import 'package:minio_new/minio.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
-/// Riwayat sedekah + total sedekah milik user yang sedang login.
-class RiwayatSedekah {
-  final List<Map<String, dynamic>> history;
-  final int totalSedekah;
-
-  RiwayatSedekah({required this.history, required this.totalSedekah});
-
-  static RiwayatSedekah fromJson(Map<String, dynamic> json) {
-    final rawHistory = json['history'];
-    return RiwayatSedekah(
-      history: rawHistory is List
-          ? rawHistory.map((e) => Map<String, dynamic>.from(e as Map)).toList()
-          : <Map<String, dynamic>>[],
-      totalSedekah: (json['total_sedekah'] as num?)?.toInt() ?? 0,
-    );
-  }
-}
-
-final riwayatSedekahProvider = FutureProvider<RiwayatSedekah>((ref) async {
-  final email = ref.watch(authNotifierProvider).valueOrNull?.email ?? '';
-  final apiClient = ref.watch(apiClientProvider);
-  try {
-    final response = await apiClient.get<RiwayatSedekah>(
-      '${ApiEndpoints.transaksiHistory}/$email',
-      fromJson: (json) => json is Map<String, dynamic>
-          ? RiwayatSedekah.fromJson(json)
-          : RiwayatSedekah(history: const [], totalSedekah: 0),
-    );
-    return response.data ?? RiwayatSedekah(history: const [], totalSedekah: 0);
-  } catch (e) {
-    return RiwayatSedekah(history: const [], totalSedekah: 0);
-  }
-});
 
 /// Info versi aplikasi
 
@@ -139,9 +104,6 @@ class AkunRepository {
         photo: data['photo'] as String? ??
             currentUser?.photo ??
             'https://nos.wjv-1.neo.id/marbot/assets/app_icon.png',
-        totalSedekah: (data['total_sedekah'] as num?)?.toInt() ??
-            currentUser?.totalSedekah ??
-            0,
       );
 
       PreferencesService.userJson = jsonEncode(updatedUser.toJson());

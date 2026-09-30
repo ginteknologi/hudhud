@@ -8,7 +8,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
+import 'package:masjid_app/core/storage/quran_reading_progress_storage.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/quran_models.dart';
 import 'package:masjid_app/pages/quran/new_quran/alquran_controller.dart';
 import 'package:masjid_app/providers/quran_ayat_providers.dart';
@@ -45,6 +48,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
   Timer? _highlightTimer;
 
   final List<ItemScrollController> itemScrollController = [];
+  final List<ItemPositionsListener> itemPositionsListeners = [];
   final List<Tab> myTabs = [];
   final List<_SurahContent> contentTab = [];
   List<Map<String, dynamic>> list = [];
@@ -128,9 +132,12 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
           pageController = PageController(initialPage: newindex);
           detail = Map<String, dynamic>.from(list[getindexbysurah]);
           tabController = TabController(
-              vsync: this, length: myTabs.length, initialIndex: getindexbysurah);
+              vsync: this,
+              length: myTabs.length,
+              initialIndex: getindexbysurah);
         });
-        final jump = (_targetAyat != null && _targetAyat! > 0) ? _targetAyat! - 1 : 0;
+        final jump =
+            (_targetAyat != null && _targetAyat! > 0) ? _targetAyat! - 1 : 0;
         await getDetailData(surahId: _targetSurah!, jumpto: jump);
         return;
       }
@@ -147,7 +154,9 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
           pageController = PageController(initialPage: newindex);
           detail = Map<String, dynamic>.from(list[getindexbysurah]);
           tabController = TabController(
-              vsync: this, length: myTabs.length, initialIndex: getindexbysurah);
+              vsync: this,
+              length: myTabs.length,
+              initialIndex: getindexbysurah);
         });
         await getDetailData(surahId: book.surat, jumpto: book.ayat - 1);
         return;
@@ -178,6 +187,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
           ));
           contentTab.add(_SurahContent(result[i]['id'] as int));
           itemScrollController.add(ItemScrollController());
+          itemPositionsListeners.add(ItemPositionsListener.create());
         }
         isLoadingList = false;
       });
@@ -295,11 +305,24 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
           }
         });
       }
+      _recordReading(surahId, jumpto + 1);
     } catch (e) {
       if (kDebugMode) {
         debugPrint(e.toString());
       }
     }
+  }
+
+  void _recordReading(int surahNumber, int ayatNumber) {
+    if (detail['id'] != surahNumber) return;
+    final index = list.indexWhere((surah) => surah['id'] == surahNumber);
+    if (index < 0 || ayatNumber <= 0) return;
+    QuranReadingProgressStorage.save(QuranReadingProgress(
+      mode: QuranReadingMode.ayat,
+      surahName: (list[index]['nama'] ?? '').toString(),
+      surahNumber: surahNumber,
+      ayatNumber: ayatNumber,
+    ));
   }
 
   Future<void> playMurotal(AyatModel item) async {
@@ -377,7 +400,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
   void _copyAyat(AyatModel item) {
     final surahNama = detail['nama'] ?? '';
     final arabText = item.madinah.isNotEmpty ? item.madinah : item.arab;
-    final textToCopy = '$arabText\n\n${item.arti}\n(QS. $surahNama: ${item.ayat})';
+    final textToCopy =
+        '$arabText\n\n${item.arti}\n(QS. $surahNama: ${item.ayat})';
     Clipboard.setData(ClipboardData(text: textToCopy));
     Fluttertoast.showToast(
       msg: 'Ayat ${item.ayat} berhasil disalin',
@@ -409,102 +433,109 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Tampilan & Ukuran Font",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close, size: 20),
-                        onPressed: () => Navigator.of(bottomSheetContext).pop(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Ukuran Font Arab (${uiSettings.arabicFontSize.toInt()} px)",
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                  ),
-                  Slider(
-                    value: uiSettings.arabicFontSize,
-                    min: 18.0,
-                    max: 36.0,
-                    divisions: 9,
-                    activeColor: const Color(0xFFD06A4C),
-                    onChanged: (val) => notifier.updateArabicFontSize(val),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Ukuran Font Terjemahan (${uiSettings.translationFontSize.toInt()} px)",
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                  ),
-                  Slider(
-                    value: uiSettings.translationFontSize,
-                    min: 11.0,
-                    max: 20.0,
-                    divisions: 9,
-                    activeColor: const Color(0xFFD06A4C),
-                    onChanged: (val) => notifier.updateTranslationFontSize(val),
-                  ),
-                  const SizedBox(height: 8),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    activeThumbColor: Colors.white,
-                    activeTrackColor: const Color(0xFFD06A4C),
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: Colors.grey.shade300,
-                    trackOutlineColor:
-                        WidgetStateProperty.all(Colors.transparent),
-                    title: const Text("Tampilkan Transliterasi Latin",
-                        style: TextStyle(fontSize: 13)),
-                    value: uiSettings.showLatin,
-                    onChanged: (val) => notifier.toggleLatin(val),
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    activeThumbColor: Colors.white,
-                    activeTrackColor: const Color(0xFFD06A4C),
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: Colors.grey.shade300,
-                    trackOutlineColor:
-                        WidgetStateProperty.all(Colors.transparent),
-                    title: const Text("Tampilkan Terjemahan",
-                        style: TextStyle(fontSize: 13)),
-                    value: uiSettings.showTranslation,
-                    onChanged: (val) => notifier.toggleTranslation(val),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Tampilan & Ukuran Font",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 20),
+                          onPressed: () =>
+                              Navigator.of(bottomSheetContext).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Ukuran Font Arab (${uiSettings.arabicFontSize.toInt()} px)",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 13),
+                    ),
+                    Slider(
+                      value: uiSettings.arabicFontSize,
+                      min: 18.0,
+                      max: 36.0,
+                      divisions: 9,
+                      activeColor: const Color(0xFFD06A4C),
+                      onChanged: (val) => notifier.updateArabicFontSize(val),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Ukuran Font Terjemahan (${uiSettings.translationFontSize.toInt()} px)",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 13),
+                    ),
+                    Slider(
+                      value: uiSettings.translationFontSize,
+                      min: 11.0,
+                      max: 20.0,
+                      divisions: 9,
+                      activeColor: const Color(0xFFD06A4C),
+                      onChanged: (val) =>
+                          notifier.updateTranslationFontSize(val),
+                    ),
+                    const SizedBox(height: 8),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      activeThumbColor: Colors.white,
+                      activeTrackColor: const Color(0xFFD06A4C),
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey.shade300,
+                      trackOutlineColor:
+                          WidgetStateProperty.all(Colors.transparent),
+                      title: const Text("Tampilkan Transliterasi Latin",
+                          style: TextStyle(fontSize: 13)),
+                      value: uiSettings.showLatin,
+                      onChanged: (val) => notifier.toggleLatin(val),
+                    ),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      activeThumbColor: Colors.white,
+                      activeTrackColor: const Color(0xFFD06A4C),
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey.shade300,
+                      trackOutlineColor:
+                          WidgetStateProperty.all(Colors.transparent),
+                      title: const Text("Tampilkan Terjemahan",
+                          style: TextStyle(fontSize: 13)),
+                      value: uiSettings.showTranslation,
+                      onChanged: (val) => notifier.toggleTranslation(val),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },
+            );
+          },
+        );
+      },
     );
   }
 
-  void _showSurahPickerDialog({void Function(Map<String, dynamic>)? onSelectSurah}) {
+  void _showSurahPickerDialog(
+      {void Function(Map<String, dynamic>)? onSelectSurah,
+      int? selectedSurahId}) {
+    final t = context.hudhud;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: t.surface,
       builder: (bottomSheetContext) {
         String filter = '';
         return StatefulBuilder(
@@ -512,7 +543,10 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
             final filtered = list.where((item) {
               if (filter.isEmpty) return true;
               final q = filter.toLowerCase();
-              return (item['nama'] ?? '').toString().toLowerCase().contains(q) ||
+              return (item['nama'] ?? '')
+                      .toString()
+                      .toLowerCase()
+                      .contains(q) ||
                   item['id'].toString() == q;
             }).toList();
 
@@ -543,8 +577,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
                     ),
                     onChanged: (val) {
                       setModalState(() {
@@ -559,26 +593,27 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                       separatorBuilder: (_, __) => const Divider(height: 1),
                       itemBuilder: (context, idx) {
                         final s = filtered[idx];
-                        final isCurrent = detail['id'] == s['id'];
+                        final isCurrent =
+                            (selectedSurahId ?? detail['id']) == s['id'];
 
                         return ListTile(
                           selected: isCurrent,
-                          selectedTileColor: const Color(0xFFE6F4F2),
+                          selectedTileColor:
+                              t.terracotta.withValues(alpha: 0.10),
                           leading: Text(
                             "${s['id']}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: isCurrent
-                                   ? const Color(0xFFD06A4C)
+                                  ? const Color(0xFFD06A4C)
                                   : Colors.black54,
                             ),
                           ),
                           title: Text(
                             "${s['nama']}",
                             style: TextStyle(
-                              fontWeight: isCurrent
-                                  ? FontWeight.bold
-                                  : FontWeight.w500,
+                              fontWeight:
+                                  isCurrent ? FontWeight.bold : FontWeight.w500,
                               color: isCurrent
                                   ? const Color(0xFFD06A4C)
                                   : Colors.black87,
@@ -602,8 +637,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                               onSelectSurah(s);
                               return;
                             }
-                            final ddd = list
-                                .indexWhere((element) => element['id'] == s['id']);
+                            final ddd = list.indexWhere(
+                                (element) => element['id'] == s['id']);
                             if (ddd != -1) {
                               final newindex = myTabs.length - ddd - 1;
                               pageController!.jumpToPage(newindex);
@@ -676,57 +711,97 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
   }
 
   void _showBottomSheet(AyatModel item) {
-    final data = list.where((p0) => p0['id'] == item.surat).toList()[0];
+    final t = context.hudhud;
+    final data = list.firstWhere((surah) => surah['id'] == item.surat);
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (sheetContext) => Container(
-        color: Colors.white,
-        child: Wrap(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "${data['nama']} ${item.ayat}:${data['ayat']}",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+      backgroundColor: t.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      builder: (sheetContext) => SafeArea(
+        top: false,
+        child: Padding(
+          padding:
+              EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceLg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: t.outline,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.play_arrow),
-              title: Text('Play Murotal'),
-              onTap: () {
-                playMurotal(item);
-                Navigator.of(sheetContext).pop();
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.bookmark),
-              title: Text('Bookmark'),
-              onTap: () async {
-                await bookmark(item);
-                if (sheetContext.mounted) {
+              SizedBox(height: t.spaceLg),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: t.spaceSm),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${data['nama']}",
+                      style: Theme.of(sheetContext)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: t.charcoal),
+                    ),
+                    SizedBox(height: t.spaceXs),
+                    Text(
+                      'Ayat ${item.ayat} dari ${data['ayat']}',
+                      style: Theme.of(sheetContext)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: t.muted),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: t.spaceMd),
+              Divider(color: t.outline, height: 1),
+              SizedBox(height: t.spaceSm),
+              _AyatActionTile(
+                icon: LucideIcons.play,
+                title: 'Putar murotal',
+                subtitle: 'Dengarkan mulai ayat ini',
+                onTap: () {
                   Navigator.of(sheetContext).pop();
-                }
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.share),
-              title: Text('Bagikan Ayat'),
-              onTap: () {
-                // Lakukan sesuatu saat menu bagikan ayat dipilih
-                SharePlus.instance.share(
-                  ShareParams(
-                    text: '${item.arab}\n\n${item.arti}',
-                    subject: "${data['nama']} ${data['ayat']}:${item.ayat}",
-                  ),
-                );
-              },
-            ),
-          ],
+                  playMurotal(item);
+                },
+              ),
+              _AyatActionTile(
+                icon: item.isBookmarked
+                    ? LucideIcons.bookmarkCheck
+                    : LucideIcons.bookmark,
+                title: item.isBookmarked ? 'Ayat ditandai' : 'Tandai ayat',
+                subtitle: 'Simpan sebagai tanda baca',
+                onTap: () async {
+                  Navigator.of(sheetContext).pop();
+                  await bookmark(item);
+                },
+              ),
+              _AyatActionTile(
+                icon: LucideIcons.share2,
+                title: 'Bagikan ayat',
+                subtitle: 'Kirim teks Arab dan terjemahan',
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  SharePlus.instance.share(
+                    ShareParams(
+                      text: '${item.arab}\n\n${item.arti}',
+                      subject: "${data['nama']} ${item.ayat}",
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -755,8 +830,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
         break;
       }
       if (index > start) {
-        spans.add(TextSpan(
-            text: text.substring(start, index), style: defaultStyle));
+        spans.add(
+            TextSpan(text: text.substring(start, index), style: defaultStyle));
       }
       spans.add(TextSpan(
         text: text.substring(index, index + query.length),
@@ -803,10 +878,11 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
   }
 
   void _showFilterBottomSheet() {
+    final t = context.hudhud;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: t.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -820,6 +896,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
         final ayatInputController = TextEditingController();
         final searchWordController = TextEditingController();
         String searchWord = '';
+        bool isLoadingSearch = false;
         String? ayatErrorText;
 
         return StatefulBuilder(
@@ -897,7 +974,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                     Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F5),
+                        color: t.sand,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -915,13 +992,13 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                     const EdgeInsets.symmetric(vertical: 9),
                                 decoration: BoxDecoration(
                                   color: selectedTabIndex == 0
-                                      ? const Color(0xFFD06A4C)
+                                      ? t.terracottaDark
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: selectedTabIndex == 0
                                       ? [
                                           BoxShadow(
-                                            color: const Color(0xFFD06A4C)
+                                            color: t.terracottaDark
                                                 .withValues(alpha: 0.25),
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
@@ -938,7 +1015,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                       size: 16,
                                       color: selectedTabIndex == 0
                                           ? Colors.white
-                                          : Colors.black54,
+                                          : t.muted,
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
@@ -948,7 +1025,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                         fontWeight: FontWeight.w600,
                                         color: selectedTabIndex == 0
                                             ? Colors.white
-                                            : Colors.black54,
+                                            : t.muted,
                                       ),
                                     ),
                                   ],
@@ -978,13 +1055,13 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                     const EdgeInsets.symmetric(vertical: 9),
                                 decoration: BoxDecoration(
                                   color: selectedTabIndex == 1
-                                      ? const Color(0xFFD06A4C)
+                                      ? t.terracottaDark
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: selectedTabIndex == 1
                                       ? [
                                           BoxShadow(
-                                            color: const Color(0xFFD06A4C)
+                                            color: t.terracottaDark
                                                 .withValues(alpha: 0.25),
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
@@ -1001,7 +1078,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                       size: 16,
                                       color: selectedTabIndex == 1
                                           ? Colors.white
-                                          : Colors.black54,
+                                          : t.muted,
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
@@ -1011,7 +1088,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                         fontWeight: FontWeight.w600,
                                         color: selectedTabIndex == 1
                                             ? Colors.white
-                                            : Colors.black54,
+                                            : t.muted,
                                       ),
                                     ),
                                   ],
@@ -1030,6 +1107,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                       InkWell(
                         onTap: () {
                           _showSurahPickerDialog(
+                            selectedSurahId: activeSurah['id'] as int?,
                             onSelectSurah: (picked) {
                               setModalState(() {
                                 activeSurah = picked;
@@ -1044,7 +1122,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 14, vertical: 11),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF7FAFA),
+                            color: t.sand,
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
                               color: const Color(0xFFD06A4C)
@@ -1058,7 +1136,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                 width: 34,
                                 height: 34,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFE6F4F2),
+                                  color: t.amber.withValues(alpha: 0.18),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 alignment: Alignment.center,
@@ -1074,8 +1152,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
@@ -1087,14 +1164,15 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                             color: Colors.black87,
                                           ),
                                         ),
-                                        if (_getSurahArab(activeSurah).isNotEmpty) ...[
+                                        if (_getSurahArab(activeSurah)
+                                            .isNotEmpty) ...[
                                           const SizedBox(width: 6),
                                           Text(
                                             "(${_getSurahArab(activeSurah)})",
                                             style: TextStyle(
-                                              fontFamily: GoogleFonts
-                                                      .amiriQuran()
-                                                  .fontFamily,
+                                              fontFamily:
+                                                  GoogleFonts.amiriQuran()
+                                                      .fontFamily,
                                               fontSize: 14,
                                               color: const Color(0xFFD06A4C),
                                             ),
@@ -1118,8 +1196,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                      color: Colors.grey.shade300),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
                                 ),
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -1169,8 +1247,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                           ),
                           suffixIcon: ayatInputController.text.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.clear_rounded,
-                                      size: 18),
+                                  icon:
+                                      const Icon(Icons.clear_rounded, size: 18),
                                   onPressed: () {
                                     setModalState(() {
                                       ayatInputController.clear();
@@ -1181,18 +1259,16 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                               : null,
                           errorText: ayatErrorText,
                           filled: true,
-                          fillColor: const Color(0xFFF9FBFB),
+                          fillColor: t.sand,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 14, vertical: 12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade300),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade300),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -1229,8 +1305,8 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             spacing: 8,
                             runSpacing: 6,
                             children: quickVerses.map((verseNum) {
-                              final isSelected =
-                                  ayatInputController.text == verseNum.toString();
+                              final isSelected = ayatInputController.text ==
+                                  verseNum.toString();
                               return ActionChip(
                                 label: Text(
                                   verseNum == totalAyat
@@ -1248,13 +1324,13 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                 ),
                                 backgroundColor: isSelected
                                     ? const Color(0xFFD06A4C)
-                                    : const Color(0xFFE6F4F2),
+                                    : t.sand,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   side: BorderSide(
                                     color: isSelected
                                         ? const Color(0xFFD06A4C)
-                                        : const Color(0xFFD4EFEA),
+                                        : t.outline,
                                   ),
                                 ),
                                 padding: const EdgeInsets.symmetric(
@@ -1286,8 +1362,7 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                             return;
                           }
                           Navigator.of(bottomSheetContext).pop();
-                          _jumpToSurahAndAyat(
-                              activeSurah['id'] as int, val);
+                          _jumpToSurahAndAyat(activeSurah['id'] as int, val);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFD06A4C),
@@ -1317,19 +1392,65 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
 
                     // TAB 1: Cari Kata
                     if (selectedTabIndex == 1) ...[
+                      InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () => _showSurahPickerDialog(
+                          selectedSurahId: activeSurah['id'] as int?,
+                          onSelectSurah: (picked) async {
+                            setModalState(() {
+                              activeSurah = picked;
+                              isLoadingSearch = true;
+                            });
+                            await getDetailData(surahId: picked['id'] as int);
+                            if (bottomSheetContext.mounted) {
+                              setModalState(() => isLoadingSearch = false);
+                            }
+                          },
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: t.sand,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: t.outline),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.menu_book_outlined,
+                                  color: t.terracottaDark, size: 20),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  'Surah ${activeSurah['nama'] ?? ''}',
+                                  style: TextStyle(
+                                    color: t.charcoal,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Text('Ganti surah',
+                                  style: TextStyle(
+                                      color: t.terracottaDark, fontSize: 12)),
+                              Icon(Icons.keyboard_arrow_down_rounded,
+                                  color: t.terracottaDark),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       // Search input
                       TextField(
                         controller: searchWordController,
                         decoration: InputDecoration(
-                          hintText:
-                              "Cari kata dalam ${activeSurah['nama']}...",
+                          hintText: "Cari kata dalam ${activeSurah['nama']}...",
                           hintStyle: const TextStyle(fontSize: 13),
                           prefixIcon: const Icon(Icons.search_rounded,
                               size: 20, color: Color(0xFFD06A4C)),
                           suffixIcon: searchWordController.text.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.clear_rounded,
-                                      size: 18),
+                                  icon:
+                                      const Icon(Icons.clear_rounded, size: 18),
                                   onPressed: () {
                                     setModalState(() {
                                       searchWordController.clear();
@@ -1339,18 +1460,16 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                 )
                               : null,
                           filled: true,
-                          fillColor: const Color(0xFFF9FBFB),
+                          fillColor: t.sand,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 14, vertical: 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade300),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade300),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -1370,130 +1489,136 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
 
                       // Hasil pencarian
                       Expanded(
-                        child: searchWord.isEmpty
+                        child: isLoadingSearch
                             ? Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.manage_search_rounded,
-                                      size: 48,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      "Cari Teks & Terjemahan",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "Ketik kata dalam terjemahan Indonesia,\naksara Arab, atau transliterasi Latin.",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                child: CircularProgressIndicator(
+                                    color: t.terracottaDark),
                               )
-                            : searchMatches.isEmpty
+                            : searchWord.isEmpty
                                 ? Center(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          Icons.search_off_rounded,
-                                          size: 44,
+                                          Icons.manage_search_rounded,
+                                          size: 48,
                                           color: Colors.grey.shade400,
                                         ),
                                         const SizedBox(height: 8),
+                                        const Text(
+                                          "Cari Teks & Terjemahan",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
                                         Text(
-                                          "Tidak ditemukan ayat dengan kata \"$searchWord\"",
+                                          "Ketik kata dalam terjemahan Indonesia,\naksara Arab, atau transliterasi Latin.",
                                           textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black54,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey.shade600,
                                           ),
                                         ),
                                       ],
                                     ),
                                   )
-                                : ListView.separated(
-                                    itemCount: searchMatches.length,
-                                    separatorBuilder: (_, __) =>
-                                        const Divider(height: 1),
-                                    itemBuilder: (context, idx) {
-                                      final item = searchMatches[idx];
-                                      return ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 4, vertical: 4),
-                                        leading: Container(
-                                          width: 34,
-                                          height: 34,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFFE6F4F2),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "${item.ayat}",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              color: Color(0xFFD06A4C),
+                                : searchMatches.isEmpty
+                                    ? Center(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.search_off_rounded,
+                                              size: 44,
+                                              color: Colors.grey.shade400,
                                             ),
-                                          ),
-                                        ),
-                                        title: Text(
-                                          item.madinah.isNotEmpty
-                                              ? item.madinah
-                                              : item.arab,
-                                          textAlign: TextAlign.right,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily:
-                                                GoogleFonts.amiriQuran()
-                                                    .fontFamily,
-                                            fontSize: 15,
-                                            color: const Color(0xFFD06A4C),
-                                          ),
-                                        ),
-                                        subtitle: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 4),
-                                          child: _highlightMatch(
-                                            item.arti,
-                                            searchWord,
-                                            const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black87,
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              "Tidak ditemukan ayat dengan kata \"$searchWord\"",
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.black54,
+                                              ),
                                             ),
-                                            const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color(0xFFD06A4C),
-                                              backgroundColor:
-                                                  Color(0xFFE6F4F2),
-                                            ),
-                                          ),
+                                          ],
                                         ),
-                                        onTap: () {
-                                          Navigator.of(bottomSheetContext)
-                                              .pop();
-                                          _jumpToSurahAndAyat(
-                                              activeSurah['id'] as int,
-                                              item.ayat);
+                                      )
+                                    : ListView.separated(
+                                        itemCount: searchMatches.length,
+                                        separatorBuilder: (_, __) =>
+                                            const Divider(height: 1),
+                                        itemBuilder: (context, idx) {
+                                          final item = searchMatches[idx];
+                                          return ListTile(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 4, vertical: 4),
+                                            leading: Container(
+                                              width: 34,
+                                              height: 34,
+                                              decoration: BoxDecoration(
+                                                color: t.amber
+                                                    .withValues(alpha: 0.18),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "${item.ayat}",
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                  color: Color(0xFFD06A4C),
+                                                ),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              item.madinah.isNotEmpty
+                                                  ? item.madinah
+                                                  : item.arab,
+                                              textAlign: TextAlign.right,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.amiriQuran()
+                                                        .fontFamily,
+                                                fontSize: 15,
+                                                color: const Color(0xFFD06A4C),
+                                              ),
+                                            ),
+                                            subtitle: Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 4),
+                                              child: _highlightMatch(
+                                                item.arti,
+                                                searchWord,
+                                                TextStyle(
+                                                  fontSize: 12,
+                                                  color: t.charcoal,
+                                                ),
+                                                TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: t.terracottaDark,
+                                                  backgroundColor: t.amber
+                                                      .withValues(alpha: 0.18),
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              Navigator.of(bottomSheetContext)
+                                                  .pop();
+                                              _jumpToSurahAndAyat(
+                                                  activeSurah['id'] as int,
+                                                  item.ayat);
+                                            },
+                                          );
                                         },
-                                      );
-                                    },
-                                  ),
+                                      ),
                       ),
                     ],
                   ],
@@ -1509,12 +1634,13 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
   @override
   Widget build(BuildContext context) {
     final uiSettings = ref.watch(quranUiSettingsProvider);
+    final t = context.hudhud;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: t.surface,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFD06A4C),
-        foregroundColor: Colors.white,
+        backgroundColor: t.sand,
+        foregroundColor: t.charcoal,
         elevation: 0,
         title: InkWell(
           onTap: _showSurahPickerDialog,
@@ -1535,15 +1661,15 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                         children: [
                           Text(
                             detail.isEmpty ? "Al-Qur'an" : detail['nama'],
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: t.charcoal,
                             ),
                           ),
                           const SizedBox(width: 4),
-                          const Icon(Icons.keyboard_arrow_down_rounded,
-                              color: Colors.white70, size: 20),
+                          Icon(Icons.keyboard_arrow_down_rounded,
+                              color: t.muted, size: 20),
                         ],
                       ),
                       Text(
@@ -1553,10 +1679,10 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
                                 ayat: (_currentPlayingAyatIndex ?? 0) + 1),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.normal,
-                          color: Colors.white70,
+                          color: t.muted,
                         ),
                       ),
                     ],
@@ -1653,25 +1779,17 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
           : Column(
               children: [
                 Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFD06A4C),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        spreadRadius: 2,
-                        blurRadius: 6,
-                      ),
-                    ],
+                  decoration: BoxDecoration(
+                    color: t.sand,
+                    border: Border(bottom: BorderSide(color: t.outline)),
                   ),
                   child: TabBar(
-                    indicator: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.white, width: 3),
-                      ),
-                    ),
-                    labelColor: Colors.white,
+                    indicatorColor: t.terracottaDark,
+                    indicatorWeight: 3,
+                    labelColor: t.terracottaDark,
                     splashBorderRadius: BorderRadius.circular(20),
-                    unselectedLabelColor: const Color(0xFFD0D0D0),
+                    unselectedLabelColor: t.muted,
+                    dividerHeight: 0,
                     isScrollable: true,
                     controller: tabController,
                     tabs: myTabs.reversed.toList(),
@@ -1724,193 +1842,216 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
     ItemScrollController itemScrollController,
     QuranUiSettings uiSettings,
   ) {
-    return ScrollablePositionedList.builder(
-      itemScrollController: itemScrollController,
-      shrinkWrap: true,
-      itemCount: banyakAyat,
-      itemBuilder: (context, index) {
-        final AyatModel item = contentTab[indexPage].list[index];
-        final bool isPlayingThis =
-            (isPlaySound && _currentPlayingAyatIndex == index);
-        final bool isHighlightedThis = (_highlightedAyatIndex == index);
+    final t = context.hudhud;
+    final positions = itemPositionsListeners[indexPage];
+    return NotificationListener<ScrollEndNotification>(
+      onNotification: (_) {
+        final visible = positions.itemPositions.value
+            .where((position) =>
+                position.itemTrailingEdge > 0 && position.itemLeadingEdge < 1)
+            .toList();
+        if (visible.isNotEmpty) {
+          visible.sort((a, b) => a.index.compareTo(b.index));
+          final verseIndex = visible.first.index;
+          if (verseIndex < contentTab[indexPage].list.length) {
+            final verse = contentTab[indexPage].list[verseIndex];
+            _recordReading(verse.surat, verse.ayat);
+          }
+        }
+        return false;
+      },
+      child: ScrollablePositionedList.builder(
+        itemScrollController: itemScrollController,
+        itemPositionsListener: positions,
+        shrinkWrap: true,
+        itemCount: banyakAyat,
+        itemBuilder: (context, index) {
+          final AyatModel item = contentTab[indexPage].list[index];
+          final bool isPlayingThis =
+              (isPlaySound && _currentPlayingAyatIndex == index);
+          final bool isHighlightedThis = (_highlightedAyatIndex == index);
 
-        return InkWell(
-          onTap: () => _showBottomSheet(item),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            decoration: BoxDecoration(
-              color: isPlayingThis
-                  ? const Color(0xFFE6F4F2)
-                  : (isHighlightedThis
-                      ? const Color(0xFFC8ECE8)
-                      : Colors.white),
-              border: Border(
-                bottom: BorderSide(
-                  color: (isPlayingThis || isHighlightedThis)
-                      ? const Color(0xFFD06A4C)
-                      : const Color(0xFFEEEEEE),
-                  width: (isPlayingThis || isHighlightedThis) ? 2.0 : 1.0,
+          return InkWell(
+            onTap: () {
+              _recordReading(item.surat, item.ayat);
+              _showBottomSheet(item);
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                color: isPlayingThis
+                    ? t.amber.withValues(alpha: 0.12)
+                    : (isHighlightedThis
+                        ? t.terracotta.withValues(alpha: 0.12)
+                        : t.surface),
+                border: Border(
+                  bottom: BorderSide(
+                    color: (isPlayingThis || isHighlightedThis)
+                        ? t.terracottaDark
+                        : t.outline,
+                    width: (isPlayingThis || isHighlightedThis) ? 2.0 : 1.0,
+                  ),
                 ),
               ),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Header baris ayat: Nomor ayat di kiri, Action icons di kanan
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Nomor Ayat
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: isPlayingThis
-                            ? const Color(0xFFD06A4C)
-                            : const Color(0xFFE6F4F2),
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        '${item.ayat}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Header baris ayat: Nomor ayat di kiri, Action icons di kanan
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Nomor Ayat
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
                           color: isPlayingThis
-                              ? Colors.white
-                              : const Color(0xFFD06A4C),
+                              ? t.terracottaDark
+                              : t.amber.withValues(alpha: 0.18),
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${item.ayat}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color:
+                                isPlayingThis ? Colors.white : t.terracottaDark,
+                          ),
                         ),
                       ),
+
+                      // Action Icons
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Play Audio
+                          IconButton(
+                            icon: Icon(
+                              isPlayingThis
+                                  ? Icons.pause_circle_outline_rounded
+                                  : Icons.play_circle_outline_rounded,
+                              color: const Color(0xFFD06A4C),
+                              size: 22,
+                            ),
+                            tooltip:
+                                isPlayingThis ? 'Jeda Audio' : 'Putar Ayat',
+                            onPressed: () {
+                              if (isPlayingThis) {
+                                player.pause();
+                                setState(() => isPlaySound = false);
+                              } else {
+                                playMurotal(item);
+                              }
+                            },
+                          ),
+
+                          // Bookmark
+                          IconButton(
+                            icon: Icon(
+                              item.isBookmarked
+                                  ? Icons.bookmark_rounded
+                                  : Icons.bookmark_border_rounded,
+                              color: item.isBookmarked
+                                  ? const Color(0xFFD97706)
+                                  : Colors.black45,
+                              size: 22,
+                            ),
+                            tooltip: item.isBookmarked
+                                ? 'Tanda Tersimpan'
+                                : 'Tandai Ayat Ini',
+                            onPressed: () => bookmark(item),
+                          ),
+
+                          // Salin
+                          IconButton(
+                            icon: const Icon(
+                              Icons.copy_rounded,
+                              color: Colors.black45,
+                              size: 19,
+                            ),
+                            tooltip: 'Salin Ayat',
+                            onPressed: () => _copyAyat(item),
+                          ),
+
+                          // Bagikan
+                          IconButton(
+                            icon: const Icon(
+                              Icons.share_outlined,
+                              color: Colors.black45,
+                              size: 19,
+                            ),
+                            tooltip: 'Bagikan',
+                            onPressed: () {
+                              final namaSurah = detail['nama'] ?? '';
+                              final arabText = item.madinah.isNotEmpty
+                                  ? item.madinah
+                                  : item.arab;
+                              SharePlus.instance.share(
+                                ShareParams(
+                                  text:
+                                      '$arabText\n\n${item.arti}\n\n(QS. $namaSurah : ${item.ayat})',
+                                  subject: 'QS. $namaSurah : ${item.ayat}',
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Teks Arab
+                  Text(
+                    item.madinah.isNotEmpty ? item.madinah : item.arab,
+                    textAlign: TextAlign.right,
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.amiriQuran().fontFamily,
+                      fontSize: uiSettings.arabicFontSize,
+                      fontWeight: FontWeight.bold,
+                      height: 2.0,
+                      color: const Color(0xFF1E293B),
                     ),
+                  ),
 
-                    // Action Icons
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Play Audio
-                        IconButton(
-                          icon: Icon(
-                            isPlayingThis
-                                ? Icons.pause_circle_outline_rounded
-                                : Icons.play_circle_outline_rounded,
-                            color: const Color(0xFFD06A4C),
-                            size: 22,
-                          ),
-                          tooltip: isPlayingThis ? 'Jeda Audio' : 'Putar Ayat',
-                          onPressed: () {
-                            if (isPlayingThis) {
-                              player.pause();
-                              setState(() => isPlaySound = false);
-                            } else {
-                              playMurotal(item);
-                            }
-                          },
-                        ),
-
-                        // Bookmark
-                        IconButton(
-                          icon: Icon(
-                            item.isBookmarked
-                                ? Icons.bookmark_rounded
-                                : Icons.bookmark_border_rounded,
-                            color: item.isBookmarked
-                                ? const Color(0xFFD97706)
-                                : Colors.black45,
-                            size: 22,
-                          ),
-                          tooltip: item.isBookmarked
-                              ? 'Tanda Tersimpan'
-                              : 'Tandai Ayat Ini',
-                          onPressed: () => bookmark(item),
-                        ),
-
-                        // Salin
-                        IconButton(
-                          icon: const Icon(
-                            Icons.copy_rounded,
-                            color: Colors.black45,
-                            size: 19,
-                          ),
-                          tooltip: 'Salin Ayat',
-                          onPressed: () => _copyAyat(item),
-                        ),
-
-                        // Bagikan
-                        IconButton(
-                          icon: const Icon(
-                            Icons.share_outlined,
-                            color: Colors.black45,
-                            size: 19,
-                          ),
-                          tooltip: 'Bagikan',
-                          onPressed: () {
-                            final namaSurah = detail['nama'] ?? '';
-                            final arabText = item.madinah.isNotEmpty
-                                ? item.madinah
-                                : item.arab;
-                            SharePlus.instance.share(
-                              ShareParams(
-                                text:
-                                    '$arabText\n\n${item.arti}\n\n(QS. $namaSurah : ${item.ayat})',
-                                subject: 'QS. $namaSurah : ${item.ayat}',
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                  // Transliterasi Latin
+                  if (uiSettings.showLatin && item.latin.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      item.latin,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: uiSettings.translationFontSize,
+                        fontStyle: FontStyle.italic,
+                        color: const Color(0xFFD06A4C),
+                        height: 1.4,
+                      ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 14),
 
-                // Teks Arab
-                Text(
-                  item.madinah.isNotEmpty ? item.madinah : item.arab,
-                  textAlign: TextAlign.right,
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.amiriQuran().fontFamily,
-                    fontSize: uiSettings.arabicFontSize,
-                    fontWeight: FontWeight.bold,
-                    height: 2.0,
-                    color: const Color(0xFF1E293B),
-                  ),
-                ),
-
-                // Transliterasi Latin
-                if (uiSettings.showLatin && item.latin.isNotEmpty) ...[
-                  const SizedBox(height: 10),
-                  Text(
-                    item.latin,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: uiSettings.translationFontSize,
-                      fontStyle: FontStyle.italic,
-                      color: const Color(0xFFD06A4C),
-                      height: 1.4,
+                  // Terjemahan Bahasa Indonesia
+                  if (uiSettings.showTranslation && item.arti.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      item.arti,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: uiSettings.translationFontSize,
+                        color: const Color(0xFF334155),
+                        height: 1.5,
+                      ),
                     ),
-                  ),
+                  ],
                 ],
-
-                // Terjemahan Bahasa Indonesia
-                if (uiSettings.showTranslation && item.arti.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    item.arti,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: uiSettings.translationFontSize,
-                      color: const Color(0xFF334155),
-                      height: 1.5,
-                    ),
-                  ),
-                ],
-              ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -1923,5 +2064,70 @@ class _ListAyatQuranPageState extends ConsumerState<ListAyatQuranPage>
     pageController?.dispose();
     player.dispose();
     super.dispose();
+  }
+}
+
+class _AyatActionTile extends StatelessWidget {
+  const _AyatActionTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.hudhud;
+    return Semantics(
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 64),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: t.spaceSm, vertical: t.spaceSm),
+            child: Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: t.terracotta.withValues(alpha: 0.10),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: t.terracottaDark, size: 21),
+                ),
+                SizedBox(width: t.spaceMd),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(color: t.charcoal)),
+                      Text(subtitle,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: t.muted)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

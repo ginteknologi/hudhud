@@ -1,293 +1,197 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 
 class AppColors {
-  static const Color appPrimary = Color(0xFFD06A4C); // Hudhud Terracotta / Cinnamon
+  static const Color appPrimary = Color(0xFFD06A4C);
   static const Color textPrimary = Colors.white;
-  static const Color appPrimary2 = Color(0xFFECA843); // Hudhud Amber Gold
-  static const Color appAccent = Color(0xFFF7EBE4); // Warm Sand Tint
-  static const Color appAccent2 = Color(0xFFF0D6C8); // Soft Cinnamon Cream
-  static const Color appWarning = Color(0xFFF1C40F);
-  static const Color appSuccess = Color(0xFF2ECC71);
-  static const Color appDanger = Color(0xFFE74C3C);
-  static const Color background = Colors.white;
-  static const Color surface = Color(0xFFFBF7F2); // Warm Off-White
+  static const Color appPrimary2 = Color(0xFFECA843);
+  static const Color appAccent = Color(0xFFF7EBE4);
+  static const Color appAccent2 = Color(0xFFF0D6C8);
+  static const Color appWarning = Color(0xFFECA843);
+  static const Color appSuccess = Color(0xFF357A56);
+  static const Color appDanger = Color(0xFFB6433D);
+  static const Color background = Color(0xFFFBF7F2);
+  static const Color surface = Colors.white;
   static const Color primary = appPrimary;
   static const Color secondary = appAccent;
-  static const Color backgroundDark = Color(0xFF212121);
-  static const Color surfaceDark = Color(0xFF333333);
-  static const Color primaryDark = Color(0xFF8C3B24);
+  static const Color backgroundDark = Color(0xFF211C1A);
+  static const Color surfaceDark = Color(0xFF302A27);
+  static const Color primaryDark = Color(0xFF9E4B35);
   static const Color secondaryDark = appAccent;
   static const Color text = Colors.white;
-  static const Color textDark = Color(0xFF2B2523); // Deep Charcoal
-  static const Color grey = Color(0xFFE8E8E8);
+  static const Color textDark = Color(0xFF2B2523);
+  static const Color grey = Color(0xFFE4DCD6);
 
-  static Color switchColor(Set<WidgetState> states) {
-    const Set<WidgetState> interactiveStates = <WidgetState>{
-      WidgetState.pressed,
-      WidgetState.hovered,
-      WidgetState.focused,
-      WidgetState.selected,
-    };
-    if (states.any(interactiveStates.contains)) {
-      return appPrimary;
-    }
-    return const Color(0xFFCBCBCB);
-  }
+  static Color switchColor(Set<WidgetState> states) =>
+      states.contains(WidgetState.selected)
+          ? appPrimary
+          : const Color(0xFFB8AEA9);
 }
 
-final priceFormat = NumberFormat.currency(
-  locale: 'id_ID',
-  decimalDigits: 0,
-  name: 'Rp. ',
-);
-
-final priceOnlyFormat = NumberFormat.currency(
-  locale: 'id_ID',
-  decimalDigits: 0,
-  name: '',
-);
+final priceFormat =
+    NumberFormat.currency(locale: 'id_ID', decimalDigits: 0, name: 'Rp. ');
+final priceOnlyFormat =
+    NumberFormat.currency(locale: 'id_ID', decimalDigits: 0, name: '');
 
 String kmbGenerator({dynamic value, String format = 'kmb'}) {
-  if (value > 999 && value < 99999) {
-    final result = (value / 1000).toStringAsFixed(0);
-    return format == 'kmb' ? result + 'K' : result + 'ribu';
-  } else if (value > 99999 && value < 999999) {
-    final result = (value / 1000).toStringAsFixed(0);
-    return format == 'kmb' ? result + 'K' : result + 'ribu';
-  } else if (value > 999999 && value < 999999999) {
-    final result = (value / 1000000).toStringAsFixed(0);
-    return format == 'kmb' ? result + 'M' : result + 'juta';
-  } else if (value > 999999999) {
-    final result = (value / 1000000000).toStringAsFixed(0);
-    return format == 'kmb' ? result + 'B' : result + 'miliar';
-  } else {
-    final result = value.toString();
-    return format == 'kmb' ? result : '${result}rupiah';
+  if (value > 999999999) {
+    return format == 'kmb'
+        ? '${(value / 1000000000).round()}B'
+        : '${(value / 1000000000).round()}miliar';
   }
+  if (value > 999999) {
+    return format == 'kmb'
+        ? '${(value / 1000000).round()}M'
+        : '${(value / 1000000).round()}juta';
+  }
+  if (value > 999) {
+    return format == 'kmb'
+        ? '${(value / 1000).round()}K'
+        : '${(value / 1000).round()}ribu';
+  }
+  return format == 'kmb' ? '$value' : '${value}rupiah';
 }
 
 Map<String, Object> bytesToSize(dynamic bytes) {
-  var result = {
-    'size': 0,
-    'type': 'Bytes',
-  };
+  if (bytes == 0) return {'size': 0, 'type': 'Bytes'};
   final sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  if (bytes == 0) return result;
   final i = log(bytes).floor() ~/ log(1024);
-  result = {
-    'size': (bytes / pow(1024, i)).round(),
-    'type': sizes[i],
-  };
-  return result;
+  return {'size': (bytes / pow(1024, i)).round(), 'type': sizes[i]};
 }
 
 class AppVariables {
   static const appPadding = 20.0;
-  static const EdgeInsets containerPadding = EdgeInsets.symmetric(
-    horizontal: appPadding,
-  );
-  static const EdgeInsets containerSpacing = EdgeInsets.symmetric(
-    vertical: appPadding,
-  );
-  static dynamic buatHargaPersen(dynamic harga, dynamic potongan) {
-    final data = ((potongan / harga) * 100).round();
-    return data;
-  }
+  static const EdgeInsets containerPadding =
+      EdgeInsets.symmetric(horizontal: appPadding);
+  static const EdgeInsets containerSpacing =
+      EdgeInsets.symmetric(vertical: appPadding);
+  static dynamic buatHargaPersen(dynamic harga, dynamic potongan) =>
+      ((potongan / harga) * 100).round();
 }
 
-Color calculateTextColor(Color background) {
-  return ThemeData.estimateBrightnessForColor(background) == Brightness.light
-      ? Colors.black
-      : Colors.white;
-}
+Color calculateTextColor(Color background) =>
+    ThemeData.estimateBrightnessForColor(background) == Brightness.light
+        ? Colors.black
+        : Colors.white;
 
 TextTheme loadTextTheme(BuildContext context, String type) {
-  TextStyle defaultTextStyle;
-  if (type == 'dark') {
-    defaultTextStyle = const TextStyle(
-      color: AppColors.text,
-    );
-  } else {
-    defaultTextStyle = const TextStyle(
-      color: AppColors.textDark,
-    );
-  }
-  return GoogleFonts.poppinsTextTheme(
-    Theme.of(context)
-        .textTheme
-        .apply(
-          displayColor: AppColors.textDark,
-          bodyColor: AppColors.backgroundDark,
-        )
-        .copyWith(
-          displayLarge: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 8,
-          ),
-          displayMedium: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 10,
-          ),
-          displaySmall: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 12,
-          ),
-          headlineMedium: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 14,
-          ),
-          headlineSmall: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 16,
-          ),
-          titleLarge: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 18,
-          ),
-          titleMedium: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 22,
-          ),
-          titleSmall: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 24,
-          ),
-          bodySmall: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 28,
-          ),
-          labelSmall: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 35,
-          ),
-          labelMedium: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 30,
-          ),
-          labelLarge: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 25,
-          ),
-          bodyLarge: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 22,
-          ),
-          bodyMedium: defaultTextStyle.copyWith(
-            fontSize: MediaQuery.of(context).size.width / 22,
-          ),
-        ),
+  const ink = Color(0xFF2B2523);
+  const muted = Color(0xFF675C57);
+  const base = TextStyle(fontFamily: 'Roboto', color: ink, height: 1.35);
+  return TextTheme(
+    displayLarge:
+        base.copyWith(fontSize: 40, fontWeight: FontWeight.w700, height: 1.1),
+    displayMedium:
+        base.copyWith(fontSize: 34, fontWeight: FontWeight.w700, height: 1.15),
+    displaySmall:
+        base.copyWith(fontSize: 28, fontWeight: FontWeight.w700, height: 1.15),
+    headlineMedium: base.copyWith(fontSize: 24, fontWeight: FontWeight.w700),
+    headlineSmall: base.copyWith(fontSize: 21, fontWeight: FontWeight.w700),
+    titleLarge: base.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
+    titleMedium: base.copyWith(fontSize: 16, fontWeight: FontWeight.w700),
+    titleSmall: base.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+    bodyLarge: base.copyWith(fontSize: 16),
+    bodyMedium: base.copyWith(fontSize: 14),
+    bodySmall: base.copyWith(fontSize: 12, color: muted),
+    labelLarge: base.copyWith(fontSize: 14, fontWeight: FontWeight.w700),
+    labelMedium: base.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
+    labelSmall: base.copyWith(fontSize: 11, fontWeight: FontWeight.w600),
   );
 }
 
-bool isDarkMode() {
-  // ignore: deprecated_member_use
-  var brightness = SchedulerBinding.instance.window.platformBrightness;
-  bool isDarkMode = brightness == Brightness.dark;
-  return isDarkMode;
-}
+bool isDarkMode() => false;
 
-ThemeData darkTheme(BuildContext context) {
-  final colorScheme = Theme.of(context).colorScheme.copyWith(
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onSurface: Colors.white,
-        primary: AppColors.primaryDark,
-        error: AppColors.appDanger,
-        secondary: AppColors.secondaryDark,
-        surface: AppColors.surfaceDark,
-      );
-
-  const inputDecorationTheme = InputDecorationTheme(
-    fillColor: AppColors.surfaceDark,
-    hintStyle: TextStyle(color: AppColors.appAccent),
-    border:
-        OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+ThemeData _theme(BuildContext context) {
+  const tokens = HudhudTheme.light;
+  final scheme = ColorScheme.fromSeed(
+    seedColor: tokens.terracotta,
+    brightness: Brightness.light,
+    primary: tokens.terracotta,
+    secondary: tokens.amber,
+    surface: tokens.surface,
+    error: tokens.danger,
   );
-
-  final tabBarTheme = TabBarThemeData(
-    indicator: const UnderlineTabIndicator(
-      borderSide: BorderSide(color: Colors.white, width: 2.0),
-    ),
-    labelColor: Colors.white,
-    unselectedLabelColor: Colors.white54,
-    labelStyle: GoogleFonts.poppins(
-      fontSize: MediaQuery.of(context).size.width / 30,
-      color: Colors.white,
-    ),
-    unselectedLabelStyle: GoogleFonts.poppins(
-      fontSize: MediaQuery.of(context).size.width / 30,
-      color: Colors.white54,
-    ),
-  );
-
-  final radioTheme = RadioThemeData(
-    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-  );
-  final checkboxTheme = CheckboxThemeData(
-    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-  );
-  final switchTheme = SwitchThemeData(
-    trackColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-    thumbColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-  );
-
+  final radius = BorderRadius.circular(tokens.radiusMd);
   return ThemeData(
-    tabBarTheme: tabBarTheme,
-    inputDecorationTheme: inputDecorationTheme,
-    textTheme: loadTextTheme(context, 'dark'),
-    switchTheme: switchTheme,
-    radioTheme: radioTheme,
-    checkboxTheme: checkboxTheme,
-    colorScheme: colorScheme.copyWith(error: AppColors.appDanger),
-  );
-}
-
-ThemeData lightTheme(BuildContext context) {
-  final colorScheme = Theme.of(context).colorScheme.copyWith(
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onSurface: Colors.black,
-        primary: AppColors.primary,
-        error: AppColors.appDanger,
-        secondary: AppColors.secondary,
-        surface: AppColors.surface,
-      );
-
-  const inputDecorationTheme = InputDecorationTheme(
-    fillColor: AppColors.appAccent,
-    hintStyle: TextStyle(color: AppColors.appPrimary2),
-    border:
-        OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
-  );
-
-  final tabBarTheme = TabBarThemeData(
-    indicator: const UnderlineTabIndicator(
-      borderSide: BorderSide(color: AppColors.primary, width: 2.0),
-    ),
-    labelColor: AppColors.primary,
-    unselectedLabelColor: AppColors.primary,
-    // ✅ versi kompatibel: langsung TextStyle
-    labelStyle: GoogleFonts.poppins(
-      fontSize: MediaQuery.of(context).size.width / 30,
-      color: AppColors.primary,
-    ),
-    unselectedLabelStyle: GoogleFonts.poppins(
-      fontSize: MediaQuery.of(context).size.width / 30,
-      color: AppColors.primary.withAlpha(140),
-    ),
-  );
-
-  final switchTheme = SwitchThemeData(
-    trackColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-    thumbColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-  );
-  final radioTheme = RadioThemeData(
-    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-  );
-  final checkboxTheme = CheckboxThemeData(
-    fillColor: WidgetStateProperty.resolveWith(AppColors.switchColor),
-  );
-
-  return ThemeData(
-    tabBarTheme: tabBarTheme,
-    inputDecorationTheme: inputDecorationTheme,
+    useMaterial3: true,
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: tokens.sand,
+    colorScheme: scheme,
+    fontFamily: 'Roboto',
     textTheme: loadTextTheme(context, 'light'),
-    switchTheme: switchTheme,
-    radioTheme: radioTheme,
-    checkboxTheme: checkboxTheme,
-    primaryColor: AppColors.primary,
-    colorScheme: colorScheme.copyWith(error: AppColors.appDanger),
+    extensions: const [HudhudTheme.light],
+    dividerTheme: const DividerThemeData(
+        color: Color(0xFFE4DCD6), thickness: 1, space: 1),
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      centerTitle: false,
+      backgroundColor: tokens.sand,
+      foregroundColor: tokens.charcoal,
+      surfaceTintColor: Colors.transparent,
+    ),
+    cardTheme: CardThemeData(
+      color: tokens.surface,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: radius),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(48, 48),
+        backgroundColor: tokens.terracotta,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: radius),
+        textStyle: const TextStyle(fontWeight: FontWeight.w700),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(48, 48),
+        foregroundColor: tokens.terracottaDark,
+        side: BorderSide(color: tokens.outline),
+        shape: RoundedRectangleBorder(borderRadius: radius),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: tokens.surface,
+      hintStyle: TextStyle(color: tokens.muted),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      border: OutlineInputBorder(
+          borderRadius: radius, borderSide: BorderSide(color: tokens.outline)),
+      enabledBorder: OutlineInputBorder(
+          borderRadius: radius, borderSide: BorderSide(color: tokens.outline)),
+      focusedBorder: OutlineInputBorder(
+          borderRadius: radius,
+          borderSide: BorderSide(color: tokens.terracotta, width: 2)),
+    ),
+    navigationBarTheme: NavigationBarThemeData(
+      height: 72,
+      backgroundColor: tokens.surface,
+      indicatorColor: tokens.terracotta.withValues(alpha: .14),
+      elevation: 0,
+      labelTextStyle: WidgetStateProperty.resolveWith((states) => TextStyle(
+            color: states.contains(WidgetState.selected)
+                ? tokens.terracottaDark
+                : tokens.muted,
+            fontSize: 12,
+            fontWeight: states.contains(WidgetState.selected)
+                ? FontWeight.w700
+                : FontWeight.w500,
+          )),
+      iconTheme: WidgetStateProperty.resolveWith((states) => IconThemeData(
+            color: states.contains(WidgetState.selected)
+                ? tokens.terracotta
+                : tokens.muted,
+            size: 23,
+          )),
+    ),
   );
 }
+
+ThemeData lightTheme(BuildContext context) => _theme(context);
+ThemeData darkTheme(BuildContext context) => _theme(context);

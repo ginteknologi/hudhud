@@ -10,25 +10,30 @@ class AppException implements Exception {
   });
 
   @override
-  String toString() => 'AppException(statusCode: $statusCode, message: $message)';
+  String toString() =>
+      'AppException(statusCode: $statusCode, message: $message)';
 }
 
 class NetworkException extends AppException {
-  NetworkException({String message = 'Tidak dapat terhubung ke internet. Periksa koneksi Anda.'})
-      : super(message: message);
+  NetworkException({
+    super.message = 'Tidak dapat terhubung ke internet. Periksa koneksi Anda.',
+  });
 }
 
 class ServerException extends AppException {
-  ServerException({String message = 'Terjadi kesalahan pada server. Silakan coba lagi nanti.', int? statusCode})
-      : super(message: message, statusCode: statusCode);
+  ServerException({
+    super.message = 'Terjadi kesalahan pada server. Silakan coba lagi nanti.',
+    super.statusCode,
+  });
 }
 
 class UnauthorizedException extends AppException {
-  UnauthorizedException({String message = 'Sesi Anda telah berakhir. Silakan login kembali.'})
-      : super(message: message, statusCode: 401);
+  UnauthorizedException({
+    super.message = 'Sesi Anda telah berakhir. Silakan login kembali.',
+  }) : super(statusCode: 401);
 }
 
 class NotFoundException extends AppException {
-  NotFoundException({String message = 'Data tidak ditemukan.'})
-      : super(message: message, statusCode: 404);
+  NotFoundException({super.message = 'Data tidak ditemukan.'})
+      : super(statusCode: 404);
 }

@@ -1,10 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:masjid_app/components/layout/app_bar_ws.dart';
-import 'package:masjid_app/components/partial/list_ui.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/providers/quran_settings_providers.dart';
 import 'package:masjid_app/providers/quran_ui_settings_provider.dart';
 
@@ -19,15 +18,16 @@ class AlquranPengaturanPage extends ConsumerWidget {
   ];
 
   void _showQoriPicker(BuildContext context, WidgetRef ref, String currentId) {
+    final t = context.hudhud;
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(t.radiusMd)),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: t.surface,
       builder: (bottomSheetContext) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+          padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceLg, t.spaceLg, t.spaceXl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,30 +37,30 @@ class AlquranPengaturanPage extends ConsumerWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: t.outline,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                "Pilih Qori Murottal",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              SizedBox(height: t.spaceMd),
+              Text(
+                'Pilih Qori Murottal',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: t.charcoal),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: t.spaceSm),
               ..._qoriList.map((qori) {
                 final isSelected = qori['id'] == currentId;
                 return ListTile(
+                  minTileHeight: t.controlHeight,
                   title: Text(
                     qori['name']!,
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? const Color(0xFFD06A4C) : Colors.black87,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+                      color: isSelected ? t.terracottaDark : t.charcoal,
                     ),
                   ),
                   trailing: isSelected
-                      ? const Icon(Icons.check_circle_rounded,
-                          color: Color(0xFFD06A4C))
+                      ? Icon(LucideIcons.circleCheck, color: t.terracotta)
                       : null,
                   onTap: () {
                     ref
@@ -80,6 +80,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
   Widget _layout(WidgetRef ref, BuildContext context) {
     final uiSettings = ref.watch(quranUiSettingsProvider);
     final uiNotifier = ref.read(quranUiSettingsProvider.notifier);
+    final t = context.hudhud;
 
     final currentQoriName = _qoriList.firstWhere(
       (q) => q['id'] == uiSettings.selectedQori,
@@ -88,28 +89,25 @@ class AlquranPengaturanPage extends ConsumerWidget {
 
     return SafeArea(
       top: false,
-      child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
+      child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: t.spaceXl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 12),
                 // Section: Tampilan & Ukuran Teks
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 6),
+                  padding: EdgeInsets.symmetric(horizontal: t.spaceLg, vertical: t.spaceSm),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AutoSizeText(
-                        "Tampilan & Tipografi",
+                        'Tampilan & Tipografi',
                         maxLines: 1,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize:
-                              Theme.of(context).textTheme.titleSmall?.fontSize,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: t.charcoal,
                         ),
                       ),
                       AutoSizeText(
@@ -117,7 +115,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                         maxLines: 1,
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
-                          color: const Color(0xFF929292),
+                          color: t.muted,
                           fontSize:
                               Theme.of(context).textTheme.bodySmall?.fontSize,
                         ),
@@ -126,12 +124,13 @@ class AlquranPengaturanPage extends ConsumerWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: t.spaceLg, vertical: t.spaceSm),
                   child: Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(t.spaceMd),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
+                      color: t.surface,
+                      borderRadius: BorderRadius.circular(t.radiusMd),
+                      border: Border.all(color: t.outline),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,11 +138,11 @@ class AlquranPengaturanPage extends ConsumerWidget {
                         // Live Preview
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(t.spaceMd),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF8FAF9),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                            color: t.sand,
+                            borderRadius: BorderRadius.circular(t.radiusSm),
+                            border: Border.all(color: t.outline),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -156,7 +155,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                   fontFamily: GoogleFonts.amiriQuran().fontFamily,
                                   fontSize: uiSettings.arabicFontSize,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1E293B),
+                                  color: t.charcoal,
                                 ),
                               ),
                               if (uiSettings.showLatin) ...[
@@ -166,7 +165,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: uiSettings.translationFontSize,
                                     fontStyle: FontStyle.italic,
-                                    color: const Color(0xFFD06A4C),
+                                    color: t.terracotta,
                                   ),
                                 ),
                               ],
@@ -176,7 +175,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                                   "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.",
                                   style: TextStyle(
                                     fontSize: uiSettings.translationFontSize,
-                                    color: Colors.black87,
+                                    color: t.charcoal,
                                   ),
                                 ),
                               ],
@@ -192,10 +191,10 @@ class AlquranPengaturanPage extends ConsumerWidget {
                             const Text("Ukuran Huruf Arab",
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                             Text("${uiSettings.arabicFontSize.toInt()} px",
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFD06A4C))),
+                                    fontWeight: FontWeight.w700,
+                                    color: t.terracottaDark)),
                           ],
                         ),
                         Slider(
@@ -203,7 +202,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                           min: 18.0,
                           max: 36.0,
                           divisions: 9,
-                          activeColor: const Color(0xFFD06A4C),
+                          activeColor: t.terracotta,
                           onChanged: (val) =>
                               uiNotifier.updateArabicFontSize(val),
                         ),
@@ -215,10 +214,10 @@ class AlquranPengaturanPage extends ConsumerWidget {
                             const Text("Ukuran Teks Terjemahan",
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                             Text("${uiSettings.translationFontSize.toInt()} px",
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFD06A4C))),
+                                    fontWeight: FontWeight.w700,
+                                    color: t.terracottaDark)),
                           ],
                         ),
                         Slider(
@@ -226,7 +225,7 @@ class AlquranPengaturanPage extends ConsumerWidget {
                           min: 11.0,
                           max: 20.0,
                           divisions: 9,
-                          activeColor: const Color(0xFFD06A4C),
+                          activeColor: t.terracotta,
                           onChanged: (val) =>
                               uiNotifier.updateTranslationFontSize(val),
                         ),
@@ -234,27 +233,27 @@ class AlquranPengaturanPage extends ConsumerWidget {
                         // Switch Toggles
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          activeThumbColor: Colors.white,
-                          activeTrackColor: const Color(0xFFD06A4C),
-                          inactiveThumbColor: Colors.white,
-                          inactiveTrackColor: Colors.grey.shade300,
+                          activeThumbColor: t.surface,
+                          activeTrackColor: t.terracotta,
+                          inactiveThumbColor: t.surface,
+                          inactiveTrackColor: t.outline,
                           trackOutlineColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          title: const Text("Tampilkan Transliterasi Latin",
-                              style: TextStyle(fontSize: 13)),
+                              const WidgetStatePropertyAll(Colors.transparent),
+                          title: Text('Tampilkan Transliterasi Latin',
+                              style: TextStyle(color: t.charcoal)),
                           value: uiSettings.showLatin,
                           onChanged: (val) => uiNotifier.toggleLatin(val),
                         ),
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          activeThumbColor: Colors.white,
-                          activeTrackColor: const Color(0xFFD06A4C),
-                          inactiveThumbColor: Colors.white,
-                          inactiveTrackColor: Colors.grey.shade300,
+                          activeThumbColor: t.surface,
+                          activeTrackColor: t.terracotta,
+                          inactiveThumbColor: t.surface,
+                          inactiveTrackColor: t.outline,
                           trackOutlineColor:
-                              WidgetStateProperty.all(Colors.transparent),
-                          title: const Text("Tampilkan Terjemahan",
-                              style: TextStyle(fontSize: 13)),
+                              const WidgetStatePropertyAll(Colors.transparent),
+                          title: Text('Tampilkan Terjemahan',
+                              style: TextStyle(color: t.charcoal)),
                           value: uiSettings.showTranslation,
                           onChanged: (val) => uiNotifier.toggleTranslation(val),
                         ),
@@ -265,454 +264,249 @@ class AlquranPengaturanPage extends ConsumerWidget {
 
                 const SizedBox(height: 10),
 
-                // Section: Umum
+                _sectionHeading(context, t, 'Umum & Audio', 'Pilihan qori dan audio murottal'),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 21, vertical: 6),
+                  padding: EdgeInsets.symmetric(horizontal: t.spaceLg, vertical: t.spaceSm),
+                  child: Container(
+                    constraints: BoxConstraints(minHeight: t.controlHeight),
+                    padding: EdgeInsets.all(t.spaceMd),
+                    decoration: BoxDecoration(
+                      color: t.surface,
+                      borderRadius: BorderRadius.circular(t.radiusMd),
+                      border: Border.all(color: t.outline),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Qori Murottal', style: TextStyle(fontWeight: FontWeight.w700, color: t.charcoal)),
+                              SizedBox(height: t.spaceXs),
+                              Text('Pelafal audio saat memutar ayat', style: TextStyle(color: t.muted)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Material(
+                          color: t.sand,
+                          borderRadius: BorderRadius.circular(t.radiusSm),
+                          child: InkWell(
+                            onTap: () => _showQoriPicker(context, ref, uiSettings.selectedQori),
+                            borderRadius: BorderRadius.circular(t.radiusSm),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(minHeight: t.controlHeight),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: t.spaceSm),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .34),
+                                      child: Text(currentQoriName, maxLines: 1, overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontWeight: FontWeight.w600, color: t.terracottaDark)),
+                                    ),
+                                    SizedBox(width: t.spaceXs),
+                                    Icon(LucideIcons.chevronDown, size: 18, color: t.terracotta),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                _sectionHeading(context, t, 'Quran Media', 'Unduh data untuk penggunaan tanpa internet'),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: t.spaceLg, vertical: t.spaceSm),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AutoSizeText(
-                        "Umum & Audio",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize:
-                              Theme.of(context).textTheme.titleSmall?.fontSize,
-                        ),
+                      Text('Mushaf', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: t.charcoal)),
+                      SizedBox(height: t.spaceSm),
+                      _mediaCard(t,
+                        icon: LucideIcons.bookOpen,
+                        title: 'Mushaf Standar Indonesia',
+                        trailing: Icon(LucideIcons.circleCheck, color: t.success),
                       ),
-                      AutoSizeText(
-                        "Pilihan qori dan audio murottal",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          color: const Color(0xFF929292),
-                          fontSize:
-                              Theme.of(context).textTheme.bodySmall?.fontSize,
-                        ),
+                      SizedBox(height: t.spaceSm),
+                      _mediaCard(t,
+                        icon: LucideIcons.bookOpen,
+                        title: 'Mushaf Indonesia Tajwid',
+                        trailing: _mediaAction(t, 'Unduh mushaf tajwid', LucideIcons.download, () async {
+                          _showPopup(context);
+                          ref.read(quranDownloadProvider.notifier).downloadFile('tajwid');
+                        }),
+                      ),
+                      SizedBox(height: t.spaceSm),
+                      _mediaCard(t,
+                        icon: LucideIcons.bookOpen,
+                        title: 'Mushaf Madinah',
+                        trailing: _mediaAction(t, 'Unduh mushaf madinah', LucideIcons.download, () async {
+                          _showPopup(context);
+                          ref.read(quranDownloadProvider.notifier).downloadFile('madinah');
+                        }),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 21, vertical: 10),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Qori Murottal",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  "Pilihan pelafal audio saat memutar ayat",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                              ],
+                  padding: EdgeInsets.symmetric(horizontal: t.spaceLg, vertical: t.spaceSm),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Murottal', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: t.charcoal)),
+                      SizedBox(height: t.spaceSm),
+                      Container(
+                        constraints: BoxConstraints(minHeight: t.controlHeight),
+                        padding: EdgeInsets.all(t.spaceSm),
+                        decoration: BoxDecoration(
+                          color: t.surface,
+                          borderRadius: BorderRadius.circular(t.radiusMd),
+                          border: Border.all(color: t.outline),
+                        ),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(t.radiusSm),
+                              child: Image.asset('assets/img/murotal/mishari.jpg', height: 64, width: 64, fit: BoxFit.cover),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          InkWell(
-                            onTap: () => _showQoriPicker(
-                                context, ref, uiSettings.selectedQori),
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 7),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: const Color(0xFFD06A4C)),
-                                borderRadius: BorderRadius.circular(8),
-                                color: const Color(0xFFE6F4F2),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
+                            SizedBox(width: t.spaceMd),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxWidth:
-                                          MediaQuery.of(context).size.width *
-                                              0.34,
-                                    ),
-                                    child: Text(
-                                      currentQoriName,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFFD06A4C),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(Icons.arrow_drop_down,
-                                      size: 18, color: Color(0xFFD06A4C)),
+                                  Text('Mishari Alafasy', style: TextStyle(fontWeight: FontWeight.w700, color: t.charcoal)),
+                                  SizedBox(height: t.spaceXs),
+                                  Text('Mishari bin Rashed Alafasy', style: TextStyle(color: t.muted)),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 21, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AutoSizeText(
-                        "Quran Media",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize:
-                              Theme.of(context).textTheme.titleSmall?.fontSize,
-                        ),
-                      ),
-                      AutoSizeText(
-                        "Download data quran & murotal untuk pemkaian tanpa internet",
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          color: const Color(0xFF929292),
-                          fontSize:
-                              Theme.of(context).textTheme.bodySmall?.fontSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 21, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AutoSizeText(
-                        "Mushaf",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize:
-                              Theme.of(context).textTheme.titleSmall?.fontSize,
-                        ),
-                      ),
-                      ListItemUiWidget(
-                        showIcon: IconPosition.both,
-                        iconLeft: const Icon(
-                          Icons.import_contacts_rounded,
-                          color: Color(0xFFADADAD),
-                        ),
-                        id: 1,
-                        typeDivider: TypeDivider.none,
-                        title: "Mushaf Indonesia",
-                        titleStyle: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black),
-                        iconRight: Row(
-                          children: [
-                            Icon(
-                              Icons.check_circle_outline_rounded,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {},
-                                  borderRadius: BorderRadius.circular(20),
-                                  splashColor:
-                                      Colors.green.withValues(alpha: 0.5),
-                                  child: const Icon(
-                                    Icons.delete_rounded,
-                                    color: Colors.black,
-                                  )),
-                            )
                           ],
                         ),
-                      ),
-                      ListItemUiWidget(
-                        showIcon: IconPosition.both,
-                        iconLeft: const Icon(
-                          Icons.import_contacts_rounded,
-                          color: Color(0xFFADADAD),
-                        ),
-                        id: 1,
-                        typeDivider: TypeDivider.none,
-                        title: "Mushaf Indonesia Tajwid",
-                        titleStyle: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black),
-                        iconRight: Row(
-                          children: [
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () async {
-                                    _showPopup(context);
-                                    ref
-                                        .read(quranDownloadProvider.notifier)
-                                        .downloadFile("halaman");
-                                  },
-                                  borderRadius: BorderRadius.circular(20),
-                                  splashColor:
-                                      Colors.green.withValues(alpha: 0.5),
-                                  child: const Icon(
-                                    Icons.download_rounded,
-                                    color: Colors.black,
-                                  )),
-                            )
-                          ],
-                        ),
-                      ),
-                      ListItemUiWidget(
-                        showIcon: IconPosition.both,
-                        iconLeft: const Icon(
-                          Icons.import_contacts_rounded,
-                          color: Color(0xFFADADAD),
-                        ),
-                        id: 1,
-                        typeDivider: TypeDivider.none,
-                        title: "Mushaf Indonesia",
-                        titleStyle: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black),
-                        iconRight: Row(
-                          children: [
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {
-                                    _showPopup(context);
-                                  },
-                                  borderRadius: BorderRadius.circular(20),
-                                  splashColor:
-                                      Colors.green.withValues(alpha: 0.5),
-                                  child: const Icon(
-                                    Icons.download_rounded,
-                                    color: Colors.black,
-                                  )),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 21, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AutoSizeText(
-                        "Murotal",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize:
-                              Theme.of(context).textTheme.titleSmall?.fontSize,
-                        ),
-                      ),
-                      ListItemUiWidget(
-                        showIcon: IconPosition.both,
-                        iconLeft: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              "assets/img/murotal/mishari.jpg",
-                              height: 80,
-                              width: 80,
-                              fit: BoxFit.cover,
-                            )),
-                        id: 1,
-                        typeDivider: TypeDivider.none,
-                        title: "Mishari Alafasy",
-                        subTitle: "Mishari bin Rashed Alafasy",
-                        titleStyle: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-          )),
+          ),
+    );
+  }
+
+  Widget _sectionHeading(BuildContext context, HudhudTheme t, String title, String subtitle) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceSm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: t.charcoal)),
+          SizedBox(height: t.spaceXs),
+          Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: t.muted)),
+        ],
+      ),
+    );
+  }
+
+  Widget _mediaCard(HudhudTheme t, {required IconData icon, required String title, required Widget trailing}) {
+    return Container(
+      constraints: BoxConstraints(minHeight: t.controlHeight),
+      padding: EdgeInsets.symmetric(horizontal: t.spaceMd),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: t.terracotta),
+          SizedBox(width: t.spaceSm),
+          Expanded(child: Text(title, style: TextStyle(color: t.charcoal, fontWeight: FontWeight.w600))),
+          trailing,
+        ],
+      ),
+    );
+  }
+
+  Widget _mediaAction(HudhudTheme t, String label, IconData icon, VoidCallback onPressed) {
+    return IconButton(
+      constraints: BoxConstraints.tightFor(width: t.controlHeight, height: t.controlHeight),
+      tooltip: label,
+      onPressed: onPressed,
+      icon: Icon(icon, color: t.terracotta),
     );
   }
 
   void _showPopup(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext bc) {
-          return Consumer(builder: (c, consumerRef, child) {
-            final state = consumerRef.watch(quranDownloadProvider);
-            return Dialog(
-              elevation: 0,
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7.0)),
-              child: Container(
-                  padding: const EdgeInsets.all(10),
-                  width: MediaQuery.of(context).size.width,
-                  height: 170,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Mendownload",
-                        style: Theme.of(bc).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      LinearProgressIndicator(
-                        borderRadius: const BorderRadius.all(Radius.zero),
-                        color: Theme.of(bc).primaryColor,
-                        backgroundColor: const Color(0xFFD9D9D9),
-                        value: state.progresDownload,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AutoSizeText(
-                            "${state.totalTerDownload}/604",
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.fontSize,
-                            ),
-                          ),
-                          AutoSizeText(
-                            "${state.persenDownload}%",
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.fontSize,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                          alignment: Alignment.centerRight,
-                          child: state.paused
-                              ? Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                      onTap: () {
-                                        consumerRef
-                                            .read(quranDownloadProvider.notifier)
-                                            .resumeDownload();
-                                      },
-                                      borderRadius: BorderRadius.circular(20),
-                                      splashColor:
-                                          Colors.green.withValues(alpha: 0.5),
-                                      child: Text("Lanjutkan",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall
-                                                ?.fontSize,
-                                          ))),
-                                )
-                              : Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                      onTap: () {
-                                        consumerRef
-                                            .read(quranDownloadProvider.notifier)
-                                            .cancelDownload();
-                                      },
-                                      borderRadius: BorderRadius.circular(20),
-                                      splashColor:
-                                          Colors.green.withValues(alpha: 0.5),
-                                      child: Text("Pause",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall
-                                                ?.fontSize,
-                                          ))),
-                                ))
-                    ],
-                  )),
-            );
-          });
-        });
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => Consumer(
+        builder: (context, consumerRef, _) {
+          final state = consumerRef.watch(quranDownloadProvider);
+          final t = dialogContext.hudhud;
+          return AlertDialog(
+            backgroundColor: t.surface,
+            surfaceTintColor: Colors.transparent,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(t.radiusMd)),
+            title: Text('Mengunduh mushaf', style: TextStyle(color: t.charcoal, fontWeight: FontWeight.w700)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                LinearProgressIndicator(
+                  borderRadius: BorderRadius.circular(t.radiusSm),
+                  color: t.terracotta,
+                  backgroundColor: t.outline,
+                  value: state.progresDownload,
+                ),
+                SizedBox(height: t.spaceSm),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${state.totalTerDownload}/604', style: TextStyle(color: t.muted)),
+                    Text('${state.persenDownload}%', style: TextStyle(color: t.charcoal, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (state.paused) {
+                    consumerRef.read(quranDownloadProvider.notifier).resumeDownload();
+                  } else {
+                    consumerRef.read(quranDownloadProvider.notifier).pauseDownload();
+                  }
+                },
+                child: Text(state.paused ? 'Lanjutkan' : 'Jeda', style: TextStyle(color: t.terracottaDark)),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
+    final t = context.hudhud;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      extendBodyBehindAppBar: false,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBarWSWidget.getAppbarWidget(
-          title: "Pengaturan Alquran",
-          context: context,
-          elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.white),
-          color: Colors.white,
-          titleAlign: Alignment.centerLeft,
-          backgroundColor: const Color(0xFFD06A4C)),
+      backgroundColor: t.sand,
+      appBar: AppBar(
+        title: const Text("Pengaturan Al-Qur'an"),
+        leading: IconButton(
+          constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+          tooltip: 'Kembali',
+          onPressed: () => Navigator.of(context).maybePop(),
+          icon: const Icon(LucideIcons.arrowLeft),
+        ),
+      ),
       body: ref.watch(quranDownloadProvider).isLoadingList
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: t.terracotta))
           : _layout(ref, context),
     );
   }

@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/worship/worship_reader_scaffold.dart';
+import 'package:masjid_app/components/worship/worship_scripture_block.dart';
+import 'package:masjid_app/components/worship/worship_state_views.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/hadist_data.dart';
 import 'package:masjid_app/providers/hadits_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// HaditsTemaPage — dua mode dalam satu file:
-///   `/hadits/tema`       → daftar kategori tema
-///   `/hadits/tema/:id`   → isi satu tema
-///
-/// Daftar dan isi berbagi header, kartu, dan state; memisahkannya jadi dua
-/// file hanya menyalin ~80 baris yang sama.
-///
-/// Catatan: teks tema berasal dari Lidwa (api.myquran.com), berbeda gaya
-/// dengan 9 kitab + Arbain. Ditampilkan apa adanya.
 class HaditsTemaPage extends ConsumerWidget {
   const HaditsTemaPage({super.key});
 
@@ -29,72 +23,107 @@ class HaditsTemaPage extends ConsumerWidget {
   // ─── Mode daftar ───────────────────────────────────────────
 
   Widget _buildDaftar(BuildContext context, WidgetRef ref) {
+    final t = context.hudhud;
     final asyncTema = ref.watch(haditsTemaProvider);
 
-    return _shell(
-      context,
+    return WorshipReaderScaffold(
       title: 'Tema Pilihan',
-      subtitle: null,
-      child: asyncTema.when(
+      subtitle: 'Kumpulan hadits tematik',
+      body: asyncTema.when(
         data: (temas) {
-          if (temas.isEmpty) return _empty('Belum ada tema tersedia');
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+          if (temas.isEmpty) {
+            return const WorshipEmptyView(
+              title: 'Belum Ada Tema',
+              message: 'Daftar tema hadits belum tersedia.',
+            );
+          }
+          return ListView.separated(
+            padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceXl),
             itemCount: temas.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (_, i) => _temaTile(context, temas[i]),
           );
         },
         loading: () => Skeletonizer(
           enabled: true,
-          child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-            itemCount: 6,
+          child: ListView.separated(
+            padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceXl),
+            itemCount: 8,
+            separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (_, i) => _temaTile(
               context,
-              const HaditsTema(id: 0, nama: 'Nama tema sedang dimuat', jumlah: 0),
+              const HaditsTema(id: 0, nama: 'Nama tema sedang dimuat...', jumlah: 10),
             ),
           ),
         ),
-        error: (_, __) => _empty('Gagal memuat tema'),
+        error: (_, __) => WorshipErrorView(
+          title: 'Gagal Memuat Tema',
+          message: 'Silakan periksa koneksi dan coba lagi.',
+          onRetry: () => ref.invalidate(haditsTemaProvider),
+        ),
       ),
     );
   }
 
   Widget _temaTile(BuildContext context, HaditsTema tema) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
-      ),
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        leading: Container(
-          width: 34,
-          height: 34,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: const Color(0xFFEAF5F2),
-            borderRadius: BorderRadius.circular(9),
-          ),
-          child: const Icon(Icons.category_rounded,
-              size: 17, color: Color(0xFFD06A4C)),
-        ),
-        title: Text(
-          tema.nama,
-          style: GoogleFonts.poppins(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF1A1A1A),
-          ),
-        ),
-        subtitle: Text(
-          '${tema.jumlah} hadits',
-          style: GoogleFonts.poppins(fontSize: 10, color: Colors.black45),
-        ),
-        trailing: const Icon(Icons.chevron_right_rounded, color: Colors.black26),
+    final t = context.hudhud;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusMd),
         onTap: () => context.push('/hadits/tema/${tema.id}'),
+        child: Container(
+          constraints: BoxConstraints(minHeight: t.controlHeight),
+          padding: EdgeInsets.all(t.spaceMd),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.radiusMd),
+            border: Border.all(color: t.outline),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: t.sand,
+                  borderRadius: BorderRadius.circular(t.radiusSm),
+                ),
+                child: Center(
+                  child: Icon(LucideIcons.tag, size: 16, color: t.terracotta),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tema.nama,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: t.charcoal,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${tema.jumlah} hadits',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 11,
+                        color: t.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(LucideIcons.chevronRight, size: 18, color: t.muted),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -102,38 +131,48 @@ class HaditsTemaPage extends ConsumerWidget {
   // ─── Mode isi ──────────────────────────────────────────────
 
   Widget _buildIsi(BuildContext context, WidgetRef ref, int temaId) {
+    final t = context.hudhud;
     final temas = ref.watch(haditsTemaProvider).valueOrNull ?? const <HaditsTema>[];
     final asyncIsi = ref.watch(haditsTemaDetailProvider(temaId));
 
     var nama = 'Tema';
-    for (final t in temas) {
-      if (t.id == temaId) {
-        nama = t.nama;
+    for (final item in temas) {
+      if (item.id == temaId) {
+        nama = item.nama;
         break;
       }
     }
 
-    return _shell(
-      context,
+    final subtitle = asyncIsi.valueOrNull != null
+        ? '${asyncIsi.valueOrNull!.length} hadits'
+        : 'Memuat hadits...';
+
+    return WorshipReaderScaffold(
       title: nama,
-      subtitle: asyncIsi.valueOrNull == null
-          ? null
-          : '${asyncIsi.valueOrNull!.length} hadits',
-      child: asyncIsi.when(
+      subtitle: subtitle,
+      body: asyncIsi.when(
         data: (items) {
-          if (items.isEmpty) return _empty('Tema ini tidak punya hadits');
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+          if (items.isEmpty) {
+            return const WorshipEmptyView(
+              title: 'Hadits Tidak Ditemukan',
+              message: 'Tema ini belum memiliki hadits.',
+            );
+          }
+          return ListView.separated(
+            padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceXl),
             itemCount: items.length,
-            itemBuilder: (_, i) => _koleksiCard(items[i]),
+            separatorBuilder: (_, __) => const SizedBox(height: 10),
+            itemBuilder: (_, i) => _koleksiCard(context, items[i]),
           );
         },
         loading: () => Skeletonizer(
           enabled: true,
-          child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+          child: ListView.separated(
+            padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceXl),
             itemCount: 4,
+            separatorBuilder: (_, __) => const SizedBox(height: 10),
             itemBuilder: (_, i) => _koleksiCard(
+              context,
               const HaditsKoleksi(
                 id: 0,
                 judul: 'Judul hadits sedang dimuat',
@@ -143,144 +182,48 @@ class HaditsTemaPage extends ConsumerWidget {
             ),
           ),
         ),
-        error: (_, __) => _empty('Gagal memuat isi tema'),
+        error: (_, __) => WorshipErrorView(
+          title: 'Gagal Memuat Isi Tema',
+          message: 'Silakan periksa koneksi dan coba lagi.',
+          onRetry: () => ref.invalidate(haditsTemaDetailProvider(temaId)),
+        ),
       ),
     );
   }
 
-  Widget _koleksiCard(HaditsKoleksi item) {
+  Widget _koleksiCard(BuildContext context, HaditsKoleksi item) {
+    final t = context.hudhud;
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(t.spaceLg),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (item.judul.isNotEmpty)
+          if (item.judul.isNotEmpty) ...[
             Text(
               item.judul,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFFD06A4C),
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: t.terracotta,
               ),
             ),
-          const SizedBox(height: 10),
-          Text(
-            item.arab,
-            textAlign: TextAlign.right,
-            textDirection: TextDirection.rtl,
-            style: GoogleFonts.amiri(fontSize: 20, height: 2.0),
-          ),
-          const SizedBox(height: 10),
-          const Divider(color: Color(0xFFEEEEEE), height: 1),
-          const SizedBox(height: 10),
-          Text(
-            item.indo,
-            style: GoogleFonts.poppins(
-              fontSize: 12.5,
-              height: 1.65,
-              color: const Color(0xFF333333),
-            ),
+            const SizedBox(height: 12),
+            const Divider(),
+            const SizedBox(height: 12),
+          ],
+          WorshipScriptureBlock(
+            arabic: item.arab,
+            translation: item.indo,
+            arabicFontSize: 22,
           ),
         ],
-      ),
-    );
-  }
-
-  // ─── Kerangka bersama ──────────────────────────────────────
-
-  Widget _shell(
-    BuildContext context, {
-    required String title,
-    required String? subtitle,
-    required Widget child,
-  }) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF9),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () => Navigator.of(context).pop(),
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFE2EBE8)),
-                        ),
-                        child: const Icon(Icons.arrow_back_rounded,
-                            size: 20, color: Color(0xFFD06A4C)),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFD06A4C),
-                            ),
-                          ),
-                          if (subtitle != null)
-                            Text(
-                              subtitle,
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: Colors.black54,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(child: child),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _empty(String message) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.category_outlined, size: 44, color: Colors.black26),
-            const SizedBox(height: 12),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.black54),
-            ),
-          ],
-        ),
       ),
     );
   }

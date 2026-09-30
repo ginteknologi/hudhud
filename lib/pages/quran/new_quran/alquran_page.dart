@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/hudhud_ui.dart';
 import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/core/storage/bookmark_storage.dart';
+import 'package:masjid_app/core/storage/quran_reading_progress_storage.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
 import 'package:masjid_app/models/quran_models.dart';
+import 'package:masjid_app/pages/quran/new_quran/quran_verse_search_sheet.dart';
 import 'package:masjid_app/providers/quran_provider.dart';
-import 'package:masjid_app/core/storage/bookmark_storage.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AlquranPage extends ConsumerStatefulWidget {
   const AlquranPage({super.key});
@@ -21,1021 +24,531 @@ class AlquranPage extends ConsumerStatefulWidget {
 
 class _AlquranPageState extends ConsumerState<AlquranPage>
     with SingleTickerProviderStateMixin {
-  final BookmarkStorage _ayatStorage = BookmarkStorage("ayat");
-  final BookmarkStorage _indonesiaStorage = BookmarkStorage("indonesia");
-  final BookmarkStorage _madinahStorage = BookmarkStorage("madinah");
-  final BookmarkStorage _tajwidStorage = BookmarkStorage("tajwid");
-
-  late BookmarkData _ayatBookmark;
-  late BookmarkData _indonesiaBookmark;
-  late BookmarkData _madinahBookmark;
-  late BookmarkData _tajwidBookmark;
-
-  late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
+  final _search = TextEditingController();
+  late final TabController _tabs;
+  final _ayatStore = BookmarkStorage('ayat');
+  final _indonesiaStore = BookmarkStorage('indonesia_saved');
+  final _madinahStore = BookmarkStorage('madinah_saved');
+  final _tajwidStore = BookmarkStorage('tajwid_saved');
+  late BookmarkData _ayat;
+  late BookmarkData _indonesia;
+  late BookmarkData _madinah;
+  late BookmarkData _tajwid;
+  QuranReadingProgress? _progress;
+  String _query = '';
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    _tabController = TabController(length: 4, vsync: this);
+    _tabs = TabController(length: 4, vsync: this);
+    _tabs.addListener(_onTabChanged);
     _loadBookmarks();
+  }
+
+  void _onTabChanged() {
+    if (_tabs.index >= 2) FocusManager.instance.primaryFocus?.unfocus();
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
-    _searchController.dispose();
+    _tabs.removeListener(_onTabChanged);
+    _tabs.dispose();
+    _search.dispose();
     super.dispose();
   }
 
   void _loadBookmarks() {
-    _ayatBookmark = _ayatStorage.getBookmark();
-    _indonesiaBookmark = _indonesiaStorage.getBookmark();
-    _madinahBookmark = _madinahStorage.getBookmark();
-    _tajwidBookmark = _tajwidStorage.getBookmark();
+    _ayat = _ayatStore.getBookmark();
+    _indonesia = _indonesiaStore.getBookmark();
+    _madinah = _madinahStore.getBookmark();
+    _tajwid = _tajwidStore.getBookmark();
+    _progress = QuranReadingProgressStorage.getLatest();
   }
 
-  Future<void> _openReader(String route, {bool bookmarks = false}) async {
-    await context.push(bookmarks ? '$route?bookmarks=true' : route);
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    if (mounted) {
-      setState(_loadBookmarks);
-    }
+  Future<void> _open(String route, {bool bookmark = false}) async {
+    await context.push(bookmark ? '$route?bookmarks=true' : route);
+    if (mounted) setState(_loadBookmarks);
   }
 
-  void _showRandomAyatDialog(BuildContext context) {
-    showDialog(
+  Future<void> _searchVerses() async {
+    final t = context.hudhud;
+    final progress = _progress;
+    final selected = await showModalBottomSheet<QuranVerseSelection>(
       context: context,
-      builder: (dialogContext) {
-        return Dialog(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Consumer(
-            builder: (context, ref, _) {
-              final randomAsync = ref.watch(randomAyatProvider);
-
-              return randomAsync.when(
-                data: (data) {
-                  final arab =
-                      data['arab'] ?? 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
-                  final terjemahan = data['indonesia'] ??
-                      'Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.';
-                  final surat = data['surat'] ?? 'Al-Fatihah';
-                  final ayat = data['nomor_ayat'] ?? '1';
-
-                  return Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () =>
-                                    Navigator.of(dialogContext).pop(),
-                              ),
-                              Text(
-                                '$surat : $ayat',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.share, size: 20),
-                                onPressed: () {
-                                  SharePlus.instance.share(
-                                    ShareParams(
-                                      text:
-                                          '$arab\n\n$terjemahan\n\n($surat : $ayat)',
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            arab,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontFamily: GoogleFonts.amiriQuran().fontFamily,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              height: 1.6,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            terjemahan,
-                            textAlign: TextAlign.justify,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          ButtonElevated(
-                            title: 'Acak Lagi',
-                            iconLeft: const Icon(Icons.refresh,
-                                color: Colors.white, size: 18),
-                            showIcon: 'left',
-                            bgcolor: const Color(0xFFD06A4C),
-                            height: 40,
-                            color: Colors.white,
-                            radius: 8,
-                            shadow: false,
-                            onPressed: () {
-                              ref.invalidate(randomAyatProvider);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                loading: () => const SizedBox(
-                  height: 200,
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-                error: (_, __) => Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Gagal memuat ayat acak'),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: () => ref.invalidate(randomAyatProvider),
-                        child: const Text('Coba Lagi'),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: t.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      builder: (_) => QuranVerseSearchSheet(
+        initialSurahId: progress?.mode == QuranReadingMode.ayat
+            ? progress!.surahNumber
+            : null,
+      ),
     );
+    if (selected != null && mounted) {
+      await _open(
+        '${AppRoutes.quranPerAyat}?surah=${selected.surah}&ayat=${selected.ayat}',
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
-      body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Baris Header: Judul & Aksi
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Al-Qur'anul Karim",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: const Color(0xFFD06A4C),
-                                      ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  "Mari senantiasa istiqomah tilawah",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(color: Colors.black54),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                tooltip: "Ayat Kejutan",
-                                style: IconButton.styleFrom(
-                                  backgroundColor: const Color(0xFFE6F4F2),
-                                  foregroundColor: const Color(0xFFD06A4C),
-                                ),
-                                icon:
-                                    const Icon(Icons.shuffle_rounded, size: 20),
-                                onPressed: () => _showRandomAyatDialog(context),
-                              ),
-                              const SizedBox(width: 6),
-                              IconButton(
-                                tooltip: "Pengaturan",
-                                style: IconButton.styleFrom(
-                                  backgroundColor: const Color(0xFFE6F4F2),
-                                  foregroundColor: const Color(0xFFD06A4C),
-                                ),
-                                icon: const Icon(Icons.settings_outlined,
-                                    size: 20),
-                                onPressed: () =>
-                                    _openReader(AppRoutes.quranPengaturan),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-
-                      // Hero Card: Terakhir Dibaca
-                      _buildLastReadCard(),
-                      const SizedBox(height: 14),
-
-                      // Kolom Pencarian
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.04),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          onChanged: (val) {
-                            setState(() {
-                              _searchQuery = val.trim();
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText:
-                                "Cari surah (misal: Yasin, Al-Mulk, 36)...",
-                            hintStyle: const TextStyle(
-                                fontSize: 13, color: Colors.black38),
-                            prefixIcon: const Icon(Icons.search,
-                                color: Color(0xFFD06A4C), size: 22),
-                            suffixIcon: _searchQuery.isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(Icons.clear,
-                                        size: 18, color: Colors.grey),
-                                    onPressed: () {
-                                      _searchController.clear();
-                                      setState(() {
-                                        _searchQuery = '';
-                                      });
-                                    },
-                                  )
-                                : null,
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 13),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Persistent TabBar
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    controller: _tabController,
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.start,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-                    indicatorColor: const Color(0xFFD06A4C),
-                    indicatorWeight: 3,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    labelColor: const Color(0xFFD06A4C),
-                    unselectedLabelColor: Colors.black45,
-                    labelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 13),
-                    unselectedLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.w500, fontSize: 13),
-                    tabs: const [
-                      Tab(text: "Surah"),
-                      Tab(text: "Juz"),
-                      Tab(text: "Mushaf"),
-                      Tab(text: "Bookmark"),
-                    ],
-                  ),
-                ),
-              ),
-            ];
-          },
-          body: TabBarView(
-            controller: _tabController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: [
-              _buildSurahTab(),
-              _buildJuzTab(),
-              _buildMushafTab(),
-              _buildBookmarkTab(),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverAppBar(
+            pinned: true,
+            title: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Al-Qur'an"),
+                  Text('Baca tenang, lanjutkan mudah',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+                ]),
+            actions: [
+              HudhudIconButton(
+                  icon: LucideIcons.settings2,
+                  tooltip: 'Pengaturan Al-Qur\'an',
+                  onPressed: () => _open(AppRoutes.quranPengaturan)),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  /// Hero Card menampilkan progress baca terakhir
-  Widget _buildLastReadCard() {
-    // Prioritas: Tilawah Per Ayat jika ada
-    final hasAyat = _ayatBookmark.surat > 0;
-    final hasMushaf = _indonesiaBookmark.index > 0 ||
-        _madinahBookmark.index > 0 ||
-        _tajwidBookmark.index > 0;
-
-    String surahName = 'Al-Fatihah';
-    String detailText = 'Mulai tilawah hari ini';
-    VoidCallback onContinue = () => _openReader(AppRoutes.quranPerAyat);
-
-    if (hasAyat) {
-      surahName = _ayatBookmark.namaSurat;
-      detailText = 'Ayat ke-${_ayatBookmark.ayat} • Tilawah Per Ayat';
-      onContinue = () async {
-        await context.push(
-            '${AppRoutes.quranPerAyat}?surah=${_ayatBookmark.surat}&ayat=${_ayatBookmark.ayat}');
-        if (mounted) setState(_loadBookmarks);
-      };
-    } else if (hasMushaf) {
-      if (_indonesiaBookmark.index > 0) {
-        surahName = _indonesiaBookmark.namaSurat.isNotEmpty
-            ? _indonesiaBookmark.namaSurat
-            : 'Mushaf Indonesia';
-        detailText = 'Halaman ${_indonesiaBookmark.index} • Standar Kemenag';
-        onContinue = () => _openReader(AppRoutes.quranPage, bookmarks: true);
-      } else if (_madinahBookmark.index > 0) {
-        surahName = _madinahBookmark.namaSurat.isNotEmpty
-            ? _madinahBookmark.namaSurat
-            : 'Mushaf Madinah';
-        detailText = 'Halaman ${_madinahBookmark.index} • Rasm Utsmani';
-        onContinue =
-            () => _openReader(AppRoutes.quranPageMadinah, bookmarks: true);
-      } else {
-        surahName = _tajwidBookmark.namaSurat.isNotEmpty
-            ? _tajwidBookmark.namaSurat
-            : 'Mushaf Tajwid';
-        detailText = 'Halaman ${_tajwidBookmark.index} • Tajwid Berwarna';
-        onContinue =
-            () => _openReader(AppRoutes.quranPageTajwid, bookmarks: true);
-      }
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF8C3B24), Color(0xFFD06A4C)],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(18),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.bookmark_added_rounded,
-                        color: Color(0xFFECA843), size: 16),
-                    const SizedBox(width: 6),
-                    Text(
-                      hasAyat || hasMushaf
-                          ? "Terakhir Dibaca"
-                          : "Yuk Mulai Membaca",
-                      style: const TextStyle(
-                        color: Color(0xFFECA843),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  surahName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  detailText,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-                const SizedBox(height: 12),
-                InkWell(
-                  onTap: onContinue,
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          hasAyat || hasMushaf ? "Lanjutkan" : "Buka Surah",
-                          style: const TextStyle(
-                            color: Color(0xFFD06A4C),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(Icons.arrow_forward_rounded,
-                            size: 14, color: Color(0xFFD06A4C)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Image.asset(
-            'assets/img/card_quran.png',
-            width: 85,
-            height: 85,
-            fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) => Image.asset(
-              'assets/img/quran_banner.png',
-              width: 85,
-              height: 85,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Tab 1: Daftar 114 Surah
-  Widget _buildSurahTab() {
-    final surahAsync = ref.watch(surahListProvider(''));
-
-    return surahAsync.when(
-      data: (surahList) {
-        if (surahList.isEmpty) {
-          return const Center(child: Text("Data surah belum tersedia"));
-        }
-
-        final filtered = surahList.where((s) {
-          if (_searchQuery.isEmpty) return true;
-          final q = _searchQuery.toLowerCase();
-          return s.nama.toLowerCase().contains(q) ||
-              s.arti.toLowerCase().contains(q) ||
-              s.id.toString() == q;
-        }).toList();
-
-        if (filtered.isEmpty) {
-          return const Center(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Text(
-                "Tidak ada surah yang cocok dengan pencarian Anda",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black54),
-              ),
-            ),
-          );
-        }
-
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          itemCount: filtered.length,
-          separatorBuilder: (_, __) => const Divider(
-            height: 1,
-            color: Color(0xFFEBEBEB),
-            indent: 58,
-          ),
-          itemBuilder: (context, index) {
-            final item = filtered[index];
-            final tipeName = item.tipe.toLowerCase().contains('mad')
-                ? 'MADANIYAH'
-                : 'MAKKIYAH';
-
-            return InkWell(
-              onTap: () async {
-                await context
-                    .push('${AppRoutes.quranPerAyat}?surah=${item.id}');
-                if (mounted) setState(_loadBookmarks);
-              },
-              borderRadius: BorderRadius.circular(10),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                child: Row(
-                  children: [
-                    // Badge Nomor Surah Islami
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/list_star.svg',
-                          height: 38,
-                          width: 38,
-                          colorFilter: const ColorFilter.mode(
-                            Color(0xFFD06A4C),
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        Text(
-                          '${item.id}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFD06A4C),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 14),
-
-                    // Info Nama Latin & Terjemahan
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.nama,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            '$tipeName • ${item.jumlahAyat} AYAT${item.arti.isNotEmpty ? ' • ${item.arti}' : ''}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-
-                    // Nama Arab
-                    Text(
-                      item.asma,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.amiriQuran().fontFamily,
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFD06A4C),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-      loading: () => const Center(
-        child: CircularProgressIndicator(color: Color(0xFFD06A4C)),
-      ),
-      error: (_, __) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Gagal memuat daftar surah"),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => ref.invalidate(surahListProvider('')),
-              child: const Text("Coba Lagi"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Tab 2: Daftar 30 Juz
-  Widget _buildJuzTab() {
-    final filteredJuz = kQuranJuzList.where((j) {
-      if (_searchQuery.isEmpty) return true;
-      final q = _searchQuery.toLowerCase();
-      return j.name.toLowerCase().contains(q) ||
-          j.startSurahName.toLowerCase().contains(q) ||
-          j.juzNumber.toString() == q;
-    }).toList();
-
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      itemCount: filteredJuz.length,
-      separatorBuilder: (_, __) => const Divider(
-        height: 1,
-        color: Color(0xFFEBEBEB),
-        indent: 58,
-      ),
-      itemBuilder: (context, index) {
-        final juz = filteredJuz[index];
-
-        return InkWell(
-          onTap: () async {
-            // Langsung buka mushaf ke halaman awal juz tersebut
-            await context.push('${AppRoutes.quranPage}?page=${juz.startPage}');
-            if (mounted) setState(_loadBookmarks);
-          },
-          borderRadius: BorderRadius.circular(10),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            child: Row(
-              children: [
-                // Badge Nomor Juz
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE6F4F2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${juz.juzNumber}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFD06A4C),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 14),
-
-                // Info Juz
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${juz.name} • ${juz.startSurahName}',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        'Mulai Ayat ${juz.startAyat} • Halaman ${juz.startPage}',
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-
-                // Nama Arab Juz
-                Text(
-                  juz.arabicName,
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.amiriQuran().fontFamily,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFFD06A4C),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Tab 3: Pilihan Mushaf Per Halaman
-  Widget _buildMushafTab() {
-    final listMushaf = [
-      {
-        'title': 'Mushaf Standar Kemenag Indonesia',
-        'desc': 'Mushaf cetak standar Kementerian Agama RI (15 baris pojok)',
-        'route': AppRoutes.quranPage,
-        'icon': 'assets/icons/indonesia.png',
-        'bookmark': _indonesiaBookmark,
-      },
-      {
-        'title': 'Mushaf Madinah (Utsmani)',
-        'desc': 'Rasm Utsmani standar Percetakan Al-Qur\'an Raja Fahd',
-        'route': AppRoutes.quranPageMadinah,
-        'icon': 'assets/icons/madinah.png',
-        'bookmark': _madinahBookmark,
-      },
-      {
-        'title': 'Mushaf Tajwid Berwarna',
-        'desc':
-            'Dilengkapi panduan warna kaidah tajwid untuk kemudahan tilawah',
-        'route': AppRoutes.quranPageTajwid,
-        'icon': 'assets/icons/tajwid.png',
-        'bookmark': _tajwidBookmark,
-      },
-    ];
-
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: listMushaf.length,
-      itemBuilder: (context, index) {
-        final item = listMushaf[index];
-        final bm = item['bookmark'] as BookmarkData;
-        final hasRead = bm.index > 0;
-
-        return Card(
-          margin: const EdgeInsets.only(bottom: 14),
-          elevation: 0,
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-            side: const BorderSide(color: Color(0xFFE2E8F0)),
-          ),
-          child: InkWell(
-            onTap: () => _openReader(item['route'] as String),
-            borderRadius: BorderRadius.circular(14),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
+              padding: EdgeInsets.fromLTRB(
+                  t.spaceLg, t.spaceSm, t.spaceLg, t.spaceMd),
+              child: Column(
                 children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE6F4F2),
-                      borderRadius: BorderRadius.circular(12),
+                  _ContinuePanel(
+                    progress: _progress,
+                    onTap: _continueReading,
+                  ),
+                  if (_tabs.index < 2) ...[
+                    SizedBox(height: t.spaceMd),
+                    TextField(
+                      controller: _search,
+                      onChanged: (value) =>
+                          setState(() => _query = value.trim()),
+                      decoration: InputDecoration(
+                        hintText: _tabs.index == 0
+                            ? 'Cari surah, arti, atau nomor'
+                            : 'Cari juz atau nama surah',
+                        prefixIcon: const Icon(LucideIcons.search),
+                        suffixIcon: _query.isEmpty
+                            ? null
+                            : IconButton(
+                                tooltip: 'Hapus pencarian',
+                                icon: const Icon(LucideIcons.x),
+                                onPressed: () {
+                                  _search.clear();
+                                  setState(() => _query = '');
+                                }),
+                      ),
                     ),
-                    padding: const EdgeInsets.all(8),
-                    child: Image.asset(
-                      item['icon'] as String,
-                      fit: BoxFit.contain,
+                  ],
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: _searchVerses,
+                      icon: const Icon(LucideIcons.scanSearch, size: 18),
+                      label: const Text('Cari ayat dalam surah'),
                     ),
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item['title'] as String,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          item['desc'] as String,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            Icon(
-                              hasRead
-                                  ? Icons.bookmark_added_rounded
-                                  : Icons.menu_book_rounded,
-                              size: 13,
-                              color: const Color(0xFFD06A4C),
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                hasRead
-                                    ? 'Terakhir: Hal ${bm.index} (${bm.namaSurat})'
-                                    : 'Mulai baca dari Halaman 1',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFFD06A4C),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, color: Colors.black38),
                 ],
               ),
             ),
           ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _QuranTabsHeader(
+              color: t.sand,
+              child: TabBar(
+                controller: _tabs,
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                padding: EdgeInsets.symmetric(horizontal: t.spaceLg),
+                labelPadding: EdgeInsets.symmetric(horizontal: t.spaceMd),
+                indicatorSize: TabBarIndicatorSize.label,
+                indicatorColor: t.terracottaDark,
+                labelColor: t.terracottaDark,
+                unselectedLabelColor: t.muted,
+                dividerHeight: 0,
+                tabs: const [
+                  Tab(text: 'Surah'),
+                  Tab(text: 'Juz'),
+                  Tab(text: 'Mushaf'),
+                  Tab(text: 'Tanda baca')
+                ],
+              ),
+            ),
+          ),
+        ],
+        body: TabBarView(
+          controller: _tabs,
+          children: [_surahTab(), _juzTab(), _mushafTab(), _bookmarkTab()],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _continueReading() {
+    final progress = _progress;
+    if (progress == null) return _open(AppRoutes.quranPerAyat);
+    switch (progress.mode) {
+      case QuranReadingMode.ayat:
+        return _open(
+            '${AppRoutes.quranPerAyat}?surah=${progress.surahNumber}&ayat=${progress.ayatNumber}');
+      case QuranReadingMode.indonesia:
+        return _open('${AppRoutes.quranPage}?page=${progress.pageNumber}');
+      case QuranReadingMode.madinah:
+        return _open(
+            '${AppRoutes.quranPageMadinah}?page=${progress.pageNumber}');
+      case QuranReadingMode.tajwid:
+        return _open(
+            '${AppRoutes.quranPageTajwid}?page=${progress.pageNumber}');
+    }
+  }
+
+  Widget _surahTab() {
+    final async = ref.watch(surahListProvider(''));
+    return async.when(
+      loading: () => Skeletonizer(
+          child: ListView(
+              children: List.generate(
+                  7,
+                  (_) => const ListTile(
+                      leading: CircleAvatar(),
+                      title: Text('Al-Fatihah'),
+                      subtitle: Text('Pembukaan • 7 ayat'))))),
+      error: (_, __) => HudhudStateView(
+          icon: LucideIcons.wifiOff,
+          title: 'Daftar surah belum dimuat',
+          message: 'Periksa koneksi dan coba kembali.',
+          actionLabel: 'Coba lagi',
+          onAction: () => ref.invalidate(surahListProvider(''))),
+      data: (items) {
+        final q = _query.toLowerCase();
+        final filtered = items
+            .where((e) =>
+                q.isEmpty ||
+                e.nama.toLowerCase().contains(q) ||
+                e.arti.toLowerCase().contains(q) ||
+                '${e.id}' == q)
+            .toList();
+        if (filtered.isEmpty) {
+          return const HudhudStateView(
+              icon: LucideIcons.searchX,
+              title: 'Surah tidak ditemukan',
+              message: 'Coba nama, arti, atau nomor surah yang lain.');
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          itemCount: filtered.length,
+          separatorBuilder: (_, __) => const Divider(indent: 56),
+          itemBuilder: (_, index) {
+            final s = filtered[index];
+            return _QuranRow(
+              number: '${s.id}',
+              title: s.nama,
+              subtitle: '${s.arti} • ${s.jumlahAyat} ayat',
+              arabic: s.asma,
+              onTap: () => _open('${AppRoutes.quranPerAyat}?surah=${s.id}'),
+            );
+          },
         );
       },
     );
   }
 
-  /// Tab 4: Bookmark & Riwayat Baca
-  Widget _buildBookmarkTab() {
-    final bookmarks = [
-      {
-        'title': 'Tilawah Per Ayat',
-        'subtitle': _ayatBookmark.surat > 0
-            ? '${_ayatBookmark.namaSurat} : Ayat ${_ayatBookmark.ayat}'
-            : 'Belum ada ayat yang ditandai',
-        'route': AppRoutes.quranPerAyat,
-        'hasData': _ayatBookmark.surat > 0,
-        'icon': Icons.format_list_numbered_rounded,
+  Widget _juzTab() {
+    final q = _query.toLowerCase();
+    final items = kQuranJuzList
+        .where((e) =>
+            q.isEmpty ||
+            e.name.toLowerCase().contains(q) ||
+            e.startSurahName.toLowerCase().contains(q) ||
+            '${e.juzNumber}' == q)
+        .toList();
+    if (items.isEmpty) {
+      return const HudhudStateView(
+          icon: LucideIcons.searchX,
+          title: 'Juz tidak ditemukan',
+          message: 'Coba nomor juz atau nama surah yang lain.');
+    }
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: items.length,
+      separatorBuilder: (_, __) => const Divider(indent: 56),
+      itemBuilder: (_, index) {
+        final j = items[index];
+        return _QuranRow(
+            number: '${j.juzNumber}',
+            title: '${j.name} • ${j.startSurahName}',
+            subtitle: 'Ayat ${j.startAyat} • Halaman ${j.startPage}',
+            arabic: j.arabicName,
+            onTap: () => _open('${AppRoutes.quranPage}?page=${j.startPage}'));
       },
-      {
-        'title': 'Mushaf Kemenag Indonesia',
-        'subtitle': _indonesiaBookmark.index > 0
-            ? 'Halaman ${_indonesiaBookmark.index} (${_indonesiaBookmark.namaSurat})'
-            : 'Belum ada halaman yang ditandai',
-        'route': AppRoutes.quranPage,
-        'hasData': _indonesiaBookmark.index > 0,
-        'icon': Icons.auto_stories_rounded,
-      },
-      {
-        'title': 'Mushaf Madinah',
-        'subtitle': _madinahBookmark.index > 0
-            ? 'Halaman ${_madinahBookmark.index} (${_madinahBookmark.namaSurat})'
-            : 'Belum ada halaman yang ditandai',
-        'route': AppRoutes.quranPageMadinah,
-        'hasData': _madinahBookmark.index > 0,
-        'icon': Icons.menu_book_rounded,
-      },
-      {
-        'title': 'Mushaf Tajwid Warna',
-        'subtitle': _tajwidBookmark.index > 0
-            ? 'Halaman ${_tajwidBookmark.index} (${_tajwidBookmark.namaSurat})'
-            : 'Belum ada halaman yang ditandai',
-        'route': AppRoutes.quranPageTajwid,
-        'hasData': _tajwidBookmark.index > 0,
-        'icon': Icons.color_lens_rounded,
-      },
-    ];
+    );
+  }
 
-    return ListView(
+  Widget _mushafTab() {
+    final items = [
+      (
+        'Standar Indonesia',
+        'Mushaf Kemenag, 15 baris',
+        AppRoutes.quranPage,
+      ),
+      ('Mushaf Madinah', 'Rasm Utsmani', AppRoutes.quranPageMadinah),
+      (
+        'Mushaf Tajwid',
+        'Panduan warna kaidah tajwid',
+        AppRoutes.quranPageTajwid,
+      ),
+    ];
+    return ListView.separated(
       padding: const EdgeInsets.all(16),
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 12),
-          child: Text(
-            "Tanda Baca Tilawah Anda",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-        ...bookmarks.map((bm) {
-          final hasData = bm['hasData'] as bool;
-          return Card(
-            margin: const EdgeInsets.only(bottom: 10),
-            elevation: 0,
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: const BorderSide(color: Color(0xFFE2E8F0)),
-            ),
-            child: ListTile(
-              onTap: () =>
-                  _openReader(bm['route'] as String, bookmarks: hasData),
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: hasData
-                      ? const Color(0xFFE6F4F2)
-                      : Colors.grey.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  bm['icon'] as IconData,
-                  color: hasData ? const Color(0xFFD06A4C) : Colors.grey,
-                  size: 20,
-                ),
-              ),
-              title: Text(
-                bm['title'] as String,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              subtitle: Text(
-                bm['subtitle'] as String,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: hasData ? const Color(0xFFD06A4C) : Colors.black45,
-                ),
-              ),
-              trailing: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      hasData ? const Color(0xFFD06A4C) : Colors.grey.shade300,
-                  foregroundColor: hasData ? Colors.white : Colors.black54,
-                  elevation: 0,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                  minimumSize: const Size(60, 32),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: () =>
-                    _openReader(bm['route'] as String, bookmarks: hasData),
-                child: Text(
-                  hasData ? 'Lanjut' : 'Buka',
-                  style: const TextStyle(fontSize: 11),
-                ),
-              ),
-            ),
-          );
-        }),
-      ],
+      itemCount: items.length,
+      separatorBuilder: (_, __) => const Divider(),
+      itemBuilder: (_, index) {
+        final item = items[index];
+        return HudhudActionRow(
+          icon: LucideIcons.bookOpen,
+          title: item.$1,
+          subtitle: item.$2,
+          onTap: () => _open(item.$3),
+        );
+      },
+    );
+  }
+
+  Widget _bookmarkTab() {
+    final items = [
+      (
+        'Tilawah per ayat',
+        _ayat.surat > 0 ? '${_ayat.namaSurat} • Ayat ${_ayat.ayat}' : null,
+        AppRoutes.quranPerAyat,
+        _ayat.surat > 0
+      ),
+      (
+        'Mushaf Indonesia',
+        _indonesia.index > 0
+            ? 'Halaman ${_indonesia.index} • ${_indonesia.namaSurat}'
+            : null,
+        AppRoutes.quranPage,
+        _indonesia.index > 0
+      ),
+      (
+        'Mushaf Madinah',
+        _madinah.index > 0
+            ? 'Halaman ${_madinah.index} • ${_madinah.namaSurat}'
+            : null,
+        AppRoutes.quranPageMadinah,
+        _madinah.index > 0
+      ),
+      (
+        'Mushaf Tajwid',
+        _tajwid.index > 0
+            ? '${_tajwid.ayat > 0 ? 'Ayat ${_tajwid.ayat} • ' : ''}Halaman ${_tajwid.index} • ${_tajwid.namaSurat}'
+            : null,
+        AppRoutes.quranPageTajwid,
+        _tajwid.index > 0
+      ),
+    ];
+    final available = items.where((e) => e.$4).toList();
+    if (available.isEmpty) {
+      return HudhudStateView(
+          icon: LucideIcons.bookmark,
+          title: 'Belum ada tanda baca',
+          message:
+              'Saat membaca, tandai ayat atau halaman untuk kembali ke sini.',
+          actionLabel: 'Mulai membaca',
+          onAction: () => _tabs.animateTo(0));
+    }
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemCount: available.length,
+      separatorBuilder: (_, __) => const Divider(),
+      itemBuilder: (_, i) => HudhudActionRow(
+          icon: LucideIcons.bookmarkCheck,
+          title: available[i].$1,
+          subtitle: available[i].$2,
+          onTap: () {
+            final item = available[i];
+            if (item.$3 == AppRoutes.quranPerAyat) {
+              _open(item.$3, bookmark: true);
+            } else {
+              final page = switch (item.$3) {
+                AppRoutes.quranPage => _indonesia.index,
+                AppRoutes.quranPageMadinah => _madinah.index,
+                _ => _tajwid.index,
+              };
+              _open('${item.$3}?page=$page');
+            }
+          }),
     );
   }
 }
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
+class _QuranTabsHeader extends SliverPersistentHeaderDelegate {
+  const _QuranTabsHeader({required this.color, required this.child});
 
-  final TabBar _tabBar;
+  final Color color;
+  final PreferredSizeWidget child;
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => child.preferredSize.height;
+
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => child.preferredSize.height;
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: Color(0xFFEEEEEE), width: 1),
-        ),
-      ),
-      child: _tabBar,
-    );
-  }
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+      Material(color: color, child: child);
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return oldDelegate._tabBar != _tabBar;
+  bool shouldRebuild(covariant _QuranTabsHeader oldDelegate) =>
+      color != oldDelegate.color || child != oldDelegate.child;
+}
+
+class _ContinuePanel extends StatelessWidget {
+  const _ContinuePanel({required this.progress, required this.onTap});
+  final QuranReadingProgress? progress;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.hudhud;
+    final hasData = progress != null;
+    final detail = progress?.detail ?? 'Mulai dari Al-Fatihah';
+    final name = progress?.surahName.isNotEmpty == true
+        ? progress!.surahName
+        : "Buka Al-Qur'an";
+    return Material(
+      color: t.terracotta.withValues(alpha: .09),
+      borderRadius: BorderRadius.circular(t.radiusMd),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 88),
+          child: Padding(
+            padding: EdgeInsets.all(t.spaceMd),
+            child: Row(children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(t.radiusMd)),
+                child: Icon(LucideIcons.bookOpen,
+                    color: t.terracottaDark, size: 22),
+              ),
+              SizedBox(width: t.spaceMd),
+              Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    Text(hasData ? 'Lanjutkan tilawah' : 'Tilawah hari ini',
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelMedium
+                            ?.copyWith(color: t.terracottaDark)),
+                    SizedBox(height: t.spaceXs),
+                    Text(name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium),
+                    Text(detail, style: Theme.of(context).textTheme.bodySmall),
+                  ])),
+              SizedBox(width: t.spaceSm),
+              Icon(LucideIcons.arrowRight, color: t.terracottaDark, size: 20),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuranRow extends StatelessWidget {
+  const _QuranRow(
+      {required this.number,
+      required this.title,
+      required this.subtitle,
+      required this.arabic,
+      required this.onTap});
+  final String number;
+  final String title;
+  final String subtitle;
+  final String arabic;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.hudhud;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(t.radiusMd),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 76),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: t.spaceSm),
+          child: Row(children: [
+            Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: t.amber.withValues(alpha: .18),
+                  borderRadius: BorderRadius.circular(t.radiusMd)),
+              child: Text(number,
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge
+                      ?.copyWith(color: t.terracottaDark)),
+            ),
+            SizedBox(width: t.spaceMd),
+            Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                  Text(title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall),
+                  SizedBox(height: t.spaceXs),
+                  Text(subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall)
+                ])),
+            if (arabic.isNotEmpty) ...[
+              SizedBox(width: t.spaceSm),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 96),
+                child: Text(arabic,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textDirection: TextDirection.rtl,
+                    style: GoogleFonts.amiriQuran(
+                        fontSize: 20, color: t.charcoal)),
+              ),
+            ],
+          ]),
+        ),
+      ),
+    );
   }
 }

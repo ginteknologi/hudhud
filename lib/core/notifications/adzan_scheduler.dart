@@ -8,8 +8,6 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// Penjadwal notifikasi adzan harian (lokal, tanpa server).
 ///
-/// Zona waktu default Asia/Jakarta (WIB). Kalau nanti perlu multizona, tambahkan
-/// `flutter_timezone` untuk membaca zona perangkat.
 /// ponytail: suara adzan masih memakai suara notifikasi bawaan; kalau
 /// `android/app/src/main/res/raw/adzan.mp3` sudah tersedia, ganti
 /// [_adzanSound] menjadi `RawResourceAndroidNotificationSound('adzan')`.
@@ -42,12 +40,10 @@ class AdzanScheduler {
     fullScreenIntent: true,
   );
 
-  static Future<void> init() async {
+  static Future<void> init({String timeZoneId = 'Asia/Jakarta'}) async {
     if (kIsWeb) return;
     if (!_ready) {
       tzdata.initializeTimeZones();
-      tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
-
       await _plugin.initialize(
         const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -55,6 +51,11 @@ class AdzanScheduler {
         ),
       );
       _ready = true;
+    }
+    try {
+      tz.setLocalLocation(tz.getLocation(timeZoneId));
+    } on tz.LocationNotFoundException {
+      tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
     }
 
     final android = _plugin.resolvePlatformSpecificImplementation<
@@ -75,9 +76,10 @@ class AdzanScheduler {
   static Future<void> sync({
     required JadwalShalatModel jadwal,
     required AppSettings settings,
+    String timeZoneId = 'Asia/Jakarta',
   }) async {
     if (kIsWeb) return;
-    await init();
+    await init(timeZoneId: timeZoneId);
     await cancelAll();
 
     if (!settings.adzanEnabled) return;

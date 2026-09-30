@@ -6,9 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// Pengaturan Umum) bernuansa Burung Hudhud.
 const Color kTileAccent = Color(0xFFD06A4C); // Hudhud Terracotta
 const Color kTileGold = Color(0xFFECA843); // Crest Amber Gold
-const Color kTileBorder = Color(0xFFEFE7DE); // Warm Sand Border
+const Color kTileBorder = Color(0xFFE4DCD6); // Warm Sand Border
 const Color kTileTextDark = Color(0xFF2B2523); // Deep Charcoal
-const Color kTileTextMuted = Color(0xFF8C817A); // Soft Feather Grey
+const Color kTileTextMuted = Color(0xFF675C57); // Soft Feather Grey
 const Color kTilePageBg = Color(0xFFFBF7F2); // Warm Sand White
 
 class SettingsPageHeader extends StatelessWidget {
@@ -136,12 +136,12 @@ class SettingsSectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
         child: Text(
           title,
           style: const TextStyle(
             fontSize: 13,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
             color: kTileTextDark,
             letterSpacing: 0.2,
           ),
@@ -156,16 +156,16 @@ class SettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 18),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: kTileBorder),
           boxShadow: [
             BoxShadow(
-              color: kTileAccent.withValues(alpha: 0.05),
-              blurRadius: 14,
-              offset: const Offset(0, 4),
+              color: kTileAccent.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -183,9 +183,9 @@ class SettingsIconBox extends StatelessWidget {
         width: 38,
         height: 38,
         decoration: BoxDecoration(
-          color: const Color(0xFFEAF5F2),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFD4EAE5), width: 0.8),
+          color: const Color(0xFFF7EBE4),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFFF0D6C8), width: 0.8),
         ),
         child: Icon(icon, size: 19, color: kTileAccent),
       );
@@ -206,7 +206,7 @@ class SettingsSwitch extends StatelessWidget {
         trackColor: WidgetStateProperty.resolveWith(
           (states) => states.contains(WidgetState.selected)
               ? kTileAccent
-              : const Color(0xFFCBD6D2),
+              : const Color(0xFFE4DCD6),
         ),
         trackOutlineColor:
             const WidgetStatePropertyAll(Colors.transparent),

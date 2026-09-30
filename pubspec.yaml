@@ -86,6 +86,7 @@ dependencies:
   flutter_compass: ^0.8.1
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
+  lucide_icons_flutter: ^3.1.20
 dependency_overrides:
   intl: any
   win32: ^5.5.4
@@ -108,12 +109,30 @@ flutter_launcher_icons:
   android: true
   ios: false
   image_path: "assets/icons/app_icon.png"
+  adaptive_icon_background: "#FBF7F2"
+  adaptive_icon_foreground: "assets/icons/app_icon.png"
+  web:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    background_color: "#FBF7F2"
+    theme_color: "#D06A4C"
+  windows:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    icon_size: 256
+  macos:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
 
 flutter_native_splash:
-  color: "#FFFFFF"
+  color: "#FBF7F2"
   image: assets/img/new-logo.png
   android: true
   ios: false
+  web: true
+  android_12:
+    color: "#FBF7F2"
+    image: assets/img/new-logo.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -131,6 +150,7 @@ flutter:
     - assets/icons/
     - assets/sounds/
     - assets/img/
+    - assets/img/hudhud/
     - assets/img/quran/
     - assets/img/card/
     - assets/img/murotal/

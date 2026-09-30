@@ -1,35 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/providers/hadits_ui_settings_provider.dart';
 
 class HaditsFontSizeModal extends ConsumerWidget {
   const HaditsFontSizeModal({super.key});
 
   static void show(BuildContext context) {
+    final t = context.hudhud;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const HaditsFontSizeModal(),
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: t.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(t.radiusMd)),
+        ),
+        child: const HaditsFontSizeModal(),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.hudhud;
     final settings = ref.watch(haditsUiSettingsProvider);
     final notifier = ref.read(haditsUiSettingsProvider.notifier);
 
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+    return Padding(
       padding: EdgeInsets.fromLTRB(
-        20,
-        16,
-        20,
-        MediaQuery.of(context).viewInsets.bottom + 24,
+        t.spaceLg,
+        t.spaceMd,
+        t.spaceLg,
+        MediaQuery.of(context).viewInsets.bottom + t.spaceLg,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -38,33 +44,37 @@ class HaditsFontSizeModal extends ConsumerWidget {
           // Drag handle
           Center(
             child: Container(
-              width: 40,
+              width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.black12,
-                borderRadius: BorderRadius.circular(2),
+                color: t.outline,
+                borderRadius: BorderRadius.circular(t.radiusSm),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Pengaturan Teks Hadits',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
+                  fontFamily: 'Roboto',
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFFD06A4C),
+                  fontWeight: FontWeight.w700,
+                  color: t.charcoal,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close, size: 20, color: Colors.black54),
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                icon: Icon(LucideIcons.x, size: 18, color: t.muted),
                 onPressed: () => Navigator.pop(context),
               ),
             ],
           ),
-          const Divider(height: 20),
+          const SizedBox(height: 8),
+          const Divider(),
+          const SizedBox(height: 8),
 
           // Pengaturan Font Arab
           Row(
@@ -72,27 +82,29 @@ class HaditsFontSizeModal extends ConsumerWidget {
             children: [
               Text(
                 'Ukuran Teks Arab',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: t.charcoal,
                 ),
               ),
               Text(
                 '${settings.arabicFontSize.round()} pt',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
+                  fontFamily: 'Roboto',
                   fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFFD06A4C),
+                  fontWeight: FontWeight.w700,
+                  color: t.terracotta,
                 ),
               ),
             ],
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFFD06A4C),
-              thumbColor: const Color(0xFFD06A4C),
-              inactiveTrackColor: const Color(0xFFE2EBE8),
+              activeTrackColor: t.terracotta,
+              thumbColor: t.terracotta,
+              inactiveTrackColor: t.outline,
             ),
             child: Slider(
               value: settings.arabicFontSize,
@@ -111,27 +123,29 @@ class HaditsFontSizeModal extends ConsumerWidget {
             children: [
               Text(
                 'Ukuran Terjemahan',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: t.charcoal,
                 ),
               ),
               Text(
                 '${settings.translationFontSize.round()} pt',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
+                  fontFamily: 'Roboto',
                   fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFFD06A4C),
+                  fontWeight: FontWeight.w700,
+                  color: t.terracotta,
                 ),
               ),
             ],
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFFD06A4C),
-              thumbColor: const Color(0xFFD06A4C),
-              inactiveTrackColor: const Color(0xFFE2EBE8),
+              activeTrackColor: t.terracotta,
+              thumbColor: t.terracotta,
+              inactiveTrackColor: t.outline,
             ),
             child: Slider(
               value: settings.translationFontSize,
@@ -146,21 +160,22 @@ class HaditsFontSizeModal extends ConsumerWidget {
 
           // Live Preview Box
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(t.spaceMd),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8FAF9),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFFE2EBE8)),
+              color: t.sand,
+              borderRadius: BorderRadius.circular(t.radiusMd),
+              border: Border.all(color: t.outline),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   'Pratinjau:',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black45,
+                    color: t.muted,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -171,16 +186,17 @@ class HaditsFontSizeModal extends ConsumerWidget {
                   style: GoogleFonts.amiri(
                     fontSize: settings.arabicFontSize,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFFD06A4C),
+                    color: t.charcoal,
                     height: 1.8,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   'Sesungguhnya setiap amalan tergantung pada niatnya.',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
                     fontSize: settings.translationFontSize,
-                    color: Colors.black87,
+                    color: t.charcoal,
                     height: 1.5,
                   ),
                 ),

@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/pages/akun/akun_page.dart';
 import 'package:masjid_app/pages/akun/edit/edit_akun_page.dart';
-import 'package:masjid_app/pages/akun/riwayat/riwayat_page.dart';
 import 'package:masjid_app/pages/artikel/artikel_page.dart';
 import 'package:masjid_app/pages/artikel/detail/detail_artikel_page.dart';
 import 'package:masjid_app/pages/auth/auth_page.dart';
@@ -70,7 +69,6 @@ class AppRoutes {
   static const String cariMasjid = '/cari-masjid';
   static const String profile = '/profile';
   static const String profileEdit = '/akun/edit';
-  static const String profileRiwayat = '/akun/riwayat';
   static const String pengaturanUmum = '/pengaturan/umum';
 }
 
@@ -240,10 +238,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.profileEdit,
         builder: (context, state) => const EditAkunPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.profileRiwayat,
-        builder: (context, state) => const RiwayatPage(),
       ),
     ],
   );

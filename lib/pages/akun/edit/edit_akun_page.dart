@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:masjid_app/components/button/elevatedbutton.dart';
-import 'package:masjid_app/components/input/input_text.dart';
-import 'package:masjid_app/components/layout/app_bar_ws.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/providers/akun_provider.dart';
 import 'package:masjid_app/providers/auth_provider.dart';
 
@@ -22,17 +21,14 @@ class _EditAkunPageState extends ConsumerState<EditAkunPage> {
   final phoneController = TextEditingController();
   final picker = ImagePicker();
 
-  String inputFoto = '';
-  File? newfile;
+  File? newFile;
   String fileName = '';
-  bool isNewfile = false;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     final user = ref.read(authNotifierProvider).valueOrNull;
-    inputFoto = user?.photo ?? '';
     txtController.text = user?.name ?? '';
     phoneController.text = AkunRepository.savedPhone;
   }
@@ -44,200 +40,214 @@ class _EditAkunPageState extends ConsumerState<EditAkunPage> {
     super.dispose();
   }
 
-  Future<void> pilihFile() async {
+  Future<void> _pickPhoto() async {
     final image = await picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 70,
       maxWidth: 1000,
     );
-    if (image == null) return;
+    if (image == null || !mounted) return;
     setState(() {
-      newfile = File(image.path);
+      newFile = File(image.path);
       fileName = image.name;
-      isNewfile = true;
     });
   }
 
-  Future<void> simpan() async {
+  Future<void> _save() async {
     if (isLoading) return;
-    setState(() => isLoading = true);
+    final name = txtController.text.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nama tidak boleh kosong')),
+      );
+      return;
+    }
 
+    setState(() => isLoading = true);
     final ok = await ref.read(akunRepositoryProvider).simpanProfile(
-          nama: txtController.text,
-          phone: phoneController.text,
-          newFile: newfile,
+          nama: name,
+          phone: phoneController.text.trim(),
+          newFile: newFile,
           fileName: fileName,
         );
-
     if (!mounted) return;
     setState(() => isLoading = false);
-    if (ok) context.pop();
-  }
-
-  Widget _avatar() {
-    if (isNewfile && newfile != null) {
-      return CircleAvatar(radius: 70, backgroundImage: FileImage(newfile!));
+    if (ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profil berhasil diperbarui')),
+      );
+      context.pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal menyimpan profil')),
+      );
     }
-    if (inputFoto.isNotEmpty) {
-      return CircleAvatar(radius: 70, backgroundImage: NetworkImage(inputFoto));
-    }
-    return const CircleAvatar(
-      radius: 70,
-      backgroundImage: AssetImage("assets/icons/app_icon.png"),
-    );
-  }
-
-  SafeArea layout(BuildContext context) {
-    return SafeArea(
-        child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-                padding: const EdgeInsets.only(left: 21, right: 21),
-                child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                            margin: EdgeInsets.only(top: 20),
-                            child: Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.white, width: 4),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                offset: Offset(0, 4),
-                                                color: Colors.black
-                                                    .withValues(alpha: 0.3),
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(70))),
-                                        child: InkWell(
-                                          onTap: () {
-                                            pilihFile();
-                                          },
-                                          child: _avatar(),
-                                        )),
-                                    Positioned(
-                                      bottom: 1,
-                                      right: 1,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            width: 3,
-                                            color: Colors.white,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                              50,
-                                            ),
-                                          ),
-                                          color: Colors.white,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: Icon(
-                                              Icons.add_a_photo_outlined,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            )),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        InputText(
-                          labelPosition: 'outside',
-                          label: "Nama",
-                          labelStyle: Theme.of(context).textTheme.bodySmall,
-                          margin: EdgeInsets.symmetric(vertical: 5),
-                          placeholder: "Nama Anda",
-                          placeholderStyle:
-                              Theme.of(context).textTheme.bodySmall,
-                          inputPadding: const EdgeInsets.all(15),
-                          multiText: false,
-                          maxLine: 1,
-                          controller: txtController,
-                          onSubmit: (newValue) {},
-                          onEditingComplete: () {},
-                          onChanged: (newValue) {},
-                          validator: (newValue) {
-                            if (newValue!.isEmpty) {
-                              return "Mohon untuk diisi.";
-                            }
-                            return null;
-                          },
-                        ),
-                        InputText(
-                          inputType: TextInputType.number,
-                          labelPosition: 'outside',
-                          label: "Nomor Handphone",
-                          isFill: false,
-                          labelStyle: Theme.of(context).textTheme.bodySmall,
-                          margin: EdgeInsets.symmetric(vertical: 5),
-                          placeholder: "08xxxxxxx",
-                          placeholderStyle:
-                              Theme.of(context).textTheme.bodySmall,
-                          inputPadding: const EdgeInsets.all(15),
-                          multiText: false,
-                          maxLine: 1,
-                          controller: phoneController,
-                          onSubmit: (newValue) {},
-                          onEditingComplete: () {},
-                          onChanged: (newValue) {},
-                          validator: (newValue) {
-                            if (newValue!.isEmpty) {
-                              return "Mohon untuk diisi.";
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 6,
-                        ),
-                      ],
-                    )))));
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final t = context.hudhud;
+    final photo = ref.watch(authNotifierProvider).valueOrNull?.photo ?? '';
+    ImageProvider? image;
+    if (newFile != null) {
+      image = FileImage(newFile!);
+    } else if (photo.isNotEmpty) {
+      image = NetworkImage(photo);
+    }
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: AppBarWSWidget.getAppbarWidget(
-            title: "Profile > Edit Profile", context: context, elevation: 0),
-        body: layout(context),
-        persistentFooterButtons: [
-          Padding(
-            padding: const EdgeInsets.only(left: 21, right: 21),
-            child: SizedBox(
-              width: screenWidth,
-              child: ButtonElevated(
-                title: 'Simpan',
-                width: screenWidth,
-                bgcolor: Theme.of(context).primaryColor,
-                height: 45,
-                color: Colors.white,
-                radius: 5,
-                onPressed: () {
-                  simpan();
-                },
+      backgroundColor: t.sand,
+      appBar: AppBar(
+        title: const Text('Edit Profil'),
+        leading: IconButton(
+          tooltip: 'Kembali',
+          constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+          onPressed: () => context.pop(),
+          icon: const Icon(LucideIcons.arrowLeft),
+        ),
+      ),
+      body: ListView(
+        padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceXl),
+        children: [
+          Center(
+            child: Semantics(
+              button: true,
+              label: 'Ubah foto profil',
+              child: InkWell(
+                onTap: _pickPhoto,
+                customBorder: const CircleBorder(),
+                child: SizedBox(
+                  width: 108,
+                  height: 108,
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 54,
+                        backgroundColor: t.terracotta.withValues(alpha: .12),
+                        backgroundImage: image,
+                        child: image == null
+                            ? Icon(LucideIcons.userRound,
+                                size: 44, color: t.terracotta)
+                            : null,
+                      ),
+                      Positioned(
+                        right: 2,
+                        bottom: 2,
+                        child: Container(
+                          width: 34,
+                          height: 34,
+                          decoration: BoxDecoration(
+                            color: t.terracotta,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: t.surface, width: 2.5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: .15),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(LucideIcons.camera,
+                              color: Colors.white, size: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          )
-        ]);
+          ),
+          SizedBox(height: t.spaceXl),
+          _field(
+            context,
+            label: 'Nama Lengkap',
+            hint: 'Masukkan nama Anda',
+            controller: txtController,
+            keyboardType: TextInputType.name,
+          ),
+          SizedBox(height: t.spaceMd),
+          _field(
+            context,
+            label: 'Nomor Handphone',
+            hint: '08xxxxxxxxxx',
+            controller: phoneController,
+            keyboardType: TextInputType.phone,
+          ),
+          SizedBox(height: t.spaceXl),
+          FilledButton.icon(
+            onPressed: isLoading ? null : _save,
+            style: FilledButton.styleFrom(
+              minimumSize: Size(double.infinity, t.controlHeight),
+              backgroundColor: t.terracotta,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(t.radiusMd)),
+            ),
+            icon: isLoading
+                ? const SizedBox.square(
+                    dimension: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(LucideIcons.save, size: 18),
+            label: Text(isLoading ? 'Menyimpan...' : 'Simpan Perubahan'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _field(
+    BuildContext context, {
+    required String label,
+    required String hint,
+    required TextEditingController controller,
+    required TextInputType keyboardType,
+  }) {
+    final t = context.hudhud;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: t.spaceXs),
+          child: Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.w600, color: t.charcoal),
+          ),
+        ),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          textInputAction: TextInputAction.next,
+          style: TextStyle(color: t.charcoal, fontSize: 14),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: t.muted, fontSize: 14),
+            filled: true,
+            fillColor: t.surface,
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: t.spaceMd, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(t.radiusMd),
+              borderSide: BorderSide(color: t.outline),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(t.radiusMd),
+              borderSide: BorderSide(color: t.outline),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(t.radiusMd),
+              borderSide: BorderSide(color: t.terracotta, width: 1.5),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

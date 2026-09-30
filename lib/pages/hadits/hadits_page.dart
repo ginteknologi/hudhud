@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/worship/worship_reader_scaffold.dart';
+import 'package:masjid_app/components/worship/worship_state_views.dart';
 import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/hadist_data.dart';
 import 'package:masjid_app/pages/hadits/component/hadits_last_read_card.dart';
 import 'package:masjid_app/providers/hadits_providers.dart';
 import 'package:masjid_app/storage/hadits_bookmark_storage.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// Landing hadits — section, bukan tab.
-///
-/// Isinya cuma 10 kitab + beberapa tema + beberapa bookmark; tab hanya
-/// menambah plumbing tanpa menambah hasil.
 class HaditsPage extends ConsumerWidget {
   const HaditsPage({super.key});
 
-  /// Cover per `namaTabel`. Dipetakan dari tabel, bukan dari `longNama`,
-  /// supaya tidak bergantung pada ejaan judul.
   static const Map<String, String> coverByTable = {
     'arbain': 'Hadits Arbain.png',
     'bukhari': 'Shahih Bukhari.png',
@@ -33,23 +29,32 @@ class HaditsPage extends ConsumerWidget {
     'darimi': 'Sunan Darimi.png',
   };
 
+  static final List<ImamData> _dummyBooks = List.generate(
+    10,
+    (i) => ImamData(
+      imamId: i + 1,
+      imamSorting: i + 1,
+      longNama: 'Shahih Hadits $i',
+      namaTabel: 'kitab_$i',
+      hadits: 1000,
+      babCount: 10,
+    ),
+  );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final booksAsync = ref.watch(haditsBooksProvider);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF9),
-        body: SafeArea(
-          child: booksAsync.when(
-            data: (books) => _buildBody(context, ref, books, isLoading: false),
-            loading: () => _buildBody(context, ref, _dummyBooks, isLoading: true),
-            error: (err, stack) => _buildError(context, ref),
-          ),
+    return WorshipReaderScaffold(
+      title: 'Ensiklopedia Hadits',
+      subtitle: 'Sabda & sunnah Rasulullah SAW',
+      body: booksAsync.when(
+        data: (books) => _buildBody(context, ref, books, isLoading: false),
+        loading: () => _buildBody(context, ref, _dummyBooks, isLoading: true),
+        error: (err, stack) => WorshipErrorView(
+          title: 'Gagal Memuat Kitab Hadits',
+          message: 'Silakan periksa koneksi dan coba lagi.',
+          onRetry: () => ref.invalidate(haditsBooksProvider),
         ),
       ),
     );
@@ -61,6 +66,7 @@ class HaditsPage extends ConsumerWidget {
     List<ImamData> books, {
     required bool isLoading,
   }) {
+    final t = context.hudhud;
     final temas =
         ref.watch(haditsTemaProvider).valueOrNull ?? const <HaditsTema>[];
     final saved = ref.watch(haditsBookmarkProvider);
@@ -70,28 +76,51 @@ class HaditsPage extends ConsumerWidget {
     return Skeletonizer(
       enabled: isLoading,
       child: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverToBoxAdapter(child: _buildHeader(context)),
-          SliverToBoxAdapter(child: _buildSearchBox(context)),
+          // 1. Lanjut Baca
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                  t.spaceLg, t.spaceSm, t.spaceLg, t.spaceMd),
+              child: const HaditsLastReadCard(),
+            ),
+          ),
+          // 2. Pencarian
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(t.spaceLg, 0, t.spaceLg, t.spaceMd),
+              child: _buildSearchBox(context),
+            ),
+          ),
+          // 3. Tema
           if (temas.isNotEmpty) ...[
-            SliverToBoxAdapter(child: _sectionTitle('Tema Pilihan')),
+            SliverToBoxAdapter(
+              child: _sectionTitle(
+                context,
+                'Tema Pilihan',
+                trailing: 'Lihat Semua',
+                onTrailingTap: () => context.push(AppRoutes.haditsTema),
+              ),
+            ),
             SliverToBoxAdapter(child: _buildTemaStrip(context, temas)),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
           ],
+          // 4. Koleksi Kitab
           SliverToBoxAdapter(
             child: _sectionTitle(
+              context,
               'Kutubut Tis\'ah & Arba\'in',
               trailing: '${books.length} Kitab',
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            padding: EdgeInsets.fromLTRB(t.spaceLg, 0, t.spaceLg, t.spaceMd),
             sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.76,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
+                childAspectRatio: 0.78,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
               ),
               delegate: SliverChildBuilderDelegate(
                 (ctx, i) => _buildBookCard(context, books[i]),
@@ -99,150 +128,96 @@ class HaditsPage extends ConsumerWidget {
               ),
             ),
           ),
+          // 5. Bookmark
           if (bookmarks.isNotEmpty) ...[
-            SliverToBoxAdapter(child: _sectionTitle('Tanda Baca')),
+            SliverToBoxAdapter(
+                child: _sectionTitle(context, 'Tanda Baca (Bookmark)')),
             SliverToBoxAdapter(
               child: _buildSavedList(context, ref, bookmarks, isBookmark: true),
             ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
           ],
+          // 6. Riwayat
           if (history.isNotEmpty) ...[
-            SliverToBoxAdapter(child: _sectionTitle('Riwayat')),
+            SliverToBoxAdapter(child: _sectionTitle(context, 'Riwayat Baca')),
             SliverToBoxAdapter(
               child: _buildSavedList(context, ref, history, isBookmark: false),
             ),
           ],
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          SliverToBoxAdapter(child: SizedBox(height: t.spaceXl)),
         ],
       ),
     );
   }
 
-  // ─── Header & search ───────────────────────────────────────
-
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Navigator.of(context).pop(),
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE2EBE8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.arrow_back_rounded,
-                  size: 20, color: Color(0xFFD06A4C)),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Ensiklopedia Hadits',
-                  style: GoogleFonts.poppins(
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFFD06A4C),
-                  ),
-                ),
-                const SizedBox(height: 1),
-                Text(
-                  'Kumpulan sabda & sunnah Rasulullah SAW',
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.black54,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Kotak cari read-only — mengetik di sini tidak menyaring apa pun,
-  /// ia hanya membuka halaman pencarian (satu pintu pencarian).
   Widget _buildSearchBox(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () => context.push(AppRoutes.haditsSearch),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE2EBE8)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-              child: Row(
-                children: [
-                  const Icon(Icons.search_rounded,
-                      color: Color(0xFFD06A4C), size: 22),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Cari teks hadits…',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black38,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    final t = context.hudhud;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        onTap: () => context.push(AppRoutes.haditsSearch),
+        child: Container(
+          height: t.controlHeight,
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.radiusMd),
+            border: Border.all(color: t.outline),
           ),
-          const SizedBox(height: 16),
-          HaditsLastReadCard(),
-        ],
+          padding: EdgeInsets.symmetric(horizontal: t.spaceMd),
+          child: Row(
+            children: [
+              Icon(LucideIcons.search, size: 18, color: t.muted),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Cari hadits dalam kitab atau tema...',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 13,
+                    color: t.muted,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  // ─── Section helpers ───────────────────────────────────────
-
-  Widget _sectionTitle(String title, {String? trailing}) {
+  Widget _sectionTitle(
+    BuildContext context,
+    String title, {
+    String? trailing,
+    VoidCallback? onTrailingTap,
+  }) {
+    final t = context.hudhud;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+      padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceSm),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
+              fontFamily: 'Roboto',
               fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFD06A4C),
+              fontWeight: FontWeight.w700,
+              color: t.charcoal,
             ),
           ),
           if (trailing != null)
-            Text(
-              trailing,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFFD06A4C),
+            GestureDetector(
+              onTap: onTrailingTap,
+              child: Text(
+                trailing,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: t.terracotta,
+                ),
               ),
             ),
         ],
@@ -251,327 +226,183 @@ class HaditsPage extends ConsumerWidget {
   }
 
   Widget _buildTemaStrip(BuildContext context, List<HaditsTema> temas) {
-    final shown = temas.take(8).toList();
+    final t = context.hudhud;
     return SizedBox(
-      height: 44,
-      child: ListView(
+      height: 48,
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: t.spaceLg),
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        children: [
-          for (final t in shown)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: GestureDetector(
-                onTap: () => context.push('/hadits/tema/${t.id}'),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFFE2EBE8)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        t.nama,
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFD06A4C),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${t.jumlah}',
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          color: Colors.black38,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+        itemCount: temas.take(8).length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (ctx, i) {
+          final tema = temas[i];
+          return ActionChip(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(t.radiusMd),
+              side: BorderSide(color: t.outline),
+            ),
+            backgroundColor: t.surface,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            label: Text(
+              '${tema.nama} (${tema.jumlah})',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: t.charcoal,
               ),
             ),
-          if (temas.length > shown.length)
-            GestureDetector(
-              onTap: () => context.push(AppRoutes.haditsTema),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEAF5F2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  'Semua tema',
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFD06A4C),
-                  ),
-                ),
-              ),
-            ),
-        ],
+            onPressed: () => context.push('/hadits/tema/${tema.id}'),
+          );
+        },
       ),
     );
   }
 
-  // ─── Kartu kitab ───────────────────────────────────────────
-
   Widget _buildBookCard(BuildContext context, ImamData book) {
+    final t = context.hudhud;
     final assetPath =
         'assets/icons/${coverByTable[book.namaTabel] ?? 'hadits.svg'}';
-
-    // Inilah seluruh mekanisme degradasi 3 level → 2 level.
     final route = book.babCount > 0
         ? AppRoutes.haditsBab.replaceFirst(':id', book.namaTabel)
         : AppRoutes.haditsListRoute.replaceFirst(':id', book.namaTabel);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFD06A4C).withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        onTap: () => context.push(route),
+        child: Container(
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(t.radiusMd),
+            border: Border.all(color: t.outline),
           ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: () => context.push(route),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          assetPath,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => Container(
-                            width: double.infinity,
-                            color: const Color(0xFFEAF5F2),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                'assets/icons/hadits.svg',
-                                width: 44,
-                                height: 44,
-                                colorFilter: const ColorFilter.mode(
-                                  Color(0xFFD06A4C),
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+          padding: EdgeInsets.all(t.spaceMd),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(t.radiusSm),
+                    child: Image.asset(
+                      assetPath,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => SvgPicture.asset(
+                        'assets/icons/hadits.svg',
+                        width: 48,
+                        height: 48,
+                        colorFilter:
+                            ColorFilter.mode(t.terracotta, BlendMode.srcIn),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  book.longNama,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                    height: 1.25,
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                book.longNama,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: t.charcoal,
                 ),
-                const SizedBox(height: 6),
-                // Di lebar tile terkecil chip "N Hadits" + "N bab" kelebihan
-                // ~11px. Skala-turun, bukan ellipsis — dua-duanya tetap terbaca.
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '${book.hadits} Hadits',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 11,
+                  color: t.muted,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSavedList(
+    BuildContext context,
+    WidgetRef ref,
+    List<HaditsBookmarkData> list, {
+    required bool isBookmark,
+  }) {
+    final t = context.hudhud;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: t.spaceLg),
+      child: Column(
+        children: list.map((e) {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(t.radiusMd),
+              border: Border.all(color: t.outline),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(t.radiusMd),
+                onTap: () => context.push(
+                  '${AppRoutes.haditsListRoute.replaceFirst(':id', e.namaTabel)}?mulai=${e.noHdt}',
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(t.spaceMd),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEAF5F2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                      Icon(
+                        isBookmark ? LucideIcons.bookmark : LucideIcons.history,
+                        size: 18,
+                        color: t.terracotta,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.menu_book_rounded,
-                                size: 11, color: Color(0xFFD06A4C)),
-                            const SizedBox(width: 4),
                             Text(
-                              '${book.hadits} Hadits',
-                              style: GoogleFonts.poppins(
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFFD06A4C),
+                              e.longNama,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                color: t.charcoal,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Hadits No. ${e.noHdt}'
+                              '${(e.babIndonesia ?? '').isNotEmpty ? ' • ${e.babIndonesia}' : ''}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 11,
+                                color: t.muted,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      if (book.babCount > 0) ...[
-                        const SizedBox(width: 6),
-                        Text(
-                          '${book.babCount} bab',
-                          style: GoogleFonts.poppins(
-                            fontSize: 9.5,
-                            color: Colors.black38,
-                          ),
-                        ),
-                      ],
+                      Icon(LucideIcons.chevronRight, size: 18, color: t.muted),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        }).toList(),
       ),
     );
   }
-
-  // ─── Bookmark & riwayat ────────────────────────────────────
-
-  Widget _buildSavedList(
-    BuildContext context,
-    WidgetRef ref,
-    List<HaditsBookmarkData> entries, {
-    required bool isBookmark,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-      child: Column(
-        children: [
-          for (final e in entries)
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE2EBE8)),
-              ),
-              child: ListTile(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                dense: true,
-                leading: Icon(
-                  isBookmark
-                      ? Icons.bookmark_rounded
-                      : Icons.history_rounded,
-                  size: 20,
-                  color: const Color(0xFFD06A4C),
-                ),
-                title: Text(
-                  e.longNama,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                subtitle: Text(
-                  'Hadits No. ${e.noHdt}'
-                  '${(e.babIndonesia ?? '').isNotEmpty ? ' • ${e.babIndonesia}' : ''}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(fontSize: 10, color: Colors.black45),
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded,
-                    size: 18, color: Colors.black26),
-                onTap: () => context.push(
-                  '${AppRoutes.haditsListRoute.replaceFirst(':id', e.namaTabel)}?mulai=${e.noHdt}',
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildError(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline_rounded,
-                color: Colors.redAccent, size: 48),
-            const SizedBox(height: 12),
-            Text(
-              'Gagal memuat daftar kitab hadits',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Periksa koneksi internet Anda dan coba lagi',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 12, color: Colors.black54),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => ref.invalidate(haditsBooksProvider),
-              icon: const Icon(Icons.refresh_rounded, size: 18),
-              label: const Text('Coba Lagi'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD06A4C),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Skeleton: harus punya `babCount` seperti data asli, kalau tidak chip
-  /// "N bab" muncul/hilang saat loading selesai.
-  static final List<ImamData> _dummyBooks = List.generate(
-    6,
-    (index) => const ImamData(
-      imamId: 0,
-      imamSorting: 0,
-      hadits: 7008,
-      longNama: 'Kitab Hadits Shahih Bukhari',
-      namaTabel: 'bukhari',
-      babCount: 97,
-    ),
-  );
 }

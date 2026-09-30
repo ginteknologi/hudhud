@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masjid_app/components/button/elevatedbutton.dart';
 import 'package:masjid_app/core/storage/preferences_service.dart';
+import 'package:masjid_app/core/storage/quran_reading_progress_storage.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/bookmark_data.dart';
 import 'package:masjid_app/models/quran_models.dart';
 import 'package:masjid_app/pages/quran/component/mushaf_filter_bottom_sheet.dart';
@@ -29,7 +31,7 @@ class _HalamanQuranTajwidPageState
   static const String _asset = 'assets/img/quran/quran-page-tajwid.json';
   static const String _lastReadKey = 'tajwidLastRead';
 
-  final BookmarkStorage _bookmarkStorage = BookmarkStorage("tajwid");
+  final BookmarkStorage _bookmarkStorage = BookmarkStorage('tajwid_saved');
 
   var surahSaatIni = 'Quran Tajwid';
   var halSaatIni = '1';
@@ -50,7 +52,8 @@ class _HalamanQuranTajwidPageState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final queryPage = int.tryParse(GoRouterState.of(context).uri.queryParameters['page'] ?? '');
+    final queryPage = int.tryParse(
+        GoRouterState.of(context).uri.queryParameters['page'] ?? '');
     if (queryPage != null && queryPage > 0) {
       lastReadHal = queryPage;
       halSaatIni = queryPage.toString();
@@ -111,14 +114,21 @@ class _HalamanQuranTajwidPageState
         surahSaatIni = item['surat'].toString();
         halSaatIni = item['hal'].toString();
         toSurat = index + 1;
+        bookmarked = _bookmarkStorage.getBookmark().index ==
+            int.tryParse('${item['hal']}');
       });
-      _saveBookmark(item);
+      _recordReading(item);
     });
   }
 
-  /// Simpan posisi tilawah supaya grid Al-Qur'an ("Tilawah Tajwid")
-  /// menampilkan posisi terakhir. Dulu `HalamanQuranController.bookmark()`
-  /// masih no-op, jadi posisi tidak pernah tersimpan.
+  void _recordReading(Map<String, dynamic> item) {
+    QuranReadingProgressStorage.save(QuranReadingProgress(
+      mode: QuranReadingMode.tajwid,
+      surahName: (item['surat'] ?? '').toString(),
+      pageNumber: int.tryParse('${item['hal']}') ?? 0,
+    ));
+  }
+
   void _saveBookmark(Map<String, dynamic> item) {
     _bookmarkStorage.saveBookmark(BookmarkData(
       namaSurat: (item['surat'] ?? '').toString(),
@@ -130,13 +140,27 @@ class _HalamanQuranTajwidPageState
     ));
   }
 
+  void _toggleBookmark() {
+    final page = _currentPage;
+    if (page == null) return;
+    setState(() => bookmarked = !bookmarked);
+    if (bookmarked) {
+      _saveBookmark(page);
+    } else {
+      _bookmarkStorage.clearBookmark();
+    }
+  }
+
   void _setPageFromItem(Map<String, dynamic> item) {
     setState(() {
       _currentPage = item;
       surahSaatIni = item['surat'].toString();
       halSaatIni = item['hal'].toString();
       toSurat = int.tryParse('${item['id']}') ?? 0;
+      bookmarked = _bookmarkStorage.getBookmark().index ==
+          int.tryParse('${item['hal']}');
     });
+    _recordReading(item);
   }
 
   /// Pengganti `goToHal(numbertogo)`: langsung cari nomor halaman di aset.
@@ -289,7 +313,8 @@ class _HalamanQuranTajwidPageState
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 5),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFD06A4C).withValues(alpha: 0.12),
+                              color: const Color(0xFFD06A4C)
+                                  .withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Row(
@@ -515,8 +540,9 @@ class _HalamanQuranTajwidPageState
   }
 
   void _bookmarkAyah(AyahCoordinate ayah, {String? surahTitle}) {
-    final finalSurahName =
-        (surahTitle != null && surahTitle.isNotEmpty) ? surahTitle : ayah.surahName;
+    final finalSurahName = (surahTitle != null && surahTitle.isNotEmpty)
+        ? surahTitle
+        : ayah.surahName;
     _bookmarkStorage.saveBookmark(BookmarkData(
       namaSurat: finalSurahName,
       surat: ayah.surahNumber,
@@ -524,6 +550,7 @@ class _HalamanQuranTajwidPageState
       totalAyat: 0,
       index: int.tryParse(halSaatIni) ?? 1,
     ));
+    setState(() => bookmarked = true);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -558,11 +585,7 @@ class _HalamanQuranTajwidPageState
                       shadow: false,
                       onPressed: () {
                         Navigator.pop(context);
-                        setState(() {
-                          bookmarked = !bookmarked;
-                        });
-                        final page = _currentPage;
-                        if (page != null) _saveBookmark(page);
+                        _toggleBookmark();
                       },
                     ),
                   ],
@@ -582,6 +605,7 @@ class _HalamanQuranTajwidPageState
 
   @override
   Widget build(BuildContext context) {
+    final t = context.hudhud;
     final listAsync = ref.watch(quranPageListProvider(_asset));
     final listSurah = listAsync.valueOrNull ?? const <Map<String, dynamic>>[];
     final isLoadingList = listAsync.isLoading;
@@ -599,24 +623,26 @@ class _HalamanQuranTajwidPageState
           context.pop('refresh');
         },
         child: Scaffold(
-            backgroundColor: const Color(0xFFF5F5F5),
+            backgroundColor: t.sand,
             extendBodyBehindAppBar: false,
             resizeToAvoidBottomInset: false,
             body: layout(listSurah, isLoadingList, context),
             appBar: _isNavbarVisible
                 ? AppBar(
-                    iconTheme: const IconThemeData(color: Colors.white),
-                    leading: GestureDetector(
-                        onTap: () {
-                          SystemChrome.setEnabledSystemUIMode(
-                              SystemUiMode.edgeToEdge);
-                          SystemChrome.setPreferredOrientations([
-                            DeviceOrientation.portraitUp,
-                          ]);
-                          context.pop('refresh');
-                        },
-                        child: const Icon(Icons.arrow_back_rounded)),
-                    backgroundColor: const Color(0xFFD06A4C),
+                    iconTheme: IconThemeData(color: t.charcoal),
+                    leading: IconButton(
+                      tooltip: 'Kembali',
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      onPressed: () {
+                        SystemChrome.setEnabledSystemUIMode(
+                            SystemUiMode.edgeToEdge);
+                        SystemChrome.setPreferredOrientations([
+                          DeviceOrientation.portraitUp,
+                        ]);
+                        context.pop('refresh');
+                      },
+                    ),
+                    backgroundColor: t.sand,
                     elevation: 0,
                     titleSpacing: 0,
                     title: Align(
@@ -624,7 +650,7 @@ class _HalamanQuranTajwidPageState
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          splashColor: Colors.white30,
+                          splashColor: t.terracotta.withValues(alpha: 0.12),
                           onTap: () => {showModal(listSurah, context)},
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -639,28 +665,28 @@ class _HalamanQuranTajwidPageState
                                       surahSaatIni,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 16,
                                         letterSpacing: 0.5,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: t.charcoal,
                                       ),
                                     ),
                                     Text(
                                       "Halaman $halSaatIni",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 11,
                                         letterSpacing: 0.5,
-                                        color: Colors.white70,
+                                        color: t.muted,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              const Icon(
+                              Icon(
                                 Icons.expand_more_rounded,
-                                color: Colors.white,
+                                color: t.charcoal,
                                 size: 20,
                               ),
                             ],
@@ -674,15 +700,11 @@ class _HalamanQuranTajwidPageState
                           bookmarked
                               ? Icons.bookmark_rounded
                               : Icons.bookmark_border_rounded,
-                          color: Colors.white,
+                          color: t.charcoal,
                         ),
                         tooltip: 'Tandai Halaman',
                         onPressed: () {
-                          setState(() {
-                            bookmarked = !bookmarked;
-                          });
-                          final page = _currentPage;
-                          if (page != null) _saveBookmark(page);
+                          _toggleBookmark();
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(bookmarked
@@ -702,12 +724,12 @@ class _HalamanQuranTajwidPageState
                                 showDialogFilter(listSurah, context);
                               },
                               borderRadius: BorderRadius.circular(20),
-                              splashColor: Colors.green.withValues(alpha: 0.5),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
+                              splashColor: t.terracotta.withValues(alpha: 0.12),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Icon(
                                   Icons.tune_rounded,
-                                  color: Colors.white,
+                                  color: t.charcoal,
                                 ),
                               ),
                             ),
@@ -717,9 +739,10 @@ class _HalamanQuranTajwidPageState
                 : null,
             bottomNavigationBar: _isNavbarVisible
                 ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFD06A4C),
+                      color: t.sand,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.2),
@@ -733,8 +756,8 @@ class _HalamanQuranTajwidPageState
                       child: Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back_ios_rounded,
-                                color: Colors.white, size: 18),
+                            icon: Icon(Icons.arrow_back_ios_rounded,
+                                color: t.charcoal, size: 18),
                             tooltip: "Halaman Sebelumnya",
                             onPressed: () {
                               final current = int.tryParse(halSaatIni) ?? 1;
@@ -749,10 +772,11 @@ class _HalamanQuranTajwidPageState
                               children: [
                                 SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
-                                    activeTrackColor: Colors.white,
-                                    inactiveTrackColor: Colors.white30,
-                                    thumbColor: Colors.white,
-                                    overlayColor: Colors.white24,
+                                    activeTrackColor: t.terracottaDark,
+                                    inactiveTrackColor: t.outline,
+                                    thumbColor: t.terracottaDark,
+                                    overlayColor:
+                                        t.terracotta.withValues(alpha: 0.12),
                                     thumbShape: const RoundSliderThumbShape(
                                         enabledThumbRadius: 6),
                                     trackHeight: 3,
@@ -771,8 +795,8 @@ class _HalamanQuranTajwidPageState
                                 ),
                                 Text(
                                   "Halaman $halSaatIni dari 604",
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  style: TextStyle(
+                                    color: t.charcoal,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -781,8 +805,8 @@ class _HalamanQuranTajwidPageState
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.arrow_forward_ios_rounded,
-                                color: Colors.white, size: 18),
+                            icon: Icon(Icons.arrow_forward_ios_rounded,
+                                color: t.charcoal, size: 18),
                             tooltip: "Halaman Berikutnya",
                             onPressed: () {
                               final current = int.tryParse(halSaatIni) ?? 1;

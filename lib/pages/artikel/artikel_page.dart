@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/hudhud_ui.dart';
 import 'package:masjid_app/core/router/app_router.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/artikel_data.dart';
 import 'package:masjid_app/models/pagination_state.dart';
 import 'package:masjid_app/pages/artikel/component/artikel_card.dart';
 import 'package:masjid_app/providers/artikel_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// Daftar lengkap artikel dengan Infinite Loading — dibuka dari tombol "Lihat Semua" di home.
+/// Daftar artikel dengan infinite loading.
 class ArtikelPage extends ConsumerStatefulWidget {
   const ArtikelPage({super.key});
 
@@ -35,18 +36,14 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_onScroll);
+    _scrollController = ScrollController()..addListener(_onScroll);
   }
 
   void _onScroll() {
-    if (_scrollController.hasClients) {
-      final maxScroll = _scrollController.position.maxScrollExtent;
-      final currentScroll = _scrollController.position.pixels;
-      // Trigger load more saat user mencapai 200px sebelum dasar list
-      if (currentScroll >= maxScroll - 200) {
-        ref.read(artikelInfiniteProvider.notifier).loadNextPage();
-      }
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - 200) {
+      ref.read(artikelInfiniteProvider.notifier).loadNextPage();
     }
   }
 
@@ -64,21 +61,30 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(artikelInfiniteProvider);
+    final t = context.hudhud;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
+    return Scaffold(
+      backgroundColor: t.sand,
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Artikel / Informasi'),
+            Text(
+              state.isLoading && state.items.isEmpty
+                  ? 'Memuat artikel...'
+                  : '${state.items.length} artikel dimuat',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF9),
-        body: SafeArea(
-          child: RefreshIndicator(
-            color: artikelTitle,
-            backgroundColor: Colors.white,
-            onRefresh: () => ref.read(artikelInfiniteProvider.notifier).refresh(),
-            child: _buildContent(context, state),
-          ),
+      body: SafeArea(
+        child: RefreshIndicator(
+          color: t.terracotta,
+          backgroundColor: t.surface,
+          onRefresh: () => ref.read(artikelInfiniteProvider.notifier).refresh(),
+          child: _buildContent(context, state),
         ),
       ),
     );
@@ -86,24 +92,10 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
 
   Widget _buildContent(BuildContext context, PaginationState<ArtikelData> state) {
     if (state.isLoading && state.items.isEmpty) {
-      return _buildScrollView(
-        context,
-        items: _dummyItems,
-        isLoading: true,
-        state: state,
-      );
+      return _buildScrollView(context, items: _dummyItems, isLoading: true, state: state);
     }
-
-    if (state.errorMessage != null && state.items.isEmpty) {
-      return _buildError();
-    }
-
-    return _buildScrollView(
-      context,
-      items: state.items,
-      isLoading: false,
-      state: state,
-    );
+    if (state.errorMessage != null && state.items.isEmpty) return _buildError();
+    return _buildScrollView(context, items: state.items, isLoading: false, state: state);
   }
 
   Widget _buildScrollView(
@@ -112,85 +104,18 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
     required bool isLoading,
     required PaginationState<ArtikelData> state,
   }) {
+    final t = context.hudhud;
     return Skeletonizer(
       enabled: isLoading,
       child: CustomScrollView(
         controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(
-          parent: BouncingScrollPhysics(),
-        ),
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
-          // Header Row
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () => Navigator.of(context).pop(),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: artikelBorder),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.04),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_rounded,
-                        size: 20,
-                        color: artikelTitle,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Artikel / Informasi',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.poppins(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
-                            color: artikelTitle,
-                          ),
-                        ),
-                        Text(
-                          isLoading
-                              ? 'Memuat artikel...'
-                              : '${items.length} artikel dimuat',
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Items List or Empty State
           if (!isLoading && items.isEmpty)
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: _buildEmpty(),
-            )
+            SliverFillRemaining(hasScrollBody: false, child: _buildEmpty())
           else
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceMd),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, i) {
@@ -199,9 +124,7 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
                       judul: item.judul,
                       image: item.image,
                       dateLabel: formatArtikelDate(
-                        item.publishDate.isNotEmpty
-                            ? item.publishDate
-                            : item.updatedAt,
+                        item.publishDate.isNotEmpty ? item.publishDate : item.updatedAt,
                       ),
                       featured: i == 0,
                       onTap: () => _openDetail(context, item),
@@ -211,20 +134,15 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
                 ),
               ),
             ),
-
-          // Bottom Loading Indicator (Infinite Scroll feedback)
           if (state.isLoadingMore)
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: EdgeInsets.all(t.spaceLg),
                 child: Center(
                   child: SizedBox(
-                    width: 26,
-                    height: 26,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: artikelTitle,
-                    ),
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: t.terracotta),
                   ),
                 ),
               ),
@@ -232,14 +150,11 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
           else if (!state.hasMore && items.isNotEmpty && !isLoading)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 28, top: 12),
+                padding: EdgeInsets.only(bottom: t.spaceXl, top: t.spaceSm),
                 child: Center(
                   child: Text(
                     'Semua artikel telah dimuat',
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      color: Colors.black38,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
               ),
@@ -249,61 +164,17 @@ class _ArtikelPageState extends ConsumerState<ArtikelPage> {
     );
   }
 
-  Widget _buildEmpty() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.article_outlined, size: 48, color: Colors.black26),
-            const SizedBox(height: 12),
-            Text(
-              'Belum ada artikel',
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.black54),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _buildEmpty() => HudhudStateView(
+        icon: LucideIcons.newspaper,
+        title: 'Belum ada artikel',
+        message: 'Artikel dan informasi akan tampil di sini.',
+      );
 
-  Widget _buildError() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.cloud_off_rounded,
-              size: 48,
-              color: Colors.black38,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Gagal memuat artikel',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black54,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: artikelTitle,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () => ref.read(artikelInfiniteProvider.notifier).loadFirstPage(),
-              child: const Text('Coba Lagi'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _buildError() => HudhudStateView(
+        icon: LucideIcons.wifiOff,
+        title: 'Gagal memuat artikel',
+        message: 'Periksa koneksi lalu coba kembali.',
+        actionLabel: 'Coba lagi',
+        onAction: () => ref.read(artikelInfiniteProvider.notifier).loadFirstPage(),
+      );
 }

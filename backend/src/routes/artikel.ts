@@ -119,14 +119,4 @@ artikel.get('/lain/:id', async (c) => {
   }
 });
 
-// GET /api/v1/artikel/category
-artikel.get('/category', async (c) => {
-  try {
-    const { results } = await c.env.DB.prepare('SELECT * FROM artikel_kategori ORDER BY id ASC').all();
-    return apiResponse(c, 200, true, 'Success', results || []);
-  } catch (e: any) {
-    return apiResponse(c, 200, true, 'Success', []);
-  }
-});
-
 export default artikel;

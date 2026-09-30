@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/jadwal_imsakiah_item.dart';
 import 'package:masjid_app/providers/jadwal_imsakiah_provider.dart';
 import 'package:masjid_app/providers/location_provider.dart';
@@ -13,393 +14,220 @@ class JadwalImsakiahPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.hudhud;
     final location = ref.watch(locationProvider);
     final selectedDate = ref.watch(selectedImsakiahDateProvider);
     final jadwalAsync = ref.watch(jadwalImsakiahProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F8F7),
+      backgroundColor: t.sand,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFD06A4C),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Jadwal Imsakiyah',
-          style: GoogleFonts.plusJakartaSans(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
+        title: const Text('Jadwal Imsakiyah'),
         actions: [
           IconButton(
-            tooltip: 'Bagikan Jadwal',
-            icon: const Icon(Icons.share_outlined),
-            onPressed: () => _shareJadwal(context, ref, location.name, selectedDate, jadwalAsync.valueOrNull),
+            constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+            tooltip: 'Bagikan jadwal',
+            icon: const Icon(LucideIcons.share2),
+            onPressed: () => _shareJadwal(
+              location.name,
+              selectedDate,
+              jadwalAsync.valueOrNull,
+            ),
           ),
         ],
       ),
       body: RefreshIndicator(
-        color: const Color(0xFFD06A4C),
+        color: t.terracotta,
         onRefresh: () async {
           ref.invalidate(jadwalImsakiahProvider);
           await ref.read(jadwalImsakiahProvider.future);
         },
-        child: SingleChildScrollView(
+        child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              _buildHeaderSection(context, ref, location, selectedDate),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Column(
-                  children: [
-                    _buildMonthNavigator(context, ref, selectedDate),
-                    const SizedBox(height: 12),
-                    jadwalAsync.when(
-                      data: (items) {
-                        if (items.isEmpty) {
-                          return _buildEmptyState(context, ref);
-                        }
-                        return Column(
-                          children: [
-                            _buildTodayHighlightCard(items),
-                            const SizedBox(height: 16),
-                            _buildTableCard(context, items),
-                          ],
-                        );
-                      },
-                      loading: () => _buildLoadingState(),
-                      error: (err, _) => _buildErrorState(context, ref, err.toString()),
+          padding:
+              EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceXl),
+          children: [
+            _locationBanner(context, location),
+            SizedBox(height: t.spaceMd),
+            _monthNavigator(context, ref, selectedDate),
+            SizedBox(height: t.spaceMd),
+            jadwalAsync.when(
+              data: (items) => items.isEmpty
+                  ? _emptyState(context, ref)
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _todayCard(context, items),
+                        SizedBox(height: t.spaceMd),
+                        _tableCard(context, items),
+                      ],
                     ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
-            ],
-          ),
+              loading: () => _loadingState(context),
+              error: (_, __) => _errorState(context, ref),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeaderSection(
-    BuildContext context,
-    WidgetRef ref,
-    SavedLocation location,
-    DateTime selectedDate,
-  ) {
+  Widget _locationBanner(BuildContext context, SavedLocation location) {
+    final t = context.hudhud;
     final hijriNow = HijriCalendar.now();
-    final hijriStr = '${hijriNow.hDay} ${hijriNow.longMonthName} ${hijriNow.hYear} H';
-
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-      decoration: const BoxDecoration(
-        color: Color(0xFFD06A4C),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
-        ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.location_on, color: Colors.white, size: 16),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    location.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            hijriStr,
-            style: GoogleFonts.plusJakartaSans(
-              color: const Color(0xFFD0F0EA),
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMonthNavigator(
-    BuildContext context,
-    WidgetRef ref,
-    DateTime selectedDate,
-  ) {
-    final monthName = DateFormat('MMMM yyyy', 'id_ID').format(selectedDate);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      constraints: BoxConstraints(minHeight: t.controlHeight),
+      padding: EdgeInsets.all(t.spaceMd),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.chevron_left, color: Color(0xFFD06A4C)),
-            onPressed: () {
-              ref.read(selectedImsakiahDateProvider.notifier).state = DateTime(
-                selectedDate.year,
-                selectedDate.month - 1,
-                1,
-              );
-            },
-          ),
-          Row(
-            children: [
-              const Icon(Icons.calendar_month, color: Color(0xFFD06A4C), size: 18),
-              const SizedBox(width: 8),
-              Text(
-                monthName,
-                style: GoogleFonts.plusJakartaSans(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: const Color(0xFF1F2937),
-                ),
-              ),
-            ],
-          ),
-          IconButton(
-            icon: const Icon(Icons.chevron_right, color: Color(0xFFD06A4C)),
-            onPressed: () {
-              ref.read(selectedImsakiahDateProvider.notifier).state = DateTime(
-                selectedDate.year,
-                selectedDate.month + 1,
-                1,
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTodayHighlightCard(List<JadwalImsakiahItem> items) {
-    final todayItem = items.where((it) => it.isToday).firstOrNull ?? items.firstOrNull;
-    if (todayItem == null) return const SizedBox.shrink();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFD06A4C), Color(0xFFECA843)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFD06A4C).withValues(alpha: 0.25),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.today, color: Colors.white, size: 16),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    todayItem.isToday ? 'Hari Ini' : '${todayItem.hari}, ${todayItem.tanggal}',
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              if (todayItem.isToday)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.25),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${todayItem.hari}, ${todayItem.tanggal}',
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white,
-                      fontSize: 12,
+              Icon(LucideIcons.mapPin, size: 18, color: t.terracotta),
+              SizedBox(width: t.spaceSm),
+              Expanded(
+                child: Text(
+                  '${location.name}${location.isGps ? '' : ' (perkiraan)'}',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
                       fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                      color: t.charcoal),
                 ),
+              ),
             ],
           ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: _buildTimeBox(
-                  label: 'Imsak',
-                  time: todayItem.imsak,
-                  icon: Icons.alarm,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildTimeBox(
-                  label: 'Berbuka (Maghrib)',
-                  time: todayItem.berbuka,
-                  icon: Icons.wb_twilight,
-                ),
-              ),
-            ],
+          SizedBox(height: t.spaceXs),
+          Text(
+            '${hijriNow.hDay} ${hijriNow.longMonthName} ${hijriNow.hYear} H',
+            style: TextStyle(fontFamily: 'Roboto', color: t.muted),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTimeBox({
-    required String label,
-    required String time,
-    required IconData icon,
-  }) {
+  Widget _monthNavigator(
+      BuildContext context, WidgetRef ref, DateTime selectedDate) {
+    final t = context.hudhud;
+    final monthName = DateFormat('MMMM yyyy', 'id_ID').format(selectedDate);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      constraints: BoxConstraints(minHeight: t.controlHeight),
+      padding: EdgeInsets.symmetric(horizontal: t.spaceSm),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white, size: 22),
-          const SizedBox(width: 10),
+          IconButton(
+            constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+            tooltip: 'Bulan sebelumnya',
+            icon: Icon(LucideIcons.chevronLeft, color: t.terracotta),
+            onPressed: () => ref
+                .read(selectedImsakiahDateProvider.notifier)
+                .state = DateTime(selectedDate.year, selectedDate.month - 1, 1),
+          ),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  label,
-                  style: GoogleFonts.plusJakartaSans(
-                    color: const Color(0xFFD0F0EA),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  time,
-                  style: GoogleFonts.plusJakartaSans(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Icon(LucideIcons.calendarDays, size: 18, color: t.terracotta),
+                SizedBox(width: t.spaceSm),
+                Flexible(
+                  child: Text(
+                    monthName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w700,
+                        color: t.charcoal),
                   ),
                 ),
               ],
             ),
+          ),
+          IconButton(
+            constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+            tooltip: 'Bulan berikutnya',
+            icon: Icon(LucideIcons.chevronRight, color: t.terracotta),
+            onPressed: () => ref
+                .read(selectedImsakiahDateProvider.notifier)
+                .state = DateTime(selectedDate.year, selectedDate.month + 1, 1),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTableCard(BuildContext context, List<JadwalImsakiahItem> items) {
+  Widget _todayCard(BuildContext context, List<JadwalImsakiahItem> items) {
+    final t = context.hudhud;
+    final item =
+        items.where((it) => it.isToday).firstOrNull ?? items.firstOrNull;
+    if (item == null) return const SizedBox.shrink();
     return Container(
+      padding: EdgeInsets.all(t.spaceMd),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFD06A4C).withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
       ),
-      clipBehavior: Clip.antiAlias,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Table
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: Color(0xFFD06A4C),
-            ),
-            child: Row(
-              children: [
-                _buildHeaderCell('No', flex: 1),
-                _buildHeaderCell('Tanggal', flex: 3),
-                _buildHeaderCell('Hari', flex: 3),
-                _buildHeaderCell('Imsak', flex: 3),
-                _buildHeaderCell('Berbuka', flex: 3),
-              ],
-            ),
-          ),
-          // Rows
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: items.length,
-            separatorBuilder: (_, __) => const Divider(
-              height: 1,
-              thickness: 1,
-              color: Color(0xFFF0F4F2),
-            ),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              return Container(
-                color: item.isToday ? const Color(0xFFE6F5F3) : Colors.transparent,
-                padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 8),
-                child: Row(
-                  children: [
-                    _buildBodyCell(item.no.toString(), flex: 1, isBold: item.isToday),
-                    _buildBodyCell(item.tanggal, flex: 3, isBold: item.isToday),
-                    _buildBodyCell(item.hari, flex: 3, isBold: item.isToday),
-                    _buildBodyCell(item.imsak, flex: 3, isBold: item.isToday, highlight: item.isToday),
-                    _buildBodyCell(item.berbuka, flex: 3, isBold: item.isToday, highlight: item.isToday),
-                  ],
+          Row(
+            children: [
+              Icon(LucideIcons.calendarCheck, size: 20, color: t.terracotta),
+              SizedBox(width: t.spaceSm),
+              Expanded(
+                child: Text(
+                  item.isToday ? 'Hari ini' : '${item.hari}, ${item.tanggal}',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w700,
+                      color: t.charcoal),
                 ),
+              ),
+              if (item.isToday)
+                Flexible(
+                  child: Text(
+                    '${item.hari}, ${item.tanggal}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                        fontFamily: 'Roboto', fontSize: 12, color: t.muted),
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: t.spaceMd),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final timeCards = [
+                _timeBox(context, 'Imsak', item.imsak, LucideIcons.alarmClock),
+                _timeBox(context, 'Berbuka', item.berbuka, LucideIcons.sunset),
+              ];
+              if (constraints.maxWidth < 340) {
+                return Column(
+                  children: [
+                    timeCards[0],
+                    SizedBox(height: t.spaceSm),
+                    timeCards[1],
+                  ],
+                );
+              }
+              return Row(
+                children: [
+                  Expanded(child: timeCards[0]),
+                  SizedBox(width: t.spaceSm),
+                  Expanded(child: timeCards[1]),
+                ],
               );
             },
           ),
@@ -408,151 +236,216 @@ class JadwalImsakiahPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeaderCell(String label, {required int flex}) {
-    return Expanded(
-      flex: flex,
-      child: Text(
-        label,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.plusJakartaSans(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBodyCell(
-    String text, {
-    required int flex,
-    bool isBold = false,
-    bool highlight = false,
-  }) {
-    return Expanded(
-      flex: flex,
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.plusJakartaSans(
-          fontSize: 12,
-          fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-          color: highlight
-              ? const Color(0xFFD06A4C)
-              : (isBold ? const Color(0xFF1F2937) : const Color(0xFF4B5563)),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingState() {
+  Widget _timeBox(
+      BuildContext context, String label, String time, IconData icon) {
+    final t = context.hudhud;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      child: const Center(
-        child: CircularProgressIndicator(
-          color: Color(0xFFD06A4C),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          const Icon(Icons.calendar_today_outlined, size: 48, color: Colors.grey),
-          const SizedBox(height: 12),
-          Text(
-            'Data jadwal belum tersedia',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 12),
-          OutlinedButton(
-            onPressed: () => ref.invalidate(jadwalImsakiahProvider),
-            child: const Text('Muat Ulang'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorState(BuildContext context, WidgetRef ref, String error) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
+      constraints: BoxConstraints(minHeight: t.controlHeight),
+      padding: EdgeInsets.symmetric(horizontal: t.spaceSm, vertical: t.spaceSm),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2EBE8)),
+        color: t.sand,
+        borderRadius: BorderRadius.circular(t.radiusSm),
+        border: Border.all(color: t.outline),
       ),
-      child: Column(
+      child: Row(
         children: [
-          const Icon(Icons.wifi_off_rounded, color: Colors.orange, size: 44),
-          const SizedBox(height: 12),
-          Text(
-            'Gagal memuat jadwal imsakiah',
-            style: GoogleFonts.plusJakartaSans(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: const Color(0xFF1F2937),
+          Icon(icon, size: 18, color: t.terracotta),
+          SizedBox(width: t.spaceSm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontFamily: 'Roboto', fontSize: 12, color: t.muted),
+                ),
+                Text(
+                  time,
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: t.charcoal),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Pastikan koneksi internet aktif dan silakan coba lagi.',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFD06A4C),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('Coba Lagi'),
-            onPressed: () => ref.invalidate(jadwalImsakiahProvider),
           ),
         ],
       ),
     );
   }
 
-  void _shareJadwal(
-    BuildContext context,
-    WidgetRef ref,
-    String locationName,
-    DateTime selectedDate,
-    List<JadwalImsakiahItem>? items,
-  ) {
-    final monthStr = DateFormat('MMMM yyyy', 'id_ID').format(selectedDate);
-    final todayItem = items?.where((it) => it.isToday).firstOrNull ?? items?.firstOrNull;
-
-    final buffer = StringBuffer();
-    buffer.writeln('🌙 *Jadwal Imsakiyah - $locationName*');
-    buffer.writeln('📅 Periode: $monthStr\n');
-
-    if (todayItem != null) {
-      buffer.writeln('📌 *Hari Ini (${todayItem.hari}, ${todayItem.tanggal})*');
-      buffer.writeln('• Imsak: ${todayItem.imsak} WIB');
-      buffer.writeln('• Berbuka: ${todayItem.berbuka} WIB\n');
-    }
-
-    buffer.writeln('Dapatkan jadwal ibadah lengkap di aplikasi Hudhud.');
-
-    SharePlus.instance.share(
-      ShareParams(
-        text: buffer.toString(),
-        subject: 'Jadwal Imsakiyah $monthStr - $locationName',
+  Widget _tableCard(BuildContext context, List<JadwalImsakiahItem> items) {
+    final t = context.hudhud;
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
       ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SizedBox(
+          width: 560,
+          child: Column(
+            children: [
+              _tableRow(
+                  context, const ['No', 'Tanggal', 'Hari', 'Imsak', 'Berbuka'],
+                  header: true),
+              for (var index = 0; index < items.length; index++) ...[
+                if (index > 0) Divider(height: 1, color: t.outline),
+                _tableRow(
+                  context,
+                  [
+                    items[index].no.toString(),
+                    items[index].tanggal,
+                    items[index].hari,
+                    items[index].imsak,
+                    items[index].berbuka,
+                  ],
+                  highlighted: items[index].isToday,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tableRow(BuildContext context, List<String> cells,
+      {bool header = false, bool highlighted = false}) {
+    final t = context.hudhud;
+    const flexes = [1, 3, 3, 3, 3];
+    return Container(
+      constraints: BoxConstraints(minHeight: t.controlHeight),
+      color: header
+          ? t.terracotta
+          : highlighted
+              ? t.amber.withValues(alpha: .16)
+              : t.surface,
+      padding: EdgeInsets.symmetric(horizontal: t.spaceSm, vertical: t.spaceXs),
+      child: Row(
+        children: [
+          for (var i = 0; i < cells.length; i++)
+            Expanded(
+              flex: flexes[i],
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: t.spaceXs),
+                child: Text(
+                  cells[i],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: header || highlighted
+                        ? FontWeight.w700
+                        : FontWeight.normal,
+                    color: header
+                        ? Colors.white
+                        : highlighted
+                            ? t.terracottaDark
+                            : t.charcoal,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _loadingState(BuildContext context) => Padding(
+        padding: EdgeInsets.all(context.hudhud.spaceXl),
+        child: Center(
+            child: CircularProgressIndicator(color: context.hudhud.terracotta)),
+      );
+
+  Widget _emptyState(BuildContext context, WidgetRef ref) {
+    return _stateCard(
+      context,
+      icon: LucideIcons.calendarDays,
+      title: 'Data jadwal belum tersedia',
+      action: FilledButton(
+        onPressed: () => ref.invalidate(jadwalImsakiahProvider),
+        child: const Text('Muat ulang'),
+      ),
+    );
+  }
+
+  Widget _errorState(BuildContext context, WidgetRef ref) => _stateCard(
+        context,
+        icon: LucideIcons.wifiOff,
+        title: 'Gagal memuat jadwal imsakiyah',
+        message: 'Periksa koneksi internet lalu coba kembali.',
+        action: FilledButton.icon(
+          onPressed: () => ref.invalidate(jadwalImsakiahProvider),
+          icon: const Icon(LucideIcons.refreshCw, size: 18),
+          label: const Text('Coba lagi'),
+        ),
+      );
+
+  Widget _stateCard(BuildContext context,
+      {required IconData icon,
+      required String title,
+      String? message,
+      required Widget action}) {
+    final t = context.hudhud;
+    return Container(
+      constraints: BoxConstraints(minHeight: t.controlHeight),
+      padding: EdgeInsets.all(t.spaceLg),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 32, color: t.terracotta),
+          SizedBox(height: t.spaceSm),
+          Text(title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleSmall),
+          if (message != null) ...[
+            SizedBox(height: t.spaceXs),
+            Text(message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: t.muted)),
+          ],
+          SizedBox(height: t.spaceMd),
+          action,
+        ],
+      ),
+    );
+  }
+
+  Future<void> _shareJadwal(String locationName, DateTime selectedDate,
+      List<JadwalImsakiahItem>? items) async {
+    final monthStr = DateFormat('MMMM yyyy', 'id_ID').format(selectedDate);
+    final todayItem =
+        items?.where((it) => it.isToday).firstOrNull ?? items?.firstOrNull;
+    final buffer = StringBuffer()
+      ..writeln('🌙 *Jadwal Imsakiyah - $locationName*')
+      ..writeln('📅 Periode: $monthStr\n');
+    if (todayItem != null) {
+      buffer
+        ..writeln('📌 *Hari Ini (${todayItem.hari}, ${todayItem.tanggal})*')
+        ..writeln('• Imsak: ${todayItem.imsak} WIB')
+        ..writeln('• Berbuka: ${todayItem.berbuka} WIB\n');
+    }
+    buffer.writeln('Dapatkan jadwal ibadah lengkap di aplikasi Hudhud.');
+    await SharePlus.instance.share(
+      ShareParams(
+          text: buffer.toString(),
+          subject: 'Jadwal Imsakiyah $monthStr - $locationName'),
     );
   }
 }

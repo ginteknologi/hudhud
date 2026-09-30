@@ -1,12 +1,13 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:masjid_app/components/worship/worship_counter_control.dart';
+import 'package:masjid_app/components/worship/worship_progress_indicator.dart';
+import 'package:masjid_app/components/worship/worship_reader_scaffold.dart';
+import 'package:masjid_app/components/worship/worship_scripture_block.dart';
+import 'package:masjid_app/components/worship/worship_share_helper.dart';
+import 'package:masjid_app/core/theme/hudhud_theme.dart';
 import 'package:masjid_app/models/dzikir_data.dart';
-import 'package:masjid_app/pages/dzikir/component/dzikir_header_painter.dart';
-import 'package:share_plus/share_plus.dart';
 
 class DzikirPage extends ConsumerStatefulWidget {
   const DzikirPage({super.key});
@@ -18,35 +19,54 @@ class DzikirPage extends ConsumerStatefulWidget {
 class _DzikirPageState extends ConsumerState<DzikirPage> {
   // false = Dzikir Pagi, true = Dzikir Petang
   bool _isPetang = false;
+  int _currentIndex = 0;
+  late final PageController _pageController;
 
   // Hitungan tasbih per dzikir item (id -> count)
   final Map<int, int> _counts = {};
 
   // Pengaturan Tampilan & Font
-  double _arabicFontSize = 21.0;
+  double _arabicFontSize = 22.0;
   bool _showLatin = true;
   bool _showTranslation = true;
 
   @override
   void initState() {
     super.initState();
-    // Default waktu disesuaikan otomatis dengan jam saat ini:
-    // Sebelum jam 15:00 = Dzikir Pagi, 15:00 ke atas = Dzikir Petang
+    _pageController = PageController();
+    // Default waktu: sebelum jam 15:00 = Pagi, 15:00 ke atas / dini hari = Petang
     final hour = DateTime.now().hour;
     if (hour >= 15 || hour < 4) {
       _isPetang = true;
     }
   }
 
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  List<DzikirItem> get _currentList => _isPetang
+      ? DzikirRepository.dzikirPetangList
+      : DzikirRepository.dzikirPagiList;
+
+  void _switchPeriod(bool toPetang) {
+    if (_isPetang == toPetang) return;
+    setState(() {
+      _isPetang = toPetang;
+      _currentIndex = 0;
+    });
+    if (_pageController.hasClients) {
+      _pageController.jumpToPage(0);
+    }
+  }
+
   void _incrementCount(DzikirItem item) {
-    HapticFeedback.lightImpact();
     setState(() {
       final current = _counts[item.id] ?? 0;
       if (current < item.targetCount) {
         _counts[item.id] = current + 1;
-        if (_counts[item.id] == item.targetCount) {
-          HapticFeedback.mediumImpact();
-        }
       } else {
         // Reset jika sudah selesai
         _counts[item.id] = 0;
@@ -54,78 +74,71 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
     });
   }
 
-  void _copyToClipboard(DzikirItem item) {
-    final buffer = StringBuffer();
-    buffer.writeln(item.judul);
-    buffer.writeln('(Dibaca ${item.targetCount}x)');
-    buffer.writeln();
-    buffer.writeln(item.arab);
-    buffer.writeln();
-    if (_showLatin && item.transliterasi.isNotEmpty) {
-      buffer.writeln(item.transliterasi);
-      buffer.writeln();
-    }
-    if (_showTranslation) {
-      buffer.writeln('Artinya:');
-      buffer.writeln('"${item.arti}"');
-      buffer.writeln();
-    }
-    if (item.faedah.isNotEmpty) {
-      buffer.writeln('Keutamaan: ${item.faedah}');
-      buffer.writeln();
-    }
-    buffer.writeln("(Dibagikan melalui Hudhud)");
+  void _goToIndex(int index) {
+    if (index < 0 || index >= _currentList.length) return;
+    final reducedMotion = MediaQuery.of(context).disableAnimations;
+    final duration =
+        reducedMotion ? Duration.zero : context.hudhud.motionNormal;
 
-    Clipboard.setData(ClipboardData(text: buffer.toString().trim()));
-    Fluttertoast.showToast(
-      msg: 'Teks Dzikir berhasil disalin',
-      backgroundColor: const Color(0xFFD06A4C),
-      textColor: Colors.white,
+    setState(() => _currentIndex = index);
+    if (_pageController.hasClients) {
+      if (reducedMotion) {
+        _pageController.jumpToPage(index);
+      } else {
+        _pageController.animateToPage(
+          index,
+          duration: duration,
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  void _copyDzikir(DzikirItem item) {
+    final text = WorshipShareHelper.formatWorshipText(
+      title: item.judul,
+      subtitle:
+          '(Dibaca ${item.targetCount}x - ${_isPetang ? "Dzikir Petang" : "Dzikir Pagi"})',
+      arabic: item.arab,
+      latin: _showLatin && item.transliterasi.isNotEmpty
+          ? item.transliterasi
+          : null,
+      translation: _showTranslation && item.arti.isNotEmpty ? item.arti : null,
+      source: item.faedah.isNotEmpty ? item.faedah : null,
     );
+    WorshipShareHelper.copy(
+        text: text, successMessage: 'Dzikir berhasil disalin');
   }
 
   void _shareDzikir(DzikirItem item) {
-    final buffer = StringBuffer();
-    buffer.writeln(item.judul);
-    buffer.writeln('(Dibaca ${item.targetCount}x)');
-    buffer.writeln();
-    buffer.writeln(item.arab);
-    buffer.writeln();
-    if (_showLatin && item.transliterasi.isNotEmpty) {
-      buffer.writeln(item.transliterasi);
-      buffer.writeln();
-    }
-    if (_showTranslation) {
-      buffer.writeln('Artinya:');
-      buffer.writeln('"${item.arti}"');
-      buffer.writeln();
-    }
-    if (item.faedah.isNotEmpty) {
-      buffer.writeln('Keutamaan: ${item.faedah}');
-      buffer.writeln();
-    }
-    buffer.writeln("Dibagikan melalui Hudhud");
-
-    SharePlus.instance.share(
-      ShareParams(
-        text: buffer.toString().trim(),
-        subject: item.judul,
-      ),
+    final text = WorshipShareHelper.formatWorshipText(
+      title: item.judul,
+      subtitle:
+          '(Dibaca ${item.targetCount}x - ${_isPetang ? "Dzikir Petang" : "Dzikir Pagi"})',
+      arabic: item.arab,
+      latin: _showLatin && item.transliterasi.isNotEmpty
+          ? item.transliterasi
+          : null,
+      translation: _showTranslation && item.arti.isNotEmpty ? item.arti : null,
+      source: item.faedah.isNotEmpty ? item.faedah : null,
     );
+    WorshipShareHelper.share(text: text, subject: item.judul);
   }
 
   void _showSettingsSheet() {
+    final t = context.hudhud;
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      backgroundColor: t.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(t.radiusMd)),
       ),
       builder: (ctx) {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              padding: EdgeInsets.fromLTRB(
+                  t.spaceLg, t.spaceMd, t.spaceLg, t.spaceXl),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,37 +148,38 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.black12,
+                        color: t.outline,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: t.spaceLg),
                   Text(
                     'Pengaturan Tampilan & Font',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD06A4C),
+                      fontWeight: FontWeight.w700,
+                      color: t.charcoal,
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // Toggle Transliterasi (Latin)
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    activeTrackColor: const Color(0xFFD06A4C),
+                    activeTrackColor: t.terracotta,
                     title: Text(
                       'Tampilkan Teks Latin',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF2D3748),
+                        color: t.charcoal,
                       ),
                     ),
                     subtitle: Text(
-                      'Menampilkan panduan bacaan transliterasi latin',
-                      style: GoogleFonts.poppins(fontSize: 11, color: Colors.black45),
+                      'Panduan bacaan transliterasi',
+                      style: TextStyle(
+                          fontFamily: 'Roboto', fontSize: 12, color: t.muted),
                     ),
                     value: _showLatin,
                     onChanged: (val) {
@@ -173,24 +187,23 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                       setState(() => _showLatin = val);
                     },
                   ),
-
-                  const Divider(height: 12),
-
-                  // Toggle Terjemahan (Arti)
+                  const Divider(),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    activeTrackColor: const Color(0xFFD06A4C),
+                    activeTrackColor: t.terracotta,
                     title: Text(
-                      'Tampilkan Terjemahan (Arti)',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
+                      'Tampilkan Terjemahan',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF2D3748),
+                        color: t.charcoal,
                       ),
                     ),
                     subtitle: Text(
-                      'Menampilkan terjemahan bahasa Indonesia',
-                      style: GoogleFonts.poppins(fontSize: 11, color: Colors.black45),
+                      'Arti dalam Bahasa Indonesia',
+                      style: TextStyle(
+                          fontFamily: 'Roboto', fontSize: 12, color: t.muted),
                     ),
                     value: _showTranslation,
                     onChanged: (val) {
@@ -198,37 +211,36 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                       setState(() => _showTranslation = val);
                     },
                   ),
-
-                  const Divider(height: 16),
-
-                  // Slider Ukuran Teks Arab
+                  const Divider(),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Ukuran Teks Arab',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF2D3748),
+                          color: t.charcoal,
                         ),
                       ),
                       Text(
                         '${_arabicFontSize.toInt()} pt',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFFD06A4C),
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: t.terracotta,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: const Color(0xFFD06A4C),
-                      inactiveTrackColor: const Color(0xFFE2EBE8),
-                      thumbColor: const Color(0xFFD06A4C),
+                      activeTrackColor: t.terracotta,
+                      inactiveTrackColor: t.sand,
+                      thumbColor: t.terracotta,
                     ),
                     child: Slider(
                       value: _arabicFontSize,
@@ -239,24 +251,6 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
                         setModalState(() => _arabicFontSize = val);
                         setState(() => _arabicFontSize = val);
                       },
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAF9),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFE2EBE8)),
-                    ),
-                    child: Text(
-                      'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.amiri(
-                        fontSize: _arabicFontSize,
-                        color: const Color(0xFF2D3748),
-                      ),
                     ),
                   ),
                 ],
@@ -270,262 +264,215 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
 
   @override
   Widget build(BuildContext context) {
-    final list = _isPetang
-        ? DzikirRepository.dzikirPetangList
-        : DzikirRepository.dzikirPagiList;
+    final t = context.hudhud;
+    final items = _currentList;
+    final safeIndex =
+        _currentIndex.clamp(0, items.isEmpty ? 0 : items.length - 1);
+    final currentItem = items.isNotEmpty ? items[safeIndex] : null;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-      ),
-      child: Scaffold(
-        body: DzikirAnimatedBackground(
-          isPetang: _isPetang,
-          child: SafeArea(
-            bottom: false,
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                // Top Header Section
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Top Nav Bar Row
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.20),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.30),
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.arrow_back_rounded,
-                                  size: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            // Settings Action Button (Font & Display)
-                            InkWell(
-                              onTap: _showSettingsSheet,
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 7,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.20),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.30),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.tune_rounded,
-                                      size: 16,
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      'Tampilan',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        // Title & Subtitle Overlay
-                        Text(
-                          _isPetang ? 'Dzikir Petang' : 'Dzikir Pagi',
-                          style: GoogleFonts.poppins(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 0.2,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          _isPetang
-                              ? 'Kumpulan dzikir & wirid sunnah di waktu sore/malam'
-                              : 'Kumpulan dzikir & wirid sunnah pembuka pagi hari',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: Colors.white.withValues(alpha: 0.90),
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        // Time Switcher Toggle (Pagi / Petang)
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.25),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.20),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _buildTimeTab(
-                                  title: 'Dzikir Pagi',
-                                  icon: Icons.wb_sunny_rounded,
-                                  isSelected: !_isPetang,
-                                  onTap: () {
-                                    if (_isPetang) {
-                                      setState(() => _isPetang = false);
-                                    }
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: _buildTimeTab(
-                                  title: 'Dzikir Petang',
-                                  icon: Icons.nightlight_round,
-                                  isSelected: _isPetang,
-                                  onTap: () {
-                                    if (!_isPetang) {
-                                      setState(() => _isPetang = true);
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Section Info Bar
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Rangkaian Bacaan',
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.18),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                '${list.length} Dzikir',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // List of Semi-Transparent Dzikir Cards
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 36),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final item = list[index];
-                        return FadeInUp(
-                          key: ValueKey('${_isPetang ? "petang" : "pagi"}_${item.id}'),
-                          duration: Duration(milliseconds: 140 + (index * 25).clamp(0, 250)),
-                          child: _buildDzikirCard(context, item, index),
-                        );
-                      },
-                      childCount: list.length,
-                    ),
-                  ),
+    return WorshipReaderScaffold(
+      title: 'Dzikir Pagi & Petang',
+      subtitle: _isPetang ? 'Al-Ma’tsurat Petang' : 'Al-Ma’tsurat Pagi',
+      actions: [
+        if (currentItem != null) ...[
+          IconButton(
+            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            icon: const Icon(LucideIcons.copy, size: 20),
+            tooltip: 'Salin',
+            onPressed: () => _copyDzikir(currentItem),
+          ),
+          IconButton(
+            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            icon: const Icon(LucideIcons.share2, size: 20),
+            tooltip: 'Bagikan',
+            onPressed: () => _shareDzikir(currentItem),
+          ),
+        ],
+        IconButton(
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          icon: const Icon(LucideIcons.settings2, size: 20),
+          tooltip: 'Pengaturan Tampilan',
+          onPressed: _showSettingsSheet,
+        ),
+      ],
+      body: Column(
+        children: [
+          // Period Selector + Progress Indicator
+          Padding(
+            padding:
+                EdgeInsets.fromLTRB(t.spaceLg, t.spaceSm, t.spaceLg, t.spaceMd),
+            child: Column(
+              children: [
+                _buildPeriodSelector(t),
+                const SizedBox(height: 12),
+                WorshipProgressIndicator(
+                  currentStep: safeIndex + 1,
+                  totalSteps: items.length,
+                  trailingLabel: currentItem != null
+                      ? 'Target: ${currentItem.targetCount}x'
+                      : null,
                 ),
               ],
             ),
+          ),
+          // Single Focus PageView
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: items.length,
+              onPageChanged: (idx) => setState(() => _currentIndex = idx),
+              itemBuilder: (ctx, i) {
+                final item = items[i];
+                return _buildFocusCard(context, item);
+              },
+            ),
+          ),
+          // Navigation Dock & Counter Control
+          if (currentItem != null)
+            _buildBottomDock(context, currentItem, safeIndex, items.length),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPeriodSelector(HudhudTheme t) {
+    return Container(
+      height: t.controlHeight,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(t.radiusMd),
+        border: Border.all(color: t.outline),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildPeriodButton(
+              title: 'Dzikir Pagi',
+              icon: LucideIcons.sun,
+              isActive: !_isPetang,
+              onTap: () => _switchPeriod(false),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: _buildPeriodButton(
+              title: 'Dzikir Petang',
+              icon: LucideIcons.moon,
+              isActive: _isPetang,
+              onTap: () => _switchPeriod(true),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPeriodButton({
+    required String title,
+    required IconData icon,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    final t = context.hudhud;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(t.radiusSm),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: t.motionFast,
+          decoration: BoxDecoration(
+            color: isActive ? t.terracotta : Colors.transparent,
+            borderRadius: BorderRadius.circular(t.radiusSm),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 16,
+                color: isActive ? Colors.white : t.muted,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: isActive ? Colors.white : t.muted,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTimeTab({
-    required String title,
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+  Widget _buildFocusCard(BuildContext context, DzikirItem item) {
+    final t = context.hudhud;
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: t.spaceLg, vertical: t.spaceSm),
+      child: Container(
+        padding: EdgeInsets.all(t.spaceLg),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
+          color: t.surface,
+          borderRadius: BorderRadius.circular(t.radiusMd),
+          border: Border.all(color: t.outline),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Icon(
-              icon,
-              size: 16,
-              color: isSelected ? const Color(0xFFD06A4C) : Colors.white70,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    item.judul,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: t.charcoal,
+                      height: 1.3,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: t.sand,
+                    borderRadius: BorderRadius.circular(t.radiusSm),
+                    border: Border.all(color: t.outline),
+                  ),
+                  child: Text(
+                    '${item.targetCount}x',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: t.terracotta,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 6),
-            Text(
-              title,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? const Color(0xFFD06A4C) : Colors.white70,
-              ),
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 16),
+            WorshipScriptureBlock(
+              arabic: item.arab,
+              latin: item.transliterasi,
+              translation: item.arti,
+              note: item.faedah.isNotEmpty ? 'Keutamaan: ${item.faedah}' : null,
+              arabicFontSize: _arabicFontSize,
+              showLatin: _showLatin,
+              showTranslation: _showTranslation,
             ),
           ],
         ),
@@ -533,274 +480,74 @@ class _DzikirPageState extends ConsumerState<DzikirPage> {
     );
   }
 
-  Widget _buildDzikirCard(BuildContext context, DzikirItem item, int index) {
+  Widget _buildBottomDock(
+    BuildContext context,
+    DzikirItem item,
+    int index,
+    int total,
+  ) {
+    final t = context.hudhud;
     final currentCount = _counts[item.id] ?? 0;
-    final isCompleted = currentCount >= item.targetCount;
-
-    // Kartu beropasitas tinggi agar animasi di background tetap terlihat lembut,
-    // namun teks di dalam kartu tetap 100% sangat kontras dan jelas.
-    final cardBgColor = Colors.white.withValues(alpha: isCompleted ? 0.96 : 0.92);
+    final canPrev = index > 0;
+    final canNext = index < total - 1;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.fromLTRB(t.spaceLg, t.spaceMd, t.spaceLg, t.spaceLg),
       decoration: BoxDecoration(
-        color: cardBgColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isCompleted
-              ? const Color(0xFF66BB6A)
-              : Colors.white.withValues(alpha: 0.6),
-          width: isCompleted ? 1.5 : 1.0,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: t.surface,
+        border: Border(top: BorderSide(color: t.outline)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header Card: Badge Nomor, Judul & Target Hitungan
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: isCompleted
-                  ? const Color(0xFFE8F5E9).withValues(alpha: 0.95)
-                  : const Color(0xFFF1F8F5).withValues(alpha: 0.95),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              border: Border(
-                bottom: BorderSide(
-                  color: isCompleted
-                      ? const Color(0xFFC8E6C9)
-                      : const Color(0xFFE2EBE8),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          children: [
+            IconButton.outlined(
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              style: IconButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(t.radiusMd),
                 ),
+                side: BorderSide(
+                    color:
+                        canPrev ? t.outline : t.outline.withValues(alpha: 0.5)),
+              ),
+              icon: Icon(
+                LucideIcons.chevronLeft,
+                size: 20,
+                color: canPrev ? t.charcoal : t.muted.withValues(alpha: 0.4),
+              ),
+              tooltip: 'Sebelumnya',
+              onPressed: canPrev ? () => _goToIndex(index - 1) : null,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: WorshipCounterControl(
+                count: currentCount,
+                target: item.targetCount,
+                onTap: () => _incrementCount(item),
               ),
             ),
-            child: Row(
-              children: [
-                // Nomor Urut
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: isCompleted
-                        ? const Color(0xFF4CAF50)
-                        : const Color(0xFFD06A4C).withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${index + 1}',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
-                      ),
-                    ),
-                  ),
+            const SizedBox(width: 12),
+            IconButton.outlined(
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              style: IconButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(t.radiusMd),
                 ),
-                const SizedBox(width: 10),
-                // Judul
-                Expanded(
-                  child: Text(
-                    item.judul,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFD06A4C),
-                    ),
-                  ),
-                ),
-                // Badge Target Count
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: isCompleted
-                        ? const Color(0xFF4CAF50)
-                        : const Color(0xFFE8F5F1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${item.targetCount}x',
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
-                    ),
-                  ),
-                ),
-              ],
+                side: BorderSide(
+                    color:
+                        canNext ? t.outline : t.outline.withValues(alpha: 0.5)),
+              ),
+              icon: Icon(
+                LucideIcons.chevronRight,
+                size: 20,
+                color: canNext ? t.charcoal : t.muted.withValues(alpha: 0.4),
+              ),
+              tooltip: 'Berikutnya',
+              onPressed: canNext ? () => _goToIndex(index + 1) : null,
             ),
-          ),
-
-          // Reading Section
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Arabic Text Container (Solid white & contrast border)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE2EBE8)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    item.arab,
-                    textAlign: TextAlign.right,
-                    textDirection: TextDirection.rtl,
-                    style: GoogleFonts.amiri(
-                      fontSize: _arabicFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1A202C),
-                      height: 2.1,
-                    ),
-                  ),
-                ),
-
-                // Transliterasi (Latin) - Dikontrol via Toggle
-                if (_showLatin && item.transliterasi.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    item.transliterasi,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
-                      color: const Color(0xFF4A5568),
-                      height: 1.45,
-                    ),
-                  ),
-                ],
-
-                // Arti / Terjemahan - Dikontrol via Toggle
-                if (_showTranslation) ...[
-                  const SizedBox(height: 10),
-                  Text(
-                    item.arti,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: const Color(0xFF2D3748),
-                      height: 1.45,
-                    ),
-                  ),
-                ],
-
-                // Faedah / Riwayat Hadits
-                if (item.faedah.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFF9E6),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFFFE082)),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(
-                          Icons.lightbulb_outline_rounded,
-                          size: 16,
-                          color: Color(0xFFF57F17),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            item.faedah,
-                            style: GoogleFonts.poppins(
-                              fontSize: 11,
-                              color: const Color(0xFF6D4C41),
-                              height: 1.4,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-
-          // Bottom Action: Tasbih Counter & Quick Actions (Salin & Share)
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-            child: Row(
-              children: [
-                // Tasbih Counter Tap Button
-                Expanded(
-                  child: InkWell(
-                    onTap: () => _incrementCount(item),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: isCompleted
-                            ? const Color(0xFF4CAF50)
-                            : const Color(0xFFE8F5F1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isCompleted
-                              ? const Color(0xFF388E3C)
-                              : const Color(0xFFD06A4C).withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            isCompleted ? Icons.check_circle_rounded : Icons.fingerprint_rounded,
-                            size: 18,
-                            color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            isCompleted
-                                ? 'Selesai ($currentCount/${item.targetCount})'
-                                : 'Ketuk: $currentCount / ${item.targetCount}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: isCompleted ? Colors.white : const Color(0xFFD06A4C),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                // Salin Icon Button
-                IconButton(
-                  icon: const Icon(Icons.copy_rounded, size: 18),
-                  tooltip: 'Salin Teks',
-                  color: const Color(0xFFD06A4C),
-                  onPressed: () => _copyToClipboard(item),
-                ),
-                // Share Icon Button
-                IconButton(
-                  icon: const Icon(Icons.share_rounded, size: 18),
-                  tooltip: 'Bagikan',
-                  color: const Color(0xFFD06A4C),
-                  onPressed: () => _shareDzikir(item),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

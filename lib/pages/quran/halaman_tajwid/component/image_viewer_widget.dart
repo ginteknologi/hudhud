@@ -325,7 +325,7 @@ class EasyImageViewState extends State<EasyImageView> {
                             selectedAyah: widget.selectedAyah,
                             highlightColor: Theme.of(context)
                                 .primaryColor
-                                .withOpacity(0.35),
+                                .withValues(alpha: 0.35),
                             borderColor: Theme.of(context).primaryColor,
                           ),
                         ),
@@ -408,8 +408,9 @@ class EasyImageViewState extends State<EasyImageView> {
                       painter: AyahHighlightPainter(
                         imageRect: imageRect,
                         selectedAyah: widget.selectedAyah,
-                        highlightColor:
-                            Theme.of(context).primaryColor.withOpacity(0.35),
+                        highlightColor: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.35),
                         borderColor: Theme.of(context).primaryColor,
                       ),
                     ),
